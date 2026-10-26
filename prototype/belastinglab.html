@@ -1,0 +1,624 @@
+<title>Box 1 Rekenlab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<style>
+/* Layout: instellingen links (sticky op desktop), uitkomsten rechts van samenvatting naar detail; op telefoon onder elkaar */
+:root{
+  --bg:#f6f7f9; --panel:#ffffff; --fg:#14181f; --muted:#5a6270; --line:#dde1e7; --soft:#eef1f5;
+  --accent:#1f4e8c; --accent-soft:#e3ebf6;
+  --gain:#2a78d6; --gain2:#9ec5f4; --loss:#eb6834; --loss2:#f6b99d; --zero:#a3abb7; --neutral:#d7dbe2;
+  --warn-bg:#fdf5e4; --warn:#8a5a00;
+  --f-display:"IBM Plex Serif",Georgia,serif; --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14171c; --panel:#1c2027; --fg:#eceef2; --muted:#a3abb8; --line:#2f3540; --soft:#232832;
+  --accent:#8db4ea; --accent-soft:#233149; --gain:#3987e5; --gain2:#25507f; --loss:#d95926; --loss2:#7c3a1f; --zero:#6b7380; --neutral:#3a404b;
+  --warn-bg:#2e2716; --warn:#e8c06a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14171c; --panel:#1c2027; --fg:#eceef2; --muted:#a3abb8; --line:#2f3540; --soft:#232832;
+  --accent:#8db4ea; --accent-soft:#233149; --gain:#3987e5; --gain2:#25507f; --loss:#d95926; --loss2:#7c3a1f; --zero:#6b7380; --neutral:#3a404b;
+  --warn-bg:#2e2716; --warn:#e8c06a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header h1{font-family:var(--f-display);font-weight:600;font-size:28px;margin:0;text-wrap:balance}
+header p{margin:4px 0 0;color:var(--muted);max-width:75ch}
+.grid{display:grid;grid-template-columns:360px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:920px){.grid{grid-template-columns:minmax(0,1fr)}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;
+  background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:18px}
+@media (max-width:920px){aside{position:static;max-height:none}}
+main{display:flex;flex-direction:column;gap:20px;min-width:0}
+section.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+h2{font-family:var(--f-display);font-weight:600;font-size:18px;margin:0 0 4px;text-wrap:balance}
+h3{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:600}
+h4{font-size:13px;margin:16px 0 6px;font-weight:600}
+.sub{color:var(--muted);margin:0 0 14px;font-size:13px;max-width:85ch}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+button,select{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--soft);color:var(--fg);border-radius:6px;padding:5px 10px;cursor:pointer}
+select{padding:4px 6px}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible,summary:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.on{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+button.ghost{background:transparent}
+.row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px}
+.row label{font-size:13px}
+.slider{display:grid;grid-template-columns:1fr 96px;gap:2px 10px;align-items:center}
+.slider label{grid-column:1/-1;font-size:13px;display:flex;justify-content:space-between;gap:8px}
+.slider label span{font-family:var(--f-num);color:var(--muted);font-size:12px;white-space:nowrap}
+input[type=range]{width:100%;accent-color:var(--accent)}
+input[type=number],input[type=text]{font-family:var(--f-num);font-size:13px;width:100%;padding:4px 6px;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--fg)}
+input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:13px}
+.grp{display:flex;flex-direction:column;gap:10px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+th:first-child,td:first-child{text-align:left}
+td.wrapc{white-space:normal;min-width:180px}
+td.num,.num{font-family:var(--f-num);font-size:13px}
+tr.tot td{font-weight:600;border-top:2px solid var(--line)}
+.tw{overflow-x:auto}
+.brk td{padding:3px 4px;border:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:23px;font-weight:500;margin-top:2px}
+.kpi .n{font-size:12px;color:var(--muted)}
+.up{color:var(--gain)} .down{color:var(--loss)}
+.chart svg{width:100%;height:auto;display:block}
+.chart text{fill:var(--fg);font-family:var(--f-body);font-size:12px}
+.chart text.m{fill:var(--muted);font-size:11px}
+.chart text.v{font-family:var(--f-num);font-size:11px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:4px 0 8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend i.ln{height:0;border-top:2px solid;width:16px;border-radius:0;vertical-align:3px}
+.legend i.dash{border-top-style:dashed}
+#tip{position:fixed;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.18);z-index:20;max-width:280px}
+details{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+summary{cursor:pointer;font-weight:600;font-size:13px}
+.note{font-size:12px;color:var(--muted);max-width:85ch}
+.edit input,.edit select{width:96px}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.two>div{min-width:0}
+.warn{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:10px 12px;font-size:12.5px}
+ul.hw{margin:6px 0 0;padding-left:18px;font-size:13px;max-width:90ch}
+ul.hw li{margin:3px 0}
+.tag{font-size:11px;color:var(--muted);font-weight:400;letter-spacing:0;text-transform:none}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>Box 1 Rekenlab</h1>
+  <p>Ontwerp je eigen inkomstenbelasting en toeslagen. Het lab rekent ruim 1.200 synthetische huishoudens door die samen Nederland in 2026 nabootsen, en laat zien wat er verandert voor de schatkist, per inkomensgroep, voor armoede en voor jouw eigen huishouden.</p>
+</header>
+
+<div class="grid">
+<aside aria-label="Instellingen">
+  <div class="grp">
+    <h3>Startpunt</h3>
+    <div class="presets" id="presets"></div>
+  </div>
+
+  <div class="grp">
+    <h3>Tarief box 1 <span class="tag">belasting + premies volksverzekeringen</span></h3>
+    <div class="row"><label for="vrij">Belastingvrije voet per persoon (€)</label><input type="number" id="vrij" step="500" min="0" style="width:110px"></div>
+    <div class="tw"><table class="brk"><thead><tr><th>Inkomen tot (€)</th><th>Tarief %</th><th></th></tr></thead><tbody id="brk"></tbody></table></div>
+    <div class="btnrow"><button class="ghost" id="addb">+ schijf</button></div>
+    <div class="row"><label for="aowk">AOW'ers: lager tarief in 1e schijf (procentpunt)</label><input type="number" id="aowk" step="0.05" min="0" style="width:110px"></div>
+  </div>
+
+  <div class="grp" id="g-kort"><h3>Heffingskortingen <span class="tag">% van 2026</span></h3></div>
+  <div class="grp" id="g-aftrek"><h3>Eigen woning en aftrekposten</h3></div>
+  <div class="grp" id="g-toes"><h3>Toeslagen <span class="tag">% van huidig bedrag</span></h3>
+  </div>
+  <details id="d-afb" style="margin-top:-8px">
+    <summary>Afbouw en bedragen toeslagen</summary>
+    <div class="grp" id="g-afb" style="margin-top:10px"></div>
+  </details>
+
+  <div class="grp">
+    <h3>Uitkeringen en gedrag</h3>
+    <label class="check"><input type="checkbox" id="kopp"><span>Netto-koppeling: AOW en uitkeringen blijven netto gelijk, de overheid past het bruto bedrag aan</span></label>
+    <div id="g-eti"></div>
+  </div>
+
+  <div class="grp">
+    <h3>Budgetneutraal maken</h3>
+    <div class="btnrow"><button id="neutV">Via vrijstelling</button><button id="neutT">Via alle tarieven</button></div>
+    <p class="note" id="neutMsg">Past de vrijstelling of alle tarieven aan tot de overheid per saldo niets wint of verliest.</p>
+  </div>
+
+  <div class="grp">
+    <h3>Scenario delen</h3>
+    <div class="btnrow"><button id="copyCode">Kopieer scenariocode</button></div>
+    <div class="row"><input type="text" id="codeIn" placeholder="Plak een scenariocode" aria-label="Scenariocode"><button id="loadCode">Laad</button></div>
+    <p class="note" id="codeMsg">Zet de code achter de link van deze pagina, na een #, om het scenario direct te openen.</p>
+  </div>
+</aside>
+
+<main>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="card">
+    <h2>Effect per inkomensgroep</h2>
+    <p class="sub">Huishoudens ingedeeld in tien even grote groepen naar besteedbaar inkomen, gecorrigeerd voor huishoudgrootte. Besteedbaar is bruto min belasting, plus toeslagen, eigenwoningvoordeel en kinderbijslag, min nominale zorgpremie.</p>
+    <div class="two">
+      <div>
+        <h4>Gemiddelde verandering besteedbaar inkomen</h4>
+        <div class="legend"><span><i style="background:var(--gain)"></i>erop vooruit</span><span><i style="background:var(--loss)"></i>erop achteruit</span></div>
+        <div class="chart" id="chDec"></div>
+      </div>
+      <div>
+        <h4>Winnaars en verliezers <span class="tag">aandeel personen</span></h4>
+        <div class="legend" id="lgWL"></div>
+        <div class="chart" id="chWL"></div>
+      </div>
+    </div>
+    <details><summary>Tabel per deciel</summary><div class="tw" style="margin-top:8px"><table id="tDec"></table></div></details>
+  </section>
+
+  <section class="card">
+    <h2>Netto inkomen en marginale druk</h2>
+    <p class="sub">Wat houdt een huishouden over bij elk bruto inkomen, en hoeveel van een extra euro verdwijnt aan belasting en wegvallende toeslagen? Pieken in de marginale druk laten de armoedeval zien.</p>
+    <div class="btnrow" style="margin-bottom:8px"><label for="curveType" class="note">Huishouden</label><select id="curveType"></select></div>
+    <div class="two">
+      <div><h4>Besteedbaar inkomen</h4><div class="legend"><span><i class="ln dash" style="border-color:var(--zero)"></i>Huidig 2026</span><span><i class="ln" style="border-color:var(--accent)"></i>Scenario</span></div><div class="chart" id="chNet"></div></div>
+      <div><h4>Marginale druk</h4><div class="legend"><span><i class="ln dash" style="border-color:var(--zero)"></i>Huidig 2026</span><span><i class="ln" style="border-color:var(--accent)"></i>Scenario</span></div><div class="chart" id="chMarg"></div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Voorbeeldhuishoudens en jouw huishouden</h2>
+    <p class="sub">Verandering in besteedbaar inkomen per jaar. Toeslagen volgen nu uit de regels, dus ze reageren op het inkomen. Pas de laatste rij aan voor je eigen situatie.</p>
+    <div class="legend"><span><i style="background:var(--gain)"></i>erop vooruit</span><span><i style="background:var(--loss)"></i>erop achteruit</span></div>
+    <div class="chart" id="chH"></div>
+    <div class="tw" style="margin-top:12px"><table id="tH"></table></div>
+    <details open id="d-edit">
+      <summary>Huishoudens aanpassen</summary>
+      <p class="note">Bedragen per jaar, huur per maand. Kinderopvang: jaarlijkse kosten.</p>
+      <div class="tw edit"><table id="eH"></table></div>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>Overheid</h2>
+    <p class="sub">Effect per jaar in miljarden euro, positief betekent meer inkomsten of minder uitgaven. De modeleffecten zijn per post geschaald naar de begrote totalen van 2026.</p>
+    <div class="tw"><table id="tG"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>Kalibratie en beperkingen</h2>
+    <p class="sub">Hoe goed bootst het model het huidige stelsel na? De schaalfactor wordt gebruikt om scenario-effecten om te rekenen naar officiële bedragen.</p>
+    <div class="tw"><table id="tK"></table></div>
+    <h4>Waar het model tekortschiet</h4>
+    <ul class="hw">
+      <li><b>Synthetische data.</b> Geen echte huishoudgegevens: zes huishoudtypes met lognormale inkomens, verdeeld naar CBS-aantallen en gekalibreerd op begrotingstotalen. Uitkomsten per groep zijn indicatief.</li>
+      <li><b>Vereenvoudigde toeslagen.</b> De afbouwparameters zijn gekalibreerd op de totale uitgaven, niet exact de wettelijke formules. Vermogenstoetsen en niet-gebruik ontbreken.</li>
+      <li><b>Netto-koppeling.</b> Geldt hier voor alle uitkeringen. In werkelijkheid zijn vooral AOW en bijstand netto gekoppeld; WW en WIA zijn een percentage van het oude loon.</li>
+      <li><b>Gedrag.</b> Alleen een eenvoudige elasticiteit van het belastbaar inkomen voor werkenden, standaard uit. Geen effecten op arbeidsdeelname, huizenprijzen of lonen.</li>
+      <li><b>Niet gemodelleerd.</b> Box 2 en 3, ondernemersfaciliteiten (als vast bedrag in "overige aftrekposten"), Wet Hillen, werkgeverspremies, inkomensafhankelijke Zvw-bijdrage, gemeentelijke regelingen.</li>
+    </ul>
+  </section>
+</main>
+</div>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+/* ===== Rekenkern Box 1 Rekenlab v3 ===== */
+/* ---------- regels 2026 ---------- */
+const HUIDIG={naam:"Huidig 2026",vrij:0,brk:[{tot:38883,r:35.75},{tot:78426,r:37.56},{tot:null,r:49.5}],aowk:17.95,
+  ahk:100,ak:100,ok:100,iack:100,hra:37.56,ewf:0.35,overig:100,
+  zorg:100,huur:100,kgb:100,kot:100,ztAfb:13.7,htAfb:50,kgbAfb:10,kgbKind:2100,
+  koppeling:true,eti:0};
+const AF={ahk:0,ak:0,ok:0,iack:0,hra:0,ewf:0,overig:0,zorg:0,huur:0,kgb:0,kot:0,aowk:0};
+const PRESETS=[
+  HUIDIG,
+  {...HUIDIG,...AF,naam:"Flat 40% / €18k",vrij:18000,brk:[{tot:null,r:40}]},
+  {...HUIDIG,...AF,naam:"35 / 40 / 45%",vrij:18000,brk:[{tot:50000,r:35},{tot:150000,r:40},{tot:null,r:45}]},
+  {...HUIDIG,naam:"Huidig zonder huurtoeslag",huur:0},
+  {...HUIDIG,naam:"Huidig zonder HRA",hra:0},
+  {...HUIDIG,naam:"Zonder HRA en forfait",hra:0,ewf:0},
+];
+const ahkF=x=>x<29736?3115:Math.max(0,3115-0.06398*(x-29736));
+const ahkAow=x=>x<29736?1556:Math.max(0,1556-0.03195*(x-29736));
+const akF=x=>x<=11965?0.08324*x:x<=25845?996+0.31009*(x-11965):x<=45592?5300+0.0195*(x-25845):Math.max(0,5685-0.0651*(x-45592));
+const okF=x=>x<45000?2067:Math.max(0,2067-0.15*(x-45000));
+const iackF=x=>Math.min(3032,Math.max(0,0.1145*(x-6239)));
+const AOW1=19800, AOW2=13600, ZORGPREMIE=2000, KINDERBIJSLAG=1400;
+
+function tax(x,p,o){ // o: {werk,aow,iack}
+  if(x<=0)return 0;
+  let t=0,prev=0;
+  p.brk.forEach((b,i)=>{const top=b.tot==null?Infinity:b.tot;const lo=Math.max(prev,p.vrij),hi=Math.min(x,top);
+    if(hi>lo){t+=(hi-lo)*b.r/100; if(i===0&&o.aow)t-=(hi-lo)*p.aowk/100;} prev=top;});
+  let k=(o.aow?ahkAow(x):ahkF(x))*p.ahk/100;
+  if(o.werk&&!o.aow)k+=akF(x)*p.ak/100;
+  if(o.aow)k+=okF(x)*p.ok/100;
+  if(o.iack)k+=iackF(x)*p.iack/100;
+  return Math.max(0,t-k);
+}
+function marg(x,p){if(x<=p.vrij)return 0;let prev=0;for(const b of p.brk){const top=b.tot==null?Infinity:b.tot;if(x<=top&&x>prev)return b.r;prev=top;}return p.brk[p.brk.length-1].r;}
+
+/* ---------- toeslagen (vereenvoudigde regels 2026) ---------- */
+function zorgtoeslag(inc,paar,p){const max=paar?3000:1575;return Math.max(0,max-p.ztAfb/100*Math.max(0,inc-29000))*p.zorg/100;}
+function huurtoeslag(inc,huurMnd,paar,ouder,p){
+  if(!huurMnd)return 0;const dr=paar?27000:20000;
+  const eb=(paar?300:288)+p.htAfb/100*Math.max(0,inc-dr)/12;
+  return Math.max(0,0.65*(Math.min(huurMnd,932)-eb))*12*p.huur/100;}
+function kgb(inc,kids,paar,p){if(!kids)return 0;
+  const max=kids*p.kgbKind+(paar?0:3480);const dr=paar?39141:29736;
+  return Math.max(0,max-p.kgbAfb/100*Math.max(0,inc-dr))*p.kgb/100;}
+function kot(inc,kosten,p){if(!kosten)return 0;
+  const pc=inc<=56413?0.96:Math.max(0.333,0.96-(inc-56413)*0.627/170000);return kosten*pc*p.kot/100;}
+
+/* ---------- huishouden doorrekenen ---------- */
+// h: {leden:[{x,soort:'werk'|'uitk'|'aow'|'geen',b}], paar, kids, kids12, huur (mnd), rente, woz, kotKosten}
+function eigenWoning(rente,woz,x,p){
+  const forf=woz*p.ewf/100, aftrek=p.hra>0?rente:0, net=forf-aftrek, m=marg(x,p);
+  const r=Math.min(p.hra,m||p.hra);
+  return net<0?-net*r/100:-net*m/100;
+}
+function netBenefitGross(b,o,cur,p){ // bruto b' zodat netto onder p gelijk is aan netto onder cur
+  const target=b-tax(b,cur,o);let lo=b*0.5,hi=b*2.5;
+  for(let k=0;k<40;k++){const m=(lo+hi)/2;(m-tax(m,p,o))<target?lo=m:hi=m;}
+  return(lo+hi)/2;
+}
+function calcHH(h,p,cur){
+  let uitkKost=0,taxT=0,bruto=0;
+  const leden=h.leden.map((l,i)=>({...l}));
+  // iack voor minstverdienende werkende ouder
+  let iackIdx=-1;if(h.kids12){let best=Infinity;leden.forEach((l,i)=>{if(l.soort==="werk"&&l.x>0&&l.x<best){best=l.x;iackIdx=i;}});
+    if(!h.paar)iackIdx=leden[0].soort==="werk"?0:-1; else if(leden.filter(l=>l.soort==="werk"&&l.x>0).length<2)iackIdx=-1;}
+  leden.forEach((l,i)=>{
+    const o={werk:l.soort==="werk",aow:l.soort==="aow",iack:i===iackIdx};
+    let x=l.x;
+    if(p!==cur&&p.koppeling&&l.b>0){const nb=netBenefitGross(l.b,o,cur,p);uitkKost+=nb-l.b;x+=nb-l.b;}
+    if(p!==cur&&p.eti&&o.werk&&x>0){const mc=marg(x,cur)/100,mn=marg(x,p)/100;x*=Math.pow((1-mn)/(1-mc),p.eti);}
+    l.xs=x;bruto+=x;taxT+=tax(x,p,o);
+  });
+  const hoofd=leden.reduce((a,b)=>b.xs>a.xs?b:a,leden[0]);
+  const ew=h.woz?eigenWoning(h.rente,h.woz,hoofd.xs,p):0;
+  const inc=bruto;
+  const zt=zorgtoeslag(inc,h.paar,p),ht=huurtoeslag(inc,h.huur,h.paar,h.kids>0,p),kg=kgb(inc,h.kids,h.paar,p),ko=kot(inc,h.kotKosten,p);
+  const adults=h.paar?2:1;
+  const best=bruto-taxT+ew+zt+ht+kg+ko+h.kids*KINDERBIJSLAG-adults*ZORGPREMIE-(h.huur?0:0);
+  return {bruto,tax:taxT,ew,zt,ht,kg,ko,uitkKost,best,adults,kids:h.kids,eq:1+0.5*(adults-1)+0.3*h.kids,
+    toes:zt+ht+kg+ko,last:taxT-ew-zt-ht-kg-ko};
+}
+
+/* ---------- synthetische populatie ---------- */
+function ninv(p){const a=[-39.69683028665376,220.9460984245205,-275.9285104469687,138.357751867269,-30.66479806614716,2.506628277459239],b=[-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771972,-13.28068155288572],c=[-.007784894002430293,-.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783],d=[.007784695709041462,.3224671290700398,2.445134137142996,3.754408661907416],pl=.02425;let q,r;
+ if(p<pl){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+ if(p>1-pl){q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+ q=p-.5;r=q*q;return(((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1)}
+const TYPES=[
+ {id:"a1",naam:"Alleenstaand",N:2.40e6,paar:false,aow:false,med:36000,sig:0.62,uitk:0.20,koop:0.42,kids:0,pw:0},
+ {id:"ao",naam:"Alleenstaand 67+",N:1.05e6,paar:false,aow:true,pmed:8500,psig:0.95,koop:0.45},
+ {id:"p0",naam:"Paar zonder kinderen",N:1.50e6,paar:true,aow:false,med:52000,sig:0.58,uitk:0.07,koop:0.72,kids:0,pw:0.80,ps:0.65},
+ {id:"po",naam:"Paar 67+",N:0.85e6,paar:true,aow:true,pmed:15000,psig:0.85,koop:0.70},
+ {id:"pk",naam:"Paar met kinderen",N:1.95e6,paar:true,aow:false,med:58000,sig:0.55,uitk:0.04,koop:0.78,kids:2,pw:0.86,ps:0.55},
+ {id:"ek",naam:"Eenoudergezin",N:0.50e6,paar:false,aow:false,med:32000,sig:0.55,uitk:0.24,koop:0.38,kids:1.5,pw:0},
+];
+const KAL={inc:1.3,rente:0.55,kot:0.75};
+function buildPop(n=200,K=KAL){
+  const rf=K.rente||1;const kf=K.kot||1;
+  const pop=[];
+  TYPES.forEach(T=>{
+    for(let i=0;i<n;i++){
+      const q=(i+.5)/n, f1=((i*7)%10)/10, f2=((i*3)%7)/6;
+      const h={type:T.id,w:T.N/n,paar:T.paar,kids:0,kids12:false,huur:0,rente:0,woz:0,kotKosten:0,leden:[]};
+      if(T.aow){
+        const pens=Math.exp(Math.log(T.pmed)+T.psig*ninv(q));
+        if(T.paar){h.leden=[{x:AOW2+pens*0.65,soort:"aow",b:AOW2},{x:AOW2+pens*0.35,soort:"aow",b:AOW2}];}
+        else h.leden=[{x:AOW1+pens,soort:"aow",b:AOW1}];
+      } else {
+        let main;
+        if(q<T.uitk){const x=17500+(q/T.uitk)*9000;main={x,soort:"uitk",b:x};}
+        else{const qq=(q-T.uitk)/(1-T.uitk);main={x:Math.exp(Math.log(T.med*(K.inc||1))+T.sig*ninv(qq)),soort:"werk",b:0};}
+        h.leden=[main];
+        if(T.paar){if(f1<T.pw&&main.soort==="werk")h.leden.push({x:main.x*T.ps*(0.55+0.9*f2),soort:"werk",b:0});
+          else h.leden.push({x:0,soort:"geen",b:0});}
+        if(T.kids){h.kids=T.id==="ek"?(i%2?1:2):(i%7===0?3:(i%3===0?1:2));h.kids12=i%5<3;}
+      }
+      const bruto=h.leden.reduce((s,l)=>s+l.x,0);
+      const koop=q>1-T.koop;
+      if(koop){
+        h.woz=Math.min(2.5e6,Math.max(260000,(T.aow?7:4.6)*bruto));
+        if(T.aow){h.rente=i%2===0?2600*rf:0;}
+        else{const hyp=Math.min(3.6*bruto,700000)*(0.55+0.45*f2);h.rente=0.034*hyp*rf;}
+      } else h.huur=Math.min(1300,560+0.009*bruto);
+      if(h.kids12){const werkenden=h.leden.filter(l=>l.soort==="werk"&&l.x>0).length;
+        const alle=T.paar?werkenden===2:werkenden===1;if(alle&&i%2===0)h.kotKosten=Math.min(h.kids,2)*9500*kf;}
+      pop.push(h);
+    }
+  });
+  return pop;
+}
+
+/* ---------- macro ---------- */
+const OFFICIEEL={ib:165,zorg:6.4,huur:5.6,kgb:3.6,kot:6.6,rente:24};
+function baseline(pop){return pop.map(h=>calcHH(h,HUIDIG,HUIDIG));}
+function totals(res,pop){const t={tax:0,ew:0,zt:0,ht:0,kg:0,ko:0,uitk:0,rente:0,hh:0,pers:0};
+  res.forEach((r,i)=>{const w=pop[i].w;t.tax+=r.tax*w;t.ew+=r.ew*w;t.zt+=r.zt*w;t.ht+=r.ht*w;t.kg+=r.kg*w;t.ko+=r.ko*w;t.uitk+=r.uitkKost*w;
+    t.rente+=pop[i].rente*w;t.hh+=w;t.pers+=(r.adults+r.kids)*w;});
+  for(const k of ["tax","ew","zt","ht","kg","ko","uitk","rente"])t[k]/=1e9;return t;}
+
+
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const nl=(v,d=0)=>v.toLocaleString("nl-NL",{minimumFractionDigits:d,maximumFractionDigits:d});
+const eur=v=>(v<0?"−":"")+"€"+nl(Math.round(Math.abs(v)));
+const sEur=v=>(Math.round(v)>0?"+":Math.round(v)<0?"−":"")+"€"+nl(Math.round(Math.abs(v)));
+const mld=v=>(Math.abs(v)<0.05?"":v>0?"+":"−")+"€"+nl(Math.abs(v),1)+" mld";
+const pct=(v,d=1)=>(v<0?"−":"")+nl(Math.abs(v),d)+"%";
+const sPct=(v,d=1)=>(v>0.05?"+":v<-0.05?"−":"")+nl(Math.abs(v),d)+"%";
+const pp=v=>(v>0.05?"+":v<-0.05?"−":"")+nl(Math.abs(v),1)+" pp";
+
+/* ---------- populatie en basislijn ---------- */
+const POP=buildPop();
+const BASE=baseline(POP);
+const BT=totals(BASE,POP);
+const OVERIG=4.0;
+const SC={ib:OFFICIEEL.ib/(BT.tax-BT.ew),zt:OFFICIEEL.zorg/BT.zt,ht:OFFICIEEL.huur/BT.ht,kg:OFFICIEEL.kgb/BT.kg,ko:OFFICIEEL.kot/BT.ko};
+// decielen naar gestandaardiseerd besteedbaar inkomen (personen-gewogen)
+const ORDER=POP.map((h,i)=>i).sort((a,b)=>BASE[a].best/BASE[a].eq-BASE[b].best/BASE[b].eq);
+const PW=POP.map((h,i)=>h.w*(BASE[i].adults+BASE[i].kids));
+const DEC=new Array(POP.length);
+(function(){const T=PW.reduce((a,b)=>a+b,0);let c=0;ORDER.forEach(i=>{c+=PW[i];DEC[i]=Math.min(9,Math.floor((c-PW[i]/2)/T*10));});})();
+function wMedian(vals,ws){const idx=vals.map((v,i)=>i).sort((a,b)=>vals[a]-vals[b]);const T=ws.reduce((a,b)=>a+b,0);let c=0;for(const i of idx){c+=ws[i];if(c>=T/2)return vals[i];}}
+const EQB=BASE.map(r=>r.best/r.eq);
+const ARMGRENS=0.6*wMedian(EQB,PW);
+function gini(vals,ws){const idx=vals.map((v,i)=>i).sort((a,b)=>vals[a]-vals[b]);let T=0,S=0;idx.forEach(i=>{T+=ws[i];S+=ws[i]*vals[i];});
+  let cw=0,cs=0,B=0;idx.forEach(i=>{const w=ws[i];cs+=w*vals[i];B+=w*(cs-w*vals[i]/2);cw+=w;});return 1-2*B/(T*S);}
+function armoede(res){let p=0,k=0,T=0,TK=0;res.forEach((r,i)=>{const w=POP[i].w;const ps=(r.adults+r.kids)*w;T+=ps;TK+=r.kids*w;if(r.best/r.eq<ARMGRENS){p+=ps;k+=r.kids*w;}});return{all:p/T*100,kids:k/TK*100};}
+const BASEARM=armoede(BASE),BASEGINI=gini(EQB,PW);
+
+function run(p){
+  const res=POP.map(h=>calcHH(h,p,HUIDIG));const t=totals(res,POP);
+  const lines=[
+    ["Belasting box 1: tarieven, vrijstelling en kortingen",((t.tax)-(BT.tax))*SC.ib],
+    ["Eigen woning: hypotheekrenteaftrek en forfait",(BT.ew-t.ew)*SC.ib],
+    ["Overige aftrekposten",OVERIG*(1-p.overig/100)],
+    ["Zorgtoeslag",(BT.zt-t.zt)*SC.zt],
+    ["Huurtoeslag",(BT.ht-t.ht)*SC.ht],
+    ["Kindgebonden budget",(BT.kg-t.kg)*SC.kg],
+    ["Kinderopvangtoeslag",(BT.ko-t.ko)*SC.ko],
+    ["Uitkeringen en AOW (netto-koppeling)",-t.uitk*SC.ib],
+  ];
+  return {res,t,lines,total:lines.reduce((s,l)=>s+l[1],0)};
+}
+
+/* ---------- voorbeeldhuishoudens ---------- */
+let HH=[
+ {pc:"P10",oms:"Alleenstaand, bijstand/uitkering, huur",x1:20000,s1:"uitk",x2:0,s2:"",kids:0,kids12:false,huur:750,rente:0,woz:0,kotKosten:0},
+ {pc:"P20",oms:"AOW'er alleenstaand, huur",x1:25000,s1:"aow",x2:0,s2:"",kids:0,kids12:false,huur:650,rente:0,woz:0,kotKosten:0},
+ {pc:"P30",oms:"Alleenstaand werkend, huur",x1:32000,s1:"werk",x2:0,s2:"",kids:0,kids12:false,huur:850,rente:0,woz:0,kotKosten:0},
+ {pc:"P50",oms:"Stel, 2 kinderen, koop",x1:48000,s1:"werk",x2:22000,s2:"werk",kids:2,kids12:true,huur:0,rente:9000,woz:400000,kotKosten:0},
+ {pc:"P75",oms:"Stel, 2 kinderen, koop",x1:62000,s1:"werk",x2:40000,s2:"werk",kids:2,kids12:true,huur:0,rente:12000,woz:500000,kotKosten:0},
+ {pc:"P90",oms:"Tweeverdieners, koop",x1:110000,s1:"werk",x2:60000,s2:"werk",kids:0,kids12:false,huur:0,rente:15000,woz:650000,kotKosten:0},
+ {pc:"P99",oms:"Topinkomen, koop",x1:350000,s1:"werk",x2:50000,s2:"werk",kids:0,kids12:false,huur:0,rente:20000,woz:1200000,kotKosten:0},
+ {pc:"Jij",oms:"Jouw huishouden (voorbeeld)",x1:45000,s1:"werk",x2:30000,s2:"werk",kids:1,kids12:true,huur:1100,rente:0,woz:0,kotKosten:8000},
+];
+function toHH(e){const paar=!!e.s2;const mk=(x,s,paarAow)=>({x:s==="geen"?0:x,soort:s,b:s==="uitk"?x:s==="aow"?Math.min(x,paarAow?AOW2:AOW1):0});
+  const leden=[mk(e.x1,e.s1,paar&&e.s2==="aow")];if(paar)leden.push(mk(e.x2,e.s2,e.s1==="aow"));
+  return {leden,paar,kids:e.kids,kids12:e.kids>0&&e.kids12,huur:e.huur,rente:e.huur?0:e.rente,woz:e.huur?0:e.woz,kotKosten:e.kids>0?e.kotKosten:0};}
+
+/* ---------- curves ---------- */
+const CURVES=[
+ {naam:"Alleenstaand, huur €850 p/m",f:x=>({leden:[{x,soort:"werk",b:0}],paar:false,kids:0,kids12:false,huur:850,rente:0,woz:0,kotKosten:0})},
+ {naam:"Eenoudergezin, 1 kind, huur €850 p/m",f:x=>({leden:[{x,soort:"werk",b:0}],paar:false,kids:1,kids12:true,huur:850,rente:0,woz:0,kotKosten:0})},
+ {naam:"Alleenverdiener, partner zonder inkomen, 2 kinderen, huur €950 p/m",f:x=>({leden:[{x,soort:"werk",b:0},{x:0,soort:"geen",b:0}],paar:true,kids:2,kids12:true,huur:950,rente:0,woz:0,kotKosten:0})},
+ {naam:"Tweeverdieners 60/40, 2 kinderen, koopwoning",f:x=>({leden:[{x:0.6*x,soort:"werk",b:0},{x:0.4*x,soort:"werk",b:0}],paar:true,kids:2,kids12:true,huur:0,rente:0.034*3.6*x*0.8,woz:Math.max(260000,4.6*x),kotKosten:0})},
+];
+CURVES.forEach((c,i)=>{const o=document.createElement("option");o.value=i;o.textContent=c.naam;$("curveType").appendChild(o);});
+$("curveType").onchange=()=>render();
+
+/* ---------- state & controls ---------- */
+let S=structuredClone(PRESETS[1]);
+const markEdit=()=>{S.naam=null;};
+function slider(parent,key,label,max,step,fmt){
+  const d=document.createElement("div");d.className="slider";
+  d.innerHTML=`<label for="s-${key}">${label}<span id="h-${key}"></span></label><input type="range" id="s-${key}" min="0" max="${max}" step="${step}"><input type="number" id="n-${key}" min="0" max="${max}" step="${step}" aria-label="${label}">`;
+  parent.appendChild(d);d.fmt=fmt;
+  const set=v=>{S[key]=+v;markEdit();render();};
+  d.querySelector("input[type=range]").addEventListener("input",e=>set(e.target.value));
+  d.querySelector("input[type=number]").addEventListener("change",e=>set(e.target.value));
+}
+const pctFmt=v=>v==0?"afgeschaft":nl(v,0)+"%";
+const SLIDERS=[
+ ["g-kort","ahk","Algemene heffingskorting",150,5,pctFmt],["g-kort","ak","Arbeidskorting",150,5,pctFmt],
+ ["g-kort","ok","Ouderenkorting",150,5,pctFmt],["g-kort","iack","Combinatiekorting (werkende ouders)",150,5,pctFmt],
+ ["g-aftrek","hra","Hypotheekrenteaftrek, max. aftrektarief",49.5,0.01,v=>v==0?"afgeschaft":nl(v,2)+"%"],
+ ["g-aftrek","ewf","Eigenwoningforfait, % van WOZ",1,0.05,v=>v==0?"afgeschaft":nl(v,2)+"%"],
+ ["g-aftrek","overig","Overige aftrekposten, % behouden",100,5,pctFmt],
+ ["g-toes","zorg","Zorgtoeslag",150,5,pctFmt],["g-toes","huur","Huurtoeslag",150,5,pctFmt],
+ ["g-toes","kgb","Kindgebonden budget",150,5,pctFmt],["g-toes","kot","Kinderopvangtoeslag",150,5,pctFmt],
+ ["g-afb","ztAfb","Zorgtoeslag: afbouw per extra € inkomen",40,0.5,v=>nl(v,1)+"%"],
+ ["g-afb","htAfb","Huurtoeslag: stijging eigen bijdrage per extra €",100,1,v=>nl(v,0)+"%"],
+ ["g-afb","kgbAfb","Kindgebonden budget: afbouw per extra €",30,0.5,v=>nl(v,1)+"%"],
+ ["g-afb","kgbKind","Kindgebonden budget: maximum per kind (€)",5000,100,v=>"€"+nl(v)],
+ ["g-eti","eti","Gedragseffect: elasticiteit belastbaar inkomen",0.6,0.05,v=>v==0?"uit":nl(v,2)],
+];
+const FMT={};SLIDERS.forEach(([g,k,l,m,s,f])=>{slider($(g),k,l,m,s,f);FMT[k]=f;});
+$("kopp").onchange=e=>{S.koppeling=e.target.checked;markEdit();render();};
+
+PRESETS.forEach((pr,i)=>{const b=document.createElement("button");b.textContent=pr.naam;b.dataset.i=i;
+  b.onclick=()=>{S=structuredClone(pr);$("neutMsg").textContent="Past de vrijstelling of alle tarieven aan tot de overheid per saldo niets wint of verliest.";render();};$("presets").appendChild(b);});
+$("vrij").addEventListener("change",e=>{S.vrij=Math.max(0,+e.target.value||0);markEdit();render();});
+$("aowk").addEventListener("change",e=>{S.aowk=+e.target.value||0;markEdit();render();});
+$("addb").onclick=()=>{const l=S.brk[S.brk.length-1];const prevTop=S.brk.length>1?S.brk[S.brk.length-2].tot:S.vrij;
+  l.tot=Math.max((prevTop||0)+20000,100000);S.brk.push({tot:null,r:l.r+5});markEdit();render();};
+function renderBrk(){
+  const tb=$("brk");tb.innerHTML="";
+  S.brk.forEach((b,i)=>{const tr=document.createElement("tr");const last=i===S.brk.length-1;
+    tr.innerHTML=`<td>${last?'<span class="note">en hoger</span>':`<input type="number" id="bt${i}" step="1000" value="${b.tot}" aria-label="Schijf ${i+1} tot">`}</td>
+      <td><input type="number" id="br${i}" step="0.25" value="${b.r}" aria-label="Tarief schijf ${i+1}"></td>
+      <td>${S.brk.length>1?`<button class="ghost" aria-label="Verwijder schijf ${i+1}" data-del="${i}">×</button>`:""}</td>`;
+    tb.appendChild(tr);
+    if(!last)tr.querySelector(`#bt${i}`).onchange=e=>{b.tot=+e.target.value;markEdit();render();};
+    tr.querySelector(`#br${i}`).onchange=e=>{b.r=+e.target.value;markEdit();render();};
+    const del=tr.querySelector("[data-del]");if(del)del.onclick=()=>{S.brk.splice(i,1);S.brk[S.brk.length-1].tot=null;markEdit();render();};
+  });
+}
+function solve(fn,lo,hi){for(let k=0;k<45;k++){const m=(lo+hi)/2;fn(m)>0?lo=m:hi=m;}return(lo+hi)/2;}
+$("neutV").onclick=()=>{const t=structuredClone(S);const f=v=>{t.vrij=v;return run(t).total;};
+  if(f(0)<0){$("neutMsg").textContent="Niet mogelijk via vrijstelling: zelfs zonder vrijstelling levert dit scenario minder op dan nu.";return;}
+  if(f(150000)>0){$("neutMsg").textContent="Niet mogelijk via vrijstelling binnen €150.000.";return;}
+  S.vrij=Math.round(solve(f,0,150000)/100)*100;markEdit();$("neutMsg").textContent=`Vrijstelling op €${nl(S.vrij)} gezet.`;render();};
+$("neutT").onclick=()=>{const t=structuredClone(S);const r0=S.brk.map(b=>b.r);const f=k=>{t.brk.forEach((b,i)=>b.r=r0[i]*k);return run(t).total;};
+  if(f(0)>0||f(2.5)<0){$("neutMsg").textContent="Niet mogelijk door alleen de tarieven te schalen.";return;}
+  const k=solve(v=>-f(v),0,2.5);S.brk.forEach((b,i)=>b.r=Math.round(r0[i]*k*100)/100);markEdit();
+  $("neutMsg").textContent=`Alle tarieven vermenigvuldigd met ${nl(k,3)}.`;render();};
+
+/* scenariocode */
+const KEYS=["vrij","brk","aowk","ahk","ak","ok","iack","hra","ewf","overig","zorg","huur","kgb","kot","ztAfb","htAfb","kgbAfb","kgbKind","koppeling","eti"];
+function encode(){const o={};KEYS.forEach(k=>o[k]=S[k]);return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+function decode(c){c=c.trim().replace(/^#/,"").replace(/-/g,"+").replace(/_/g,"/");while(c.length%4)c+="=";const o=JSON.parse(decodeURIComponent(escape(atob(c))));
+  const n={...structuredClone(HUIDIG),naam:null};KEYS.forEach(k=>{if(k in o)n[k]=o[k];});if(!Array.isArray(n.brk)||!n.brk.length)throw 0;return n;}
+$("copyCode").onclick=()=>{const c=encode();$("codeIn").value=c;
+  const ok=()=>$("codeMsg").textContent="Code gekopieerd. Zet hem na een # achter de link van deze pagina, of plak hem hierboven om te laden.";
+  try{navigator.clipboard.writeText(c).then(ok,()=>{$("codeIn").select();$("codeMsg").textContent="Selecteer en kopieer de code in het veld.";});}catch(e){$("codeIn").select();}};
+$("loadCode").onclick=()=>{try{S=decode($("codeIn").value);$("codeMsg").textContent="Scenario geladen.";render();}catch(e){$("codeMsg").textContent="Deze code kan ik niet lezen. Controleer of je hem volledig hebt geplakt.";}};
+try{if(location.hash.length>8)S=decode(location.hash);}catch(e){}
+
+/* ---------- grafieken ---------- */
+const tip=$("tip");
+function showTip(e,html){tip.innerHTML=html;tip.hidden=false;const x=Math.min(e.clientX+14,innerWidth-290);tip.style.left=Math.max(4,x)+"px";tip.style.top=(e.clientY+14)+"px";}
+function hideTip(){tip.hidden=true;}
+function niceStep(range,n){const raw=range/n;const p=Math.pow(10,Math.floor(Math.log10(raw)));return[1,2,2.5,5,10].map(m=>m*p).find(m=>m>=raw)||raw;}
+function bars(el,items,{goodWhenNeg=false,lw=200,unit=""}={}){
+  const W=640,rowH=34,pad=10,H=items.length*rowH+30;
+  const max=Math.max(1e-9,...items.map(i=>Math.abs(i.v)))*1.25;
+  const x0=lw+(W-lw-pad)/2,sc=(W-lw-pad)/2/max,st=niceStep(max,2);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Staafdiagram">`;
+  for(let t=-Math.floor(max/st)*st;t<=max+1e-9;t+=st){const x=x0+t*sc;
+    s+=`<line x1="${x}" x2="${x}" y1="0" y2="${H-22}" stroke="var(--line)" stroke-width="1"/><text class="m" x="${x}" y="${H-6}" text-anchor="middle">${(t>1e-9?"+":t<-1e-9?"−":"")+nl(Math.abs(t),st<1?1:0)}${unit}</text>`;}
+  s+=`<line x1="${x0}" x2="${x0}" y1="0" y2="${H-22}" stroke="var(--zero)" stroke-width="1.5"/>`;
+  items.forEach((it,i)=>{const y=i*rowH+6,bh=rowH-14;const w=Math.abs(it.v)*sc;
+    const good=goodWhenNeg?it.v<0:it.v>0;const col=Math.abs(it.v)<(it.eps||0.5)?"var(--zero)":good?"var(--gain)":"var(--loss)";
+    const bx=it.v>=0?x0:x0-w;
+    s+=`<g class="hit" data-i="${i}"><rect x="0" y="${y-4}" width="${W}" height="${rowH}" fill="transparent"/>`+
+      `<text x="0" y="${y+bh/2-3}" dominant-baseline="middle" font-weight="600">${it.label}</text>`+
+      `<text class="m" x="0" y="${y+bh/2+11}" dominant-baseline="middle">${it.sub||""}</text>`+
+      `<rect x="${bx}" y="${y}" width="${Math.max(w,1)}" height="${bh}" rx="3" fill="${col}"/>`+
+      `<text class="v" x="${it.v>=0?bx+w+5:bx-5}" y="${y+bh/2}" dominant-baseline="middle" text-anchor="${it.v>=0?"start":"end"}">${it.fmt}</text></g>`;});
+  el.innerHTML=s+"</svg>";
+  el.querySelectorAll(".hit").forEach(g=>{const it=items[+g.dataset.i];g.addEventListener("pointermove",e=>showTip(e,it.tip));g.addEventListener("pointerleave",hideTip);});
+}
+const WLCAT=[["Verlies >5%","var(--loss)"],["Verlies 1–5%","var(--loss2)"],["Minder dan 1%","var(--neutral)"],["Winst 1–5%","var(--gain2)"],["Winst >5%","var(--gain)"]];
+$("lgWL").innerHTML=WLCAT.map(c=>`<span><i style="background:${c[1]}"></i>${c[0]}</span>`).join("");
+function stacked(el,rows){ // rows:{label,sh:[5]}
+  const W=640,lw=78,rowH=26,H=rows.length*rowH+24,iw=W-lw-8;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Winnaars en verliezers per deciel">`;
+  [0,25,50,75,100].forEach(t=>{const x=lw+iw*t/100;s+=`<text class="m" x="${x}" y="${H-6}" text-anchor="${t===0?"start":t===100?"end":"middle"}">${t}%</text>`;});
+  rows.forEach((r,i)=>{const y=i*rowH+4,bh=rowH-8;let x=lw;
+    s+=`<g class="hit" data-i="${i}"><rect x="0" y="${y-3}" width="${W}" height="${rowH}" fill="transparent"/><text x="0" y="${y+bh/2}" dominant-baseline="middle" ${r.bold?'font-weight="600"':""}>${r.label}</text>`;
+    r.sh.forEach((v,k)=>{const w=iw*v/100;if(w>0.3){s+=`<rect x="${x}" y="${y}" width="${Math.max(0,w-2)}" height="${bh}" rx="2" fill="${WLCAT[k][1]}"/>`;}x+=w;});
+    s+=`</g>`;});
+  el.innerHTML=s+"</svg>";
+  el.querySelectorAll(".hit").forEach(g=>{const r=rows[+g.dataset.i];g.addEventListener("pointermove",e=>showTip(e,`<b>${r.label}</b><br>`+WLCAT.map((c,k)=>`${c[0]}: ${nl(r.sh[k],0)}%`).join("<br>")));g.addEventListener("pointerleave",hideTip);});
+}
+function lines(el,xs,ya,yb,{yfmt=v=>eur(v),ylab="",clampMin=null,clampMax=null}={}){
+  const W=640,H=300,l=64,r=14,t=12,b=36,iw=W-l-r,ih=H-t-b;
+  let ymin=Math.min(...ya,...yb),ymax=Math.max(...ya,...yb);
+  if(clampMin!=null)ymin=Math.max(ymin,clampMin);if(clampMax!=null)ymax=Math.min(ymax,clampMax);
+  const st=niceStep((ymax-ymin)||1,5);ymin=Math.floor(ymin/st)*st;ymax=Math.ceil(ymax/st)*st;
+  const X=x=>l+(x-xs[0])/(xs[xs.length-1]-xs[0])*iw,Y=y=>t+ih-(Math.min(ymax,Math.max(ymin,y))-ymin)/(ymax-ymin)*ih;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Lijngrafiek">`;
+  for(let v=ymin;v<=ymax+1e-9;v+=st){s+=`<line x1="${l}" x2="${W-r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text class="m" x="${l-6}" y="${Y(v)}" text-anchor="end" dominant-baseline="middle">${yfmt(v)}</text>`;}
+  const xst=niceStep(xs[xs.length-1]-xs[0],6);for(let v=Math.ceil(xs[0]/xst)*xst;v<=xs[xs.length-1];v+=xst)s+=`<text class="m" x="${X(v)}" y="${H-16}" text-anchor="middle">€${nl(v/1000)}k</text>`;
+  s+=`<text class="m" x="${l+iw/2}" y="${H-2}" text-anchor="middle">bruto huishoudinkomen per jaar</text>`;
+  const path=ys=>ys.map((y,i)=>(i?"L":"M")+X(xs[i]).toFixed(1)+","+Y(y).toFixed(1)).join("");
+  s+=`<path d="${path(ya)}" fill="none" stroke="var(--zero)" stroke-width="2" stroke-dasharray="5 4"/><path d="${path(yb)}" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
+  s+=`<line class="cx" x1="0" x2="0" y1="${t}" y2="${t+ih}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/><rect class="ov" x="${l}" y="${t}" width="${iw}" height="${ih}" fill="transparent"/>`;
+  el.innerHTML=s+"</svg>";
+  const svg=el.querySelector("svg"),cx=el.querySelector(".cx");
+  el.querySelector(".ov").addEventListener("pointermove",e=>{const bb=svg.getBoundingClientRect();const px=(e.clientX-bb.left)/bb.width*W;
+    const i=Math.max(0,Math.min(xs.length-1,Math.round((px-l)/iw*(xs.length-1))));cx.setAttribute("x1",X(xs[i]));cx.setAttribute("x2",X(xs[i]));cx.setAttribute("visibility","visible");
+    showTip(e,`<b>Bruto ${eur(xs[i])}</b><br>Huidig: ${yfmt(ya[i])}<br>Scenario: ${yfmt(yb[i])}`);});
+  el.querySelector(".ov").addEventListener("pointerleave",()=>{cx.setAttribute("visibility","hidden");hideTip();});
+}
+
+/* ---------- render ---------- */
+function syncControls(){
+  document.querySelectorAll("#presets button").forEach(b=>b.classList.toggle("on",PRESETS[b.dataset.i].naam===S.naam));
+  $("vrij").value=S.vrij;$("aowk").value=S.aowk;$("kopp").checked=!!S.koppeling;renderBrk();
+  SLIDERS.forEach(([g,k])=>{$("s-"+k).value=S[k];$("n-"+k).value=S[k];$("h-"+k).textContent=FMT[k](S[k]);});
+}
+function render(){
+  syncControls();
+  const R=run(S);
+  // verdeling
+  const dec=Array.from({length:10},()=>({d:0,b:0,w:0,pw:0,sh:[0,0,0,0,0]}));const all=[0,0,0,0,0];let allW=0;
+  const eqS=R.res.map(r=>r.best/r.eq);
+  R.res.forEach((r,i)=>{const a=BASE[i],g=dec[DEC[i]],w=POP[i].w,pw=PW[i];const d=r.best-a.best,rel=d/Math.max(1,a.best)*100;
+    g.d+=d*w;g.b+=a.best*w;g.w+=w;g.pw+=pw;const c=rel<-5?0:rel<-1?1:rel<=1?2:rel<=5?3:4;g.sh[c]+=pw;all[c]+=pw;allW+=pw;});
+  const arm=armoede(R.res),gi=gini(eqS,PW);
+  const losers=(all[0]+all[1])/allW*100,winners=(all[3]+all[4])/allW*100;
+  $("kpis").innerHTML=`
+   <div class="kpi"><div class="l">Overheid per saldo</div><div class="v ${R.total<-0.05?"down":""}">${mld(R.total)}</div><div class="n">per jaar, ${R.total>=0?"meer inkomsten of minder uitgaven":"tekort neemt toe"}</div></div>
+   <div class="kpi"><div class="l">Armoederisico (personen)</div><div class="v ${arm.all>BASEARM.all+0.05?"down":arm.all<BASEARM.all-0.05?"up":""}">${pct(BASEARM.all)} → ${pct(arm.all)}</div><div class="n">kinderen ${pct(BASEARM.kids)} → ${pct(arm.kids)}, grens ${eur(ARMGRENS)} p.j.</div></div>
+   <div class="kpi"><div class="l">Ongelijkheid (Gini)</div><div class="v">${nl(BASEGINI,3)} → ${nl(gi,3)}</div><div class="n">${gi>BASEGINI+0.0005?"ongelijker":gi<BASEGINI-0.0005?"gelijker":"vrijwel gelijk"}, op besteedbaar inkomen</div></div>
+   <div class="kpi"><div class="l">Erop achteruit / vooruit</div><div class="v"><span class="down">${nl(losers,0)}%</span> / <span class="up">${nl(winners,0)}%</span></div><div class="n">van alle personen, verschil groter dan 1%</div></div>`;
+  const D=dec.map((g,i)=>({i,avg:g.d/g.w,rel:g.d/g.b*100,sh:g.sh.map(v=>v/g.pw*100)}));
+  bars($("chDec"),D.map(g=>({label:`Deciel ${g.i+1}`,sub:g.i===0?"laagste inkomens":g.i===9?"hoogste inkomens":"",v:g.rel,eps:0.05,fmt:`${sPct(g.rel)} · ${sEur(g.avg)}`,
+    tip:`<b>Deciel ${g.i+1}</b><br>Gemiddeld ${sEur(g.avg)} per huishouden per jaar<br>${sPct(g.rel)} van het besteedbaar inkomen`})),{lw:120,unit:"%"});
+  stacked($("chWL"),[...D.map(g=>({label:`Deciel ${g.i+1}`,sh:g.sh})),{label:"Alle",bold:true,sh:all.map(v=>v/allW*100)}]);
+  $("tDec").innerHTML=`<thead><tr><th>Deciel</th><th>Δ per huishouden</th><th>Δ in %</th>${WLCAT.map(c=>`<th>${c[0]}</th>`).join("")}</tr></thead><tbody>`+
+    D.map(g=>`<tr><td>${g.i+1}</td><td class="num">${sEur(g.avg)}</td><td class="num">${sPct(g.rel)}</td>${g.sh.map(v=>`<td class="num">${nl(v,0)}%</td>`).join("")}</tr>`).join("")+"</tbody>";
+
+  // curves
+  const C=CURVES[+$("curveType").value||0];const xs=[];for(let x=10000;x<=150000;x+=1000)xs.push(x);
+  const pS={...S,eti:0},cur=HUIDIG;
+  const bA=xs.map(x=>calcHH(C.f(x),cur,cur).best),bB=xs.map(x=>calcHH(C.f(x),pS,cur).best);
+  const mA=xs.map(x=>(1-(calcHH(C.f(x+1000),cur,cur).best-calcHH(C.f(x),cur,cur).best)/1000)*100);
+  const mB=xs.map(x=>(1-(calcHH(C.f(x+1000),pS,cur).best-calcHH(C.f(x),pS,cur).best)/1000)*100);
+  lines($("chNet"),xs,bA,bB);
+  lines($("chMarg"),xs,mA,mB,{yfmt:v=>nl(v,0)+"%",clampMin:-20,clampMax:120});
+
+  // voorbeeldhuishoudens
+  const rows=HH.map(e=>{const h=toHH(e);const a=calcHH(h,HUIDIG,HUIDIG),b=calcHH(h,S,HUIDIG);return{e,a,b,d:b.best-a.best};});
+  bars($("chH"),rows.map(r=>({label:`${r.e.pc} · ${eur(r.a.bruto)}`,sub:r.e.oms,v:r.d,fmt:sEur(r.d),
+    tip:`<b>${r.e.pc}</b> ${r.e.oms}<br>Belasting ${eur(r.a.tax)} → ${eur(r.b.tax)}<br>Eigen woning ${sEur(r.a.ew)} → ${sEur(r.b.ew)}<br>Zorgtoeslag ${eur(r.a.zt)} → ${eur(r.b.zt)}<br>Huurtoeslag ${eur(r.a.ht)} → ${eur(r.b.ht)}<br>Kindgebonden budget ${eur(r.a.kg)} → ${eur(r.b.kg)}<br>Kinderopvangtoeslag ${eur(r.a.ko)} → ${eur(r.b.ko)}${r.b.uitkKost?`<br>Hogere bruto uitkering ${sEur(r.b.uitkKost)}`:""}<br><b>Besteedbaar ${sEur(r.d)} per jaar</b> (${sEur(r.d/12)}/mnd)`})),{lw:220});
+  $("tH").innerHTML=`<thead><tr><th>Huishouden</th><th>Bruto</th><th>Belasting</th><th>Toeslagen</th><th>Besteedbaar nu</th><th>Scenario</th><th>Δ per jaar</th><th>Δ per maand</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr><td>${r.e.pc} <span class="note">${r.e.oms}</span></td><td class="num">${eur(r.a.bruto)}</td><td class="num">${eur(r.a.tax)} → ${eur(r.b.tax)}</td><td class="num">${eur(r.a.toes)} → ${eur(r.b.toes)}</td><td class="num">${eur(r.a.best)}</td><td class="num">${eur(r.b.best)}</td>
+      <td class="num ${r.d>50?"up":r.d<-50?"down":""}">${sEur(r.d)}</td><td class="num">${sEur(r.d/12)}</td></tr>`).join("")+"</tbody>";
+
+  // overheid
+  $("tG").innerHTML=`<thead><tr><th>Post</th><th>Effect</th></tr></thead><tbody>`+
+    R.lines.map(l=>`<tr><td>${l[0]}</td><td class="num ${Math.abs(l[1])<0.05?"":l[1]>0?"up":"down"}">${Math.abs(l[1])<0.05?"–":mld(l[1])}</td></tr>`).join("")+
+    `<tr class="tot"><td>Totaal</td><td class="num">${mld(R.total)}</td></tr></tbody>`;
+}
+
+/* huishoud-editor */
+function renderEdit(){
+  const SO=[["werk","werkt"],["uitk","uitkering"],["aow","AOW"]],SO2=[["","geen partner"],["werk","werkt"],["geen","zonder inkomen"],["uitk","uitkering"],["aow","AOW"]];
+  const sel=(id,opts,v)=>`<select id="${id}">${opts.map(o=>`<option value="${o[0]}"${o[0]===v?" selected":""}>${o[1]}</option>`).join("")}</select>`;
+  const F=[["x1","Inkomen 1"],["s1","Soort"],["s2","Partner"],["x2","Inkomen 2"],["kids","Kinderen"],["kids12","Kind < 12"],["huur","Huur p/m"],["rente","Hyp.rente"],["woz","WOZ"],["kotKosten","Opvangkosten"]];
+  $("eH").innerHTML=`<thead><tr><th>Huishouden</th>${F.map(f=>`<th>${f[1]}</th>`).join("")}</tr></thead><tbody>`+
+    HH.map((h,i)=>`<tr><td>${h.pc}</td>${F.map(([k,l])=>`<td>${k==="s1"?sel(`e-${i}-${k}`,SO,h[k]):k==="s2"?sel(`e-${i}-${k}`,SO2,h[k]):k==="kids12"?`<input type="checkbox" id="e-${i}-${k}" ${h[k]?"checked":""} aria-label="${h.pc} ${l}">`:`<input type="number" id="e-${i}-${k}" step="${k==="kids"?1:k==="huur"?25:500}" min="0" value="${h[k]}" aria-label="${h.pc} ${l}">`}</td>`).join("")}</tr>`).join("")+"</tbody>";
+  HH.forEach((h,i)=>F.forEach(([k])=>{const el=$(`e-${i}-${k}`);el.onchange=e=>{
+    h[k]=k==="s1"||k==="s2"?e.target.value:k==="kids12"?e.target.checked:Math.max(0,+e.target.value||0);render();};}));
+}
+
+/* kalibratietabel */
+(function(){
+  let nz=0,nh=0,nk=0,nko=0;BASE.forEach((r,i)=>{const w=POP[i].w;if(r.zt>0)nz+=w;if(r.ht>0)nh+=w;if(r.kg>0)nk+=w;if(r.ko>0)nko+=w;});
+  const row=(n,m,o,extra="")=>`<tr><td class="wrapc">${n}</td><td class="num">€${nl(m,1)} mld</td><td class="num">${o==null?"–":"€"+nl(o,1)+" mld"}</td><td class="num">${o==null?"–":nl(o/m,2)}</td><td class="num">${extra}</td></tr>`;
+  $("tK").innerHTML=`<thead><tr><th>Post (huidig stelsel)</th><th>Model</th><th>Begroting 2026</th><th>Schaalfactor</th><th>Ontvangers model</th></tr></thead><tbody>`+
+    row("Loon- en inkomstenbelasting + premies volksverzekeringen (na HRA)",BT.tax-BT.ew,OFFICIEEL.ib)+
+    row("Afgetrokken hypotheekrente (grondslag)",BT.rente,OFFICIEEL.rente)+
+    row("Zorgtoeslag",BT.zt,OFFICIEEL.zorg,nl(nz/1e6,1)+" mln hh")+
+    row("Huurtoeslag",BT.ht,OFFICIEEL.huur,nl(nh/1e6,1)+" mln hh")+
+    row("Kindgebonden budget",BT.kg,OFFICIEEL.kgb,nl(nk/1e6,1)+" mln hh")+
+    row("Kinderopvangtoeslag",BT.ko,OFFICIEEL.kot,nl(nko/1e6,1)+" mln hh")+
+    `<tr><td class="wrapc">Huishoudens / personen in model</td><td class="num" colspan="4" style="text-align:left">${nl(BT.hh/1e6,2)} mln huishoudens, ${nl(BT.pers/1e6,1)} mln personen</td></tr></tbody>`;
+})();
+
+renderEdit();render();
+</script>
