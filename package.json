@@ -1,0 +1,40 @@
+{
+  "name": "box1lab",
+  "private": true,
+  "type": "module",
+  "description": "Nederlandstalige website over belastingen en toeslagen: calculator, scenariolab en verkiezingsmodule",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "packages/*",
+    "site"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w site",
+    "build": "npm run build -w site",
+    "preview": "npm run preview -w site",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -p packages/engine/tsconfig.json --noEmit && npm run check -w site",
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.13.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "eslint-plugin-svelte": "^3.23.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.2",
+    "prettier-plugin-svelte": "^4.1.1",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.0.5"
+  }
+}

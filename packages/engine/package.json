@@ -1,0 +1,10 @@
+{
+  "name": "@box1lab/engine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Rekenkern: box 1, heffingskortingen, toeslagen, populatie en uitkomstmaten. Puur TypeScript, geen UI of DOM.",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
