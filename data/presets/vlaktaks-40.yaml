@@ -1,0 +1,19 @@
+id: vlaktaks-40
+naam: "Vlaktaks 40% boven €18.000"
+omschrijving: "Eén tarief van 40% boven een belastingvrije voet van €18.000 per persoon. Alle heffingskortingen, de hypotheekrenteaftrek, het eigenwoningforfait, overige aftrekposten en alle toeslagen vervallen."
+volgorde: 10
+wijzigingen:
+  - { parameter: box1.vrijstelling, zet: 18000 }
+  - { parameter: box1.schijven, zet: [{ tot: null, tarief: 40 }] }
+  - { parameter: box1.aowVerlagingEersteSchijf, zet: 0 }
+  - { parameter: heffingskortingen.algemeen.niveau, zet: 0 }
+  - { parameter: heffingskortingen.arbeid.niveau, zet: 0 }
+  - { parameter: heffingskortingen.ouderen.niveau, zet: 0 }
+  - { parameter: heffingskortingen.combinatie.niveau, zet: 0 }
+  - { parameter: eigenWoning.aftrekMaxTarief, zet: 0 }
+  - { parameter: eigenWoning.forfait, zet: 0 }
+  - { parameter: overigeAftrekposten.niveau, zet: 0 }
+  - { parameter: toeslagen.zorgtoeslag.niveau, zet: 0 }
+  - { parameter: toeslagen.huurtoeslag.niveau, zet: 0 }
+  - { parameter: toeslagen.kindgebondenBudget.niveau, zet: 0 }
+  - { parameter: toeslagen.kinderopvangtoeslag.niveau, zet: 0 }

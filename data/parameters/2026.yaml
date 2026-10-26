@@ -1,0 +1,140 @@
+# Parameters belastingjaar 2026
+#
+# Afspraken (zie ook docs/JAARLIJKSE-UPDATE.md):
+# - Percentages schrijf je als percentage: 35,75% wordt 35.75.
+# - Bedragen in euro per jaar, tenzij de naam iets anders zegt (bijvoorbeeld "perMaand").
+# - Een punt is de decimaal: 1.575 euro schrijf je als 1575.
+# - Elke sectie heeft een "bron". Weet je de bron niet? Schrijf "TODO: bron nodig".
+# - "niveau" is een knop voor scenario's: 100 = zoals de wet nu is, 0 = afgeschaft.
+#
+# Status: fase 1. Deze waarden zijn letterlijk overgenomen uit het prototype, zodat de nieuwe rekenkern
+# dezelfde uitkomsten geeft. In fase 2 worden ze één voor één gecontroleerd tegen officiële bronnen.
+
+jaar: 2026
+
+box1:
+  bron: "Belastingdienst, tarieven 2026 (https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-tarieven-en-heffingskortingen). Waarden uit prototype, controle in fase 2."
+  # Belastingvrij deel per persoon. Bestaat nu niet (0); handig voor scenario's als een vlaktaks.
+  vrijstelling: 0
+  # Inkomstenbelasting plus premies volksverzekeringen. De laatste schijf heeft "tot: null" (geen bovengrens).
+  schijven:
+    - { tot: 38883, tarief: 35.75 }
+    - { tot: 78426, tarief: 37.56 }
+    - { tot: null, tarief: 49.5 }
+  # AOW'ers betalen geen AOW-premie: hun tarief in de eerste schijf is zoveel procentpunt lager.
+  aowVerlagingEersteSchijf: 17.95
+
+# Een heffingskorting is een "staffel": een reeks stukken die elk beginnen bij een inkomen ("vanaf").
+# Op elk stuk is de korting: bedrag + tarief% × (inkomen − vanaf). Een negatief tarief is afbouw.
+# De korting is nooit lager dan 0 en nooit hoger dan "maximum" (als dat er staat).
+heffingskortingen:
+  algemeen:
+    bron: "Belastingdienst, heffingskortingen 2026. Waarden uit prototype, controle in fase 2."
+    niveau: 100
+    staffel:
+      - { vanaf: 0, bedrag: 3115, tarief: 0 }
+      - { vanaf: 29736, bedrag: 3115, tarief: -6.398 }
+    # Voor wie de AOW-leeftijd heeft (lager, omdat er geen AOW-premie wordt betaald).
+    staffelAow:
+      - { vanaf: 0, bedrag: 1556, tarief: 0 }
+      - { vanaf: 29736, bedrag: 1556, tarief: -3.195 }
+  arbeid:
+    bron: "Belastingdienst, heffingskortingen 2026. Waarden uit prototype, controle in fase 2."
+    niveau: 100
+    staffel:
+      - { vanaf: 0, bedrag: 0, tarief: 8.324 }
+      - { vanaf: 11965, bedrag: 996, tarief: 31.009 }
+      - { vanaf: 25845, bedrag: 5300, tarief: 1.95 }
+      - { vanaf: 45592, bedrag: 5685, tarief: -6.51 }
+  ouderen:
+    bron: "TODO: bron nodig. Afbouw is een benadering uit het prototype (HANDOFF §2, zwakke plek 7)."
+    niveau: 100
+    staffel:
+      - { vanaf: 0, bedrag: 2067, tarief: 0 }
+      - { vanaf: 45000, bedrag: 2067, tarief: -15 }
+  combinatie:
+    bron: "Belastingdienst, inkomensafhankelijke combinatiekorting 2026. Waarden uit prototype, controle in fase 2."
+    niveau: 100
+    staffel:
+      - { vanaf: 0, bedrag: 0, tarief: 0 }
+      - { vanaf: 6239, bedrag: 0, tarief: 11.45 }
+    maximum: 3032
+
+eigenWoning:
+  bron: "TODO: bron nodig. Waarden uit prototype; Wet Hillen ontbreekt nog (fase 2)."
+  # Eigenwoningforfait als percentage van de WOZ-waarde. 0 = afgeschaft.
+  forfait: 0.35
+  # Hoogste tarief waartegen hypotheekrente aftrekbaar is. 0 = geen hypotheekrenteaftrek.
+  aftrekMaxTarief: 37.56
+
+overigeAftrekposten:
+  bron: "Prototype: vaste schatting voor aftrekposten die niet apart in het model zitten (HANDOFF §2, zwakke plek 8)."
+  # Totaal in miljard euro per jaar. Wordt niet per huishouden berekend.
+  budgetMld: 4.0
+  niveau: 100
+
+toeslagen:
+  # Fase 1: vereenvoudigde formules uit het prototype, gekalibreerd op totalen. Fase 2 vervangt ze door de
+  # exacte regels uit de Toeslagenkaart 2026.
+  zorgtoeslag:
+    bron: "Prototype (vereenvoudigd). Exacte regels volgen in fase 2."
+    niveau: 100
+    maximum: { alleenstaand: 1575, partners: 3000 }
+    drempelinkomen: 29000
+    # Zoveel procent van elke euro boven het drempelinkomen gaat van de toeslag af.
+    afbouw: 13.7
+  huurtoeslag:
+    bron: "Prototype (vereenvoudigd). Exacte regels volgen in fase 2."
+    niveau: 100
+    maximaleHuurPerMaand: 932
+    # Percentage van (huur − eigen bijdrage) dat wordt vergoed.
+    vergoeding: 65
+    basisbijdragePerMaand: { alleenstaand: 288, partners: 300 }
+    drempelinkomen: { alleenstaand: 20000, partners: 27000 }
+    # De eigen bijdrage stijgt met zoveel procent van elke euro boven het drempelinkomen.
+    afbouw: 50
+  kindgebondenBudget:
+    bron: "Prototype (vereenvoudigd). Exacte regels volgen in fase 2."
+    niveau: 100
+    perKind: 2100
+    alleenstaandeOuderkop: 3480
+    drempelinkomen: { alleenstaand: 29736, partners: 39141 }
+    afbouw: 10
+  kinderopvangtoeslag:
+    bron: "Prototype (vereenvoudigd). De officiële KOT-tabel per inkomensgroep volgt in fase 2."
+    niveau: 100
+    # Vergoedingspercentage van de kosten: maximaal tot de inkomensgrens, daarna lineair omlaag tot het minimum.
+    maxVergoeding: 96
+    minVergoeding: 33.3
+    inkomensgrens: 56413
+    # Over hoeveel euro inkomen het percentage van maximaal naar minimaal daalt.
+    afbouwTraject: 170000
+
+uitkeringen:
+  bron: "TODO: bron nodig. AOW-bedragen zijn ronde schattingen uit het prototype (HANDOFF §2, zwakke plek 3)."
+  aow: { alleenstaand: 19800, partners: 13600 }
+  # Netto-koppeling: in een scenario houden uitkeringen hun netto bedrag; de overheid betaalt het verschil bruto bij.
+  nettoKoppeling: true
+
+zorg:
+  bron: "TODO: bron nodig. Ronde schatting uit het prototype."
+  nominalePremiePerVolwassene: 2000
+
+kinderbijslag:
+  bron: "TODO: bron nodig. Ronde schatting uit het prototype; leeftijdsafhankelijke bedragen volgen in fase 2."
+  perKind: 1400
+
+gedrag:
+  bron: "Modelkeuze. 0 = geen gedragseffect (statische doorrekening)."
+  # Elasticiteit van het belastbaar inkomen voor werkenden.
+  eti: 0
+
+methodiek:
+  bron: "Modelkeuze, zoals in het prototype."
+  # Equivalentieschaal: eerste volwassene telt als 1, elke volgende volwassene en elk kind zoveel extra.
+  equivalentie: { extraVolwassene: 0.5, kind: 0.3 }
+  # Armoederisicogrens als percentage van het mediane gestandaardiseerde besteedbaar inkomen.
+  armoedegrens: 60
+  # Grenzen (in procent verandering van het besteedbaar inkomen) voor de vijf klassen winnaars en verliezers:
+  # verlies > 5%, verlies 1–5%, minder dan 1%, winst 1–5%, winst > 5%.
+  winnaarsGrenzen: [-5, -1, 1, 5]

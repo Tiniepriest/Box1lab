@@ -1,0 +1,6 @@
+id: zonder-hra
+naam: "Zonder hypotheekrenteaftrek"
+omschrijving: "Het huidige stelsel, maar hypotheekrente is niet meer aftrekbaar. Het eigenwoningforfait blijft bestaan."
+volgorde: 40
+wijzigingen:
+  - { parameter: eigenWoning.aftrekMaxTarief, zet: 0 }

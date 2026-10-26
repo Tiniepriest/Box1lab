@@ -19,8 +19,10 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc -p packages/engine/tsconfig.json --noEmit && npm run check -w site",
-    "ci": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build"
+    "typecheck": "tsc -p packages/engine/tsconfig.json && tsc -p scripts/tsconfig.json && npm run check -w site",
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run valideer && npm test && npm run build",
+    "valideer": "tsx scripts/valideer.ts",
+    "golden:prototype": "node scripts/prototype-golden.cjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

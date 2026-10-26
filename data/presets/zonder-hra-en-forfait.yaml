@@ -1,0 +1,7 @@
+id: zonder-hra-en-forfait
+naam: "Zonder hypotheekrenteaftrek en forfait"
+omschrijving: "Het huidige stelsel, maar de eigen woning valt helemaal buiten de inkomstenbelasting: geen hypotheekrenteaftrek en geen eigenwoningforfait."
+volgorde: 50
+wijzigingen:
+  - { parameter: eigenWoning.aftrekMaxTarief, zet: 0 }
+  - { parameter: eigenWoning.forfait, zet: 0 }
