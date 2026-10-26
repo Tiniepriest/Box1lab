@@ -1,103 +1,106 @@
-# Specificatie van de synthetische populatie (fase 1: overgenomen uit het prototype).
-# Fase 3 vervangt dit door een grotere populatie die offline wordt herwogen naar CBS-marges.
+# Specificatie van de synthetische populatie 2026.
 #
-# Per huishoudtype: aantal huishoudens in Nederland (N), lognormaal inkomen (mediaan, spreiding),
-# aandeel met een uitkering, aandeel koopwoning, en voor paren het aandeel tweeverdieners.
+# De structuur (huishoudtypes en leeftijden) komt uit CBS (data/kalibratie/2026.yaml). Dit bestand bevat de
+# aannames waarmee binnen elke CBS-cel huishoudens worden gemaakt: inkomens, woning, kinderopvang.
+# Daarna herweegt `npm run kalibreer` de populatie naar de kalibratiedoelen; het rapport in
+# docs/kalibratie-2026.md laat zien hoe goed dat lukt. Deze aannames hoeven dus niet exact te kloppen, maar ze
+# moeten wel genoeg variatie bieden.
 
-bron: "Prototype: met de hand gekozen parameters (HANDOFF §2, zwakke plek 6)."
-huishoudensPerType: 200
+bron: "Modelaannames (fase 3), afgestemd op de kalibratiedoelen. Zie docs/DECISIONS.md D-021."
 
-types:
-  - {
-      id: a1,
-      naam: "Alleenstaand",
-      N: 2400000,
-      partners: false,
-      aow: false,
-      mediaan: 36000,
-      spreiding: 0.62,
-      uitkering: 0.20,
-      koop: 0.42,
-    }
-  - {
-      id: ao,
-      naam: "Alleenstaand 67+",
-      N: 1050000,
-      partners: false,
-      aow: true,
-      pensioenMediaan: 8500,
-      pensioenSpreiding: 0.95,
-      koop: 0.45,
-    }
-  - {
-      id: p0,
-      naam: "Paar zonder kinderen",
-      N: 1500000,
-      partners: true,
-      aow: false,
-      mediaan: 52000,
-      spreiding: 0.58,
-      uitkering: 0.07,
-      koop: 0.72,
-      tweeverdieners: 0.80,
-      partnerAandeel: 0.65,
-    }
-  - {
-      id: po,
-      naam: "Paar 67+",
-      N: 850000,
-      partners: true,
-      aow: true,
-      pensioenMediaan: 15000,
-      pensioenSpreiding: 0.85,
-      koop: 0.70,
-    }
-  - {
-      id: pk,
-      naam: "Paar met kinderen",
-      N: 1950000,
-      partners: true,
-      aow: false,
-      mediaan: 58000,
-      spreiding: 0.55,
-      uitkering: 0.04,
-      koop: 0.78,
-      tweeverdieners: 0.86,
-      partnerAandeel: 0.55,
-      kinderen: true,
-    }
-  - {
-      id: ek,
-      naam: "Eenoudergezin",
-      N: 500000,
-      partners: false,
-      aow: false,
-      mediaan: 32000,
-      spreiding: 0.55,
-      uitkering: 0.24,
-      koop: 0.38,
-      kinderen: true,
-    }
+# Aantal synthetische huishoudens (ongeveer) en minimum per CBS-cel. Cellen met minder echte huishoudens dan
+# "minimaleCel" worden overgeslagen; hun gewicht gaat naar de rest van dezelfde samenstelling.
+aantal: 4000
+minimumPerCel: 3
+minimaleCel: 1000
+# Zaadje voor de toevalsgenerator: dezelfde waarde geeft altijd dezelfde populatie.
+zaad: 2026
 
-# Correctiefactoren waarmee het prototype op de begrotingstotalen uitkwam.
-correctie: { inkomen: 1.3, hypotheekrente: 0.55, kinderopvang: 0.75 }
+# AOW-leeftijd in 2026 (Rijksoverheid, AOW-leeftijd 2025–2031).
+aowLeeftijd: 67
 
-# Uitkeringen: inkomen tussen minimum en minimum + bereik. Het laagste deel (aandeelBijstand) is bijstand
-# (netto gekoppeld), de rest WW/WIA. Aanname fase 2; fase 3 kalibreert dit.
-uitkering: { minimum: 17500, bereik: 9000, aandeelBijstand: 0.5 }
-pensioenVerdelingPartners: 0.65
+inkomen:
+  # Mediaan bruto jaarinkomen van de hoofdverdiener tussen 40 en 55 jaar, en de verhouding per leeftijdsgroep.
+  mediaanHoofdverdiener: 64000
+  leeftijdsprofiel:
+    - { vanaf: 15, factor: 0.25 }
+    - { vanaf: 20, factor: 0.5 }
+    - { vanaf: 25, factor: 0.75 }
+    - { vanaf: 30, factor: 0.9 }
+    - { vanaf: 35, factor: 1.0 }
+    - { vanaf: 55, factor: 0.95 }
+    - { vanaf: 60, factor: 0.85 }
+  # Spreiding (sigma van de lognormale verdeling).
+  spreiding: 0.55
+  # Alleenstaanden en eenouders verdienen relatief minder dan de hoofdverdiener in een paar.
+  factorAlleenstaand: 0.8
+  factorEenouder: 0.65
+  # Kans dat de partner werkt, en het mediane inkomen van de partner als deel van dat van de hoofdverdiener.
+  partnerWerkt: 0.85
+  partnerAandeel: 0.65
+  # Samenhang tussen het inkomen van de hoofdverdiener en de partner (correlatie in de lognormale verdeling).
+  partnerCorrelatie: 0.4
+  # Kans op een uitkering in plaats van werk (hoofdverdiener), en het deel daarvan dat bijstand is.
+  uitkeringKans: { alleenstaand: 0.12, paar: 0.04, eenouder: 0.22 }
+  aandeelBijstand: 0.5
+  # Bruto uitkering per jaar: tussen minimum en maximum.
+  uitkering: { minimum: 17000, maximum: 30000 }
+
+pensioen:
+  # Aanvullend pensioen naast de AOW: mediaan en spreiding, per huishouden.
+  mediaanAlleenstaand: 12000
+  mediaanPaar: 21000
+  spreiding: 0.9
+  # Deel van het pensioen van een paar dat bij de hoofdverdiener hoort.
+  aandeelHoofd: 0.65
+
 woning:
-  wozPerBrutoInkomen: { werkend: 4.6, aow: 7 }
-  wozMinimum: 260000
-  wozMaximum: 2500000
-  hypotheekPerBrutoInkomen: 3.6
-  hypotheekMaximum: 700000
+  # Kans op een koopwoning: logistisch in leeftijd en inkomenspositie (0 = laagste, 1 = hoogste in de cel).
+  koop: { basis: -0.6, perJaarLeeftijd: 0.035, inkomen: 3.0, alleenstaand: -0.9, maxLeeftijdEffect: 55 }
+  # Van de huurders: kans op een corporatiewoning (anders particulier), dalend met het inkomen.
+  corporatie: { basis: 0.8, inkomen: -2.6 }
+  # Kale huur per maand: gelijkmatig tussen minimum en maximum.
+  huurCorporatie: { minimum: 450, maximum: 900 }
+  huurParticulier: { minimum: 750, maximum: 1600 }
+  # WOZ-waarde en hypotheek van eigenaren.
+  wozPerBrutoInkomen: 5.0
+  # Spreiding rond die waarde: ±30% (gelijkmatig).
+  wozSpreiding: 0.3
+  wozMinimum: 200000
+  wozMaximum: 2000000
+  hypotheekPerBrutoInkomen: 4.0
+  hypotheekMaximum: 800000
+  # Spreiding van de hypotheek rond die waarde: ±60% (gelijkmatig).
+  hypotheekSpreiding: 0.6
+  # Deel van de oorspronkelijke hypotheek dat over is: daalt met de leeftijd tot nul rond deze leeftijd.
+  hypotheekAfgelostOpLeeftijd: 75
   hypotheekrentePct: 3.4
-  aowHypotheekrente: 2600
-# Kale huur per maand = basis + aandeel × bruto jaarinkomen, met een maximum.
-huur: { basisPerMaand: 560, aandeelBrutoInkomen: 0.009, maximumPerMaand: 1300 }
-# Kinderopvang per kind (fase 2: zo gekozen dat de kosten per kind gelijk zijn aan het prototype,
-# 72 uur × € 11 × 12 × 0,75 ≈ € 7.125 per jaar). Fase 3 kalibreert dit op de uitgaven.
-kinderopvang: { soort: dagopvang, urenPerMaand: 72, uurprijs: 11.0, maxKinderen: 2 }
-# Leeftijden van kinderen (de eerste 1, 2 of 3 worden gebruikt). Aanname fase 2.
-kinderLeeftijden: { onder12: [3, 7, 10], vanaf12: [13, 15, 17] }
+
+kinderen:
+  # Leeftijd van het oudste kind ≈ leeftijd referentiepersoon − dit verschil, met een spreiding; volgende
+  # kinderen telkens "tussenruimte" jaar jonger.
+  leeftijdsverschil: 31
+  spreiding: 6
+  tussenruimte: 2.5
+  # Inkomen van meerderjarige thuiswonende kinderen. Tot "studieTotLeeftijd": een bijbaan (gelijkmatig tussen
+  # minimum en maximum). Daarna werkt een deel ("werkKans", lognormaal inkomen), de rest heeft een bijbaan.
+  inkomen:
+    studieTotLeeftijd: 21
+    bijbaan: { minimum: 1000, maximum: 12000 }
+    werkKans: 0.7
+    mediaanWerk: 30000
+    spreiding: 0.5
+
+kinderopvang:
+  # Kans op kinderopvang als alle ouders werken en er een kind jonger dan 13 is.
+  kans: 0.85
+  dagopvang: { totLeeftijd: 4, urenPerMaand: 80 }
+  buitenschoolse: { totLeeftijd: 13, urenPerMaand: 45 }
+  # Uurprijs als factor van de maximale uurprijs (gelijkmatig tussen de twee waarden).
+  uurprijsFactor: { minimum: 0.95, maximum: 1.15 }
+
+# Herweging: grenzen voor de gewichten ten opzichte van het startgewicht.
+herweging:
+  minimaleFactor: 0.2
+  maximaleFactor: 5
+  iteraties: 200

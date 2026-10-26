@@ -148,3 +148,60 @@ Oplosser vlaktaks: vrijstelling € 26.675 → € 26.257; tarieven × 0,815 →
 - **De populatie past niet bij de exacte regels.** Met de echte formules zou de synthetische populatie € 14,3 mld huurtoeslag en € 6,7 mld kindgebonden budget krijgen, tegen € 5,6 en € 3,6 mld in de begroting (schaalfactoren 0,39 en 0,54). Het prototype verborg dit door de formules te "kalibreren" op de totalen. De regels zijn nu goed (ze halen de officiële rekenvoorbeelden); de populatie heeft te veel huurders met een huur en inkomen die recht geven op toeslag, geen niet-gebruik, en mogelijk te veel gezinnen in de afbouwzone. Dit is precies het werk van fase 3 (herwegen naar CBS-marges, waaronder het aantal ontvangers per toeslag).
 - **Armoede daalt van 11,3% naar 6,9%.** Vooral bij AOW'ers (hogere AOW volgens de SVB, en de royalere huurtoeslag vanaf 2026) en bij huurders met lage inkomens. Omdat de toeslagen in de populatie te ruim uitvallen (zie hierboven), is dit cijfer te laag; het CBS-armoederisico ligt rond de 13–14%. **Tot fase 3 zijn de verdelingscijfers (armoede, Gini, decielen) niet betrouwbaar.**
 - De kalibratiedoelen zelf (zoals € 3,6 mld kindgebonden budget) komen nog uit het prototype en worden in fase 3 gecontroleerd tegen de Miljoenennota 2026.
+
+## Fase 3
+
+### D-021 Populatie: structuur van CBS, inhoud uit aannames, herwogen naar marges
+
+De populatie wordt offline gemaakt door `npm run kalibreer` (scripts/kalibreer.ts) en opgeslagen in `data/populatie/2026.json`; de site laadt alleen dat bestand.
+
+1. **Structuur uit CBS.** Het startpunt zijn de 136 cellen (leeftijd referentiepersoon × samenstelling) uit CBS 71486ned, 1 januari 2026. Elke cel met minstens 1.000 echte huishoudens krijgt synthetische huishoudens naar rato (in totaal 4.024). "Overig huishouden" (48.384, 0,6%) zit er niet in.
+2. **Inhoud uit aannames.** Inkomens (lognormaal, leeftijdsprofiel), pensioenen, woning (koop/corporatie/particulier, huur, WOZ, hypotheek), kinderleeftijden en kinderopvang volgen uit `data/populatie/spec-2026.yaml`. Dat zijn bewust aannames; ze hoeven alleen genoeg variatie te geven.
+3. **Herweging** met begrensde raking (Deville & Särndal 1992; `scripts/populatie/herweeg.ts`, met unit tests) naar 32 marges tegelijk: huishoudens per samenstelling en leeftijdsgroep (CBS), koop/corporatie (CBS 82900NED), ontvangers en uitgaven per toeslag (Dienst Toeslagen, raming 2026), betaalde hypotheekrente en huurwaarde eigen woning (CBS 84493NED) en de negen decielgrenzen van het besteedbaar huishoudinkomen (CBS 83934NED). Gewichten mogen hoogstens een factor 5 omhoog of omlaag.
+
+Resultaat (zie `docs/kalibratie-2026.md`): geconvergeerd in 5 iteraties; alle marges binnen 0,1%; mediane gewichtsfactor 0,91, 90% tussen 0,32 en 1,94. Schaalfactoren van de toeslagen 1,00 (eis 0,9–1,1); decielgrenzen binnen 0,2% van CBS (eis 5%).
+
+### D-022 Belasting wordt niet geschaald, wel gecontroleerd
+
+Voor box 1 alleen bestaat geen gepubliceerd totaal: de Miljoenennota noemt de loon- en inkomensheffing (€ 155,2 mld) voor alle boxen samen, en de raming voor box 3 schommelt tussen € 8,2 en 11,5 mld. Een schaalfactor op basis van een geschat box 1-totaal zou de scenario's een schijnzekerheid geven. Daarom: **schaalfactor belasting = 1**, en de opbrengst volgt uit de herwogen inkomensverdeling. Ter controle meldt het rapport de modelopbrengst (€ 152,0 mld) naast twee controlegetallen: 95% van wat huishoudens volgens CBS betalen aan belasting op inkomen en premies volksverzekeringen (alle boxen, geïndexeerd), en 105% van box 1 + box 2 volgens de Miljoenennota. Omdat box 2, box 3 en ondernemerswinst niet in het model zitten, is een uitkomst tussen die twee plausibel.
+
+### D-023 Meerderjarige thuiswonende kinderen
+
+CBS telt alle thuiswonende kinderen mee, ook volwassenen. In het model hadden die geen inkomen, waardoor gezinnen met volwassen kinderen arm leken en de herweging extreme gewichten nodig had (armoede 22%). Nu hebben kinderen vanaf 18 jaar (parameter `zorg.volwassenVanaf`) een eigen inkomen (bijbaan of werk, aannames in de spec), betalen ze eigen belasting en nominale premie, krijgen ze eigen zorgtoeslag, en telt hun inkomen mee in het rekeninkomen voor de huurtoeslag (onder 23 jaar boven de vrijstelling van € 6.218, bron: Berekening huurtoeslag 2026). Dienst Toeslagen telt zorgtoeslagontvangers per persoon; het model telt ze nu ook zo.
+
+### D-024 Equivalentieschaal OECD-gemodificeerd
+
+Kinderen vanaf 14 jaar tellen als volwassene (0,5), jongere kinderen als 0,3. Dat is de standaard OECD-gemodificeerde schaal; het prototype telde alle kinderen als 0,3. CBS gebruikt een eigen schaal, dus gestandaardiseerde inkomens zijn niet één op één vergelijkbaar met CBS-cijfers.
+
+### D-025 Hetzelfde inkomensbegrip als CBS bij het kalibreren
+
+CBS telt in het besteedbaar inkomen het voordeel van wonen in een eigen woning mee (huurwaarde, 2024: € 38,3 mld) en trekt de betaalde hypotheekrente af (€ 23,3 mld). Zonder die correctie moesten eigenaren in het model meer loon krijgen om op de CBS-decielgrenzen uit te komen, en betaalden ze te veel belasting (€ 159,8 mld). De kalibratie rekent daarom met: besteedbaar (model) − hypotheekrente + huurwaarde, met de huurwaarde evenredig aan de WOZ-waarde. **Alleen voor de kalibratie**: de uitkomsten op de site gebruiken het gewone besteedbaar inkomen van het model.
+
+### D-026 Kalibratiedoelen vervangen
+
+De doelen uit het prototype bleken deels onjuist. Nu: toeslagen volgens Dienst Toeslagen (raming 2026: zorgtoeslag € 6,3 mld, huurtoeslag € 5,6 mld, kindgebonden budget € 4,7 mld in plaats van 3,6, kinderopvangtoeslag € 5,7 mld in plaats van 6,6); hypotheekrente volgens CBS (€ 23,3 mld, 2024, niet geïndexeerd). Inkomensgrenzen van CBS 2024 zijn naar 2026 geïndexeerd met de cao-loonstijging marktsector (CPB MEV 2027: 5,3% en 4,3%, factor 1,0983).
+
+### D-027 Controle in CI
+
+`npm run kalibreer:controle` maakt de populatie opnieuw en vergelijkt die met het opgeslagen bestand. Verandert iemand de parameters, de doelen of de spec zonder opnieuw te kalibreren, dan faalt CI met de opdracht om `npm run kalibreer` te draaien.
+
+### D-028 Verschillen met fase 2 en het prototype
+
+| Scenario               | Saldo prototype | Saldo fase 2 | Saldo nu | Armoede prototype | Armoede nu | Gini nu |
+| ---------------------- | --------------- | ------------ | -------- | ----------------- | ---------- | ------- |
+| huidig                 | 0,0             | 0,0          | 0,0      | 11,3%             | 9,9%       | 0,227   |
+| vlaktaks-40            | 30,7            | 30,5         | 41,6     | 23,4%             | 20,1%      | 0,274   |
+| drie-schijven-35-40-45 | 20,8            | 20,3         | 29,4     | 22,7%             | 19,1%      | 0,274   |
+| zonder-huurtoeslag     | 5,6             | 5,6          | 5,6      | 14,9%             | 11,8%      | 0,236   |
+| zonder-hra             | 9,4             | 7,3          | 7,9      | 11,5%             | 10,3%      | 0,225   |
+| zonder-hra-en-forfait  | 5,5             | 6,0          | 6,9      | 11,5%             | 10,2%      | 0,226   |
+
+- **Vlaktaks en drie schijven leveren meer op** dan in het prototype. De posten verschuiven: belasting box 1 +7,9 (prototype −3,1) omdat de herwogen populatie meer inkomen heeft in de schijf die nu 40% gaat betalen; eigen woning +8,0 (prototype +5,5) door de forfaittabel, aftrekbeperking en de CBS-hypotheekrente; de netto-koppeling kost nu € 0,7 mld (prototype: € 2,2 mld besparing), omdat alleen AOW en bijstand gekoppeld zijn. Omdat de belasting niet meer geschaald wordt, zijn deze bedragen gevoeliger voor de inkomensverdeling bovenin, die niet direct gekalibreerd is (boven P90 volgt de verdeling uit de aannames).
+- **Armoede 9,9%** onder het huidige beleid. De Gini van 0,227 is waarschijnlijk te laag: inkomen uit vermogen, aanmerkelijk belang en onderneming zit niet in het model, en dat zit vooral bovenin.
+
+### D-029 Bekende beperkingen van de populatie
+
+- Geen ondernemers, dga's of vermogensinkomen (box 2/3); hun inkomen telt als loon.
+- Geen vermogen, dus de vermogenstoetsen van de toeslagen doen in de populatie niets.
+- De verdeling boven P90 en de verdeling binnen decielen volgen uit de aannames.
+- Niet-gebruik van toeslagen wordt niet apart gemodelleerd; de herweging vangt het grotendeels op via de ontvangersaantallen.

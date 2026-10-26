@@ -26,8 +26,13 @@ export interface Lid {
 export interface Huishouden {
   leden: Lid[];
   partners: boolean;
-  /** Leeftijden van de kinderen in het huishouden. */
+  /** Leeftijden van de kinderen in het huishouden (thuiswonend, elke leeftijd). */
   kinderen: number[];
+  /**
+   * Bruto jaarinkomen per kind, in dezelfde volgorde als `kinderen` (ontbreekt = 0). Meerderjarige kinderen
+   * betalen hun eigen belasting, krijgen hun eigen zorgtoeslag en betalen hun eigen nominale premie.
+   */
+  kindInkomens?: number[];
   /** Kale huur per maand; 0 bij een koopwoning. */
   huurPerMaand: number;
   hypotheekrente: number;
@@ -45,7 +50,10 @@ export interface Resultaat {
   /** Fiscaal voordeel van de eigen woning (positief = minder belasting); zit al in `belasting`. */
   eigenWoning: number;
   zvw: number;
+  /** Zorgtoeslag van het huishouden, inclusief die van meerderjarige kinderen. */
   zorgtoeslag: number;
+  /** Aantal personen of partnerparen in het huishouden dat zorgtoeslag krijgt (zoals Dienst Toeslagen telt). */
+  zorgtoeslagOntvangers: number;
   huurtoeslag: number;
   kgb: number;
   kot: number;
@@ -153,17 +161,39 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     zvw += zvwBijdrage(x, k.aow, p);
   });
 
-  // 4. Toeslagen, kinderbijslag en zorgpremie.
+  // 4. Meerderjarige kinderen: eigen inkomen, belasting, zorgtoeslag en premie. Hun inkomen telt mee in het
+  //    rekeninkomen voor de huurtoeslag (onder 23 jaar alleen boven de vrijstelling), niet in de andere toeslagen.
+  const volwassenVanaf = p.zorg.volwassenVanaf;
+  const kindK: PersoonKenmerken = { werkt: true, aow: false, alleenstaand: true, combinatiekorting: false };
+  let ztKinderen = 0;
+  let ztKinderenOntvangers = 0;
+  let meerderjarig = 0;
+  let rekeninkomen = toetsingsinkomen;
+  h.kinderen.forEach((leeftijd, i) => {
+    const y = h.kindInkomens?.[i] ?? 0;
+    if (leeftijd < volwassenVanaf) return;
+    meerderjarig++;
+    bruto += y;
+    belasting += belastingBox1(y, y, p, { ...kindK, werkt: y > 0 });
+    const z = zorgtoeslag(y, false, 0, p);
+    ztKinderen += z;
+    if (z > 0) ztKinderenOntvangers++;
+    rekeninkomen += leeftijd < 23 ? Math.max(0, y - p.toeslagen.huurtoeslag.inkomensvrijstellingKind) : y;
+  });
+
+  // 5. Toeslagen, kinderbijslag en zorgpremie.
   const volwassenen = h.partners ? 2 : 1;
   const aantalPersonen = volwassenen + h.kinderen.length;
-  const zt = zorgtoeslag(toetsingsinkomen, h.partners, h.vermogen, p);
-  const ht = huurtoeslag(toetsingsinkomen, h.huurPerMaand, aantalPersonen, h.partners, h.vermogen, p);
+  const ztOuders = zorgtoeslag(toetsingsinkomen, h.partners, h.vermogen, p);
+  const zt = ztOuders + ztKinderen;
+  const ht = huurtoeslag(rekeninkomen, h.huurPerMaand, aantalPersonen, h.partners, h.vermogen, p);
   const kg = kindgebondenBudget(toetsingsinkomen, h.kinderen, h.partners, h.vermogen, p);
   const ko = kinderopvangtoeslag(toetsingsinkomen, h.kinderopvang, p);
   const kb = berekenKinderbijslag(h.kinderen, p);
-  const zorgpremie = volwassenen * p.zorg.nominalePremiePerVolwassene;
+  const zorgpremie = (volwassenen + meerderjarig) * p.zorg.nominalePremiePerVolwassene;
   const toeslagen = zt + ht + kg + ko;
   const eq = p.methodiek.equivalentie;
+  const ouderKinderen = h.kinderen.filter((l) => l >= eq.kindVanafLeeftijd).length;
 
   return {
     bruto,
@@ -171,6 +201,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     eigenWoning: belastingZonderWoning - belasting,
     zvw,
     zorgtoeslag: zt,
+    zorgtoeslagOntvangers: (ztOuders > 0 ? 1 : 0) + ztKinderenOntvangers,
     huurtoeslag: ht,
     kgb: kg,
     kot: ko,
@@ -182,7 +213,10 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     besteedbaar: bruto - belasting - zvw + toeslagen + kb - zorgpremie,
     volwassenen,
     kinderen: h.kinderen.length,
-    equivalentie: 1 + eq.extraVolwassene * (volwassenen - 1) + eq.kind * h.kinderen.length,
+    equivalentie:
+      1 +
+      eq.extraVolwassene * (volwassenen - 1 + ouderKinderen) +
+      eq.kind * (h.kinderen.length - ouderKinderen),
   };
 }
 

@@ -26,7 +26,17 @@ Weet je een bedrag niet zeker? Laat de oude waarde staan en zet in de `bron`: `T
 
 ### 2. Kalibratiedoelen
 
-Kopieer `data/kalibratie/2026.yaml` naar `2027.yaml` en vul de begrotingstotalen uit de nieuwe Miljoenennota in (bijlagen, kerngegevens). Doe hetzelfde voor `data/populatie/spec-2026.yaml`.
+Kopieer `data/kalibratie/<jaar>.yaml` en `data/populatie/spec-<jaar>.yaml` naar het nieuwe jaar en werk de doelen bij. Elke sectie noemt haar bron:
+
+| Doel                                               | Waar te vinden                                                    |
+| -------------------------------------------------- | ----------------------------------------------------------------- |
+| Huishoudens per samenstelling en leeftijd          | CBS StatLine 71486ned (1 januari van het jaar)                    |
+| Koop, corporatie, particuliere huur                | CBS StatLine 82900NED                                             |
+| Decielgrenzen besteedbaar inkomen                  | CBS StatLine 83934NED (nieuwste jaar)                             |
+| Huurwaarde eigen woning, hypotheekrente, belasting | CBS StatLine 84493NED (nieuwste jaar)                             |
+| Indexatie naar het modeljaar                       | CPB, kerngegevenstabel van de nieuwste MEV (cao-loon marktsector) |
+| Ontvangers en uitgaven per toeslag                 | Dienst Toeslagen, Aantallen en bedragen (overtoeslagen.nl)        |
+| Controle belastingopbrengst                        | Miljoenennota, bijlage belasting- en premieontvangsten            |
 
 ### 3. Controleren
 
@@ -45,7 +55,7 @@ Dat betekent: in de sectie `toeslagen` → `zorgtoeslag` staat een sleutel `drem
 ### 4. Kalibreren en testen
 
 ```
-npm run kalibreer    # vanaf fase 3
+npm run kalibreer    # maakt de populatie en het kalibratierapport
 npm test
 npm run golden       # legt de nieuwe kerncijfers vast
 ```

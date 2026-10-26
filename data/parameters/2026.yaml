@@ -123,6 +123,8 @@ toeslagen:
     # Inkomensafhankelijke correctie: afbouw% × (rekeninkomen − inkomensijkpunt), per jaar.
     inkomensijkpunt: { eenpersoons: 23425, meerpersoons: 31500 }
     afbouw: { eenpersoons: 27, meerpersoons: 22 }
+    # Van inwonende kinderen jonger dan 23 telt alleen het inkomen boven dit bedrag mee in het rekeninkomen.
+    inkomensvrijstellingKind: 6218
     maxVermogen: { alleenstaand: 38479, partners: 76958 }
   kindgebondenBudget:
     bron: "Dienst Toeslagen, Berekening kindgebonden budget 2026 (https://download.belastingdienst.nl/toeslagen/docs/berekening_kindgebonden_budget_tg0811z61fd.pdf)"
@@ -234,6 +236,8 @@ zorg:
   # Voor werknemers en uitkeringen betaalt de werkgever of uitkeringsinstantie; dat valt buiten het model.
   zvwBijdrage: 4.85
   zvwMaximumInkomen: 79409
+  # Vanaf deze leeftijd betaalt iemand zelf de nominale premie en kan diegene zorgtoeslag krijgen (Zvw).
+  volwassenVanaf: 18
 
 kinderbijslag:
   bron: "SVB, Bedragen kinderbijslag 2026 (https://www.svb.nl/nl/kinderbijslag/bedragen-betaaldagen/bedragen-kinderbijslag)"
@@ -251,8 +255,9 @@ gedrag:
 
 methodiek:
   bron: "Modelkeuze, zoals in het prototype."
-  # Equivalentieschaal: eerste volwassene telt als 1, elke volgende volwassene en elk kind zoveel extra.
-  equivalentie: { extraVolwassene: 0.5, kind: 0.3 }
+  # Equivalentieschaal (OECD-gemodificeerd): eerste volwassene telt als 1, elke volgende persoon vanaf
+  # "kindVanafLeeftijd" als extraVolwassene, jongere kinderen als kind.
+  equivalentie: { extraVolwassene: 0.5, kind: 0.3, kindVanafLeeftijd: 14 }
   # Armoederisicogrens als percentage van het mediane gestandaardiseerde besteedbaar inkomen.
   armoedegrens: 60
   # Grenzen (in procent verandering van het besteedbaar inkomen) voor de vijf klassen winnaars en verliezers:

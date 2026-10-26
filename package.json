@@ -20,11 +20,13 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc -p packages/engine/tsconfig.json && tsc -p scripts/tsconfig.json && npm run check -w site",
-    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run valideer && npm test && npm run build",
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run valideer && npm run kalibreer:controle && npm test && npm run build",
     "valideer": "tsx scripts/valideer.ts",
     "golden:prototype": "node scripts/prototype-golden.cjs",
     "golden": "tsx scripts/golden.ts",
-    "vergelijk": "tsx scripts/vergelijk-prototype.ts"
+    "vergelijk": "tsx scripts/vergelijk-prototype.ts",
+    "kalibreer": "tsx scripts/kalibreer.ts",
+    "kalibreer:controle": "tsx scripts/kalibreer.ts --controle"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

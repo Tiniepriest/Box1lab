@@ -1,19 +1,18 @@
 import { describe, expect, it } from "vitest";
 import {
   berekenHuishouden,
-  genereerPopulatie,
   inkomenscurve,
   maakBasis,
   pasToe,
   simuleer,
   type Huishouden,
 } from "../src/index.ts";
-import { laadKalibratie, laadParameters, laadPopulatieSpec } from "../src/node/index.ts";
+import { laadKalibratie, laadParameters, laadPopulatie } from "../src/node/index.ts";
 
 /* Eigenschapstests (HANDOFF §5.3). */
 
 const params = laadParameters(2026);
-const pop = genereerPopulatie(laadPopulatieSpec(2026), params);
+const pop = laadPopulatie(2026).huishoudens;
 const basis = maakBasis(params, pop, laadKalibratie(2026));
 
 describe("huidig beleid als scenario", () => {

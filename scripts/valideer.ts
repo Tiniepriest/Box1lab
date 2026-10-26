@@ -10,7 +10,7 @@ import {
   DATA_MAP,
   laadKalibratie,
   laadParameters,
-  laadPopulatieSpec,
+  laadPopulatie,
   laadPresets,
   laadVoorbeelden,
 } from "@box1lab/engine/node";
@@ -44,7 +44,7 @@ console.log("Databestanden controleren:");
 for (const jaar of jaren) {
   controleer(`data/parameters/${jaar}.yaml`, () => laadParameters(jaar));
   controleer(`data/kalibratie/${jaar}.yaml`, () => laadKalibratie(jaar));
-  controleer(`data/populatie/spec-${jaar}.yaml`, () => laadPopulatieSpec(jaar));
+  controleer(`data/populatie/${jaar}.json`, () => laadPopulatie(jaar).huishoudens.length);
 }
 const laatste = Math.max(...jaren);
 controleer(`data/presets/ (tegen parameters ${laatste})`, () => laadPresets(laadParameters(laatste)));
