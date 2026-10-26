@@ -4,7 +4,7 @@
  */
 
 /** Versie van het rekenmodel. Verhoog bij elke inhoudelijke wijziging van de rekenregels. */
-export const MODEL_VERSIE = "0.1.0";
+export const MODEL_VERSIE = "0.2.0";
 
 export * from "./parameters/schema.ts";
 export * from "./parameters/wijzig.ts";
@@ -17,6 +17,8 @@ export * from "./regels/toeslagen/huurtoeslag.ts";
 export * from "./regels/toeslagen/kgb.ts";
 export * from "./regels/toeslagen/kot.ts";
 export * from "./regels/uitkeringen.ts";
+export * from "./regels/kinderbijslag.ts";
+export * from "./regels/zorg.ts";
 export * from "./huishouden.ts";
 export * from "./populatie/genereer.ts";
 export * from "./metrics/armoede.ts";
@@ -28,3 +30,4 @@ export * from "./metrics/winnaars.ts";
 export * from "./simulatie.ts";
 export * from "./oplosser.ts";
 export * from "./scenario/preset.ts";
+export * from "./voorbeelden.ts";

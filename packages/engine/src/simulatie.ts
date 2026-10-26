@@ -16,6 +16,8 @@ export const POSTEN = [
   { id: "huurtoeslag", label: "Huurtoeslag" },
   { id: "kgb", label: "Kindgebonden budget" },
   { id: "kot", label: "Kinderopvangtoeslag" },
+  { id: "kinderbijslag", label: "Kinderbijslag" },
+  { id: "zvw", label: "Inkomensafhankelijke bijdrage Zvw (AOW'ers)" },
   { id: "uitkeringen", label: "Uitkeringen en AOW (netto-koppeling)" },
 ] as const;
 
@@ -23,8 +25,12 @@ export type PostId = (typeof POSTEN)[number]["id"];
 
 /** Totalen over de populatie. Geldbedragen in miljard euro per jaar. */
 export interface Totalen {
+  /** Box 1-belasting na het effect van de eigen woning. */
   belasting: number;
+  /** Belastingvoordeel van de eigen woning (zit al in belasting). */
   eigenWoning: number;
+  zvw: number;
+  kinderbijslag: number;
   zorgtoeslag: number;
   huurtoeslag: number;
   kgb: number;
@@ -50,6 +56,8 @@ export function totalen(
   const t: Totalen = {
     belasting: 0,
     eigenWoning: 0,
+    zvw: 0,
+    kinderbijslag: 0,
     zorgtoeslag: 0,
     huurtoeslag: 0,
     kgb: 0,
@@ -64,6 +72,8 @@ export function totalen(
     const w = h.gewicht;
     t.belasting += r.belasting * w;
     t.eigenWoning += r.eigenWoning * w;
+    t.zvw += r.zvw * w;
+    t.kinderbijslag += r.kinderbijslag * w;
     t.zorgtoeslag += r.zorgtoeslag * w;
     t.huurtoeslag += r.huurtoeslag * w;
     t.kgb += r.kgb * w;
@@ -76,6 +86,8 @@ export function totalen(
   for (const k of [
     "belasting",
     "eigenWoning",
+    "zvw",
+    "kinderbijslag",
     "zorgtoeslag",
     "huurtoeslag",
     "kgb",
@@ -114,7 +126,7 @@ export function maakBasis(
   const t = totalen(resultaten, populatie);
   const d = kalibratie.doelen;
   const schaal: Schaalfactoren = {
-    ib: d.ibNaHra.waardeMld / (t.belasting - t.eigenWoning),
+    ib: d.ibNaHra.waardeMld / t.belasting,
     zorgtoeslag: d.zorgtoeslag.waardeMld / t.zorgtoeslag,
     huurtoeslag: d.huurtoeslag.waardeMld / t.huurtoeslag,
     kgb: d.kindgebondenBudget.waardeMld / t.kgb,
@@ -174,13 +186,15 @@ export function simuleer(basis: Basis, scenario: Parameters): Uitkomst {
   const overig = scenario.overigeAftrekposten;
 
   const posten: Record<PostId, number> = {
-    box1: (t.belasting - bt.belasting) * schaal.ib,
+    box1: (t.belasting + t.eigenWoning - (bt.belasting + bt.eigenWoning)) * schaal.ib,
     eigenWoning: (bt.eigenWoning - t.eigenWoning) * schaal.ib,
     overigeAftrek: overig.budgetMld * (1 - overig.niveau / 100),
     zorgtoeslag: (bt.zorgtoeslag - t.zorgtoeslag) * schaal.zorgtoeslag,
     huurtoeslag: (bt.huurtoeslag - t.huurtoeslag) * schaal.huurtoeslag,
     kgb: (bt.kgb - t.kgb) * schaal.kgb,
     kot: (bt.kot - t.kot) * schaal.kot,
+    kinderbijslag: bt.kinderbijslag - t.kinderbijslag,
+    zvw: t.zvw - bt.zvw,
     uitkeringen: -t.uitkeringKosten * schaal.ib,
   };
 

@@ -77,7 +77,7 @@ describe("wijzigingen", () => {
       { parameter: "box1.schijven.2.tarief", maal: 2 },
     ]);
     expect(p.box1.vrijstelling).toBe(10000);
-    expect(p.toeslagen.zorgtoeslag.drempelinkomen).toBe(30000);
+    expect(p.toeslagen.zorgtoeslag.drempelinkomen).toBe(30736);
     expect(p.box1.schijven[2]!.tarief).toBe(99);
   });
 

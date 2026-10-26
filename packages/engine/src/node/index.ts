@@ -7,10 +7,12 @@ import {
   valideerParameters,
   valideerPopulatieSpec,
   valideerPreset,
+  valideerVoorbeelden,
   type Kalibratie,
   type Parameters,
   type PopulatieSpec,
   type Preset,
+  type Voorbeelden,
 } from "../index.ts";
 
 /*
@@ -47,4 +49,8 @@ export function laadPresets(params: Parameters): Preset[] {
       return preset;
     })
     .sort((a, b) => a.volgorde - b.volgorde);
+}
+
+export function laadVoorbeelden(): Voorbeelden {
+  return valideerVoorbeelden(lees("voorbeelden/huishoudens.yaml"), "data/voorbeelden/huishoudens.yaml");
 }

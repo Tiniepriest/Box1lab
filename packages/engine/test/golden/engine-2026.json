@@ -1,0 +1,540 @@
+{
+ "jaar": 2026,
+ "toelichting": "Gegenereerd door `npm run golden`. Niet met de hand bewerken.",
+ "kalibratie": {
+  "modelMld": {
+   "ibNaHra": 165.9189,
+   "hypotheekrente": 23.6839,
+   "zorgtoeslag": 5.2554,
+   "huurtoeslag": 14.3171,
+   "kindgebondenBudget": 6.7262,
+   "kinderopvangtoeslag": 6.5262
+  },
+  "schaal": {
+   "ib": 0.9945,
+   "zorgtoeslag": 1.2178,
+   "huurtoeslag": 0.3911,
+   "kgb": 0.5352,
+   "kot": 1.0113
+  },
+  "armoedegrens": 21650.25,
+  "armoede": 6.8766,
+  "gini": 0.25452
+ },
+ "scenarios": [
+  {
+   "id": "huidig",
+   "saldoMld": 0,
+   "posten": {
+    "box1": 0,
+    "eigenWoning": 0,
+    "overigeAftrek": 0,
+    "zorgtoeslag": 0,
+    "huurtoeslag": 0,
+    "kgb": 0,
+    "kot": 0,
+    "kinderbijslag": 0,
+    "zvw": 0,
+    "uitkeringen": 0
+   },
+   "armoede": 6.8766,
+   "armoedeKinderen": 7.2881,
+   "gini": 0.25452,
+   "decielenRelatief": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "winnaars": [
+    0,
+    0,
+    100,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "vlaktaks-40",
+   "saldoMld": 30.4618,
+   "posten": {
+    "box1": -1.0446,
+    "eigenWoning": 5.796,
+    "overigeAftrek": 4,
+    "zorgtoeslag": 6.4,
+    "huurtoeslag": 5.6,
+    "kgb": 3.6,
+    "kot": 6.6,
+    "kinderbijslag": 0,
+    "zvw": 0.1015,
+    "uitkeringen": -0.591
+   },
+   "armoede": 25.4815,
+   "armoedeKinderen": 24.9886,
+   "gini": 0.32781,
+   "decielenRelatief": [
+    -33.084,
+    -18.411,
+    -19.778,
+    -20.153,
+    -14.402,
+    -13.014,
+    -8.451,
+    -4.635,
+    0.5,
+    8.316
+   ],
+   "winnaars": [
+    68.568,
+    10.064,
+    4.982,
+    6.708,
+    9.678
+   ]
+  },
+  {
+   "id": "drie-schijven-35-40-45",
+   "saldoMld": 20.2725,
+   "posten": {
+    "box1": -11.6236,
+    "eigenWoning": 5.796,
+    "overigeAftrek": 4,
+    "zorgtoeslag": 6.4,
+    "huurtoeslag": 5.6,
+    "kgb": 3.6,
+    "kot": 6.6,
+    "kinderbijslag": 0,
+    "zvw": 0.082,
+    "uitkeringen": -0.1819
+   },
+   "armoede": 23.9706,
+   "armoedeKinderen": 23.138,
+   "gini": 0.3266,
+   "decielenRelatief": [
+    -32.326,
+    -17.436,
+    -18.387,
+    -18.188,
+    -11.623,
+    -9.956,
+    -5.375,
+    -1.613,
+    3.17,
+    9.409
+   ],
+   "winnaars": [
+    58.754,
+    12.058,
+    5.658,
+    9.938,
+    13.592
+   ]
+  },
+  {
+   "id": "zonder-huurtoeslag",
+   "saldoMld": 5.6,
+   "posten": {
+    "box1": 0,
+    "eigenWoning": 0,
+    "overigeAftrek": 0,
+    "zorgtoeslag": 0,
+    "huurtoeslag": 5.6,
+    "kgb": 0,
+    "kot": 0,
+    "kinderbijslag": 0,
+    "zvw": 0,
+    "uitkeringen": 0
+   },
+   "armoede": 14.4518,
+   "armoedeKinderen": 12.0973,
+   "gini": 0.27742,
+   "decielenRelatief": [
+    -19.167,
+    -11.079,
+    -8.436,
+    -6.69,
+    -2.353,
+    -0.408,
+    0,
+    0,
+    0,
+    0
+   ],
+   "winnaars": [
+    26.272,
+    3.505,
+    70.224,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "zonder-hra",
+   "saldoMld": 7.3124,
+   "posten": {
+    "box1": 0,
+    "eigenWoning": 7.0875,
+    "overigeAftrek": 0,
+    "zorgtoeslag": 0.0484,
+    "huurtoeslag": 0,
+    "kgb": 0.0984,
+    "kot": 0.0781,
+    "kinderbijslag": 0,
+    "zvw": 0,
+    "uitkeringen": 0
+   },
+   "armoede": 7.395,
+   "armoedeKinderen": 8.4019,
+   "gini": 0.25074,
+   "decielenRelatief": [
+    -0.224,
+    -0.271,
+    -0.356,
+    -0.401,
+    -0.832,
+    -1.648,
+    -2.189,
+    -2.379,
+    -2.431,
+    -1.923
+   ],
+   "winnaars": [
+    0,
+    54.607,
+    45.393,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "zonder-hra-en-forfait",
+   "saldoMld": 5.975,
+   "posten": {
+    "box1": 0,
+    "eigenWoning": 5.796,
+    "overigeAftrek": 0,
+    "zorgtoeslag": 0.0187,
+    "huurtoeslag": 0,
+    "kgb": 0.0866,
+    "kot": 0.0737,
+    "kinderbijslag": 0,
+    "zvw": 0,
+    "uitkeringen": 0
+   },
+   "armoede": 7.395,
+   "armoedeKinderen": 8.4019,
+   "gini": 0.25162,
+   "decielenRelatief": [
+    -0.194,
+    -0.192,
+    -0.248,
+    -0.309,
+    -0.679,
+    -1.385,
+    -1.9,
+    -2.071,
+    -2.092,
+    -1.398
+   ],
+   "winnaars": [
+    0,
+    52.938,
+    46.974,
+    0.089,
+    0
+   ]
+  }
+ ],
+ "voorbeelden": [
+  {
+   "id": "p10",
+   "scenarios": {
+    "huidig": {
+     "belasting": 4035,
+     "toeslagen": 6951.71,
+     "besteedbaar": 21032.71
+    },
+    "vlaktaks-40": {
+     "belasting": 0,
+     "toeslagen": 0,
+     "besteedbaar": 14081
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 0,
+     "toeslagen": 0,
+     "besteedbaar": 14081
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 4035,
+     "toeslagen": 1550.45,
+     "besteedbaar": 15631.45
+    },
+    "zonder-hra": {
+     "belasting": 4035,
+     "toeslagen": 6951.71,
+     "besteedbaar": 21032.71
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 4035,
+     "toeslagen": 6951.71,
+     "besteedbaar": 21032.71
+    }
+   }
+  },
+  {
+   "id": "p20",
+   "scenarios": {
+    "huidig": {
+     "belasting": 299.5,
+     "toeslagen": 5857.4,
+     "besteedbaar": 27461.4
+    },
+    "vlaktaks-40": {
+     "belasting": 3614.86,
+     "toeslagen": 0,
+     "besteedbaar": 20226.99
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 3025.89,
+     "toeslagen": 0,
+     "besteedbaar": 20443.21
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 299.5,
+     "toeslagen": 1550.45,
+     "besteedbaar": 23154.45
+    },
+    "zonder-hra": {
+     "belasting": 299.5,
+     "toeslagen": 5857.4,
+     "besteedbaar": 27461.4
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 299.5,
+     "toeslagen": 5857.4,
+     "besteedbaar": 27461.4
+    }
+   }
+  },
+  {
+   "id": "p30",
+   "scenarios": {
+    "huidig": {
+     "belasting": 3049.83,
+     "toeslagen": 4805.61,
+     "besteedbaar": 31871.78
+    },
+    "vlaktaks-40": {
+     "belasting": 5600,
+     "toeslagen": 0,
+     "besteedbaar": 24516
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 4900,
+     "toeslagen": 0,
+     "besteedbaar": 25216
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 3049.83,
+     "toeslagen": 1239.6,
+     "besteedbaar": 28305.77
+    },
+    "zonder-hra": {
+     "belasting": 3049.83,
+     "toeslagen": 4805.61,
+     "besteedbaar": 31871.78
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 3049.83,
+     "toeslagen": 4805.61,
+     "besteedbaar": 31871.78
+    }
+   }
+  },
+  {
+   "id": "p50",
+   "scenarios": {
+    "huidig": {
+     "belasting": 6509.5,
+     "toeslagen": 3392.32,
+     "besteedbaar": 65743.05
+    },
+    "vlaktaks-40": {
+     "belasting": 13600,
+     "toeslagen": 0,
+     "besteedbaar": 55260.24
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 11900,
+     "toeslagen": 0,
+     "besteedbaar": 56960.24
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 6509.5,
+     "toeslagen": 3392.32,
+     "besteedbaar": 65743.05
+    },
+    "zonder-hra": {
+     "belasting": 10023.44,
+     "toeslagen": 2784.78,
+     "besteedbaar": 61621.58
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 9850.31,
+     "toeslagen": 2814.72,
+     "besteedbaar": 61824.65
+    }
+   }
+  },
+  {
+   "id": "p75",
+   "scenarios": {
+    "huidig": {
+     "belasting": 15664.02,
+     "toeslagen": 1161.72,
+     "besteedbaar": 86357.94
+    },
+    "vlaktaks-40": {
+     "belasting": 26400,
+     "toeslagen": 0,
+     "besteedbaar": 74460.24
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 23700,
+     "toeslagen": 0,
+     "besteedbaar": 77160.24
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 15664.02,
+     "toeslagen": 1161.72,
+     "besteedbaar": 86357.94
+    },
+    "zonder-hra": {
+     "belasting": 20386.13,
+     "toeslagen": 345.3,
+     "besteedbaar": 80819.41
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 20169.72,
+     "toeslagen": 382.72,
+     "besteedbaar": 81073.24
+    }
+   }
+  },
+  {
+   "id": "p90",
+   "scenarios": {
+    "huidig": {
+     "belasting": 54017.07,
+     "toeslagen": 0,
+     "besteedbaar": 112214.93
+    },
+    "vlaktaks-40": {
+     "belasting": 53600,
+     "toeslagen": 0,
+     "besteedbaar": 112632
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 50400,
+     "toeslagen": 0,
+     "besteedbaar": 115832
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 54017.07,
+     "toeslagen": 0,
+     "besteedbaar": 112214.93
+    },
+    "zonder-hra": {
+     "belasting": 59113.4,
+     "toeslagen": 0,
+     "besteedbaar": 107118.6
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 58796.58,
+     "toeslagen": 0,
+     "besteedbaar": 107435.42
+    }
+   }
+  },
+  {
+   "id": "p99",
+   "scenarios": {
+    "huidig": {
+     "belasting": 168107.34,
+     "toeslagen": 0,
+     "besteedbaar": 228124.66
+    },
+    "vlaktaks-40": {
+     "belasting": 145600,
+     "toeslagen": 0,
+     "besteedbaar": 250632
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 152400,
+     "toeslagen": 0,
+     "besteedbaar": 243832
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 168107.34,
+     "toeslagen": 0,
+     "besteedbaar": 228124.66
+    },
+    "zonder-hra": {
+     "belasting": 174626.71,
+     "toeslagen": 0,
+     "besteedbaar": 221605.29
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 174041.82,
+     "toeslagen": 0,
+     "besteedbaar": 222190.18
+    }
+   }
+  },
+  {
+   "id": "jij",
+   "scenarios": {
+    "huidig": {
+     "belasting": 8386.29,
+     "toeslagen": 7056,
+     "besteedbaar": 71088.65
+    },
+    "vlaktaks-40": {
+     "belasting": 15600,
+     "toeslagen": 0,
+     "besteedbaar": 56818.94
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 13650,
+     "toeslagen": 0,
+     "besteedbaar": 58768.94
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 8386.29,
+     "toeslagen": 7056,
+     "besteedbaar": 71088.65
+    },
+    "zonder-hra": {
+     "belasting": 8386.29,
+     "toeslagen": 7056,
+     "besteedbaar": 71088.65
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 8386.29,
+     "toeslagen": 7056,
+     "besteedbaar": 71088.65
+    }
+   }
+  }
+ ],
+ "oplosser": {
+  "vlaktaksVrijstelling": 26257,
+  "vlaktaksTariefFactor": 0.8184
+ }
+}

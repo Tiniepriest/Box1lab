@@ -4,4 +4,4 @@ omschrijving: "Het huidige stelsel, maar de eigen woning valt helemaal buiten de
 volgorde: 50
 wijzigingen:
   - { parameter: eigenWoning.aftrekMaxTarief, zet: 0 }
-  - { parameter: eigenWoning.forfait, zet: 0 }
+  - { parameter: eigenWoning.forfait.niveau, zet: 0 }

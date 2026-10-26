@@ -19,6 +19,8 @@ export interface PersoonKenmerken {
   werkt: boolean;
   /** Heeft de AOW-leeftijd. */
   aow: boolean;
+  /** Heeft geen (fiscale) partner; voor de alleenstaande-ouderenkorting. */
+  alleenstaand: boolean;
   /** Krijgt de inkomensafhankelijke combinatiekorting (werkende ouder met jong kind). */
   combinatiekorting: boolean;
 }
@@ -27,19 +29,45 @@ export interface Kortingen {
   algemeen: number;
   arbeid: number;
   ouderen: number;
+  alleenstaandeOuderen: number;
   combinatie: number;
   totaal: number;
 }
 
-/** Alle heffingskortingen van één persoon, inclusief de niveau-knop per korting. */
-export function heffingskortingen(inkomen: number, p: Parameters, k: PersoonKenmerken): Kortingen {
+/**
+ * Alle heffingskortingen van één persoon, inclusief de niveau-knop per korting.
+ *
+ * @param inkomen verzamelinkomen (bepaalt algemene heffingskorting en ouderenkorting)
+ * @param arbeidsinkomen inkomen uit werk (bepaalt arbeidskorting en combinatiekorting)
+ */
+export function heffingskortingen(
+  inkomen: number,
+  arbeidsinkomen: number,
+  p: Parameters,
+  k: PersoonKenmerken,
+): Kortingen {
   const h = p.heffingskortingen;
+  const n = (niveau: number) => niveau / 100;
   const algemeen =
-    staffelWaarde(k.aow ? h.algemeen.staffelAow : h.algemeen.staffel, inkomen) * (h.algemeen.niveau / 100);
-  const arbeid = k.werkt && !k.aow ? staffelWaarde(h.arbeid.staffel, inkomen) * (h.arbeid.niveau / 100) : 0;
-  const ouderen = k.aow ? staffelWaarde(h.ouderen.staffel, inkomen) * (h.ouderen.niveau / 100) : 0;
+    staffelWaarde(k.aow ? h.algemeen.staffelAow : h.algemeen.staffel, inkomen) * n(h.algemeen.niveau);
+  const arbeid =
+    k.werkt && arbeidsinkomen > 0
+      ? staffelWaarde(k.aow ? h.arbeid.staffelAow : h.arbeid.staffel, arbeidsinkomen) * n(h.arbeid.niveau)
+      : 0;
+  const ouderen = k.aow ? staffelWaarde(h.ouderen.staffel, inkomen) * n(h.ouderen.niveau) : 0;
+  const alleenstaandeOuderen =
+    k.aow && k.alleenstaand ? h.alleenstaandeOuderen.bedrag * n(h.alleenstaandeOuderen.niveau) : 0;
+  const c = h.combinatie;
   const combinatie = k.combinatiekorting
-    ? staffelWaarde(h.combinatie.staffel, inkomen, h.combinatie.maximum) * (h.combinatie.niveau / 100)
+    ? staffelWaarde(k.aow ? c.staffelAow : c.staffel, arbeidsinkomen, k.aow ? c.maximumAow : c.maximum) *
+      n(c.niveau)
     : 0;
-  return { algemeen, arbeid, ouderen, combinatie, totaal: algemeen + arbeid + ouderen + combinatie };
+  return {
+    algemeen,
+    arbeid,
+    ouderen,
+    alleenstaandeOuderen,
+    combinatie,
+    totaal: algemeen + arbeid + ouderen + alleenstaandeOuderen + combinatie,
+  };
 }

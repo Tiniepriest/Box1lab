@@ -1,9 +1,22 @@
 import type { Parameters } from "../../parameters/schema.ts";
 
-/** Zorgtoeslag per jaar. Fase 1: vereenvoudigde formule uit het prototype. */
-export function zorgtoeslag(toetsingsinkomen: number, partners: boolean, p: Parameters): number {
+/**
+ * Zorgtoeslag per jaar: standaardpremie (twee keer bij partners) min normpremie.
+ * Normpremie = drempelpercentage × drempelinkomen + afbouwpercentage × (toetsingsinkomen − drempelinkomen).
+ * Bron en rekenvoorbeelden: Dienst Toeslagen, Berekening zorgtoeslag 2026.
+ */
+export function zorgtoeslag(
+  toetsingsinkomen: number,
+  partners: boolean,
+  vermogen: number,
+  p: Parameters,
+): number {
   const z = p.toeslagen.zorgtoeslag;
-  const max = partners ? z.maximum.partners : z.maximum.alleenstaand;
-  const afbouw = (z.afbouw / 100) * Math.max(0, toetsingsinkomen - z.drempelinkomen);
-  return Math.max(0, max - afbouw) * (z.niveau / 100);
+  const soort = partners ? "partners" : "alleenstaand";
+  if (toetsingsinkomen > z.maxToetsingsinkomen[soort] || vermogen > z.maxVermogen[soort]) return 0;
+  const normpremie =
+    (z.normpremieDrempel[soort] / 100) * z.drempelinkomen +
+    (z.normpremieAfbouw / 100) * Math.max(0, toetsingsinkomen - z.drempelinkomen);
+  const standaard = z.standaardpremie * (partners ? 2 : 1);
+  return Math.max(0, standaard - normpremie) * (z.niveau / 100);
 }
