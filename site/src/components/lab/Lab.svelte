@@ -284,7 +284,7 @@
         sub: v.omschrijving,
         h: maakHuishouden(v.invoer, params),
       }));
-    if (jij) lijst.push({ label: "Jij", sub: "Jouw opgeslagen situatie", h: jij });
+    if (jij) lijst.push({ label: "Jij", sub: "Jouw situatie", h: jij });
     return lijst.map((x) => {
       const a = berekenHuishouden(x.h, params);
       const b = toestand.p === params ? a : berekenHuishouden(x.h, toestand.p, params);
@@ -657,8 +657,8 @@
         <Figuur
           titel="Wat betekent het voor deze huishoudens?"
           uitleg={jij
-            ? "Verandering van het besteedbaar inkomen per jaar. De onderste rij is jouw opgeslagen situatie."
-            : "Verandering van het besteedbaar inkomen per jaar. Sla op de pagina Jouw situatie je eigen situatie op om die hier te zien."}
+            ? "Verandering van het besteedbaar inkomen per jaar. De onderste rij is jouw situatie."
+            : "Verandering van het besteedbaar inkomen per jaar. Vul op de pagina Jouw situatie je eigen situatie in om die hier te zien."}
         >
           {#snippet legenda()}
             <span><i class="legenda-blok" style="background: var(--gain)"></i>erop vooruit</span>

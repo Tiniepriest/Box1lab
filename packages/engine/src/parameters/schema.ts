@@ -43,6 +43,8 @@ const aowBedragen = z.strictObject({
   vakantiegeldPerMaand: nietNegatief,
 });
 
+const halfjaren = z.strictObject({ eersteHalfjaar: nietNegatief, tweedeHalfjaar: nietNegatief });
+
 export const parametersSchema = z.strictObject({
   jaar: z.number().int().min(2000).max(2100),
 
@@ -90,7 +92,8 @@ export const parametersSchema = z.strictObject({
     hillenAftrek: pct,
   }),
 
-  overigeAftrekposten: z.strictObject({ bron, budgetMld: nietNegatief, niveau }),
+  /** Aftrekposten die niet per huishouden worden berekend: budgettair belang per post, in miljard euro. */
+  overigeAftrekposten: z.strictObject({ bron, posten: z.record(z.string(), nietNegatief), niveau }),
 
   toeslagen: z.strictObject({
     zorgtoeslag: z.strictObject({
@@ -156,6 +159,31 @@ export const parametersSchema = z.strictObject({
       bijstand: z.boolean(),
       werknemersverzekering: z.boolean(),
     }),
+  }),
+
+  bijstand: z.strictObject({
+    bron,
+    /** Netto norm per maand inclusief vakantiegeld, voor 21 jaar tot de AOW-leeftijd. */
+    alleenstaand: halfjaren,
+    gehuwden: halfjaren,
+    minimumLeeftijd: z.number().int().positive(),
+  }),
+
+  ondernemers: z.strictObject({
+    bron,
+    zelfstandigenaftrek: nietNegatief,
+    startersaftrek: nietNegatief,
+    mkbWinstvrijstelling: pct,
+    /** Uren per jaar in de onderneming die nodig zijn voor de ondernemersaftrek. */
+    urencriterium: nietNegatief,
+  }),
+
+  pensioenpremie: z.strictObject({
+    bron,
+    /** Standaard werknemersdeel van de pensioenpremie, in procent van het loon tussen franchise en aftoppingsgrens. */
+    werknemer: pct,
+    franchise: nietNegatief,
+    aftoppingsgrens: nietNegatief,
   }),
 
   zorg: z.strictObject({
@@ -242,6 +270,9 @@ export const kalibratieSchema = z.strictObject({
     betaaldeHypotheekrenteMln: z.number().nonnegative(),
     belastingOpInkomenMln: z.number().nonnegative(),
     premiesVolksverzekeringenMln: z.number().nonnegative(),
+    pensioenpremieWerknemerMln: z.number().nonnegative(),
+    inkomenZelfstandigOndernemerMln: z.number().nonnegative(),
+    huishoudensMetZelfstandigOndernemer: aantal,
   }),
   indexatie: z.strictObject({ bron, factor: z.number().positive() }),
   toeslagen: z.strictObject({

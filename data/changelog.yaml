@@ -6,6 +6,33 @@
 #
 # soort: nieuw | cijfers | model | correctie
 
+- datum: 2026-10-28
+  soort: model
+  modelversie: 0.3.0
+  titel: Bijstand, zzp'ers en pensioenpremie
+  tekst: >-
+    De bijstand volgt nu uit de landelijke norm in plaats van een zelf in te vullen bedrag. Voor zzp'ers rekenen
+    we de zelfstandigenaftrek, de startersaftrek, de mkb-winstvrijstelling en de eigen bijdrage voor de
+    zorgverzekering. Werknemers betalen pensioenpremie; die verlaagt de belasting, maar ook wat je overhoudt. De
+    nagebootste bevolking heeft nu zelfstandigen en pensioenpremie en is opnieuw gewogen; de belastingopbrengst in
+    het model komt daardoor uit op het niveau van de Miljoenennota.
+
+- datum: 2026-10-28
+  soort: nieuw
+  titel: Eenvoudiger formulier, en je situatie gaat mee
+  tekst: >-
+    Je situatie blijft bewaard zolang je tabblad openstaat, zodat je hem ook in het lab en bij de voorstellen
+    ziet. Nieuw: een veld voor een 13e maand of bonus. Zzp'ers krijgen geen vakantiegeld meer bijgeteld. "Weet ik
+    niet" en "Anders" bij wonen zijn weg; in plaats daarvan staat erbij waar je de bedragen vindt.
+
+- datum: 2026-10-28
+  soort: cijfers
+  titel: Overige aftrekposten met bron
+  tekst: >-
+    De aftrekposten die we niet per huishouden berekenen (giften, zorgkosten, lijfrente, ondernemersaftrek) tellen
+    nu mee met de bedragen uit de Miljoenennota: € 6,0 miljard in plaats van een schatting van € 4 miljard.
+    Alleen voorstellen die deze aftrekposten afschaffen, veranderen daardoor.
+
 - datum: 2026-10-27
   soort: nieuw
   titel: Lijst van wijzigingen en "Meld een fout"
