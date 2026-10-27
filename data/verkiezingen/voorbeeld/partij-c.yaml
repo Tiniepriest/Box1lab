@@ -1,0 +1,18 @@
+# FICTIEF: testpartij in concept, om de previewmodus te testen. Verschijnt niet op de gewone site.
+id: partij-c
+naam: "Partij C"
+programma:
+  titel: "Voorbeeldprogramma Partij C (fictief)"
+  url: https://example.org/partij-c.pdf
+  geraadpleegd: 2026-10-27
+status: concept
+maatregelen:
+  - id: zorgtoeslag-hoger
+    omschrijving: "Zorgtoeslag 20% hoger"
+    categorie: zorg
+    parameter: toeslagen.zorgtoeslag.niveau
+    wijziging: { type: factor, waarde: 1.2 }
+    bron: { document: programma, pagina: 5 }
+    zekerheid: middel
+    toelichting: "Programma noemt 'een vijfde meer zorgtoeslag'."
+niet_gemodelleerd: []

@@ -35,3 +35,4 @@ export * from "./invoer.ts";
 export * from "./lab.ts";
 export * from "./metrics/positie.ts";
 export * from "./scenario/code.ts";
+export * from "./verkiezing.ts";

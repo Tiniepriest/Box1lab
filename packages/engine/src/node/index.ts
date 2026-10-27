@@ -9,12 +9,16 @@ import {
   valideerPreset,
   valideerVoorbeelden,
   valideerLabKnoppen,
+  valideerPartij,
+  valideerVerkiezing,
   type Kalibratie,
   type Parameters,
   type Populatie,
   type Preset,
   type Voorbeelden,
   type LabKnoppen,
+  type Partij,
+  type Verkiezing,
 } from "../index.ts";
 
 /*
@@ -61,4 +65,38 @@ export function laadVoorbeelden(): Voorbeelden {
 
 export function laadLabKnoppen(params: Parameters): LabKnoppen {
   return valideerLabKnoppen(lees("lab/knoppen.yaml"), params, "data/lab/knoppen.yaml");
+}
+
+/** Alle verkiezingen in data/verkiezingen/ (mappen met een verkiezing.yaml). */
+export function laadVerkiezingen(): string[] {
+  return readdirSync(join(DATA_MAP, "verkiezingen"), { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
+    .sort();
+}
+
+/**
+ * Een verkiezing met haar partijen, gevalideerd tegen de parameters van het basispad. Met `metConcepten` ook
+ * partijen die nog niet gepubliceerd zijn (voor de previewmodus).
+ */
+export function laadVerkiezing(
+  id: string,
+  metConcepten = false,
+): { verkiezing: Verkiezing; partijen: Partij[] } {
+  const map = `verkiezingen/${id}`;
+  const verkiezing = valideerVerkiezing(lees(`${map}/verkiezing.yaml`), `data/${map}/verkiezing.yaml`);
+  if (verkiezing.id !== id)
+    throw new Error(`data/${map}/verkiezing.yaml: id '${verkiezing.id}' moet gelijk zijn aan de mapnaam.`);
+  const params = laadParameters(verkiezing.basispad.jaar);
+  const partijen = readdirSync(join(DATA_MAP, map))
+    .filter((f) => f.endsWith(".yaml") && f !== "verkiezing.yaml")
+    .map((f) => {
+      const p = valideerPartij(lees(`${map}/${f}`), params, `data/${map}/${f}`);
+      if (`${p.id}.yaml` !== f)
+        throw new Error(`data/${map}/${f}: id '${p.id}' moet gelijk zijn aan de bestandsnaam.`);
+      return p;
+    })
+    .filter((p) => metConcepten || p.status === "gepubliceerd")
+    .sort((a, b) => a.naam.localeCompare(b.naam, "nl"));
+  return { verkiezing, partijen };
 }

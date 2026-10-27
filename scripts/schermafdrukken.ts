@@ -25,6 +25,7 @@ const PAGINAS = [
   "uitleg/hypotheekrenteaftrek",
   "uitleg/inkomensgroepen",
   "uitleg/marginale-druk",
+  "verkiezingen/voorbeeld",
   "methodiek",
   "over",
 ];
@@ -124,6 +125,13 @@ try {
   await mini.fill("20000");
   const na = (await pg.locator(".mini p").first().textContent()) ?? "";
   controleer(voor !== na && /houd/.test(na), "uitleg: interactief voorbeeld reageert");
+  await pg.goto(`${BASIS}/verkiezingen/voorbeeld`, { waitUntil: "networkidle" });
+  const partijen = await pg.locator("details.partij").count();
+  const tekst = (await pg.textContent("body")) ?? "";
+  controleer(
+    partijen === 2 && !tekst.includes("Partij C"),
+    `verkiezingen: ${partijen} gepubliceerde partijen, geen concept zichtbaar`,
+  );
   await pg.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
   await pg.waitForFunction(() => /van de mensen heeft minder/.test(document.body.textContent ?? ""), null, {
     timeout: 30000,

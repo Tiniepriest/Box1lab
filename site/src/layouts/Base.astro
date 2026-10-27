@@ -13,6 +13,8 @@ interface Props {
   breed?: boolean;
   /** Deelafbeelding (pad binnen de site); standaard de algemene. */
   afbeelding?: string;
+  /** Niet in zoekmachines (bijvoorbeeld voor een voorbeeld met fictieve partijen). */
+  nietIndexeren?: boolean;
 }
 
 const {
@@ -20,6 +22,7 @@ const {
   description = "Wat betekent het belasting- en toeslagenstelsel voor jou? Reken je eigen situatie door en speel minister van Financiën.",
   breed = false,
   afbeelding = pad("og/standaard.png"),
+  nietIndexeren = false,
 } = Astro.props;
 const afbeeldingUrl = new URL(afbeelding, Astro.site).href;
 const paginaUrl = new URL(Astro.url.pathname, Astro.site).href;
@@ -44,6 +47,7 @@ const menu = [
     <meta name="theme-color" content="#1f4e8c" />
     <link rel="icon" type="image/svg+xml" href={pad("favicon.svg")} />
     <title>{title}</title>
+    {nietIndexeren && <meta name="robots" content="noindex" />}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

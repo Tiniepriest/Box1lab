@@ -59,12 +59,24 @@
 - [x] Scenario vergelijken met een voorstel
 - [x] Browsercontrole uitgebreid naar alle nieuwe pagina's; Lighthouse 99–100
 
-## Fase 6: Verkiezingsmodule — bezig
+## Fase 6: Verkiezingsmodule — klaar (PR #7)
+
+- [x] Schema per partij met bron (paginanummer), zekerheid en toelichting; controle in CI, ook voor concepten
+- [x] Vier-ogen-principe: `gepubliceerd` alleen met controleur; previewbuild voor concepten
+- [x] Pagina per verkiezing: effect op jouw huishouden per maatregel, bronnen, niet meegenomen, macrobeeld en effect per inkomensgroep
+- [x] Methodiek in `docs/METHODIEK-VERKIEZINGEN.md`
+- [x] Alleen fictieve testpartijen; pagina niet in het menu en `noindex`
+
+## Fase 7: Lancering — wacht op de eigenaar
+
+Analytics, eigen domein en de naam van de site vragen een keuze van de eigenaar (HANDOFF §10).
 
 ## Open vragen voor de eigenaar
 
 - Licentie van de broncode (bijvoorbeeld MIT voor code en CC BY voor teksten). Nog niet gekozen; er staat geen LICENSE-bestand.
 - Naam en domein van de site.
+- Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
+- Analytics: geen, of een privacyvriendelijke dienst (bijvoorbeeld Plausible of GoatCounter)?
 - Tekst van de pagina Over: wie zit erachter? Nu staat er alleen dat het project open en neutraal is.
 
 ## TODO: bron nodig

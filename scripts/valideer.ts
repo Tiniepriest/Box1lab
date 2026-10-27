@@ -14,6 +14,8 @@ import {
   laadPresets,
   laadVoorbeelden,
   laadLabKnoppen,
+  laadVerkiezing,
+  laadVerkiezingen,
 } from "@box1lab/engine/node";
 
 let fouten = 0;
@@ -53,6 +55,9 @@ controleer("data/voorbeelden/huishoudens.yaml", () => laadVoorbeelden());
 controleer(`data/lab/knoppen.yaml (tegen parameters ${laatste})`, () =>
   laadLabKnoppen(laadParameters(laatste)),
 );
+for (const v of laadVerkiezingen()) {
+  controleer(`data/verkiezingen/${v}/ (alle partijen, ook concepten)`, () => laadVerkiezing(v, true));
+}
 
 if (todo.length) {
   console.log(`\nWaarschuwing: ${todo.length} waarde(n) met 'TODO: bron nodig':`);

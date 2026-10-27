@@ -1,0 +1,44 @@
+---
+import Verkiezingen from "../../components/verkiezingen/Verkiezingen.svelte";
+import Base from "../../layouts/Base.astro";
+import { params } from "../../lib/data.ts";
+import { PREVIEW, verkiezingData, verkiezingIds, type VerkiezingData } from "../../lib/verkiezingen.ts";
+
+export function getStaticPaths() {
+  return verkiezingIds.map((id) => ({ params: { id }, props: { data: verkiezingData(id) } }));
+}
+
+const { data } = Astro.props as { data: VerkiezingData };
+const { verkiezing, partijen, macro } = data;
+const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+---
+
+<Base
+  title={`${verkiezing.naam} — Box1lab`}
+  description="Wat betekenen de plannen van partijen voor jouw portemonnee?"
+  breed
+  nietIndexeren={verkiezing.fictief}
+>
+  <h1>{verkiezing.naam}: wat betekenen de plannen voor jou?</h1>
+  <p class="intro">
+    Verkiezing van {datum}. Per partij: wat de doorrekenbare plannen doen voor jouw huishouden en voor
+    Nederland.
+  </p>
+  <Verkiezingen client:load {params} {verkiezing} {partijen} {macro} preview={PREVIEW} />
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(26px, 4vw, 34px);
+    margin: 0 0 6px;
+  }
+  .intro {
+    color: var(--muted);
+    margin: 0 0 18px;
+    max-width: 70ch;
+  }
+</style>
