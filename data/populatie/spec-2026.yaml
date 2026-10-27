@@ -37,11 +37,17 @@ inkomen:
   partnerAandeel: 0.65
   # Samenhang tussen het inkomen van de hoofdverdiener en de partner (correlatie in de lognormale verdeling).
   partnerCorrelatie: 0.4
-  # Kans op een uitkering in plaats van werk (hoofdverdiener), en het deel daarvan dat bijstand is.
+  # Kans op een uitkering in plaats van werk (hoofdverdiener), en het deel daarvan dat bijstand is. Bijstand volgt
+  # uit de norm (bij een paar krijgen beide partners de helft van de gezinsnorm).
   uitkeringKans: { alleenstaand: 0.12, paar: 0.04, eenouder: 0.22 }
   aandeelBijstand: 0.5
-  # Bruto uitkering per jaar: tussen minimum en maximum.
+  # Bruto WW- of WIA-uitkering per jaar: tussen minimum en maximum.
   uitkering: { minimum: 17000, maximum: 30000 }
+  # Kans dat een werkende zelfstandig ondernemer is (anders werknemer), en de kans dat een ondernemer het
+  # urencriterium haalt. De herweging stemt het aantal af op CBS. Wie pensioenpremie betaalt, bepaalt de
+  # kalibratie per inkomensgroep (data/kalibratie, sectie pensioenpremie).
+  zelfstandigKans: 0.13
+  urencriteriumKans: 0.6
 
 pensioen:
   # Aanvullend pensioen naast de AOW: mediaan en spreiding, per huishouden.

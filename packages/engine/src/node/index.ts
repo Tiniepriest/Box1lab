@@ -34,6 +34,15 @@ function lees(relatief: string): unknown {
   return leesYaml(readFileSync(join(DATA_MAP, relatief), "utf8"), `data/${relatief}`);
 }
 
+/** De jaren waarvoor een parameterbestand bestaat, oplopend. */
+export function parameterJaren(): number[] {
+  return readdirSync(join(DATA_MAP, "parameters"))
+    .map((f) => /^(\d{4})\.yaml$/.exec(f)?.[1])
+    .filter((j): j is string => !!j)
+    .map(Number)
+    .sort((a, b) => a - b);
+}
+
 export function laadParameters(jaar: number): Parameters {
   return valideerParameters(lees(`parameters/${jaar}.yaml`), `data/parameters/${jaar}.yaml`);
 }

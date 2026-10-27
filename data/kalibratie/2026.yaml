@@ -237,14 +237,46 @@ inkomen:
 #   besteedbaar inkomen; betaaldeHypotheekrente wordt daarvan afgetrokken. Om het model te kunnen vergelijken
 #   met de CBS-decielgrenzen, telt de kalibratie dit voordeel (naar rato van de WOZ-waarde) en de rente mee.
 # - belastingOpInkomen en premiesVolksverzekeringen: ter controle van de belastingopbrengst van huishoudens.
+# - pensioenpremieWerknemer en inkomenZelfstandigOndernemer: ter controle van de pensioenpremie en de winst.
+# - huishoudensMetZelfstandigOndernemer: marge voor het aantal huishoudens met een zelfstandige.
 inkomensbestanddelen:
-  bron: "CBS StatLine 84493NED, Inkomen van huishoudens; inkomensbestanddelen, huishoudenskenmerken, 2024: posten 3.1.2.1, 3.2.1, 13, 11.4.3 en 12.3 (https://opendata.cbs.nl/statline/#/CBS/nl/dataset/84493NED)"
+  bron: "CBS StatLine 84493NED, Inkomen van huishoudens; inkomensbestanddelen, huishoudenskenmerken, 2024: posten 3.1.2.1, 3.2.1, 13, 11.4.3, 12.3, 11.4.1.1 en 2.1 (https://opendata.cbs.nl/statline/#/CBS/nl/dataset/84493NED)"
   jaar: 2024
   inkomenEigenWoningMln: 38279
   betaaldeHypotheekrenteMln: 23331
   belastingOpInkomenMln: 103255
   # 26.097 (premie pensioen: volksverzekeringen) + 16.837 (premie ziektekosten: volksverzekeringen)
   premiesVolksverzekeringenMln: 42934
+  # 11.4.1.1 Premie pensioen: werknemer
+  pensioenpremieWerknemerMln: 19163
+  # 2.1 Inkomen zelfstandig ondernemer: totaal en aantal huishoudens met dit inkomen
+  inkomenZelfstandigOndernemerMln: 59381
+  huishoudensMetZelfstandigOndernemer: 1189600
+
+# Pensioenpremie van werknemers: wie betaalt, en hoeveel, per 10%-groep gestandaardiseerd inkomen (evenveel
+# huishoudens per groep, laag naar hoog). Per groep: huishoudens met loon (post 1.1) en hun loon, en huishoudens
+# met pensioenpremie werknemer (post 11.4.1.1) en die premie. De kalibratie geeft binnen elke groep dit aandeel
+# werknemershuishoudens pensioenpremie, zo hoog dat de premie als deel van het loon klopt met CBS.
+pensioenpremie:
+  bron: "CBS StatLine 84493NED, Inkomen van huishoudens; inkomensbestanddelen, huishoudenskenmerken, 2024: posten 1.1 en 11.4.1.1, naar gestandaardiseerd inkomen (10%-groepen) en leeftijd hoofdkostwinner (https://opendata.cbs.nl/statline/#/CBS/nl/dataset/84493NED)"
+  jaar: 2024
+  perDeciel:
+    - { huishoudensMetLoon: 378300, loonMln: 3468, huishoudensMetPremie: 44600, premieMln: 35 }
+    - { huishoudensMetLoon: 280200, loonMln: 5733, huishoudensMetPremie: 143800, premieMln: 152 }
+    - { huishoudensMetLoon: 368800, loonMln: 11103, huishoudensMetPremie: 293100, premieMln: 392 }
+    - { huishoudensMetLoon: 482500, loonMln: 18779, huishoudensMetPremie: 419500, premieMln: 785 }
+    - { huishoudensMetLoon: 546200, loonMln: 26590, huishoudensMetPremie: 487800, premieMln: 1214 }
+    - { huishoudensMetLoon: 595000, loonMln: 35359, huishoudensMetPremie: 541300, premieMln: 1707 }
+    - { huishoudensMetLoon: 630100, loonMln: 44810, huishoudensMetPremie: 582700, premieMln: 2277 }
+    - { huishoudensMetLoon: 675400, loonMln: 57034, huishoudensMetPremie: 632600, premieMln: 3038 }
+    - { huishoudensMetLoon: 704700, loonMln: 72428, huishoudensMetPremie: 665600, premieMln: 4067 }
+    - { huishoudensMetLoon: 688100, loonMln: 104335, huishoudensMetPremie: 636800, premieMln: 5496 }
+  # Naar leeftijd hoofdkostwinner (25 tot 65 is de som van de vier CBS-groepen daartussen). De kalibratie past de
+  # deelname tegelijk aan de 10%-groepen en aan deze leeftijdsgroepen aan.
+  perLeeftijd:
+    - { totLeeftijd: 25, huishoudensMetLoon: 350700, huishoudensMetPremie: 144300 }
+    - { totLeeftijd: 65, huishoudensMetLoon: 4621600, huishoudensMetPremie: 4132800 }
+    - { totLeeftijd: null, huishoudensMetLoon: 377000, huishoudensMetPremie: 170500 }
 
 indexatie:
   bron: "CPB, Kerngegevenstabel MEV 2027 (september 2026): cao-loon marktsector 5,3% in 2025 en 4,3% in 2026 (https://www.cpb.nl/system/files/cpbmedia/CPB-kerngegevens-MEV-2027.pdf)"

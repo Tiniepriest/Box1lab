@@ -301,3 +301,100 @@ Besluit van de eigenaar: voorlopig geen licentie. De code is openbaar te bekijke
 ### D-051 GitHub Pages, geen eigen domein
 
 Besluit van de eigenaar. Overstappen naar een eigen domein later: in `site/astro.config.mjs` `site` aanpassen en `base` weghalen, een `CNAME`-bestand in `site/public/`, en de DNS bij de domeinregistrar. Alle interne links gaan via `pad()` en de repolink via `site/src/lib/project.ts`, dus verder hoeft er niets te veranderen.
+
+## Fase 8a: formulier en privacy (verbeterlijst van de eigenaar)
+
+### D-052 Situatie onthouden zolang het tabblad openstaat
+
+Besluit van de eigenaar (punt 7b). Wat je invult, bewaren we in `sessionStorage`: alleen in deze browser, alleen voor dit tabblad, weg als je het sluit. Zo gaat je situatie mee naar het lab, de voorstellen en de verkiezingen. Langer bewaren (`localStorage`) blijft alleen op verzoek ("Onthoud ook als ik het tabblad sluit"). "Wis mijn gegevens" haalt beide weg. Het voorbeeld waarmee het formulier start, bewaren we pas als je iets verandert; anders zou het voorbeeld als "jouw situatie" in het lab verschijnen. De privacytekst bij het formulier en op de pagina Over is herschreven. Dit wijkt af van HANDOFF §3.3 ("optioneel lokaal onthouden"): er gaat nog steeds niets naar een server, en sessieopslag is functioneel en op verzoek van de bezoeker, dus geen toestemmingsbanner nodig.
+
+### D-053 Formulier eenvoudiger
+
+- "Weet ik niet" is weg. Het vulde een mediaan uit de modelbevolking in, en daar had niemand iets aan. Nu staat bij elk veld waar je het bedrag vindt (huurcontract, gemeentelijke aanslag of WOZ-waardeloket, jaaropgave hypotheek).
+- "Anders" bij wonen is weg: het rekende precies hetzelfde als huur met € 0. Oude bewaarde invoer met "anders" wordt bij het lezen omgezet naar huur € 0.
+- Nieuw veld bij loondienst: "Extra per jaar" (13e maand, eindejaarsuitkering, bonus), opgeteld bij het jaarinkomen. Het bijzonder tarief op de loonstrook speelt geen rol, want het model rekent met het hele jaar, zoals de aangifte.
+- Een zzp'er krijgt geen vakantiegeld bijgeteld, en vult zijn winst in.
+
+### D-054 Overige aftrekposten met bron
+
+De vaste € 4 mld uit het prototype (TODO: bron nodig) is vervangen door het budgettair belang per regeling uit de Miljoenennota 2027, tabel 4.3.2, kolom 2026: persoonsgebonden aftrek 0,804, lijfrentepremieaftrek 1,378, premieaftrek arbeidsongeschiktheidsverzekering 0,626, zelfstandigenaftrek 0,306, startersaftrek 0,117, meewerkaftrek 0,007 en mkb-winstvrijstelling 2,730; samen € 5,968 mld. In het parameterbestand staat nu per post een bedrag (`posten`), zodat de jaarlijkse update gewoon de nieuwe tabel overneemt. De ondernemersfaciliteiten staan hier omdat de modelbevolking geen aparte zelfstandigen heeft.
+
+Golden-verschil: alleen de voorstellen die de overige aftrekposten afschaffen veranderen. Vlaktaks 40%: saldo € 41,62 → € 43,59 mld; drie schijven: € 29,35 → € 31,32 mld (beide + € 1,968 mld, precies het verschil). De oplosser voor de budgetneutrale vlaktaks geeft daardoor een vrijstelling van € 28.322 in plaats van € 27.796 en tariefsfactor 0,7368 in plaats van 0,7487.
+
+### D-055 Sitemap
+
+`@astrojs/sitemap` maakt `sitemap-index.xml` tijdens de build, zonder verkiezingen met fictieve partijen. Een `robots.txt` heeft geen zin: zoekmachines lezen die alleen op de hoofdmap van het domein (`tiniepriest.github.io/robots.txt`), en die valt buiten deze repo. Om Google de sitemap te laten gebruiken, kan de eigenaar hem gratis aanmelden in Google Search Console.
+
+## Fase 8b: bijstand, zzp en pensioen (verbeterlijst punten 1, 6 en 8)
+
+### D-056 Bijstand volgt uit de norm
+
+Je vult bij bijstand geen bedrag meer in. Het model neemt de netto norm per maand inclusief vakantiegeld (Rijksoverheid, 1 januari en 1 juli 2026) en rekent terug naar het bruto bedrag waarover de gemeente loonheffing inhoudt (`brutoVoorNetto`, dezelfde bisectie als de netto-koppeling). Een alleenstaande krijgt de alleenstaandennorm, een paar in de bijstand ieder de helft van de gezinsnorm, en als de partner werkt, vult de bijstand aan tot de gezinsnorm (min het netto inkomen van de partner). Niet in het model: jongerennormen (onder 21), de kostendelersnorm, vrijlatingen en de AOW-normen (AIO). In de calculator staat bij bijstand geen marginale druk en geen inkomenscurve, want bijverdienen gaat van de uitkering af. De voorbeeldhuishoudens en de nagebootste bevolking gebruiken dezelfde regel.
+
+### D-057 Zelfstandigen
+
+Een zzp'er vult de winst in. Het model trekt de zelfstandigenaftrek (€ 1.200, alleen met urencriterium), eventueel de startersaftrek (€ 2.123) en daarna de mkb-winstvrijstelling (12,7%) af, en rekent de inkomensafhankelijke bijdrage Zvw (4,85%) over de belastbare winst. De arbeidskorting gaat over de winst vóór die aftrekposten (Wet IB 2001, art. 8.11 lid 2: "winst uit onderneming", niet de belastbare winst). Verliesverrekening en investeringsaftrek zitten er niet in. Zelfstandigenaftrek en mkb-winstvrijstelling zijn knoppen in het lab.
+
+In de nagebootste bevolking is 13% van de werkenden zelfstandig (60% met urencriterium); de herweging stemt het aantal huishoudens met een zelfstandige af op CBS (1,19 mln, 84493NED, 2024). De zelfstandigenaftrek en de mkb-winstvrijstelling zijn daardoor uit de overige aftrekposten gehaald (die zijn nu € 2,932 mld); starters- en meewerkaftrek blijven daar, want de bevolking heeft geen starters of meewerkende partners. Controle: de winst in het model is € 72,4 mld tegen € 65,2 mld bij CBS (geïndexeerd), 11% hoger.
+
+### D-058 Pensioenpremie van werknemers
+
+Werknemers betalen het werknemersdeel van de pensioenpremie; dat wordt op het loon ingehouden en verlaagt het fiscale loon, dus ook de belasting, de arbeidskorting en het toetsingsinkomen voor de toeslagen. Standaard rekent het model met de regeling van ABP, het grootste fonds: 8,13% van het loon tussen € 19.200 en € 137.800. In het formulier kun je kiezen voor de schatting, het bedrag van je loonstrook of geen pensioen. In de nagebootste bevolking betaalt iedere werknemer de standaardpremie: samen € 22,1 mld, tegen € 21,0 mld bij CBS (geïndexeerd, +5%). Dat een deel van de werknemers geen pensioen opbouwt en andere fondsen anders rekenen, valt daar ongeveer tegen weg.
+
+De marginale druk laat de pensioenpremie buiten beschouwing: het is opbouw voor later, geen verlies. Besteedbaar inkomen is wel na pensioenpremie, net als bij CBS.
+
+### D-059 Herweging en golden-verschillen
+
+De nagebootste bevolking is opnieuw gemaakt (andere toevalsreeks door de nieuwe kenmerken) en herwogen met de extra marge voor zelfstandigen. Alle schaalfactoren blijven 1,00 en de decielgrenzen kloppen binnen 0,1%. De belastingopbrengst in het model daalt van € 152,0 naar € 144,1 mld, vooral door de pensioenpremie en de ondernemersaftrek; dat is nu vrijwel gelijk aan de € 144,7 mld box 1 en box 2 uit de Miljoenennota. Armoede 9,9% → 10,3%, Gini 0,227 → 0,225.
+
+Golden-verschillen (modelversie 0.3.0):
+
+- Saldo van de voorstellen: vlaktaks € 43,59 → € 41,86 mld; drie schijven € 31,32 → € 29,62 mld; hogere algemene heffingskorting −€ 4,45 → −€ 4,50 mld; de andere voorstellen veranderen minder dan € 0,1 mld. De oplosser geeft een vrijstelling van € 27.836 (was € 28.322).
+- Voorbeeldhuishoudens: werkenden betalen nu pensioenpremie, dus minder belasting en iets meer toeslag, maar minder besteedbaar (P50 € 65.743 → € 64.536). P10 (bijstand) krijgt de norm: netto precies € 16.926, besteedbaar € 21.033 → € 21.993.
+
+## Fase 8c: jouw situatie overal (verbeterlijst punten 7 en 11)
+
+### D-060 "Wat betekent dit voor jou?"
+
+Eén component (`JouwEffect.svelte`) laat het effect van een scenario op het eigen huishouden zien: wat je per maand meer of minder overhoudt, met belasting, toeslagen en kinderbijslag nu en straks. Hij gebruikt de bewaarde situatie (D-052), en wie niets bewaard heeft, kan het formulier in het blok zelf openen. Het blok staat in het scenariolab (onder de landelijke kerncijfers, rekent mee met elke knop) en op elke voorstelpagina. De rij "Jij" in de grafiek met voorbeeldhuishoudens volgt dezelfde situatie. De verkiezingspagina deed dit al per maatregel; echte partijen krijgen het zo vanzelf.
+
+Op Jouw situatie staat een grafiek "Wat doen de voorstellen met jou?" met het verschil per maand per voorstel en een link naar het voorstel.
+
+De staafgrafiek zet labels boven de staven als ze er niet naast passen (vooral op een telefoon).
+
+## Fase 8d: cijfers 2027 (verbeterlijst punt 10)
+
+### D-061 Voorlopig parameterjaar 2027
+
+Besluit van de eigenaar: nu al live, duidelijk gemarkeerd als voorlopig. Een parameterbestand heeft daarvoor een `status` (`definitief` of `voorlopig`) en een `toelichting` die de site toont.
+
+`data/parameters/2027.yaml` bevat wat er op 28 oktober 2026 officieel bekend is:
+
+- Tarieven, algemene heffingskorting, arbeidskorting, ouderenkorting, alleenstaande-ouderenkorting en combinatiekorting: Belastingplan 2027, memorie van toelichting tabel 1 en 2, met de tweede nota van wijziging van 20 oktober 2026 (aanvangspunt toptarief € 80.578, arbeidskorting € 40 minder verhoogd). Afgeleid en zo vermeld: het afbouwpercentage van de algemene heffingskorting (nul bij het aanvangspunt van het toptarief, zoals in eerdere jaren) en de eerste twee knikken van de arbeidskorting (grenzen 2026 × 1,01248, de beperkte indexatie uit de memorie van toelichting).
+- Zelfstandigenaftrek € 900, startersaftrek € 10 (afschaffing in 2028), mkb-winstvrijstelling 12,7%.
+- Maximaal aftrektarief eigen woning 38,16%: gelijk aan het tarief van de tweede schijf, zoals in 2025 en 2026.
+- Overige aftrekposten: kolom 2027 van dezelfde Miljoenennota-tabel.
+
+Nog niet gepubliceerd, dus tijdelijk de bedragen van 2026 met `TODO: bron nodig`: de vier toeslagen, AOW-bedragen, bijstandsnormen, zorgpremie en Zvw-bijdrage, kinderbijslag, pensioenpremie (ABP gaat in 2027 over naar het nieuwe stelsel), eigenwoningforfait en Wet Hillen, en de kortingen voor AOW'ers die werken. `npm run valideer` noemt ze allemaal. De site noemt ze bij de vergelijking.
+
+Wat de site ermee doet: op Jouw situatie staat "Wat verandert er in 2027 voor jou?", bij hetzelfde bruto inkomen (lonen en uitkeringen stijgen meestal ook; dat staat erbij). Er is nog geen kalibratie of bevolking voor 2027, dus geen landelijke doorrekening; `npm run valideer` slaat die voor 2027 over.
+
+Bijwerken: zodra de bedragen definitief zijn (Belastingdienst half december, Dienst Toeslagen en SVB eind november en december), de TODO's invullen, de afgeleide waarden vervangen door de officiële en `status: definitief` zetten. Zie docs/JAARLIJKSE-UPDATE.md.
+
+## Fase 8e: pensioenpremie realistischer (vraag van de eigenaar)
+
+### D-062 Pensioenpremie: zelf invullen, en in de bevolking volgens CBS
+
+Vervangt een deel van D-058. De eigenaar vond "iedere werknemer betaalt de ABP-premie" te grof.
+
+**Calculator.** Je vult je eigen pensioenpremie per maand in, van je loonstrook (standaard 0). Er is geen schatting meer: fondsen verschillen te veel, en het echte bedrag staat op de loonstrook.
+
+**Nagebootste bevolking.** Wie pensioenpremie betaalt en hoeveel, volgt uit CBS 84493NED (2024, posten 1.1 en 11.4.1.1):
+
+- _Wie_: per werknemershuishouden een kans op deelname, passend gemaakt op twee CBS-verdelingen tegelijk: het aandeel werknemershuishoudens met premie per 10%-groep gestandaardiseerd inkomen (van 12% in de laagste tot 94% in de op één na hoogste groep) en per leeftijdsgroep van de hoofdkostwinner (41% onder 25, 89% van 25 tot 65, 45% vanaf 65). Daarna getrokken met een vast zaad, zodat de bevolking reproduceerbaar is.
+- _Hoeveel_: een vast deel van het loon, per 10%-groep zo hoog dat premie ÷ al het loon in die groep klopt met CBS (1,0% tot 5,6%). Dat is het gemiddelde over alle fondsen, niet de regeling van één fonds.
+- De 10%-groep hangt af van het besteedbaar inkomen en dus van de premie; de kalibratie wisselt daarom drie keer af tussen toekennen en herwegen.
+
+Uitkomst: totaal € 20,8 mld tegen € 21,0 mld bij CBS (geïndexeerd, −1,1%; was +5,2%); deelname per leeftijdsgroep klopt; per 10%-groep wijkt alleen de laagste groep af (16% tegen 12%). Het rapport `docs/kalibratie-2026.md` laat de tabel per groep zien. De voorbeeldhuishoudens in het lab rekenen nog met de ABP-regeling uit `pensioenpremie` in het parameterbestand, als herkenbaar voorbeeld.
+
+Golden-verschil (alleen cijfers die van de bevolking afhangen; voorbeeldhuishoudens niet): belasting in het model € 144,1 → € 145,3 mld (Miljoenennota € 144,7 mld), omdat minder werknemers premie aftrekken; armoede 10,34% → 10,34%, Gini 0,2250 → 0,2254. Saldo vlaktaks € 41,86 → € 41,40 mld, drie schijven € 29,62 → € 29,17 mld, hogere algemene heffingskorting −€ 4,50 → −€ 4,48 mld; de andere voorstellen veranderen minder dan € 0,01 mld. Oplosser: vrijstelling € 27.762 (was € 27.836).

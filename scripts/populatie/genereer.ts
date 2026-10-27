@@ -1,5 +1,6 @@
 import {
   aowPerJaar,
+  vulBijstandIn,
   type Kalibratie,
   type Lid,
   type Parameters,
@@ -95,16 +96,36 @@ export function genereerPopulatie(spec: Spec, kal: Kalibratie, p: Parameters): P
         const factor = partners ? 1 : eenouder ? s.factorEenouder : s.factorAlleenstaand;
         const mediaan = s.mediaanHoofdverdiener * profiel(spec, leeftijd) * factor;
         let hoofd: Lid;
+        // Werkenden: werknemer (de pensioenpremie komt later, bij de kalibratie) of zelfstandig ondernemer.
+        const werk = (inkomen: number): Lid =>
+          toeval.uniform() < s.zelfstandigKans
+            ? {
+                inkomen,
+                soort: "werk",
+                uitkering: 0,
+                ondernemer: { urencriterium: toeval.uniform() < s.urencriteriumKans, starter: false },
+              }
+            : { inkomen, soort: "werk", uitkering: 0 };
+        const bijstand = (): Lid => ({
+          inkomen: 0,
+          soort: "uitkering",
+          uitkering: 0,
+          uitkeringSoort: "bijstand",
+        });
         if (toeval.uniform() < s.uitkeringKans[categorie]) {
           const x = s.uitkering.minimum + (s.uitkering.maximum - s.uitkering.minimum) * toeval.uniform();
-          const uitkeringSoort = toeval.uniform() < s.aandeelBijstand ? "bijstand" : "werknemersverzekering";
-          hoofd = { inkomen: x, soort: "uitkering", uitkering: x, uitkeringSoort };
+          hoofd =
+            toeval.uniform() < s.aandeelBijstand
+              ? bijstand()
+              : { inkomen: x, soort: "uitkering", uitkering: x, uitkeringSoort: "werknemersverzekering" };
         } else {
-          hoofd = { inkomen: mediaan * Math.exp(s.spreiding * zq), soort: "werk", uitkering: 0 };
+          hoofd = werk(mediaan * Math.exp(s.spreiding * zq));
         }
         leden = [hoofd];
         if (partners) {
-          if (hoofd.soort === "werk" && toeval.uniform() < s.partnerWerkt) {
+          if (hoofd.uitkeringSoort === "bijstand") {
+            leden.push(bijstand());
+          } else if (hoofd.soort === "werk" && toeval.uniform() < s.partnerWerkt) {
             const rho = s.partnerCorrelatie;
             const z2 = rho * zq + Math.sqrt(1 - rho * rho) * toeval.normaal();
             const x2 =
@@ -112,12 +133,18 @@ export function genereerPopulatie(spec: Spec, kal: Kalibratie, p: Parameters): P
               profiel(spec, leeftijd) *
               s.partnerAandeel *
               Math.exp(s.spreiding * z2);
-            leden.push({ inkomen: x2, soort: "werk", uitkering: 0 });
+            leden.push(werk(x2));
           } else {
             leden.push({ inkomen: 0, soort: "geen", uitkering: 0 });
           }
         }
       }
+      vulBijstandIn(
+        leden,
+        leden.map((l) => l.uitkeringSoort === "bijstand"),
+        partners,
+        p,
+      );
       const bruto = leden.reduce((t, l) => t + l.inkomen, 0);
 
       // Kinderen

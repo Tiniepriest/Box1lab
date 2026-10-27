@@ -22,6 +22,7 @@ import {
 import { DATA_MAP, laadKalibratie, laadParameters } from "@box1lab/engine/node";
 import { TYPES, genereerPopulatie } from "./populatie/genereer.ts";
 import { herweeg, type Afwijking, type Restrictie } from "./populatie/herweeg.ts";
+import { kenPensioenpremieToe, leeftijdsgroep, pensioenCijfers, tienGroepen } from "./populatie/pensioen.ts";
 import { valideerSpec } from "./populatie/spec.ts";
 
 const argumenten = process.argv.slice(2);
@@ -37,7 +38,8 @@ const spec = valideerSpec(
 
 // 1. Genereren en doorrekenen onder het huidige beleid.
 const pop = genereerPopulatie(spec, kal, params);
-const res: Resultaat[] = pop.map((h) => berekenHuishouden(h, params));
+// Eerst zonder pensioenpremie; die komt na een eerste herweging (stap 3).
+let res: Resultaat[] = pop.map((h) => berekenHuishouden(h, params));
 const start = pop.map((h) => h.gewicht);
 const indicator = (f: (h: PopulatieHuishouden, r: Resultaat) => boolean) =>
   pop.map((h, i) => (f(h, res[i]!) ? 1 : 0));
@@ -69,7 +71,7 @@ const huurwaardeFactor = huurwaardeDoel / pop.reduce((s, x, i) => s + start[i]! 
 const huurwaarde = pop.map((x) => huurwaardeFactor * x.woz);
 const besteedbaarCbs = (r: Resultaat, i: number) => r.besteedbaar - pop[i]!.hypotheekrente + huurwaarde[i]!;
 
-const restricties: Restrictie[] = [
+const maakRestricties = (): Restrictie[] => [
   ...TYPES.map((ty) => ({
     naam: `huishoudens: ${ty}`,
     waarden: indicator((h) => h.type === ty),
@@ -138,6 +140,12 @@ const restricties: Restrictie[] = [
     doel: ib.betaaldeHypotheekrenteMln * 1e6,
   },
   { naam: "huurwaarde eigen woning", waarden: huurwaarde, doel: huurwaardeDoel },
+  // CBS telt huishoudens met inkomen uit een eigen onderneming (jaar van de inkomensbestanddelen, niet geïndexeerd).
+  {
+    naam: "huishoudens met zelfstandig ondernemer",
+    waarden: indicator((x) => x.leden.some((l) => !!l.ondernemer)),
+    doel: ib.huishoudensMetZelfstandigOndernemer,
+  },
   ...grenzen.map((g, k) => ({
     naam: `besteedbaar inkomen onder P${(k + 1) * 10} (€ ${Math.round(g).toLocaleString("nl-NL")})`,
     waarden: res.map((r, i) => (besteedbaarCbs(r, i) <= g ? 1 : 0)),
@@ -145,12 +153,22 @@ const restricties: Restrictie[] = [
   })),
 ];
 
-// 3. Herwegen.
+// 3. Herwegen, in twee rondes. De pensioenpremie hangt per 10%-groep gestandaardiseerd inkomen af van CBS, en die
+//    groep hangt af van de gewichten. Dus: eerst herwegen zonder premie, dan de premie toekennen, dan opnieuw.
+const gestandaardiseerd = () => res.map((r, i) => besteedbaarCbs(r, i) / r.equivalentie);
+const herwegingOpties = { ...spec.herweging, tolerantie: 1e-4 };
+let gewichtenNu = herweeg(start, maakRestricties(), herwegingOpties).gewichten;
+for (let ronde = 0; ronde < 3; ronde++) {
+  kenPensioenpremieToe(pop, gestandaardiseerd(), gewichtenNu, kal, spec.zaad + 1);
+  res = pop.map((x) => berekenHuishouden(x, params));
+  if (ronde < 2) gewichtenNu = herweeg(start, maakRestricties(), herwegingOpties).gewichten;
+}
+const restricties = maakRestricties();
 const voor: Afwijking[] = restricties.map((r) => {
   const uitkomst = start.reduce((s, w, i) => s + w * r.waarden[i]!, 0);
   return { naam: r.naam, doel: r.doel, uitkomst, relatief: (uitkomst - r.doel) / r.doel };
 });
-const h = herweeg(start, restricties, { ...spec.herweging, tolerantie: 1e-4 });
+const h = herweeg(start, restricties, herwegingOpties);
 const herwogen: PopulatieHuishouden[] = pop.map((x, i) => ({ ...x, gewicht: h.gewichten[i]! }));
 
 // 4. Controles na herweging.
@@ -182,7 +200,12 @@ const uitvoer = {
   huishoudens: herwogen.map((x) => ({
     ...x,
     gewicht: rond(x.gewicht),
-    leden: x.leden.map((l) => ({ ...l, inkomen: rond(l.inkomen), uitkering: rond(l.uitkering) })),
+    leden: x.leden.map((l) => ({
+      ...l,
+      inkomen: rond(l.inkomen),
+      uitkering: rond(l.uitkering),
+      ...(typeof l.pensioenpremie === "number" ? { pensioenpremie: rond(l.pensioenpremie) } : {}),
+    })),
     huurPerMaand: rond(x.huurPerMaand),
     hypotheekrente: rond(x.hypotheekrente),
     woz: Math.round(x.woz),
@@ -235,6 +258,38 @@ const bt = basis.totalen;
 const controle = kal.controle.loonEnInkomensheffingMld - kal.controle.box3Mld;
 const cbsBelasting =
   ((ib.belastingOpInkomenMln + ib.premiesVolksverzekeringenMln) / 1e3) * kal.indexatie.factor;
+const gewogenSom = (f: (x: PopulatieHuishouden, i: number) => number) =>
+  herwogen.reduce((s, x, i) => s + x.gewicht * f(x, i), 0) / 1e9;
+const modelPensioenpremie = gewogenSom((_, i) => basis.resultaten[i]!.pensioenpremie);
+const modelWinst = gewogenSom((x) => x.leden.reduce((s, l) => s + (l.ondernemer ? l.inkomen : 0), 0));
+const cbsPensioenpremie = (ib.pensioenpremieWerknemerMln / 1e3) * kal.indexatie.factor;
+const groepNa = tienGroepen(
+  basis.resultaten.map((r, i) => besteedbaarCbs(r, i) / r.equivalentie),
+  herwogen.map((x) => x.gewicht),
+);
+const pp = kal.pensioenpremie;
+const pensioenRijen = pp.perDeciel.map((c, d) => {
+  const m = pensioenCijfers(herwogen, basis.resultaten, (i) => groepNa[i] === d);
+  return `| ${d + 1} | ${nl((c.huishoudensMetPremie / c.huishoudensMetLoon) * 100, 0)}% | ${nl(m.aandeel, 0)}% | ${nl((c.premieMln / c.loonMln) * 100, 2)}% | ${nl(m.vanLoon, 2)}% |`;
+});
+const pensioenLeeftijd = pp.perLeeftijd
+  .map((c, g) => {
+    const m = pensioenCijfers(
+      herwogen,
+      basis.resultaten,
+      (i) => leeftijdsgroep(herwogen[i]!.leeftijd, kal) === g,
+    );
+    const van = g === 0 ? 0 : pp.perLeeftijd[g - 1]!.totLeeftijd;
+    const naam =
+      c.totLeeftijd === null
+        ? `${van} jaar of ouder`
+        : g === 0
+          ? `jonger dan ${c.totLeeftijd}`
+          : `${van} tot ${c.totLeeftijd} jaar`;
+    return `${naam}: model ${nl(m.aandeel, 0)}%, CBS ${nl((c.huishoudensMetPremie / c.huishoudensMetLoon) * 100, 0)}%`;
+  })
+  .join("; ");
+const cbsWinst = (ib.inkomenZelfstandigOndernemerMln / 1e3) * kal.indexatie.factor;
 const rapport = `# Kalibratierapport ${jaar}
 
 Gegenereerd door \`npm run kalibreer\` op ${new Date().toISOString().slice(0, 10)} (model ${MODEL_VERSIE}). Niet met de hand bewerken.
@@ -273,12 +328,26 @@ ${decielen.map((d) => `| P${d.k} | € ${nl(d.doel)} | € ${nl(d.model)} | ${pc
 
 ## Controle: belastingopbrengst
 
-Het model rekent € ${nl(bt.belasting, 1)} mld box 1-belasting (inclusief premies volksverzekeringen, na de eigen woning) en € ${nl(bt.zvw, 1)} mld Zvw-bijdrage van AOW'ers.
+Het model rekent € ${nl(bt.belasting, 1)} mld box 1-belasting (inclusief premies volksverzekeringen, na de eigen woning) en € ${nl(bt.zvw, 1)} mld Zvw-bijdrage die AOW'ers en zelfstandigen zelf betalen.
 
 - Volgens CBS betaalden huishoudens in ${ib.jaar} € ${nl((ib.belastingOpInkomenMln + ib.premiesVolksverzekeringenMln) / 1e3, 1)} mld belasting op inkomen en premies volksverzekeringen (alle boxen, inclusief ondernemers); geïndexeerd naar ${jaar} is dat € ${nl(cbsBelasting, 1)} mld. Het model komt uit op ${nl((bt.belasting / cbsBelasting) * 100, 0)}% daarvan.
 - De loon- en inkomensheffing in de Miljoenennota ${jaar} is € ${nl(kal.controle.loonEnInkomensheffingMld, 1)} mld, waarvan € ${nl(kal.controle.box3Mld, 1)} mld box 3; de rest (€ ${nl(controle, 1)} mld) is box 1 en box 2. Het model komt uit op ${nl((bt.belasting / controle) * 100, 0)}% daarvan.
 
-Het model bevat alleen box 1 voor werknemers, uitkeringsgerechtigden en gepensioneerden. Box 2, box 3 en de winst van ondernemers zitten er niet in; hun inkomen telt in het model als loon. De modelopbrengst hoort daarom iets lager uit te komen dan beide controlegetallen.
+Het model bevat alleen box 1. Box 2 en box 3 zitten er niet in, en ook niet de aftrekposten die het model niet per huishouden berekent (zie "overige aftrekposten" in het parameterbestand). De modelopbrengst hoort daarom iets lager uit te komen dan de CBS-opbrengst.
+
+## Controle: pensioenpremie en winst
+
+- Werknemersdeel pensioenpremie: model € ${nl(modelPensioenpremie, 1)} mld; CBS ${ib.jaar} € ${nl(ib.pensioenpremieWerknemerMln / 1e3, 1)} mld, geïndexeerd € ${nl(cbsPensioenpremie, 1)} mld (${pct(modelPensioenpremie / cbsPensioenpremie - 1)}).
+- Werknemershuishoudens met pensioenpremie, naar leeftijd hoofdkostwinner: ${pensioenLeeftijd}.
+- Winst van zelfstandig ondernemers: model € ${nl(modelWinst, 1)} mld; CBS ${ib.jaar} € ${nl(ib.inkomenZelfstandigOndernemerMln / 1e3, 1)} mld, geïndexeerd € ${nl(cbsWinst, 1)} mld (${pct(modelWinst / cbsWinst - 1)}).
+
+### Pensioenpremie per 10%-groep gestandaardiseerd inkomen
+
+Het aandeel werknemershuishoudens dat pensioenpremie betaalt, klopt met CBS per 10%-groep en per leeftijdsgroep van de hoofdkostwinner; de premie is per groep zo hoog dat premie ÷ loon klopt met CBS (${pp.jaar}). Door het herwegen schuiven huishoudens een beetje tussen groepen; daarom wijkt het model iets af.
+
+| Groep | Met premie: CBS | Model | Premie ÷ loon: CBS | Model |
+|---|---|---|---|---|
+${pensioenRijen.join("\n")}
 
 ## Uitkomsten huidig beleid
 
@@ -293,7 +362,7 @@ Het model bevat alleen box 1 voor werknemers, uitkeringsgerechtigden en gepensio
 
 ## Bronnen
 
-${[kal.huishoudens.bron, kal.woningen.bron, kal.inkomen.bron, kal.indexatie.bron, kal.toeslagen.bron, kal.controle.bron].map((b) => `- ${b}`).join("\n")}
+${[kal.huishoudens.bron, kal.woningen.bron, kal.inkomen.bron, kal.inkomensbestanddelen.bron, kal.pensioenpremie.bron, kal.indexatie.bron, kal.toeslagen.bron, kal.controle.bron].map((b) => `- ${b}`).join("\n")}
 `;
 const rapportPad = fileURLToPath(new URL(`../docs/kalibratie-${jaar}.md`, import.meta.url));
 writeFileSync(rapportPad, rapport);

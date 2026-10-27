@@ -6,40 +6,13 @@ import { marked } from "marked";
 import Base from "../layouts/Base.astro";
 import { MODEL_VERSIE, kalibratie, pad, params } from "../lib/data.ts";
 import { REPO, meldFoutUrl } from "../lib/project.ts";
+import { bronnen } from "../lib/secties.ts";
 
 // Het kalibratierapport wordt door `npm run kalibreer` gemaakt; hier tonen we het zoals het is.
 const rapportPad = join(DATA_MAP, "..", "docs", `kalibratie-${params.jaar}.md`);
 const rapport = await marked.parse(readFileSync(rapportPad, "utf8").replace(/^# .*\n/, ""));
 
-// Bronnen: rechtstreeks uit de "bron"-velden van het parameterbestand, zodat deze lijst altijd klopt.
-const NAMEN: Record<string, string> = {
-  box1: "Tarieven box 1",
-  "heffingskortingen.algemeen": "Algemene heffingskorting",
-  "heffingskortingen.arbeid": "Arbeidskorting",
-  "heffingskortingen.ouderen": "Ouderenkorting",
-  "heffingskortingen.alleenstaandeOuderen": "Alleenstaande-ouderenkorting",
-  "heffingskortingen.combinatie": "Combinatiekorting",
-  eigenWoning: "Eigen woning",
-  overigeAftrekposten: "Overige aftrekposten",
-  "toeslagen.zorgtoeslag": "Zorgtoeslag",
-  "toeslagen.huurtoeslag": "Huurtoeslag",
-  "toeslagen.kindgebondenBudget": "Kindgebonden budget",
-  "toeslagen.kinderopvangtoeslag": "Kinderopvangtoeslag",
-  uitkeringen: "AOW en uitkeringen",
-  zorg: "Zorgpremie en Zvw-bijdrage",
-  kinderbijslag: "Kinderbijslag",
-  loon: "Vakantiegeld",
-  gedrag: "Gedragseffect",
-  methodiek: "Uitkomstmaten",
-};
-const bronnen: { naam: string; bron: string }[] = [];
-const loop = (o: unknown, pad: string) => {
-  if (typeof o !== "object" || o === null || Array.isArray(o)) return;
-  const r = o as Record<string, unknown>;
-  if (typeof r.bron === "string") bronnen.push({ naam: NAMEN[pad] ?? pad, bron: r.bron });
-  for (const [k, v] of Object.entries(r)) if (k !== "bron") loop(v, pad ? `${pad}.${k}` : k);
-};
-loop(params, "");
+const lijst = bronnen(params);
 const metLinks = (t: string) =>
   t.replace(/</g, "&lt;").replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" rel="noopener">$1</a>');
 ---
@@ -97,7 +70,7 @@ const metLinks = (t: string) =>
       <dt>Marginale druk</dt>
       <dd>
         Welk deel van een extra euro bruto verdwijnt aan belasting en lagere toeslagen. Boven de 50% spreken
-        we van een armoedeval.
+        we van een armoedeval. Pensioenpremie telt niet mee: dat is opbouw voor later.
       </dd>
       <dt>Overheid per saldo</dt>
       <dd>
@@ -110,7 +83,19 @@ const metLinks = (t: string) =>
     <h2>Wat zit er niet in?</h2>
     <ul>
       <li>Box 2 (aanmerkelijk belang) en box 3 (sparen en beleggen).</li>
-      <li>Ondernemers: de zelfstandigenaftrek en de mkb-winstvrijstelling. Winst telt als loon.</li>
+      <li>
+        Ondernemers: verliezen, de startersaftrek en de meewerkaftrek in de nagebootste bevolking (die tellen
+        mee als vast bedrag bij de overige aftrekposten), en de aftrek van investeringen.
+      </li>
+      <li>
+        Pensioen: in de nagebootste bevolking betaalt een deel van de werknemers pensioenpremie, zoveel als
+        CBS per inkomensgroep en leeftijd telt, en gemiddeld zo hoog als CBS per inkomensgroep meet. Wie welk
+        fonds heeft, weten we niet. In de calculator vul je je eigen premie in.
+      </li>
+      <li>
+        Bijstand: alleen de landelijke normen vanaf 21 jaar. Jongerennormen, de kostendelersnorm, vrijlatingen
+        bij bijverdienen en gemeentelijke regelingen zitten er niet in.
+      </li>
       <li>Gedrag: standaard rekenen we statisch. In het lab kun je een eenvoudig gedragseffect aanzetten.</li>
       <li>
         Vermogen in de nagebootste bevolking. De vermogensgrenzen van de toeslagen werken wel als je zelf
@@ -142,7 +127,7 @@ const metLinks = (t: string) =>
         </tr>
       </thead>
       <tbody>
-        {bronnen.map((b) => (
+        {lijst.map((b) => (
           <tr>
             <td>{b.naam}</td>
             <td set:html={metLinks(b.bron)} />

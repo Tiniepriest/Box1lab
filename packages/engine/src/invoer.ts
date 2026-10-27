@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Huishouden, Lid } from "./huishouden.ts";
+import { vulBijstandIn, type Huishouden, type Lid } from "./huishouden.ts";
 import { formatteerFouten, type Parameters } from "./parameters/schema.ts";
 import type { Kinderopvang } from "./regels/toeslagen/kot.ts";
 import { aowPerJaar } from "./regels/uitkeringen.ts";
@@ -15,11 +15,19 @@ const bedrag = z.number().finite().nonnegative();
 export const persoonInvoerSchema = z.strictObject({
   leeftijd: z.number().int().min(15).max(110),
   soort: z.enum(["loondienst", "zzp", "bijstand", "werknemersverzekering", "aow", "geen"]),
-  /** Bruto inkomen uit werk of uitkering; bij "aow" het aanvullend pensioen. */
+  /** Bruto inkomen uit werk of uitkering; bij "zzp" de winst; bij "aow" het aanvullend pensioen; niet bij bijstand. */
   bedrag,
   periode: z.enum(["jaar", "maand"]),
-  /** Alleen bij periode "maand": zit het vakantiegeld al in het maandbedrag? */
+  /** Alleen bij loondienst en uitkering per maand: zit het vakantiegeld al in het maandbedrag? */
   inclusiefVakantiegeld: z.boolean(),
+  /** Alleen bij loondienst: bruto extra per jaar, zoals een 13e maand, eindejaarsuitkering of bonus. */
+  extraPerJaar: bedrag.default(0),
+  /** Alleen bij loondienst: het eigen deel van de pensioenpremie per maand, zoals op de loonstrook (0 = geen). */
+  pensioenpremiePerMaand: bedrag.default(0),
+  /** Alleen bij zzp: voldoet aan het urencriterium voor de ondernemersaftrek. */
+  urencriterium: z.boolean().default(true),
+  /** Alleen bij zzp: mag de startersaftrek gebruiken. */
+  starter: z.boolean().default(false),
 });
 
 export const invoerSchema = z.strictObject({
@@ -34,7 +42,8 @@ export const invoerSchema = z.strictObject({
       uurprijs: bedrag,
     }),
   ),
-  wonen: z.enum(["huur", "koop", "anders"]),
+  /** Wie inwoont of geen woonlasten heeft, kiest "huur" met huur 0: dat rekent hetzelfde. */
+  wonen: z.enum(["huur", "koop"]),
   huurPerMaand: bedrag,
   woz: bedrag,
   hypotheekrente: bedrag,
@@ -50,20 +59,38 @@ export function valideerInvoer(data: unknown): Invoer {
   return r.data;
 }
 
-/** Bruto jaarinkomen uit wat iemand invult (per maand of per jaar, met of zonder vakantiegeld). */
+/**
+ * Bruto jaarinkomen uit wat iemand invult: per maand of per jaar, met of zonder vakantiegeld, plus wat er bij
+ * loondienst eens per jaar bij komt. Een zzp'er krijgt geen vakantiegeld.
+ */
 export function jaarbedrag(persoon: PersoonInvoer, p: Parameters): number {
-  if (persoon.periode === "jaar") return persoon.bedrag;
-  const vakantiegeld = persoon.inclusiefVakantiegeld ? 1 : 1 + p.loon.vakantiegeld / 100;
-  return persoon.bedrag * 12 * vakantiegeld;
+  const extra = persoon.soort === "loondienst" ? persoon.extraPerJaar : 0;
+  if (persoon.periode === "jaar") return persoon.bedrag + extra;
+  const metVakantiegeld = persoon.soort !== "zzp" && !persoon.inclusiefVakantiegeld;
+  const factor = metVakantiegeld ? 1 + p.loon.vakantiegeld / 100 : 1;
+  return persoon.bedrag * 12 * factor + extra;
 }
 
 function lid(persoon: PersoonInvoer, partners: boolean, p: Parameters): Lid {
   const bedrag = jaarbedrag(persoon, p);
   switch (persoon.soort) {
     case "loondienst":
+      return {
+        inkomen: bedrag,
+        soort: "werk",
+        uitkering: 0,
+        pensioenpremie: persoon.pensioenpremiePerMaand * 12,
+      };
     case "zzp":
-      return { inkomen: bedrag, soort: "werk", uitkering: 0 };
+      return {
+        inkomen: bedrag,
+        soort: "werk",
+        uitkering: 0,
+        ondernemer: { urencriterium: persoon.urencriterium, starter: persoon.starter },
+      };
     case "bijstand":
+      // Het bedrag volgt uit de norm; dat vult huishoudenUitInvoer in als alle leden bekend zijn.
+      return { inkomen: 0, soort: "uitkering", uitkering: 0, uitkeringSoort: "bijstand" };
     case "werknemersverzekering":
       return { inkomen: bedrag, soort: "uitkering", uitkering: bedrag, uitkeringSoort: persoon.soort };
     case "aow": {
@@ -85,8 +112,15 @@ export function huishoudenUitInvoer(invoer: Invoer, p: Parameters): Huishouden {
       urenPerMaand: k.urenPerMaand,
       uurprijs: k.uurprijs,
     }));
+  const leden = invoer.personen.map((persoon) => lid(persoon, partners, p));
+  vulBijstandIn(
+    leden,
+    invoer.personen.map((x) => x.soort === "bijstand"),
+    partners,
+    p,
+  );
   return {
-    leden: invoer.personen.map((persoon) => lid(persoon, partners, p)),
+    leden,
     partners,
     kinderen: invoer.kinderen.map((k) => k.leeftijd),
     kindInkomens: invoer.kinderen.map((k) => (k.leeftijd >= p.zorg.volwassenVanaf ? k.inkomen : 0)),

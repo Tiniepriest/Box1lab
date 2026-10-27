@@ -6,6 +6,7 @@
     decodeerScenario,
     huishoudenUitInvoer,
     inkomenscurve,
+    invoerSchema,
     leesParameter,
     maakHuishouden,
     pasToe,
@@ -28,7 +29,8 @@
     type BasisSamenvatting,
     type UitkomstSamenvatting,
   } from "../../lib/rekenen.ts";
-  import { leesInvoer } from "../../lib/opslag.ts";
+  import { voorbeeldInvoer } from "../../lib/opslag.ts";
+  import JouwEffect from "../JouwEffect.svelte";
   import { pad } from "../../lib/pad.ts";
   import Figuur from "../grafieken/Figuur.svelte";
   import Gestapeld, { KLASSEN } from "../grafieken/Gestapeld.svelte";
@@ -269,11 +271,13 @@
     return { x, nu, sc };
   });
 
-  // Voorbeeldhuishoudens, met "jij" als je je situatie hebt opgeslagen
-  let jij = $state<Huishouden | null>(null);
-  $effect(() => {
-    const opgeslagen = leesInvoer();
-    if (opgeslagen) jij = huishoudenUitInvoer(opgeslagen, params);
+  // Jouw situatie (blok "Wat betekent dit voor jou?") en de voorbeeldhuishoudens, met "jij" als je die hebt.
+  let invoer = $state(voorbeeldInvoer());
+  let ingevuld = $state(false);
+  const jij = $derived.by(() => {
+    if (!ingevuld) return null;
+    const geldig = invoerSchema.safeParse($state.snapshot(invoer));
+    return geldig.success ? huishoudenUitInvoer(geldig.data, params) : null;
   });
   const huishoudens = $derived.by(() => {
     // Als je je eigen situatie hebt opgeslagen, vervangt die het voorbeeld "jij".
@@ -284,7 +288,7 @@
         sub: v.omschrijving,
         h: maakHuishouden(v.invoer, params),
       }));
-    if (jij) lijst.push({ label: "Jij", sub: "Jouw opgeslagen situatie", h: jij });
+    if (jij) lijst.push({ label: "Jij", sub: "Jouw situatie", h: jij });
     return lijst.map((x) => {
       const a = berekenHuishouden(x.h, params);
       const b = toestand.p === params ? a : berekenHuishouden(x.h, toestand.p, params);
@@ -514,6 +518,8 @@
         </div>
       </div>
 
+      <JouwEffect {params} scenario={toestand.p} bind:invoer bind:ingevuld />
+
       <div class="kaart twee">
         <Figuur
           titel="Wie gaat erop vooruit of achteruit?"
@@ -657,8 +663,8 @@
         <Figuur
           titel="Wat betekent het voor deze huishoudens?"
           uitleg={jij
-            ? "Verandering van het besteedbaar inkomen per jaar. De onderste rij is jouw opgeslagen situatie."
-            : "Verandering van het besteedbaar inkomen per jaar. Sla op de pagina Jouw situatie je eigen situatie op om die hier te zien."}
+            ? "Verandering van het besteedbaar inkomen per jaar. De onderste rij is jouw situatie."
+            : "Verandering van het besteedbaar inkomen per jaar. Vul hierboven je eigen situatie in om die hier te zien."}
         >
           {#snippet legenda()}
             <span><i class="legenda-blok" style="background: var(--gain)"></i>erop vooruit</span>
