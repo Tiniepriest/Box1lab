@@ -4,18 +4,20 @@ Lees eerst `docs/PROGRESS.md` (waar staan we) en `docs/DECISIONS.md` (wat is al 
 
 ## Commando's
 
-| Commando                          | Wat                                                                        |
-| --------------------------------- | -------------------------------------------------------------------------- |
-| `npm test`                        | Alle tests (Vitest)                                                        |
-| `npm run lint`                    | ESLint                                                                     |
-| `npm run format` / `format:check` | Prettier                                                                   |
-| `npm run typecheck`               | `tsc` voor de engine en `astro check` voor de site                         |
-| `npm run build`                   | Bouwt de site naar `site/dist`                                             |
-| `npm run dev`                     | Lokale ontwikkelserver                                                     |
-| `npm run valideer`                | Controleert alle databestanden en toont waarden zonder bron                |
-| `npm run golden`                  | Schrijft de kerncijfers naar het golden-bestand (na een bewuste wijziging) |
-| `npm run vergelijk`               | Vergelijkt de engine met de prototype-baseline                             |
-| `npm run ci`                      | Alles wat CI doet, in volgorde                                             |
+| Commando                          | Wat                                                                                             |
+| --------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `npm test`                        | Alle tests (Vitest)                                                                             |
+| `npm run lint`                    | ESLint                                                                                          |
+| `npm run format` / `format:check` | Prettier                                                                                        |
+| `npm run typecheck`               | `tsc` voor de engine en `astro check` voor de site                                              |
+| `npm run build`                   | Bouwt de site naar `site/dist`                                                                  |
+| `npm run dev`                     | Lokale ontwikkelserver                                                                          |
+| `npm run valideer`                | Controleert alle databestanden en toont waarden zonder bron                                     |
+| `npm run kalibreer`               | Maakt en herweegt de populatie (`data/populatie/<jaar>.json`) en schrijft het kalibratierapport |
+| `npm run kalibreer:controle`      | Controleert (in CI) of de populatie actueel is                                                  |
+| `npm run golden`                  | Schrijft de kerncijfers naar het golden-bestand (na een bewuste wijziging)                      |
+| `npm run vergelijk`               | Vergelijkt de engine met de prototype-baseline                                                  |
+| `npm run ci`                      | Alles wat CI doet, in volgorde                                                                  |
 
 Node 24 (`.nvmrc`). npm-workspaces: `packages/engine` en `site`.
 

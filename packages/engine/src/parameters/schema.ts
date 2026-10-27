@@ -117,6 +117,7 @@ export const parametersSchema = z.strictObject({
       }),
       inkomensijkpunt: perOmvang(nietNegatief),
       afbouw: perOmvang(pct),
+      inkomensvrijstellingKind: nietNegatief,
       maxVermogen: perHuishouden(nietNegatief),
     }),
     kindgebondenBudget: z.strictObject({
@@ -161,6 +162,7 @@ export const parametersSchema = z.strictObject({
     nominalePremiePerVolwassene: nietNegatief,
     zvwBijdrage: pct,
     zvwMaximumInkomen: nietNegatief,
+    volwassenVanaf: z.number().int().positive(),
   }),
 
   kinderbijslag: z.strictObject({
@@ -185,7 +187,11 @@ export const parametersSchema = z.strictObject({
 
   methodiek: z.strictObject({
     bron,
-    equivalentie: z.strictObject({ extraVolwassene: nietNegatief, kind: nietNegatief }),
+    equivalentie: z.strictObject({
+      extraVolwassene: nietNegatief,
+      kind: nietNegatief,
+      kindVanafLeeftijd: z.number().int().nonnegative(),
+    }),
     armoedegrens: pct,
     winnaarsGrenzen: z.tuple([pct, pct, pct, pct]),
   }),
@@ -195,18 +201,54 @@ export type Parameters = z.infer<typeof parametersSchema>;
 export type Staffel = z.infer<typeof staffel>;
 export type Schijf = z.infer<typeof schijf>;
 
-const doel = z.strictObject({ omschrijving: z.string(), waardeMld: z.number().positive(), bron });
+const aantal = z.number().int().nonnegative();
+const toeslagDoel = z.strictObject({ ontvangers: aantal, bedragMld: z.number().positive() });
 
+/** Kalibratiedoelen (data/kalibratie/<jaar>.yaml). */
 export const kalibratieSchema = z.strictObject({
   jaar: z.number().int(),
-  doelen: z.strictObject({
-    ibNaHra: doel,
-    hypotheekrente: doel,
-    zorgtoeslag: doel,
-    huurtoeslag: doel,
-    kindgebondenBudget: doel,
-    kinderopvangtoeslag: doel,
+  huishoudens: z.strictObject({
+    bron,
+    leeftijdsgroepen: z
+      .array(
+        z.strictObject({
+          van: z.number().int(),
+          tot: z.number().int(),
+          alleenstaand: aantal,
+          paar0: aantal,
+          paar1: aantal,
+          paar2: aantal,
+          paar3: aantal,
+          eenouder1: aantal,
+          eenouder2: aantal,
+          eenouder3: aantal,
+        }),
+      )
+      .min(1),
   }),
+  woningen: z.strictObject({ bron, koop: aantal, corporatie: aantal, particulier: aantal }),
+  inkomen: z.strictObject({
+    bron,
+    jaar: z.number().int(),
+    besteedbaarPercentielen: z.array(z.number().positive()).length(9),
+  }),
+  inkomensbestanddelen: z.strictObject({
+    bron,
+    jaar: z.number().int(),
+    inkomenEigenWoningMln: z.number().nonnegative(),
+    betaaldeHypotheekrenteMln: z.number().nonnegative(),
+    belastingOpInkomenMln: z.number().nonnegative(),
+    premiesVolksverzekeringenMln: z.number().nonnegative(),
+  }),
+  indexatie: z.strictObject({ bron, factor: z.number().positive() }),
+  toeslagen: z.strictObject({
+    bron,
+    zorgtoeslag: toeslagDoel,
+    huurtoeslag: toeslagDoel,
+    kindgebondenBudget: toeslagDoel,
+    kinderopvangtoeslag: toeslagDoel,
+  }),
+  controle: z.strictObject({ bron, loonEnInkomensheffingMld: z.number().positive(), box3Mld: z.number() }),
 });
 
 export type Kalibratie = z.infer<typeof kalibratieSchema>;

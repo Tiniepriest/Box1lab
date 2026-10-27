@@ -5,12 +5,12 @@ import {
   leesYaml,
   valideerKalibratie,
   valideerParameters,
-  valideerPopulatieSpec,
+  valideerPopulatie,
   valideerPreset,
   valideerVoorbeelden,
   type Kalibratie,
   type Parameters,
-  type PopulatieSpec,
+  type Populatie,
   type Preset,
   type Voorbeelden,
 } from "../index.ts";
@@ -34,8 +34,10 @@ export function laadKalibratie(jaar: number): Kalibratie {
   return valideerKalibratie(lees(`kalibratie/${jaar}.yaml`), `data/kalibratie/${jaar}.yaml`);
 }
 
-export function laadPopulatieSpec(jaar: number): PopulatieSpec {
-  return valideerPopulatieSpec(lees(`populatie/spec-${jaar}.yaml`), `data/populatie/spec-${jaar}.yaml`);
+/** De herwogen populatie, gemaakt door `npm run kalibreer`. */
+export function laadPopulatie(jaar: number): Populatie {
+  const pad = join(DATA_MAP, `populatie/${jaar}.json`);
+  return valideerPopulatie(JSON.parse(readFileSync(pad, "utf8")), `data/populatie/${jaar}.json`);
 }
 
 /** Alle presets, gevalideerd tegen de parameters en gesorteerd op `volgorde`. */

@@ -5,7 +5,7 @@ import { gewogenMediaan } from "./metrics/gewogen.ts";
 import { gini } from "./metrics/gini.ts";
 import { winnaarsKlasse } from "./metrics/winnaars.ts";
 import type { Kalibratie, Parameters } from "./parameters/schema.ts";
-import type { PopulatieHuishouden } from "./populatie/genereer.ts";
+import type { PopulatieHuishouden } from "./populatie.ts";
 
 /** Posten in het overheidssaldo, in de volgorde waarin ze getoond worden. */
 export const POSTEN = [
@@ -124,13 +124,15 @@ export function maakBasis(
 ): Basis {
   const resultaten = populatie.map((h) => berekenHuishouden(h, params));
   const t = totalen(resultaten, populatie);
-  const d = kalibratie.doelen;
+  // Toeslagen worden geschaald naar de raming van Dienst Toeslagen. De belasting niet: voor box 1 alleen bestaat
+  // geen gepubliceerd totaal (zie docs/DECISIONS.md D-022); die volgt uit de herwogen inkomensverdeling.
+  const d = kalibratie.toeslagen;
   const schaal: Schaalfactoren = {
-    ib: d.ibNaHra.waardeMld / t.belasting,
-    zorgtoeslag: d.zorgtoeslag.waardeMld / t.zorgtoeslag,
-    huurtoeslag: d.huurtoeslag.waardeMld / t.huurtoeslag,
-    kgb: d.kindgebondenBudget.waardeMld / t.kgb,
-    kot: d.kinderopvangtoeslag.waardeMld / t.kot,
+    ib: 1,
+    zorgtoeslag: d.zorgtoeslag.bedragMld / t.zorgtoeslag,
+    huurtoeslag: d.huurtoeslag.bedragMld / t.huurtoeslag,
+    kgb: d.kindgebondenBudget.bedragMld / t.kgb,
+    kot: d.kinderopvangtoeslag.bedragMld / t.kot,
   };
   const persoonsgewichten = populatie.map(
     (h, i) => h.gewicht * (resultaten[i]!.volwassenen + resultaten[i]!.kinderen),

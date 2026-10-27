@@ -3,23 +3,23 @@
  "toelichting": "Gegenereerd door `npm run golden`. Niet met de hand bewerken.",
  "kalibratie": {
   "modelMld": {
-   "ibNaHra": 165.9189,
-   "hypotheekrente": 23.6839,
-   "zorgtoeslag": 5.2554,
-   "huurtoeslag": 14.3171,
-   "kindgebondenBudget": 6.7262,
-   "kinderopvangtoeslag": 6.5262
+   "ibNaHra": 151.9805,
+   "hypotheekrente": 23.331,
+   "zorgtoeslag": 6.3,
+   "huurtoeslag": 5.6,
+   "kindgebondenBudget": 4.7,
+   "kinderopvangtoeslag": 5.7
   },
   "schaal": {
-   "ib": 0.9945,
-   "zorgtoeslag": 1.2178,
-   "huurtoeslag": 0.3911,
-   "kgb": 0.5352,
-   "kot": 1.0113
+   "ib": 1,
+   "zorgtoeslag": 1,
+   "huurtoeslag": 1,
+   "kgb": 1,
+   "kot": 1
   },
-  "armoedegrens": 21650.25,
-  "armoede": 6.8766,
-  "gini": 0.25452
+  "armoedegrens": 22280.03,
+  "armoede": 9.8744,
+  "gini": 0.22738
  },
  "scenarios": [
   {
@@ -37,9 +37,9 @@
     "zvw": 0,
     "uitkeringen": 0
    },
-   "armoede": 6.8766,
-   "armoedeKinderen": 7.2881,
-   "gini": 0.25452,
+   "armoede": 9.8744,
+   "armoedeKinderen": 9.0698,
+   "gini": 0.22738,
    "decielenRelatief": [
     0,
     0,
@@ -62,78 +62,78 @@
   },
   {
    "id": "vlaktaks-40",
-   "saldoMld": 30.4618,
+   "saldoMld": 41.6219,
    "posten": {
-    "box1": -1.0446,
-    "eigenWoning": 5.796,
+    "box1": 7.9267,
+    "eigenWoning": 7.9704,
     "overigeAftrek": 4,
-    "zorgtoeslag": 6.4,
+    "zorgtoeslag": 6.3,
     "huurtoeslag": 5.6,
-    "kgb": 3.6,
-    "kot": 6.6,
+    "kgb": 4.7,
+    "kot": 5.7,
     "kinderbijslag": 0,
-    "zvw": 0.1015,
-    "uitkeringen": -0.591
+    "zvw": 0.1004,
+    "uitkeringen": -0.6756
    },
-   "armoede": 25.4815,
-   "armoedeKinderen": 24.9886,
-   "gini": 0.32781,
+   "armoede": 20.0851,
+   "armoedeKinderen": 20.074,
+   "gini": 0.27407,
    "decielenRelatief": [
-    -33.084,
-    -18.411,
-    -19.778,
-    -20.153,
-    -14.402,
-    -13.014,
-    -8.451,
-    -4.635,
-    0.5,
-    8.316
+    -19.259,
+    -15.688,
+    -15.979,
+    -14.125,
+    -12.235,
+    -10.497,
+    -8.142,
+    -6.442,
+    -2.588,
+    4.05
    ],
    "winnaars": [
-    68.568,
-    10.064,
-    4.982,
-    6.708,
-    9.678
+    70.925,
+    12.542,
+    4.859,
+    6.123,
+    5.551
    ]
   },
   {
    "id": "drie-schijven-35-40-45",
-   "saldoMld": 20.2725,
+   "saldoMld": 29.3505,
    "posten": {
-    "box1": -11.6236,
-    "eigenWoning": 5.796,
+    "box1": -3.9653,
+    "eigenWoning": 7.1474,
     "overigeAftrek": 4,
-    "zorgtoeslag": 6.4,
+    "zorgtoeslag": 6.3,
     "huurtoeslag": 5.6,
-    "kgb": 3.6,
-    "kot": 6.6,
+    "kgb": 4.7,
+    "kot": 5.7,
     "kinderbijslag": 0,
-    "zvw": 0.082,
-    "uitkeringen": -0.1819
+    "zvw": 0.0811,
+    "uitkeringen": -0.2128
    },
-   "armoede": 23.9706,
-   "armoedeKinderen": 23.138,
-   "gini": 0.3266,
+   "armoede": 19.0868,
+   "armoedeKinderen": 19.3992,
+   "gini": 0.27396,
    "decielenRelatief": [
-    -32.326,
-    -17.436,
-    -18.387,
-    -18.188,
-    -11.623,
-    -9.956,
-    -5.375,
-    -1.613,
-    3.17,
-    9.409
+    -18.458,
+    -14.228,
+    -14.138,
+    -11.607,
+    -9.384,
+    -7.471,
+    -5.014,
+    -3.389,
+    0.326,
+    5.883
    ],
    "winnaars": [
-    58.754,
-    12.058,
-    5.658,
-    9.938,
-    13.592
+    57.889,
+    16.207,
+    7.02,
+    9.59,
+    9.294
    ]
   },
   {
@@ -151,102 +151,102 @@
     "zvw": 0,
     "uitkeringen": 0
    },
-   "armoede": 14.4518,
-   "armoedeKinderen": 12.0973,
-   "gini": 0.27742,
+   "armoede": 11.7989,
+   "armoedeKinderen": 10.1503,
+   "gini": 0.23563,
    "decielenRelatief": [
-    -19.167,
-    -11.079,
-    -8.436,
-    -6.69,
-    -2.353,
-    -0.408,
-    0,
+    -7.896,
+    -4.145,
+    -3.83,
+    -1.71,
+    -0.294,
+    -0.161,
+    -0.023,
     0,
     0,
     0
    ],
    "winnaars": [
-    26.272,
-    3.505,
-    70.224,
+    9.397,
+    3.608,
+    86.995,
     0,
     0
    ]
   },
   {
    "id": "zonder-hra",
-   "saldoMld": 7.3124,
+   "saldoMld": 7.9366,
    "posten": {
     "box1": 0,
-    "eigenWoning": 7.0875,
+    "eigenWoning": 7.4971,
     "overigeAftrek": 0,
-    "zorgtoeslag": 0.0484,
+    "zorgtoeslag": 0.1141,
     "huurtoeslag": 0,
-    "kgb": 0.0984,
-    "kot": 0.0781,
+    "kgb": 0.2243,
+    "kot": 0.1011,
     "kinderbijslag": 0,
     "zvw": 0,
     "uitkeringen": 0
    },
-   "armoede": 7.395,
-   "armoedeKinderen": 8.4019,
-   "gini": 0.25074,
+   "armoede": 10.3089,
+   "armoedeKinderen": 9.6465,
+   "gini": 0.22507,
    "decielenRelatief": [
-    -0.224,
-    -0.271,
-    -0.356,
-    -0.401,
-    -0.832,
-    -1.648,
-    -2.189,
-    -2.379,
-    -2.431,
-    -1.923
+    -1.451,
+    -0.879,
+    -0.733,
+    -0.91,
+    -1.183,
+    -1.343,
+    -1.5,
+    -1.734,
+    -1.882,
+    -2.479
    ],
    "winnaars": [
-    0,
-    54.607,
-    45.393,
+    10.06,
+    28.594,
+    61.346,
     0,
     0
    ]
   },
   {
    "id": "zonder-hra-en-forfait",
-   "saldoMld": 5.975,
+   "saldoMld": 6.8798,
    "posten": {
     "box1": 0,
-    "eigenWoning": 5.796,
+    "eigenWoning": 6.4811,
     "overigeAftrek": 0,
-    "zorgtoeslag": 0.0187,
+    "zorgtoeslag": 0.0905,
     "huurtoeslag": 0,
-    "kgb": 0.0866,
-    "kot": 0.0737,
+    "kgb": 0.2116,
+    "kot": 0.0966,
     "kinderbijslag": 0,
     "zvw": 0,
     "uitkeringen": 0
    },
-   "armoede": 7.395,
-   "armoedeKinderen": 8.4019,
-   "gini": 0.25162,
+   "armoede": 10.2101,
+   "armoedeKinderen": 9.4553,
+   "gini": 0.22554,
    "decielenRelatief": [
-    -0.194,
-    -0.192,
-    -0.248,
-    -0.309,
-    -0.679,
-    -1.385,
-    -1.9,
-    -2.071,
-    -2.092,
-    -1.398
+    -1.27,
+    -0.752,
+    -0.635,
+    -0.795,
+    -1.063,
+    -1.186,
+    -1.332,
+    -1.545,
+    -1.656,
+    -2.059
    ],
    "winnaars": [
+    9.087,
+    26.449,
+    64.464,
     0,
-    52.938,
-    46.974,
-    0.089,
     0
    ]
   }
@@ -534,7 +534,7 @@
   }
  ],
  "oplosser": {
-  "vlaktaksVrijstelling": 26257,
-  "vlaktaksTariefFactor": 0.8184
+  "vlaktaksVrijstelling": 27796,
+  "vlaktaksTariefFactor": 0.7487
  }
 }

@@ -2,7 +2,6 @@ import {
   berekenHuishouden,
   budgetneutraalViaTarieven,
   budgetneutraalViaVrijstelling,
-  genereerPopulatie,
   maakBasis,
   maakHuishouden,
   pasToe,
@@ -11,7 +10,7 @@ import {
 import {
   laadKalibratie,
   laadParameters,
-  laadPopulatieSpec,
+  laadPopulatie,
   laadPresets,
   laadVoorbeelden,
 } from "../../src/node/index.ts";
@@ -24,7 +23,7 @@ import {
 export function berekenGolden(jaar = 2026) {
   const params = laadParameters(jaar);
   const presets = laadPresets(params);
-  const basis = maakBasis(params, genereerPopulatie(laadPopulatieSpec(jaar), params), laadKalibratie(jaar));
+  const basis = maakBasis(params, laadPopulatie(jaar).huishoudens, laadKalibratie(jaar));
   // "+ 0" maakt van −0 een 0, zodat de JSON-vergelijking klopt.
   const r = (x: number, d = 4) => Math.round(x * 10 ** d) / 10 ** d + 0;
   const t = basis.totalen;

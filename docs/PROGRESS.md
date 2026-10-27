@@ -30,9 +30,18 @@
 - [x] Netto-koppeling per uitkeringssoort; Zvw-bijdrage AOW'ers; kinderbijslag naar leeftijd
 - [x] Unit tests per regeling (50), golden tests op de nieuwe engine, eigenschapstests inclusief bekende armoedeval-punten
 - [x] Verschillen met de prototype-baseline verklaard (D-020)
-- [ ] **Bekend probleem voor fase 3:** de populatie geeft met de exacte regels veel te veel huurtoeslag en kindgebonden budget (schaalfactoren 0,39 en 0,54). Verdelingscijfers zijn tot fase 3 niet betrouwbaar.
+- [x] Bekend probleem (te veel toeslag in de populatie) opgelost in fase 3
 
-## Fase 3: Populatie en kalibratie — bezig
+## Fase 3: Populatie en kalibratie — klaar (PR #4)
+
+- [x] Populatie offline gegenereerd uit de CBS-huishoudenscellen 2026 (4.024 huishoudens) en herwogen met begrensde raking naar 32 marges (CBS, Dienst Toeslagen); `npm run kalibreer`
+- [x] Kalibratierapport `docs/kalibratie-2026.md`
+- [x] Alle schaalfactoren 1,00 (eis 0,9–1,1); decielgrenzen besteedbaar inkomen binnen 0,2% van CBS (eis 5%)
+- [x] Meerderjarige thuiswonende kinderen met eigen inkomen, belasting en zorgtoeslag
+- [x] Kalibratiedoelen vervangen door officiële bronnen; hypotheekrente uit CBS
+- [x] CI controleert of de populatie actueel is (`npm run kalibreer:controle`)
+
+## Fase 4: Site MVP — bezig
 
 ## Open vragen voor de eigenaar
 
@@ -41,7 +50,6 @@
 
 ## TODO: bron nodig
 
-`npm run valideer` toont de actuele lijst. Na fase 2:
+`npm run valideer` toont de actuele lijst. Na fase 3:
 
 - `overigeAftrekposten`: vaste schatting van € 4 mld uit het prototype
-- `kalibratie.doelen.hypotheekrente` (en de overige kalibratiedoelen worden in fase 3 gecontroleerd)

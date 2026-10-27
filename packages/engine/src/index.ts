@@ -20,7 +20,7 @@ export * from "./regels/uitkeringen.ts";
 export * from "./regels/kinderbijslag.ts";
 export * from "./regels/zorg.ts";
 export * from "./huishouden.ts";
-export * from "./populatie/genereer.ts";
+export * from "./populatie.ts";
 export * from "./metrics/armoede.ts";
 export * from "./metrics/decielen.ts";
 export * from "./metrics/gewogen.ts";
