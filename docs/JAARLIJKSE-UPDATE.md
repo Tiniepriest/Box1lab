@@ -34,6 +34,7 @@ Kopieer `data/kalibratie/<jaar>.yaml` en `data/populatie/spec-<jaar>.yaml` naar 
 | Koop, corporatie, particuliere huur                | CBS StatLine 82900NED                                             |
 | Decielgrenzen besteedbaar inkomen                  | CBS StatLine 83934NED (nieuwste jaar)                             |
 | Huurwaarde eigen woning, hypotheekrente, belasting | CBS StatLine 84493NED (nieuwste jaar)                             |
+| Pensioenpremie werknemers, winst zelfstandigen     | CBS StatLine 84493NED, posten 11.4.1.1 en 2.1                     |
 | Indexatie naar het modeljaar                       | CPB, kerngegevenstabel van de nieuwste MEV (cao-loon marktsector) |
 | Ontvangers en uitgaven per toeslag                 | Dienst Toeslagen, Aantallen en bedragen (overtoeslagen.nl)        |
 | Controle belastingopbrengst                        | Miljoenennota, bijlage belasting- en premieontvangsten            |

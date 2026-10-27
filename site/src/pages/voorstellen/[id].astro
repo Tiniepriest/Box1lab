@@ -1,4 +1,5 @@
 ---
+import JouwEffect from "../../components/JouwEffect.svelte";
 import MiniDecielen from "../../components/MiniDecielen.astro";
 import MeldFout from "../../components/MeldFout.astro";
 import Base from "../../layouts/Base.astro";
@@ -42,6 +43,8 @@ const { k } = Astro.props as { k: Kerncijfers };
       <div class="t">van alle personen, meer dan 1% verschil</div>
     </div>
   </div>
+
+  <JouwEffect client:visible {params} wijzigingen={k.preset.wijzigingen} />
 
   <section class="kaart">
     <h2>Verandering per inkomensgroep</h2>

@@ -1,51 +1,58 @@
 <script lang="ts">
-  import { heeftAowLeeftijd, type Invoer, type Parameters, type PersoonInvoer } from "@box1lab/engine";
-  import { euro } from "../lib/format.ts";
-  import { bewaarInvoer, leesInvoer, wisInvoer } from "../lib/opslag.ts";
+  import {
+    bijstandsnormPerJaar,
+    heeftAowLeeftijd,
+    jaarbedrag,
+    persoonInvoerSchema,
+    standaardPensioenpremie,
+    type Invoer,
+    type Parameters,
+    type PersoonInvoer,
+  } from "@box1lab/engine";
+  import { untrack } from "svelte";
+  import { euro, getal, procent } from "../lib/format.ts";
+  import { bewaarInvoer, leesBewaard, wisInvoer } from "../lib/opslag.ts";
 
   /*
-   * Het gedeelde invoerformulier (HANDOFF §3.3). Alles blijft in de browser. Onthouden kan alleen als de bezoeker
-   * dat aanzet, en is altijd te wissen. "Weet ik niet" gebruikt een mediaan uit de modelpopulatie.
+   * Het gedeelde invoerformulier (HANDOFF §3.3). Alles blijft in de browser (D-052): zolang het tabblad openstaat
+   * onthouden we het, zodat het meegaat naar andere pagina's; op dit apparaat alleen als de bezoeker dat aanzet.
    */
-  let {
-    invoer = $bindable(),
-    params,
-    standaarden,
-  }: {
-    invoer: Invoer;
-    params: Parameters;
-    /** Medianen uit de populatie voor "weet ik niet"; null zolang de populatie laadt. */
-    standaarden: { huur: number; woz: number; rente: number } | null;
-  } = $props();
+  let { invoer = $bindable(), params }: { invoer: Invoer; params: Parameters } = $props();
 
   let onthouden = $state(false);
-  let weetNiet = $state({ huur: false, woz: false, rente: false });
   let melding = $state("");
+  // Het voorbeeld bewaren we pas als de bezoeker iets verandert; anders lijkt het voorbeeld "jouw situatie".
+  let begin: string | null = null;
+  let bewaren = false;
 
   $effect(() => {
-    const opgeslagen = leesInvoer();
-    if (opgeslagen) {
-      invoer = opgeslagen;
-      onthouden = true;
+    const bewaard = leesBewaard();
+    if (bewaard) {
+      invoer = bewaard.invoer;
+      onthouden = bewaard.opApparaat;
+      bewaren = true;
     }
+    begin = JSON.stringify(untrack(() => $state.snapshot(invoer)));
   });
 
   $effect(() => {
-    const kopie = $state.snapshot(invoer) as Invoer;
-    if (onthouden) bewaarInvoer(kopie);
-  });
-
-  $effect(() => {
-    if (!standaarden) return;
-    if (weetNiet.huur) invoer.huurPerMaand = standaarden.huur;
-    if (weetNiet.woz) invoer.woz = standaarden.woz;
-    if (weetNiet.rente) invoer.hypotheekrente = standaarden.rente;
+    const tekst = JSON.stringify($state.snapshot(invoer));
+    const opApparaat = onthouden;
+    if (begin === null || (!bewaren && tekst === begin)) return;
+    bewaren = true;
+    bewaarInvoer(JSON.parse(tekst) as Invoer, opApparaat);
   });
 
   const partner = $derived(invoer.personen.length === 2);
 
   function nieuwePersoon(): PersoonInvoer {
-    return { leeftijd: 35, soort: "loondienst", bedrag: 0, periode: "maand", inclusiefVakantiegeld: false };
+    return persoonInvoerSchema.parse({
+      leeftijd: 35,
+      soort: "loondienst",
+      bedrag: 0,
+      periode: "maand",
+      inclusiefVakantiegeld: false,
+    });
   }
   function zetPartner(aan: boolean) {
     invoer.personen = aan ? [invoer.personen[0]!, nieuwePersoon()] : [invoer.personen[0]!];
@@ -68,10 +75,12 @@
   }
   function wis() {
     wisInvoer();
+    bewaren = false;
+    begin = JSON.stringify($state.snapshot(invoer));
     onthouden = false;
     melding = "Je gegevens zijn gewist uit deze browser.";
   }
-  function getal(e: Event): number {
+  function leesGetal(e: Event): number {
     const v = Number((e.currentTarget as HTMLInputElement).value);
     return Number.isFinite(v) && v >= 0 ? v : 0;
   }
@@ -88,7 +97,9 @@
 
 <form class="invoer" onsubmit={(e) => e.preventDefault()} aria-label="Jouw situatie">
   <p class="privacy">
-    <strong>Privacy:</strong> wat je invult blijft in je eigen browser. Er gaat niets naar een server.
+    <strong>Privacy:</strong> wat je invult blijft in je eigen browser. Er gaat niets naar een server. Zolang dit
+    tabblad openstaat, onthouden we het, zodat je jouw situatie ook in het lab en bij de voorstellen ziet. Sluit
+    je het tabblad, dan is het weg.
   </p>
 
   <fieldset>
@@ -118,12 +129,25 @@
         </select>
       </div>
       {#if persoon.soort === "zzp"}
-        <p class="notitie">We rekenen je winst als loon. De zelfstandigenaftrek zit nog niet in het model.</p>
+        <p class="notitie">Vul je winst in: je omzet min je kosten, vóór belasting.</p>
       {/if}
-      {#if persoon.soort !== "geen"}
+      {#if persoon.soort === "bijstand"}
+        <p class="notitie">
+          De bijstand is een vast bedrag: {euro(bijstandsnormPerJaar(params, partner) / 12)} netto per maand
+          {partner ? "voor jullie samen" : ""}, inclusief vakantiegeld (gemiddelde over {params.jaar}).
+          {#if partner}Heeft je partner inkomen, dan gaat dat er netto vanaf.{/if}
+          Niet in het model: lagere bedragen onder de {params.bijstand.minimumLeeftijd} jaar, de kostendelersnorm
+          als je met andere volwassenen woont, en bijverdienen.
+        </p>
+      {/if}
+      {#if persoon.soort !== "geen" && persoon.soort !== "bijstand"}
         <div class="rij">
           <label for="bedrag-{i}">
-            {persoon.soort === "aow" ? "Aanvullend pensioen, bruto" : "Bruto bedrag"}
+            {persoon.soort === "aow"
+              ? "Aanvullend pensioen, bruto"
+              : persoon.soort === "zzp"
+                ? "Winst"
+                : "Bruto bedrag"}
           </label>
           <div class="bedrag">
             <input id="bedrag-{i}" type="number" min="0" step="50" bind:value={persoon.bedrag} />
@@ -133,11 +157,68 @@
             </select>
           </div>
         </div>
-        {#if persoon.periode === "maand" && persoon.soort !== "aow"}
+        {#if persoon.periode === "maand" && persoon.soort !== "aow" && persoon.soort !== "zzp"}
           <label class="vinkje">
             <input type="checkbox" bind:checked={persoon.inclusiefVakantiegeld} />
             Vakantiegeld zit al in dit maandbedrag
           </label>
+        {/if}
+        {#if persoon.soort === "loondienst"}
+          <div class="rij">
+            <label for="extra-{i}">Extra per jaar <span class="hint">13e maand, bonus</span></label>
+            <input id="extra-{i}" type="number" min="0" step="100" bind:value={persoon.extraPerJaar} />
+          </div>
+          <p class="notitie">
+            Bruto, zonder vakantiegeld. Bijvoorbeeld een 13e maand, eindejaarsuitkering of bonus. Op je
+            loonstrook gaat daar meer belasting van af; dat wordt in je aangifte verrekend. Wij rekenen meteen
+            met het hele jaar.
+          </p>
+        {/if}
+        {#if persoon.soort === "loondienst"}
+          <div class="rij">
+            <label for="pensioen-{i}">Pensioen via je werk</label>
+            <select id="pensioen-{i}" bind:value={persoon.pensioen}>
+              <option value="standaard">Ja, schat de premie</option>
+              <option value="bedrag">Ja, ik weet het bedrag</option>
+              <option value="geen">Nee</option>
+            </select>
+          </div>
+          {#if persoon.pensioen === "standaard"}
+            <p class="notitie">
+              We schatten {euro(standaardPensioenpremie(jaarbedrag(persoon, params), params) / 12)} per maand:
+              {procent(params.pensioenpremie.werknemer, 2)} van je loon boven {euro(
+                params.pensioenpremie.franchise,
+              )} per jaar, zoals bij ABP. Andere fondsen rekenen anders; het echte bedrag staat op je loonstrook.
+            </p>
+          {:else if persoon.pensioen === "bedrag"}
+            <div class="rij">
+              <label for="premie-{i}"
+                >Pensioenpremie per maand <span class="hint">staat op je loonstrook</span></label
+              >
+              <input
+                id="premie-{i}"
+                type="number"
+                min="0"
+                step="10"
+                bind:value={persoon.pensioenpremiePerMaand}
+              />
+            </div>
+          {/if}
+        {/if}
+        {#if persoon.soort === "zzp"}
+          <label class="vinkje">
+            <input type="checkbox" bind:checked={persoon.urencriterium} />
+            Ik werk minstens {getal(params.ondernemers.urencriterium)} uur per jaar voor mijn bedrijf
+          </label>
+          <label class="vinkje">
+            <input type="checkbox" bind:checked={persoon.starter} />
+            Ik ben starter en mag de startersaftrek gebruiken
+          </label>
+          <p class="notitie">
+            We trekken de zelfstandigenaftrek ({euro(params.ondernemers.zelfstandigenaftrek)}) en de
+            mkb-winstvrijstelling ({procent(params.ondernemers.mkbWinstvrijstelling, 1)}) af en rekenen de
+            inkomensafhankelijke bijdrage voor de zorgverzekering mee.
+          </p>
         {/if}
         {#if persoon.soort === "aow"}
           <p class="notitie">De AOW zelf rekenen we volgens de bedragen van de SVB.</p>
@@ -207,58 +288,30 @@
       <button type="button" aria-pressed={invoer.wonen === "koop"} onclick={() => (invoer.wonen = "koop")}
         >Koop</button
       >
-      <button type="button" aria-pressed={invoer.wonen === "anders"} onclick={() => (invoer.wonen = "anders")}
-        >Anders</button
-      >
     </div>
     {#if invoer.wonen === "huur"}
       <div class="rij">
         <label for="huur">Kale huur per maand (€)</label>
-        <input
-          id="huur"
-          type="number"
-          min="0"
-          step="10"
-          bind:value={invoer.huurPerMaand}
-          disabled={weetNiet.huur}
-        />
+        <input id="huur" type="number" min="0" step="10" bind:value={invoer.huurPerMaand} />
       </div>
-      <label class="vinkje"><input type="checkbox" bind:checked={weetNiet.huur} /> Weet ik niet</label>
-      {#if weetNiet.huur && standaarden}
-        <p class="notitie">
-          We gebruiken de middelste huur in het model: {euro(standaarden.huur)} per maand.
-        </p>
-      {/if}
+      <p class="notitie">
+        Kale huur: zonder servicekosten, gas, water en licht. Staat in je huurcontract. Woon je in,
+        bijvoorbeeld bij je ouders? Vul dan 0 in.
+      </p>
     {:else if invoer.wonen === "koop"}
       <div class="rij">
         <label for="woz">WOZ-waarde (€)</label>
-        <input id="woz" type="number" min="0" step="5000" bind:value={invoer.woz} disabled={weetNiet.woz} />
+        <input id="woz" type="number" min="0" step="5000" bind:value={invoer.woz} />
       </div>
-      <label class="vinkje"><input type="checkbox" bind:checked={weetNiet.woz} /> Weet ik niet</label>
+      <p class="notitie">
+        Staat op de aanslag van de gemeentelijke belastingen, of zoek je huis op in het
+        <a href="https://www.wozwaardeloket.nl/">WOZ-waardeloket</a>.
+      </p>
       <div class="rij">
         <label for="rente">Betaalde hypotheekrente per jaar (€)</label>
-        <input
-          id="rente"
-          type="number"
-          min="0"
-          step="100"
-          bind:value={invoer.hypotheekrente}
-          disabled={weetNiet.rente}
-        />
+        <input id="rente" type="number" min="0" step="100" bind:value={invoer.hypotheekrente} />
       </div>
-      <label class="vinkje"><input type="checkbox" bind:checked={weetNiet.rente} /> Weet ik niet</label>
-      {#if (weetNiet.woz || weetNiet.rente) && standaarden}
-        <p class="notitie">
-          We gebruiken de middelste waarde in het model: WOZ {euro(standaarden.woz)}, rente {euro(
-            standaarden.rente,
-          )}
-          per jaar.
-        </p>
-      {/if}
-    {:else}
-      <p class="notitie">
-        Bijvoorbeeld inwonend of in een instelling. We rekenen dan zonder woonkosten en huurtoeslag.
-      </p>
+      <p class="notitie">Staat op de jaaropgave van je hypotheek.</p>
     {/if}
   </fieldset>
 
@@ -272,14 +325,16 @@
         min="0"
         step="1000"
         value={invoer.vermogen}
-        oninput={(e) => (invoer.vermogen = getal(e))}
+        oninput={(e) => (invoer.vermogen = leesGetal(e))}
       />
     </div>
     <p class="notitie">Nodig voor de vermogensgrens van toeslagen. Box 3 zit nog niet in het model.</p>
   </fieldset>
 
   <div class="opslaan">
-    <label class="vinkje"><input type="checkbox" bind:checked={onthouden} /> Onthoud op dit apparaat</label>
+    <label class="vinkje"
+      ><input type="checkbox" bind:checked={onthouden} /> Onthoud ook als ik het tabblad sluit (op dit apparaat)</label
+    >
     <button type="button" class="stil" onclick={wis}>Wis mijn gegevens</button>
     {#if melding}<p class="notitie" role="status">{melding}</p>{/if}
   </div>
@@ -364,6 +419,11 @@
   }
   .notitie {
     margin: 0;
+  }
+  .hint {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
   }
   .opslaan {
     display: flex;
