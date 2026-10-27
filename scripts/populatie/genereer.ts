@@ -96,7 +96,7 @@ export function genereerPopulatie(spec: Spec, kal: Kalibratie, p: Parameters): P
         const factor = partners ? 1 : eenouder ? s.factorEenouder : s.factorAlleenstaand;
         const mediaan = s.mediaanHoofdverdiener * profiel(spec, leeftijd) * factor;
         let hoofd: Lid;
-        // Werkenden: werknemer met de standaard pensioenpremie, of zelfstandig ondernemer.
+        // Werkenden: werknemer (de pensioenpremie komt later, bij de kalibratie) of zelfstandig ondernemer.
         const werk = (inkomen: number): Lid =>
           toeval.uniform() < s.zelfstandigKans
             ? {
@@ -105,7 +105,7 @@ export function genereerPopulatie(spec: Spec, kal: Kalibratie, p: Parameters): P
                 uitkering: 0,
                 ondernemer: { urencriterium: toeval.uniform() < s.urencriteriumKans, starter: false },
               }
-            : { inkomen, soort: "werk", uitkering: 0, pensioenpremie: "standaard" };
+            : { inkomen, soort: "werk", uitkering: 0 };
         const bijstand = (): Lid => ({
           inkomen: 0,
           soort: "uitkering",

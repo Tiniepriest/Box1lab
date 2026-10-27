@@ -70,13 +70,10 @@ describe("pensioenpremie (ABP 2026: 8,13% boven € 19.200, tot € 137.800)", (
     expect(rz.besteedbaar - rm.besteedbaar).toBeLessThan(2504.04);
   });
 
-  it("een eigen bedrag van de loonstrook gaat voor de schatting", () => {
-    const h = huishoudenUitInvoer(
-      invoer([persoon("loondienst", 50000, { pensioen: "bedrag", pensioenpremiePerMaand: 150 })]),
-      p,
-    );
+  it("in de calculator vul je je eigen premie in (van de loonstrook); standaard geen", () => {
+    const h = huishoudenUitInvoer(invoer([persoon("loondienst", 50000, { pensioenpremiePerMaand: 150 })]), p);
     expect(berekenHuishouden(h, p).pensioenpremie).toBe(1800);
-    const geen = huishoudenUitInvoer(invoer([persoon("loondienst", 50000, { pensioen: "geen" })]), p);
+    const geen = huishoudenUitInvoer(invoer([persoon("loondienst", 50000)]), p);
     expect(berekenHuishouden(geen, p).pensioenpremie).toBe(0);
   });
 });

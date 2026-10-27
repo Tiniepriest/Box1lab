@@ -43,8 +43,9 @@ inkomen:
   aandeelBijstand: 0.5
   # Bruto WW- of WIA-uitkering per jaar: tussen minimum en maximum.
   uitkering: { minimum: 17000, maximum: 30000 }
-  # Kans dat een werkende zelfstandig ondernemer is (anders werknemer met de standaard pensioenpremie), en de
-  # kans dat een ondernemer het urencriterium haalt. De herweging stemt het aantal af op CBS.
+  # Kans dat een werkende zelfstandig ondernemer is (anders werknemer), en de kans dat een ondernemer het
+  # urencriterium haalt. De herweging stemt het aantal af op CBS. Wie pensioenpremie betaalt, bepaalt de
+  # kalibratie per inkomensgroep (data/kalibratie, sectie pensioenpremie).
   zelfstandigKans: 0.13
   urencriteriumKans: 0.6
 

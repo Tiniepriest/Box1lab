@@ -19,7 +19,6 @@ const p = laadParameters(2026);
 /** Velden met een standaardwaarde in het schema. */
 const STANDAARD = {
   extraPerJaar: 0,
-  pensioen: "standaard" as const,
   pensioenpremiePerMaand: 0,
   urencriterium: true,
   starter: false,
