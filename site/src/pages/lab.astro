@@ -1,5 +1,6 @@
 ---
 import Lab from "../components/lab/Lab.svelte";
+import MeldFout from "../components/MeldFout.astro";
 import Base from "../layouts/Base.astro";
 import { kalibratie, labKnoppen, pad, params, presets, voorbeelden } from "../lib/data.ts";
 ---
@@ -19,6 +20,7 @@ import { kalibratie, labKnoppen, pad, params, presets, voorbeelden } from "../li
     knoppen={labKnoppen}
     {voorbeelden}
   />
+  <MeldFout />
 </Base>
 
 <style>

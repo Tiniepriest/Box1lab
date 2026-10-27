@@ -64,7 +64,17 @@ Golden tests die wijzigen door de nieuwe cijfers zijn verwacht. Leg in de pull r
 
 ### 5. Afronden
 
-Voeg een regel toe aan de changelog (vanaf fase 7 op de site), open een pull request en merge na groene CI. De site wordt automatisch bijgewerkt.
+Voeg bovenaan `data/changelog.yaml` een regel toe met `soort: cijfers`, bijvoorbeeld:
+
+```yaml
+- datum: 2027-01-02
+  soort: cijfers
+  titel: Cijfers van 2027
+  tekst: >-
+    Nieuwe tarieven, heffingskortingen en toeslagen voor 2027, en een opnieuw gewogen bevolking.
+```
+
+De site toont hem op `/wijzigingen`, en de datum komt onderaan elke pagina als "bijgewerkt". Open een pull request en merge na groene CI. De site wordt automatisch bijgewerkt.
 
 ## Wat gaat vanzelf mee
 

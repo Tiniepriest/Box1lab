@@ -1,5 +1,6 @@
 ---
 import MiniDecielen from "../../components/MiniDecielen.astro";
+import MeldFout from "../../components/MeldFout.astro";
 import Base from "../../layouts/Base.astro";
 import { pad, params } from "../../lib/data.ts";
 import { getal, miljard, procent, procentVerschil } from "../../lib/format.ts";
@@ -71,6 +72,7 @@ const { k } = Astro.props as { k: Kerncijfers };
   <p class="notitie">
     Statische doorrekening voor {params.jaar}. <a href={pad("methodiek")}>Hoe rekenen we?</a>
   </p>
+  <MeldFout />
 </Base>
 
 <style>

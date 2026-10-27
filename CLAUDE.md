@@ -30,6 +30,7 @@ Nieuwe tarieven en nieuwe regelingen moeten makkelijk toe te voegen zijn.
 - **Elke regeling is één module** met een eigen sectie in het parameterbestand, een eigen schema en eigen tests.
 - **Een scenario, preset of partij is een diff op een parameterset**, zodat een jaarlijkse update daar vanzelf in meegaat.
 - **Schemavalidatie in CI.** Een fout in een YAML-bestand laat de build falen met een leesbare melding.
+- **Elke wijziging die bezoekers merken krijgt een regel in `data/changelog.yaml`** (nieuwste bovenaan), en altijd bij een correctie. Andere rekenregels: ook `MODEL_VERSIE` in `packages/engine/src/versie.ts` verhogen; `npm run valideer` controleert dat ze overeenkomen.
 - Werk `docs/JAARLIJKSE-UPDATE.md` en `docs/NIEUWE-REGELING.md` bij als het proces verandert.
 
 ## Conventies
@@ -48,4 +49,4 @@ Nieuwe tarieven en nieuwe regelingen moeten makkelijk toe te voegen zijn.
 
 ## Stop en vraag de eigenaar bij
 
-Naam en domein van de site, analytics, echte partijdata, uitbreiding naar zorg/btw/box 3, alles wat geld kost of een externe dienst vereist, afwijken van de fasering, de licentie.
+Naam en domein van de site, analytics, advertenties, echte partijdata, uitbreiding naar zorg/btw/box 3, alles wat geld kost of een externe dienst vereist, afwijken van de fasering, de licentie.

@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
-import { pad } from "../lib/data.ts";
+import { MODEL_VERSIE, pad, params } from "../lib/data.ts";
+import { REPO, meldFoutUrl } from "../lib/project.ts";
 ---
 
 <Base title="Over — Box1lab">
@@ -32,14 +33,20 @@ import { pad } from "../lib/data.ts";
 
     <h2>Open</h2>
     <p>
-      De broncode, alle cijfers en de keuzes die we hebben gemaakt, staan openbaar op
-      <a href="https://github.com/Tiniepriest/Box1lab">GitHub</a>.
+      De broncode, alle cijfers en de keuzes die we hebben gemaakt, staan openbaar op{" "}
+      <a href={REPO}>GitHub</a>. Wat er verandert, zie je in de{" "}
+      <a href={pad("wijzigingen")}>lijst van wijzigingen</a>.
     </p>
 
     <h2>Een fout gezien?</h2>
     <p>
-      Meld het via <a href="https://github.com/Tiniepriest/Box1lab/issues">GitHub</a>. Noem als het kan de
-      pagina, wat je invulde en wat je verwachtte.
+      Meld het via het{" "}
+      <a href={meldFoutUrl(`parameterjaar ${params.jaar}, model ${MODEL_VERSIE}`)} data-meldfout>
+        formulier op GitHub
+      </a>
+      . Noem als het kan wat je invulde en wat je verwachtte. Je melding is openbaar, dus zet er geen
+      persoonlijke gegevens in. Elke correctie zetten we in de{" "}
+      <a href={pad("wijzigingen")}>lijst van wijzigingen</a>.
     </p>
   </article>
 </Base>

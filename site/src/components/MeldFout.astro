@@ -1,0 +1,27 @@
+---
+import { MODEL_VERSIE, params } from "../lib/data.ts";
+import { meldFoutUrl } from "../lib/project.ts";
+
+interface Props {
+  /** Korte zin vóór de link. */
+  tekst?: string;
+}
+const { tekst = "Klopt er iets niet?" } = Astro.props;
+const href = meldFoutUrl(`parameterjaar ${params.jaar}, model ${MODEL_VERSIE}`);
+---
+
+<p class="meldfout">
+  {tekst}{" "}
+  <a href={href} data-meldfout>
+    Meld een fout
+  </a>{" "}
+  (via GitHub, openbaar).
+</p>
+
+<style>
+  .meldfout {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 28px 0 0;
+  }
+</style>

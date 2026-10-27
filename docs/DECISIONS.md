@@ -279,3 +279,25 @@ HANDOFF §4.3 vraagt het vastgestelde beleid voor het eerste kabinetsjaar. Dat p
 ### D-046 Alleen fictieve partijen
 
 Echte partijdata pas na akkoord van de eigenaar (HANDOFF §10). De voorbeeldverkiezing heeft drie verzonnen partijen (A en B gepubliceerd, C concept) met bronnen op example.org. De pagina `/verkiezingen/voorbeeld` heeft een duidelijke waarschuwing, staat niet in het menu of op de home en heeft `noindex`. Weergave volgens HANDOFF §4.1: alfabetisch met sorteerknop op uitkomst, winst blauw en verlies oranje, geen partijkleuren of logo's, disclaimer dat het CPB leidend is.
+
+## Fase 7
+
+### D-047 Changelog als data
+
+De publieke lijst van wijzigingen staat in `data/changelog.yaml` (nieuwste bovenaan, met soort `nieuw`, `cijfers`, `model` of `correctie`) en verschijnt op `/wijzigingen`. `npm run valideer` controleert het schema, de volgorde en dat de hoogste `modelversie` gelijk is aan `MODEL_VERSIE` (nu in `packages/engine/src/versie.ts`). Onderaan elke pagina staat "bijgewerkt" met de datum van de nieuwste regel, niet de builddatum: die verandert ook bij een tikfout of een update van een afhankelijkheid. De regels voor de fasen 1 t/m 7 zijn achteraf toegevoegd met de datums van de commits. Fase 3 (bevolking) veranderde de uitkomsten maar niet de rekenregels, en dus niet de modelversie.
+
+### D-048 Meld een fout via een GitHub-formulier
+
+"Meld een fout" opent het formulier `.github/ISSUE_TEMPLATE/fout.yml`, met pagina en versie al ingevuld. In de browser zet een klein script bij aanraken de huidige link in het veld "pagina"; in het lab zit het scenario daar al in. Calculatorinvoer staat nooit in de link en gaat dus niet mee (privacy-eis). Het formulier zegt dat de melding openbaar is. Melden kan alleen met een GitHub-account; een e-mailadres of formulier zonder account vraagt een externe dienst en een keuze van de eigenaar. De link staat onderaan elke pagina en onder de calculator, het lab, elk voorstel en de verkiezingspagina.
+
+### D-049 Geen analytics; advertenties misschien later
+
+Besluit van de eigenaar: nu geen analytics. Later misschien advertenties. Daarvoor eerst beslissen: advertentienetwerken plaatsen meestal cookies of volgen bezoekers. Dat vraagt een toestemmingsbanner (AVG, Telecommunicatiewet) en botst met de belofte op de pagina Over ("geen cookies, geen scripts van andere partijen"). Ook kunnen advertenties naast verkiezingscontent afbreuk doen aan de neutraliteit. Een contextuele advertentie zonder tracking of een sponsorvermelding past beter. Er is nu niets ingebouwd.
+
+### D-050 Geen licentie
+
+Besluit van de eigenaar: voorlopig geen licentie. De code is openbaar te bekijken, maar alle rechten zijn voorbehouden. Dat staat in de README.
+
+### D-051 GitHub Pages, geen eigen domein
+
+Besluit van de eigenaar. Overstappen naar een eigen domein later: in `site/astro.config.mjs` `site` aanpassen en `base` weghalen, een `CNAME`-bestand in `site/public/`, en de DNS bij de domeinregistrar. Alle interne links gaan via `pad()` en de repolink via `site/src/lib/project.ts`, dus verder hoeft er niets te veranderen.

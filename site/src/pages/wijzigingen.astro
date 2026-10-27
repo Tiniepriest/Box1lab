@@ -1,0 +1,114 @@
+---
+import MeldFout from "../components/MeldFout.astro";
+import Base from "../layouts/Base.astro";
+import { changelog } from "../lib/data.ts";
+import { REPO } from "../lib/project.ts";
+
+const SOORT = {
+  nieuw: "Nieuw",
+  cijfers: "Nieuwe cijfers",
+  model: "Rekenregels",
+  correctie: "Correctie",
+} as const;
+
+const datum = (d: string) =>
+  new Date(d).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+---
+
+<Base
+  title="Wijzigingen — Box1lab"
+  description="Wat er aan Box1lab is veranderd: nieuwe cijfers, andere rekenregels, nieuwe pagina's en correcties."
+>
+  <article class="tekst">
+    <h1>Wat is er veranderd?</h1>
+    <p class="intro">
+      Elke wijziging aan de cijfers of de rekenregels staat hier, en altijd als we een fout hebben hersteld.
+      Verandert de uitkomst voor jouw situatie? Dan zie je hier waarom. Alle technische details staan op{" "}
+      <a href={`${REPO}/commits/main`}>GitHub</a>.
+    </p>
+
+    <ol class="lijst">
+      {changelog.map((r) => (
+        <li class:list={["regel", { correctie: r.soort === "correctie" }]}>
+          <p class="meta">
+            <time datetime={r.datum}>{datum(r.datum)}</time>
+            <span class="soort">{SOORT[r.soort]}</span>
+            {r.modelversie && <span class="versie">model {r.modelversie}</span>}
+          </p>
+          <h2>{r.titel}</h2>
+          <p>{r.tekst}</p>
+          {r.links.length > 0 && (
+            <p class="links">
+              {r.links.map((l, i) => (
+                <>
+                  {i > 0 && " · "}
+                  <a href={l.url}>{l.tekst}</a>
+                </>
+              ))}
+            </p>
+          )}
+        </li>
+      ))}
+    </ol>
+    <MeldFout tekst="Een fout gezien?" />
+  </article>
+</Base>
+
+<style>
+  .tekst {
+    max-width: 70ch;
+  }
+  h1 {
+    font-size: clamp(28px, 4.5vw, 38px);
+    margin: 0 0 8px;
+  }
+  .intro {
+    color: var(--muted);
+    margin: 0 0 24px;
+  }
+  .lijst {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .regel {
+    border-left: 2px solid var(--line);
+    padding: 2px 0 2px 16px;
+    margin: 0 0 24px;
+  }
+  .regel.correctie {
+    border-left-color: var(--warn);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    align-items: baseline;
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .soort {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0 6px;
+    color: var(--fg);
+  }
+  .correctie .soort {
+    background: var(--warn-bg);
+    border-color: var(--warn);
+  }
+  .versie {
+    font-family: var(--f-num);
+  }
+  h2 {
+    font-size: 19px;
+    margin: 4px 0 4px;
+  }
+  .regel p {
+    margin: 4px 0;
+  }
+  .links {
+    font-size: 14px;
+  }
+</style>

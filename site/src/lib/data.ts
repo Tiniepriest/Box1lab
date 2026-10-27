@@ -4,6 +4,7 @@
  */
 import { MODEL_VERSIE } from "@box1lab/engine";
 import {
+  laadChangelog,
   laadKalibratie,
   laadLabKnoppen,
   laadParameters,
@@ -17,6 +18,7 @@ export const presets = laadPresets(params);
 export const voorbeelden = laadVoorbeelden();
 export const labKnoppen = laadLabKnoppen(params);
 export const kalibratie = laadKalibratie(JAAR);
+export const changelog = laadChangelog();
 export { MODEL_VERSIE };
 
 export { pad } from "./pad.ts";

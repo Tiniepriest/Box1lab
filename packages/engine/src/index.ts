@@ -3,8 +3,8 @@
  * Bestanden inlezen in Node (tests, scripts): zie "@box1lab/engine/node".
  */
 
-/** Versie van het rekenmodel. Verhoog bij elke inhoudelijke wijziging van de rekenregels. */
-export const MODEL_VERSIE = "0.2.0";
+export * from "./versie.ts";
+export * from "./datum.ts";
 
 export * from "./parameters/schema.ts";
 export * from "./parameters/wijzig.ts";
@@ -36,3 +36,4 @@ export * from "./lab.ts";
 export * from "./metrics/positie.ts";
 export * from "./scenario/code.ts";
 export * from "./verkiezing.ts";
+export * from "./changelog.ts";

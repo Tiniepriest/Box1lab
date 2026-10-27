@@ -49,6 +49,10 @@ In `packages/engine/test/`: minimaal vijf gevallen uit officiële rekenvoorbeeld
 
 Draai daarna `npm run ci`. Veranderen golden tests? Dat is verwacht als de regeling in het basispad meetelt: draai `npm run golden` en verklaar het verschil in `docs/DECISIONS.md`.
 
+## 7. Versie en changelog
+
+Een nieuwe regeling verandert de rekenregels. Verhoog daarom `MODEL_VERSIE` in `packages/engine/src/versie.ts` (bijvoorbeeld 0.2.0 → 0.3.0) en zet bovenaan `data/changelog.yaml` een regel met `soort: model` en `modelversie` gelijk aan de nieuwe versie. `npm run valideer` faalt als die twee niet overeenkomen.
+
 ## Voorbeeld
 
 Stel: er komt een "energietoeslag" van €500 per huishouden, afgebouwd met 10% boven €25.000.
