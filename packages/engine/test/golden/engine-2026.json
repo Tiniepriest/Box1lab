@@ -62,11 +62,11 @@
   },
   {
    "id": "vlaktaks-40",
-   "saldoMld": 41.6219,
+   "saldoMld": 43.5899,
    "posten": {
     "box1": 7.9267,
     "eigenWoning": 7.9704,
-    "overigeAftrek": 4,
+    "overigeAftrek": 5.968,
     "zorgtoeslag": 6.3,
     "huurtoeslag": 5.6,
     "kgb": 4.7,
@@ -100,11 +100,11 @@
   },
   {
    "id": "drie-schijven-35-40-45",
-   "saldoMld": 29.3505,
+   "saldoMld": 31.3185,
    "posten": {
     "box1": -3.9653,
     "eigenWoning": 7.1474,
-    "overigeAftrek": 4,
+    "overigeAftrek": 5.968,
     "zorgtoeslag": 6.3,
     "huurtoeslag": 5.6,
     "kgb": 4.7,
@@ -768,7 +768,7 @@
   }
  ],
  "oplosser": {
-  "vlaktaksVrijstelling": 27796,
-  "vlaktaksTariefFactor": 0.7487
+  "vlaktaksVrijstelling": 28322,
+  "vlaktaksTariefFactor": 0.7368
  }
 }

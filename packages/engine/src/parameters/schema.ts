@@ -90,7 +90,8 @@ export const parametersSchema = z.strictObject({
     hillenAftrek: pct,
   }),
 
-  overigeAftrekposten: z.strictObject({ bron, budgetMld: nietNegatief, niveau }),
+  /** Aftrekposten die niet per huishouden worden berekend: budgettair belang per post, in miljard euro. */
+  overigeAftrekposten: z.strictObject({ bron, posten: z.record(z.string(), nietNegatief), niveau }),
 
   toeslagen: z.strictObject({
     zorgtoeslag: z.strictObject({

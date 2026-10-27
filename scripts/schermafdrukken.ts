@@ -144,6 +144,32 @@ try {
   const zin = (await pg.locator(".kernzin").textContent()) ?? "";
   controleer(/per maand/.test(zin), `calculator: "${zin.trim().slice(0, 60)}…"`);
   controleer(true, "calculator: plek in de inkomensverdeling geladen");
+  const leesSessie = () => pg.evaluate(() => sessionStorage.getItem("box1lab.invoer.v1"));
+  controleer((await leesSessie()) === null, "formulier: het voorbeeld wordt niet bewaard");
+  await pg.locator("#soort-0").selectOption("zzp");
+  controleer(
+    !(await pg.getByText("Vakantiegeld zit al in dit maandbedrag").isVisible()),
+    "formulier: geen vakantiegeld bij zzp",
+  );
+  await pg.locator("#soort-0").selectOption("loondienst");
+  await pg.locator("#bedrag-0").fill("2700");
+  await pg.waitForTimeout(300);
+  controleer(/2700/.test((await leesSessie()) ?? ""), "formulier: situatie bewaard voor dit tabblad");
+  controleer(
+    (await pg.evaluate(() => localStorage.getItem("box1lab.invoer.v1"))) === null,
+    "formulier: niet op het apparaat zonder toestemming",
+  );
+  await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
+  await pg.waitForFunction(() => /Jij · €/.test(document.body.textContent ?? ""), null, { timeout: 30000 });
+  controleer(true, "lab: jouw situatie gaat mee naar het lab");
+  await pg.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
+  controleer(
+    (await pg.locator("#bedrag-0").inputValue()) === "2700",
+    "formulier: situatie terug na navigeren",
+  );
+  await pg.getByRole("button", { name: "Wis mijn gegevens" }).click();
+  await pg.waitForTimeout(300);
+  controleer((await leesSessie()) === null, "formulier: wissen haalt de situatie weg");
   await ctx.close();
 } finally {
   await browser.close();
