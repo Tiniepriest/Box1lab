@@ -9,9 +9,10 @@ wijzigingen:
   - { parameter: heffingskortingen.algemeen.niveau, zet: 0 }
   - { parameter: heffingskortingen.arbeid.niveau, zet: 0 }
   - { parameter: heffingskortingen.ouderen.niveau, zet: 0 }
+  - { parameter: heffingskortingen.alleenstaandeOuderen.niveau, zet: 0 }
   - { parameter: heffingskortingen.combinatie.niveau, zet: 0 }
   - { parameter: eigenWoning.aftrekMaxTarief, zet: 0 }
-  - { parameter: eigenWoning.forfait, zet: 0 }
+  - { parameter: eigenWoning.forfait.niveau, zet: 0 }
   - { parameter: overigeAftrekposten.niveau, zet: 0 }
   - { parameter: toeslagen.zorgtoeslag.niveau, zet: 0 }
   - { parameter: toeslagen.huurtoeslag.niveau, zet: 0 }

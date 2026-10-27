@@ -1,24 +1,64 @@
 import type { Parameters } from "../parameters/schema.ts";
-import { schijfTarief } from "./box1.ts";
+import { tariefStukken } from "./box1.ts";
+
+/** Eigenwoningforfait per jaar bij een WOZ-waarde, inclusief de niveau-knop. */
+export function eigenwoningforfait(woz: number, p: Parameters): number {
+  const { tabel, villataks, niveau } = p.eigenWoning.forfait;
+  const pctBij = (w: number) => {
+    let pct = tabel[0]!.percentage;
+    for (const r of tabel) {
+      if (w >= r.vanaf) pct = r.percentage;
+      else break;
+    }
+    return pct;
+  };
+  const forfait =
+    woz > villataks.vanaf
+      ? (pctBij(villataks.vanaf) / 100) * villataks.vanaf +
+        (villataks.percentage / 100) * (woz - villataks.vanaf)
+      : (pctBij(woz) / 100) * woz;
+  return forfait * (niveau / 100);
+}
+
+export interface EigenWoningSaldo {
+  forfait: number;
+  aftrekbareRente: number;
+  /** Aftrek wegens geen of geringe eigenwoningschuld (Wet Hillen). */
+  hillenAftrek: number;
+  /** Inkomen uit eigen woning: forfait − rente − Hillen-aftrek. Negatief = aftrekpost. */
+  saldo: number;
+}
+
+/** Het inkomen uit eigen woning dat bij het belastbaar inkomen van de hoofdverdiener wordt opgeteld. */
+export function eigenWoningSaldo(hypotheekrente: number, woz: number, p: Parameters): EigenWoningSaldo {
+  const forfait = eigenwoningforfait(woz, p);
+  const aftrekbareRente = p.eigenWoning.aftrekMaxTarief > 0 ? hypotheekrente : 0;
+  const hillenAftrek =
+    forfait > aftrekbareRente ? (p.eigenWoning.hillenAftrek / 100) * (forfait - aftrekbareRente) : 0;
+  return { forfait, aftrekbareRente, hillenAftrek, saldo: forfait - aftrekbareRente - hillenAftrek };
+}
 
 /**
- * Fiscaal effect van de eigen woning voor het huishouden (positief = voordeel).
- * Saldo = forfait − aftrekbare rente. Een negatief saldo levert belastingvoordeel op tegen hoogstens het
- * maximale aftrektarief; een positief saldo wordt belast tegen het schijftarief.
+ * Aftrekbeperking: een negatief saldo eigen woning levert hoogstens voordeel op tegen het maximale
+ * aftrektarief. Voor het deel van de aftrek dat in een schijf met een hoger tarief valt, wordt het verschil
+ * als extra heffing teruggenomen.
  *
- * Fase 1: zoals het prototype. Wet Hillen ontbreekt nog (HANDOFF §2, zwakke plek 5).
+ * @param inkomenZonderWoning belastbaar inkomen vóór het saldo eigen woning
  */
-export function eigenWoningVoordeel(
-  hypotheekrente: number,
-  woz: number,
-  inkomen: number,
+export function aftrekbeperking(
+  inkomenZonderWoning: number,
+  saldo: number,
   p: Parameters,
+  aow: boolean,
 ): number {
-  const { forfait, aftrekMaxTarief } = p.eigenWoning;
-  const forfaitBedrag = (woz * forfait) / 100;
-  const aftrek = aftrekMaxTarief > 0 ? hypotheekrente : 0;
-  const saldo = forfaitBedrag - aftrek;
-  const tarief = schijfTarief(inkomen, p);
-  const aftrekTarief = Math.min(aftrekMaxTarief, tarief || aftrekMaxTarief);
-  return saldo < 0 ? (-saldo * aftrekTarief) / 100 : (-saldo * tarief) / 100;
+  if (saldo >= 0) return 0;
+  const max = p.eigenWoning.aftrekMaxTarief;
+  const onder = inkomenZonderWoning + saldo;
+  let extra = 0;
+  for (const s of tariefStukken(p, aow)) {
+    if (s.tarief <= max) continue;
+    const deel = Math.min(inkomenZonderWoning, s.boven) - Math.max(onder, s.onder);
+    if (deel > 0) extra += (deel * (s.tarief - max)) / 100;
+  }
+  return extra;
 }

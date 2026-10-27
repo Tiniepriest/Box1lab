@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Huishouden, Lid } from "../huishouden.ts";
+import { aowPerJaar } from "../regels/uitkeringen.ts";
 import type { Parameters } from "../parameters/schema.ts";
 import { formatteerFouten } from "../parameters/schema.ts";
 import { inverseNormaal } from "./normaal.ts";
@@ -31,7 +32,11 @@ export const populatieSpecSchema = z.strictObject({
   huishoudensPerType: z.number().int().positive(),
   types: z.array(type).min(1),
   correctie: z.strictObject({ inkomen: z.number(), hypotheekrente: z.number(), kinderopvang: z.number() }),
-  uitkering: z.strictObject({ minimum: z.number(), bereik: z.number() }),
+  uitkering: z.strictObject({
+    minimum: z.number(),
+    bereik: z.number(),
+    aandeelBijstand: z.number().min(0).max(1),
+  }),
   pensioenVerdelingPartners: z.number().min(0).max(1),
   woning: z.strictObject({
     wozPerBrutoInkomen: z.strictObject({ werkend: z.number(), aow: z.number() }),
@@ -47,7 +52,16 @@ export const populatieSpecSchema = z.strictObject({
     aandeelBrutoInkomen: z.number(),
     maximumPerMaand: z.number(),
   }),
-  kinderopvang: z.strictObject({ kostenPerKind: z.number(), maxKinderen: z.number().int() }),
+  kinderopvang: z.strictObject({
+    soort: z.enum(["dagopvang", "buitenschoolse", "gastouder"]),
+    urenPerMaand: z.number(),
+    uurprijs: z.number(),
+    maxKinderen: z.number().int(),
+  }),
+  kinderLeeftijden: z.strictObject({
+    onder12: z.array(z.number()).min(3),
+    vanaf12: z.array(z.number()).min(3),
+  }),
 });
 
 export type PopulatieSpec = z.infer<typeof populatieSpecSchema>;
@@ -83,12 +97,12 @@ export function genereerPopulatie(spec: PopulatieSpec, p: Parameters): Populatie
         type: T.id,
         gewicht: T.N / n,
         partners: T.partners,
-        kinderen: 0,
-        kindOnder12: false,
+        kinderen: [],
         huurPerMaand: 0,
         hypotheekrente: 0,
         woz: 0,
-        kinderopvangKosten: 0,
+        kinderopvang: [],
+        vermogen: 0,
         leden: [],
       };
 
@@ -97,14 +111,14 @@ export function genereerPopulatie(spec: PopulatieSpec, p: Parameters): Populatie
         const sig = vereist(T.pensioenSpreiding, "pensioenSpreiding", T.id);
         const pensioen = Math.exp(Math.log(med) + sig * inverseNormaal(q));
         if (T.partners) {
-          const aow = p.uitkeringen.aow.partners;
+          const aow = aowPerJaar(p, true);
           const a = spec.pensioenVerdelingPartners;
           h.leden = [
             { inkomen: aow + pensioen * a, soort: "aow", uitkering: aow },
             { inkomen: aow + pensioen * (1 - a), soort: "aow", uitkering: aow },
           ];
         } else {
-          const aow = p.uitkeringen.aow.alleenstaand;
+          const aow = aowPerJaar(p, false);
           h.leden = [{ inkomen: aow + pensioen, soort: "aow", uitkering: aow }];
         }
       } else {
@@ -112,7 +126,9 @@ export function genereerPopulatie(spec: PopulatieSpec, p: Parameters): Populatie
         let hoofd: Lid;
         if (q < uitk) {
           const x = spec.uitkering.minimum + (q / uitk) * spec.uitkering.bereik;
-          hoofd = { inkomen: x, soort: "uitkering", uitkering: x };
+          const uitkeringSoort =
+            q / uitk < spec.uitkering.aandeelBijstand ? "bijstand" : "werknemersverzekering";
+          hoofd = { inkomen: x, soort: "uitkering", uitkering: x, uitkeringSoort };
         } else {
           const qq = (q - uitk) / (1 - uitk);
           const med = vereist(T.mediaan, "mediaan", T.id) * c.inkomen;
@@ -133,8 +149,9 @@ export function genereerPopulatie(spec: PopulatieSpec, p: Parameters): Populatie
           }
         }
         if (T.kinderen) {
-          h.kinderen = T.partners ? (i % 7 === 0 ? 3 : i % 3 === 0 ? 1 : 2) : i % 2 ? 1 : 2;
-          h.kindOnder12 = i % 5 < 3;
+          const aantal = T.partners ? (i % 7 === 0 ? 3 : i % 3 === 0 ? 1 : 2) : i % 2 ? 1 : 2;
+          const leeftijden = i % 5 < 3 ? spec.kinderLeeftijden.onder12 : spec.kinderLeeftijden.vanaf12;
+          h.kinderen = leeftijden.slice(0, aantal);
         }
       }
 
@@ -156,14 +173,17 @@ export function genereerPopulatie(spec: PopulatieSpec, p: Parameters): Populatie
         );
       }
 
-      if (h.kindOnder12) {
+      if (h.kinderen.some((l) => l < 12)) {
         const werkend = h.leden.filter((l) => l.soort === "werk" && l.inkomen > 0).length;
         const allenWerken = T.partners ? werkend === 2 : werkend === 1;
         if (allenWerken && i % 2 === 0) {
-          h.kinderopvangKosten =
-            Math.min(h.kinderen, spec.kinderopvang.maxKinderen) *
-            spec.kinderopvang.kostenPerKind *
-            c.kinderopvang;
+          const o = spec.kinderopvang;
+          const aantal = Math.min(h.kinderen.length, o.maxKinderen);
+          h.kinderopvang = Array.from({ length: aantal }, () => ({
+            soort: o.soort,
+            urenPerMaand: o.urenPerMaand * c.kinderopvang,
+            uurprijs: o.uurprijs,
+          }));
         }
       }
       pop.push(h);

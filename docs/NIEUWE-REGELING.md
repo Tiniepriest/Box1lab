@@ -32,7 +32,7 @@ Exporteer hem in `packages/engine/src/index.ts`.
 
 In `packages/engine/test/`: minimaal vijf gevallen uit officiële rekenvoorbeelden (Belastingdienst, proefberekening toeslagen, Nibud), inclusief net onder en net boven elke grens. Voeg ook een geval toe aan de niveau-knoppentest in `eigenschappen.test.ts`.
 
-Draai daarna `npm run ci`. Veranderen golden tests? Verklaar het verschil in `docs/DECISIONS.md`.
+Draai daarna `npm run ci`. Veranderen golden tests? Dat is verwacht als de regeling in het basispad meetelt: draai `npm run golden` en verklaar het verschil in `docs/DECISIONS.md`.
 
 ## Voorbeeld
 

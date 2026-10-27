@@ -82,7 +82,9 @@ types:
 # Correctiefactoren waarmee het prototype op de begrotingstotalen uitkwam.
 correctie: { inkomen: 1.3, hypotheekrente: 0.55, kinderopvang: 0.75 }
 
-uitkering: { minimum: 17500, bereik: 9000 }
+# Uitkeringen: inkomen tussen minimum en minimum + bereik. Het laagste deel (aandeelBijstand) is bijstand
+# (netto gekoppeld), de rest WW/WIA. Aanname fase 2; fase 3 kalibreert dit.
+uitkering: { minimum: 17500, bereik: 9000, aandeelBijstand: 0.5 }
 pensioenVerdelingPartners: 0.65
 woning:
   wozPerBrutoInkomen: { werkend: 4.6, aow: 7 }
@@ -94,4 +96,8 @@ woning:
   aowHypotheekrente: 2600
 # Kale huur per maand = basis + aandeel × bruto jaarinkomen, met een maximum.
 huur: { basisPerMaand: 560, aandeelBrutoInkomen: 0.009, maximumPerMaand: 1300 }
-kinderopvang: { kostenPerKind: 9500, maxKinderen: 2 }
+# Kinderopvang per kind (fase 2: zo gekozen dat de kosten per kind gelijk zijn aan het prototype,
+# 72 uur × € 11 × 12 × 0,75 ≈ € 7.125 per jaar). Fase 3 kalibreert dit op de uitgaven.
+kinderopvang: { soort: dagopvang, urenPerMaand: 72, uurprijs: 11.0, maxKinderen: 2 }
+# Leeftijden van kinderen (de eerste 1, 2 of 3 worden gebruikt). Aanname fase 2.
+kinderLeeftijden: { onder12: [3, 7, 10], vanaf12: [13, 15, 17] }

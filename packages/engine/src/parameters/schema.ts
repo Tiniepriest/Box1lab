@@ -17,18 +17,31 @@ const pct = z.number().finite();
 /** Scenarioknop: 100 = huidige wet, 0 = afgeschaft. */
 const niveau = z.number().finite().nonnegative();
 const perHuishouden = <T extends z.ZodType>(t: T) => z.strictObject({ alleenstaand: t, partners: t });
+const perOmvang = <T extends z.ZodType>(t: T) => z.strictObject({ eenpersoons: t, meerpersoons: t });
+
+/** Een lijst rijen met oplopende "vanaf", waarvan de eerste bij 0 begint. */
+const oplopendVanafNul = <T extends z.ZodObject<{ vanaf: z.ZodNumber }>>(rij: T, naam: string) =>
+  z
+    .array(rij)
+    .min(1)
+    .refine((s) => s[0]?.vanaf === 0, `De eerste rij van ${naam} begint bij vanaf: 0.`)
+    .refine(
+      (s) => s.every((r, i) => i === 0 || r.vanaf > s[i - 1]!.vanaf),
+      `De rijen van ${naam} staan op volgorde van 'vanaf', van laag naar hoog.`,
+    );
 
 const schijf = z.strictObject({ tot: nietNegatief.nullable(), tarief: pct });
 
-const staffelStuk = z.strictObject({ vanaf: nietNegatief, bedrag: bedrag, tarief: pct });
-const staffel = z
-  .array(staffelStuk)
-  .min(1)
-  .refine((s) => s[0]?.vanaf === 0, "Het eerste stuk van een staffel begint bij vanaf: 0.")
-  .refine(
-    (s) => s.every((st, i) => i === 0 || st.vanaf > s[i - 1]!.vanaf),
-    "De stukken van een staffel staan op volgorde van 'vanaf', van laag naar hoog.",
-  );
+const staffel = oplopendVanafNul(
+  z.strictObject({ vanaf: nietNegatief, bedrag: bedrag, tarief: pct }),
+  "een staffel",
+);
+
+const aowBedragen = z.strictObject({
+  perMaandEersteHalfjaar: nietNegatief,
+  perMaandTweedeHalfjaar: nietNegatief,
+  vakantiegeldPerMaand: nietNegatief,
+});
 
 export const parametersSchema = z.strictObject({
   jaar: z.number().int().min(2000).max(2100),
@@ -53,15 +66,28 @@ export const parametersSchema = z.strictObject({
 
   heffingskortingen: z.strictObject({
     algemeen: z.strictObject({ bron, niveau, staffel, staffelAow: staffel }),
-    arbeid: z.strictObject({ bron, niveau, staffel }),
+    arbeid: z.strictObject({ bron, niveau, staffel, staffelAow: staffel }),
     ouderen: z.strictObject({ bron, niveau, staffel }),
-    combinatie: z.strictObject({ bron, niveau, staffel, maximum: nietNegatief }),
+    alleenstaandeOuderen: z.strictObject({ bron, niveau, bedrag: nietNegatief }),
+    combinatie: z.strictObject({
+      bron,
+      niveau,
+      staffel,
+      maximum: nietNegatief,
+      staffelAow: staffel,
+      maximumAow: nietNegatief,
+    }),
   }),
 
   eigenWoning: z.strictObject({
     bron,
-    forfait: pct,
+    forfait: z.strictObject({
+      niveau,
+      tabel: oplopendVanafNul(z.strictObject({ vanaf: nietNegatief, percentage: pct }), "de forfaittabel"),
+      villataks: z.strictObject({ vanaf: nietNegatief, percentage: pct }),
+    }),
     aftrekMaxTarief: pct,
+    hillenAftrek: pct,
   }),
 
   overigeAftrekposten: z.strictObject({ bron, budgetMld: nietNegatief, niveau }),
@@ -70,46 +96,90 @@ export const parametersSchema = z.strictObject({
     zorgtoeslag: z.strictObject({
       bron,
       niveau,
-      maximum: perHuishouden(nietNegatief),
+      standaardpremie: nietNegatief,
       drempelinkomen: nietNegatief,
-      afbouw: pct,
+      normpremieDrempel: perHuishouden(pct),
+      normpremieAfbouw: pct,
+      maxToetsingsinkomen: perHuishouden(nietNegatief),
+      maxVermogen: perHuishouden(nietNegatief),
     }),
     huurtoeslag: z.strictObject({
       bron,
       niveau,
-      maximaleHuurPerMaand: nietNegatief,
-      vergoeding: pct,
-      basisbijdragePerMaand: perHuishouden(nietNegatief),
-      drempelinkomen: perHuishouden(nietNegatief),
-      afbouw: pct,
+      huurgrens: nietNegatief,
+      basishuur: perOmvang(nietNegatief),
+      kwaliteitskortingsgrens: nietNegatief,
+      aftoppingsgrens: z.strictObject({ eenOfTweePersonen: nietNegatief, drieOfMeerPersonen: nietNegatief }),
+      vergoeding: z.strictObject({
+        totKwaliteitskortingsgrens: pct,
+        totAftoppingsgrens: pct,
+        totHuurgrens: pct,
+      }),
+      inkomensijkpunt: perOmvang(nietNegatief),
+      afbouw: perOmvang(pct),
+      maxVermogen: perHuishouden(nietNegatief),
     }),
     kindgebondenBudget: z.strictObject({
       bron,
       niveau,
       perKind: nietNegatief,
+      verhogingKind12tot16: nietNegatief,
+      verhogingKind16en17: nietNegatief,
       alleenstaandeOuderkop: nietNegatief,
       drempelinkomen: perHuishouden(nietNegatief),
       afbouw: pct,
+      maxVermogen: perHuishouden(nietNegatief),
     }),
     kinderopvangtoeslag: z.strictObject({
       bron,
       niveau,
-      maxVergoeding: pct,
-      minVergoeding: pct,
-      inkomensgrens: nietNegatief,
-      afbouwTraject: z.number().positive(),
+      maxUurprijs: z.strictObject({
+        dagopvang: nietNegatief,
+        buitenschoolse: nietNegatief,
+        gastouder: nietNegatief,
+      }),
+      maxUrenPerMaand: nietNegatief,
+      tabel: oplopendVanafNul(
+        z.strictObject({ vanaf: nietNegatief, eersteKind: pct, volgendKind: pct }),
+        "de kinderopvangtoeslagtabel",
+      ),
     }),
   }),
 
   uitkeringen: z.strictObject({
     bron,
-    aow: perHuishouden(nietNegatief),
-    nettoKoppeling: z.boolean(),
+    aow: perHuishouden(aowBedragen),
+    nettoKoppeling: z.strictObject({
+      aow: z.boolean(),
+      bijstand: z.boolean(),
+      werknemersverzekering: z.boolean(),
+    }),
   }),
 
-  zorg: z.strictObject({ bron, nominalePremiePerVolwassene: nietNegatief }),
+  zorg: z.strictObject({
+    bron,
+    nominalePremiePerVolwassene: nietNegatief,
+    zvwBijdrage: pct,
+    zvwMaximumInkomen: nietNegatief,
+  }),
 
-  kinderbijslag: z.strictObject({ bron, perKind: nietNegatief }),
+  kinderbijslag: z.strictObject({
+    bron,
+    niveau,
+    perKwartaal: z
+      .array(
+        z.strictObject({
+          totLeeftijd: z.number().int().positive(),
+          eersteHalfjaar: nietNegatief,
+          tweedeHalfjaar: nietNegatief,
+        }),
+      )
+      .min(1)
+      .refine(
+        (s) => s.every((r, i) => i === 0 || r.totLeeftijd > s[i - 1]!.totLeeftijd),
+        "De leeftijdsgroepen van de kinderbijslag lopen op.",
+      ),
+  }),
 
   gedrag: z.strictObject({ bron, eti: z.number().min(0).max(2) }),
 

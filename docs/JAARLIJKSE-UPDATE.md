@@ -47,6 +47,7 @@ Dat betekent: in de sectie `toeslagen` → `zorgtoeslag` staat een sleutel `drem
 ```
 npm run kalibreer    # vanaf fase 3
 npm test
+npm run golden       # legt de nieuwe kerncijfers vast
 ```
 
 Golden tests die wijzigen door de nieuwe cijfers zijn verwacht. Leg in de pull request uit wat er verandert en waarom.

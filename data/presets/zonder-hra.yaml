@@ -1,6 +1,6 @@
 id: zonder-hra
 naam: "Zonder hypotheekrenteaftrek"
-omschrijving: "Het huidige stelsel, maar hypotheekrente is niet meer aftrekbaar. Het eigenwoningforfait blijft bestaan."
+omschrijving: "Het huidige stelsel, maar hypotheekrente is niet meer aftrekbaar. Het eigenwoningforfait blijft bestaan, met de bestaande aftrek voor wie geen of weinig hypotheekschuld heeft (Wet Hillen)."
 volgorde: 40
 wijzigingen:
   - { parameter: eigenWoning.aftrekMaxTarief, zet: 0 }

@@ -3,17 +3,16 @@
 # Afspraken (zie ook docs/JAARLIJKSE-UPDATE.md):
 # - Percentages schrijf je als percentage: 35,75% wordt 35.75.
 # - Bedragen in euro per jaar, tenzij de naam iets anders zegt (bijvoorbeeld "perMaand").
-# - Een punt is de decimaal: 1.575 euro schrijf je als 1575.
+# - Een punt is de decimaal: € 1.575,50 schrijf je als 1575.50.
 # - Elke sectie heeft een "bron". Weet je de bron niet? Schrijf "TODO: bron nodig".
 # - "niveau" is een knop voor scenario's: 100 = zoals de wet nu is, 0 = afgeschaft.
 #
-# Status: fase 1. Deze waarden zijn letterlijk overgenomen uit het prototype, zodat de nieuwe rekenkern
-# dezelfde uitkomsten geeft. In fase 2 worden ze één voor één gecontroleerd tegen officiële bronnen.
+# Status: fase 2. Alle bedragen zijn gecontroleerd tegen officiële bronnen (zie "bron" per sectie).
 
 jaar: 2026
 
 box1:
-  bron: "Belastingdienst, tarieven 2026 (https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-tarieven-en-heffingskortingen). Waarden uit prototype, controle in fase 2."
+  bron: "Belastingdienst, Voorlopige aanslag 2026: gebruikte tarieven en heffingskortingen (https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-tarieven-en-heffingskortingen)"
   # Belastingvrij deel per persoon. Bestaat nu niet (0); handig voor scenario's als een vlaktaks.
   vrijstelling: 0
   # Inkomstenbelasting plus premies volksverzekeringen. De laatste schijf heeft "tot: null" (geen bovengrens).
@@ -21,108 +20,229 @@ box1:
     - { tot: 38883, tarief: 35.75 }
     - { tot: 78426, tarief: 37.56 }
     - { tot: null, tarief: 49.5 }
-  # AOW'ers betalen geen AOW-premie: hun tarief in de eerste schijf is zoveel procentpunt lager.
-  aowVerlagingEersteSchijf: 17.95
+  # AOW'ers betalen geen AOW-premie: hun tarief in de eerste schijf is zoveel procentpunt lager
+  # (35,75% − 17,85% voor AOW'ers geboren in of na 1946 = 17,90).
+  aowVerlagingEersteSchijf: 17.9
 
 # Een heffingskorting is een "staffel": een reeks stukken die elk beginnen bij een inkomen ("vanaf").
 # Op elk stuk is de korting: bedrag + tarief% × (inkomen − vanaf). Een negatief tarief is afbouw.
 # De korting is nooit lager dan 0 en nooit hoger dan "maximum" (als dat er staat).
+# "staffelAow" geldt voor wie het hele jaar de AOW-leeftijd heeft.
 heffingskortingen:
   algemeen:
-    bron: "Belastingdienst, heffingskortingen 2026. Waarden uit prototype, controle in fase 2."
+    bron: "Belastingdienst, Tabel algemene heffingskorting 2026 (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/algemene_heffingskorting/tabel-algemene-heffingskorting-2026)"
     niveau: 100
     staffel:
       - { vanaf: 0, bedrag: 3115, tarief: 0 }
       - { vanaf: 29736, bedrag: 3115, tarief: -6.398 }
-    # Voor wie de AOW-leeftijd heeft (lager, omdat er geen AOW-premie wordt betaald).
     staffelAow:
       - { vanaf: 0, bedrag: 1556, tarief: 0 }
       - { vanaf: 29736, bedrag: 1556, tarief: -3.195 }
   arbeid:
-    bron: "Belastingdienst, heffingskortingen 2026. Waarden uit prototype, controle in fase 2."
+    bron: "Belastingdienst, Tabel arbeidskorting 2026 (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/tabel-arbeidskorting-2026)"
     niveau: 100
     staffel:
       - { vanaf: 0, bedrag: 0, tarief: 8.324 }
       - { vanaf: 11965, bedrag: 996, tarief: 31.009 }
       - { vanaf: 25845, bedrag: 5300, tarief: 1.95 }
       - { vanaf: 45592, bedrag: 5685, tarief: -6.51 }
+    staffelAow:
+      - { vanaf: 0, bedrag: 0, tarief: 4.156 }
+      - { vanaf: 11965, bedrag: 498, tarief: 15.483 }
+      - { vanaf: 25845, bedrag: 2647, tarief: 0.974 }
+      - { vanaf: 45592, bedrag: 2840, tarief: -3.25 }
   ouderen:
-    bron: "TODO: bron nodig. Afbouw is een benadering uit het prototype (HANDOFF §2, zwakke plek 7)."
+    bron: "Belastingdienst, Fiscale Informatie 2026, hoofdstuk 21 Heffingskortingen (https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/heffingskortingen)"
     niveau: 100
     staffel:
       - { vanaf: 0, bedrag: 2067, tarief: 0 }
-      - { vanaf: 45000, bedrag: 2067, tarief: -15 }
+      - { vanaf: 46002, bedrag: 2067, tarief: -15 }
+  alleenstaandeOuderen:
+    bron: "Belastingdienst, Fiscale Informatie 2026, hoofdstuk 21 Heffingskortingen (https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/heffingskortingen)"
+    niveau: 100
+    # Voor AOW'ers zonder partner.
+    bedrag: 540
   combinatie:
-    bron: "Belastingdienst, inkomensafhankelijke combinatiekorting 2026. Waarden uit prototype, controle in fase 2."
+    bron: "Belastingdienst, Fiscale Informatie 2026, hoofdstuk 21 Heffingskortingen (https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/heffingskortingen)"
     niveau: 100
     staffel:
       - { vanaf: 0, bedrag: 0, tarief: 0 }
       - { vanaf: 6239, bedrag: 0, tarief: 11.45 }
     maximum: 3032
+    staffelAow:
+      - { vanaf: 0, bedrag: 0, tarief: 0 }
+      - { vanaf: 6239, bedrag: 0, tarief: 5.72 }
+    maximumAow: 1514
 
 eigenWoning:
-  bron: "TODO: bron nodig. Waarden uit prototype; Wet Hillen ontbreekt nog (fase 2)."
-  # Eigenwoningforfait als percentage van de WOZ-waarde. 0 = afgeschaft.
-  forfait: 0.35
-  # Hoogste tarief waartegen hypotheekrente aftrekbaar is. 0 = geen hypotheekrenteaftrek.
+  bron: "Belastingdienst, Fiscale Informatie 2026, hoofdstuk 10 Eigen woning (https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/eigen_woning_en_restschuld_vroegere); maximaal aftrektarief: antwoord Kamervragen 23 juni 2026 (https://zoek.officielebekendmakingen.nl/ah-1255510.pdf)"
+  forfait:
+    niveau: 100
+    # Eigenwoningforfait als percentage van de hele WOZ-waarde, afhankelijk van de WOZ-waarde.
+    tabel:
+      - { vanaf: 0, percentage: 0 }
+      - { vanaf: 12500, percentage: 0.1 }
+      - { vanaf: 25000, percentage: 0.2 }
+      - { vanaf: 50000, percentage: 0.25 }
+      - { vanaf: 75000, percentage: 0.35 }
+    # Boven deze WOZ-waarde: het forfait op de grens, plus dit percentage van het deel daarboven.
+    villataks: { vanaf: 1350000, percentage: 2.35 }
+  # Hoogste tarief waartegen de aftrek eigen woning werkt. 0 = geen hypotheekrenteaftrek.
   aftrekMaxTarief: 37.56
+  # Wet Hillen: is het forfait hoger dan de aftrekbare rente, dan is dit percentage van het verschil aftrekbaar.
+  hillenAftrek: 71.867
 
 overigeAftrekposten:
-  bron: "Prototype: vaste schatting voor aftrekposten die niet apart in het model zitten (HANDOFF §2, zwakke plek 8)."
+  bron: "Prototype: vaste schatting voor aftrekposten die niet apart in het model zitten (HANDOFF §2, zwakke plek 8). TODO: bron nodig."
   # Totaal in miljard euro per jaar. Wordt niet per huishouden berekend.
   budgetMld: 4.0
   niveau: 100
 
 toeslagen:
-  # Fase 1: vereenvoudigde formules uit het prototype, gekalibreerd op totalen. Fase 2 vervangt ze door de
-  # exacte regels uit de Toeslagenkaart 2026.
   zorgtoeslag:
-    bron: "Prototype (vereenvoudigd). Exacte regels volgen in fase 2."
+    bron: "Dienst Toeslagen, Berekening zorgtoeslag 2026 (https://download.belastingdienst.nl/toeslagen/docs/berekening_zorgtoeslag_tg0821z62fd.pdf); percentages: Besluit percentages drempel- en toetsingsinkomen zorgtoeslag (https://wetten.overheid.nl/BWBR0030989)"
     niveau: 100
-    maximum: { alleenstaand: 1575, partners: 3000 }
-    drempelinkomen: 29000
-    # Zoveel procent van elke euro boven het drempelinkomen gaat van de toeslag af.
-    afbouw: 13.7
+    # Per volwassene; voor partners geldt twee keer de standaardpremie.
+    standaardpremie: 2119
+    drempelinkomen: 29736
+    # Normpremie = percentage van het drempelinkomen + afbouwpercentage × (toetsingsinkomen − drempelinkomen).
+    normpremieDrempel: { alleenstaand: 1.912, partners: 4.289 }
+    normpremieAfbouw: 13.73
+    maxToetsingsinkomen: { alleenstaand: 40857, partners: 51142 }
+    maxVermogen: { alleenstaand: 146011, partners: 184633 }
   huurtoeslag:
-    bron: "Prototype (vereenvoudigd). Exacte regels volgen in fase 2."
+    bron: "Dienst Toeslagen, Berekening huurtoeslag 2026 (https://download.belastingdienst.nl/toeslagen/docs/berekening_huurtoeslag_tg0831z62fd.pdf); Handboek Toeslagen §1.12.1 (https://handboek.toeslagen.nl/htsn/20-huurtoeslag-huurtoeslag/)"
     niveau: 100
-    maximaleHuurPerMaand: 932
-    # Percentage van (huur − eigen bijdrage) dat wordt vergoed.
-    vergoeding: 65
-    basisbijdragePerMaand: { alleenstaand: 288, partners: 300 }
-    drempelinkomen: { alleenstaand: 20000, partners: 27000 }
-    # De eigen bijdrage stijgt met zoveel procent van elke euro boven het drempelinkomen.
-    afbouw: 50
+    # Bedragen in deze sectie zijn per maand, behalve inkomens en vermogen.
+    huurgrens: 932.93
+    basishuur: { eenpersoons: 202.52, meerpersoons: 200.71 }
+    kwaliteitskortingsgrens: 498.2
+    aftoppingsgrens: { eenOfTweePersonen: 713.02, drieOfMeerPersonen: 764.14 }
+    # Vergoeding van de huur tot de kwaliteitskortingsgrens, tot de aftoppingsgrens en tot de huurgrens.
+    vergoeding: { totKwaliteitskortingsgrens: 100, totAftoppingsgrens: 65, totHuurgrens: 40 }
+    # Inkomensafhankelijke correctie: afbouw% × (rekeninkomen − inkomensijkpunt), per jaar.
+    inkomensijkpunt: { eenpersoons: 23425, meerpersoons: 31500 }
+    afbouw: { eenpersoons: 27, meerpersoons: 22 }
+    maxVermogen: { alleenstaand: 38479, partners: 76958 }
   kindgebondenBudget:
-    bron: "Prototype (vereenvoudigd). Exacte regels volgen in fase 2."
+    bron: "Dienst Toeslagen, Berekening kindgebonden budget 2026 (https://download.belastingdienst.nl/toeslagen/docs/berekening_kindgebonden_budget_tg0811z61fd.pdf)"
     niveau: 100
-    perKind: 2100
-    alleenstaandeOuderkop: 3480
+    perKind: 2580
+    verhogingKind12tot16: 724
+    verhogingKind16en17: 964
+    alleenstaandeOuderkop: 3416
     drempelinkomen: { alleenstaand: 29736, partners: 39141 }
-    afbouw: 10
+    afbouw: 7.6
+    maxVermogen: { alleenstaand: 146011, partners: 184633 }
   kinderopvangtoeslag:
-    bron: "Prototype (vereenvoudigd). De officiële KOT-tabel per inkomensgroep volgt in fase 2."
+    bron: "Dienst Toeslagen, Berekening kinderopvangtoeslag 2026 (https://download.belastingdienst.nl/toeslagen/docs/berekening_kinderopvangtoeslag_tg0801z61fd.pdf); maximale uurprijzen: Handboek Toeslagen §1.8.2.2"
     niveau: 100
-    # Vergoedingspercentage van de kosten: maximaal tot de inkomensgrens, daarna lineair omlaag tot het minimum.
-    maxVergoeding: 96
-    minVergoeding: 33.3
-    inkomensgrens: 56413
-    # Over hoeveel euro inkomen het percentage van maximaal naar minimaal daalt.
-    afbouwTraject: 170000
+    maxUurprijs: { dagopvang: 11.23, buitenschoolse: 9.98, gastouder: 8.49 }
+    maxUrenPerMaand: 230
+    # Vergoedingspercentage per (gezamenlijk) toetsingsinkomen, vanaf dat inkomen. "eersteKind" is het kind met
+    # de meeste opvanguren; "volgendKind" geldt voor de andere kinderen.
+    tabel:
+      - { vanaf: 0, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 24150, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 25757, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 27364, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 28974, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 30580, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 32190, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 33796, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 35401, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 37130, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 38856, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 40587, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 42314, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 44047, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 45777, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 47547, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 49319, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 51093, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 52865, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 54642, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 56413, eersteKind: 95.5, volgendKind: 95.6 }
+      - { vanaf: 58185, eersteKind: 94.8, volgendKind: 95.6 }
+      - { vanaf: 59958, eersteKind: 93.9, volgendKind: 95.6 }
+      - { vanaf: 61896, eersteKind: 92.4, volgendKind: 95.6 }
+      - { vanaf: 65696, eersteKind: 91.6, volgendKind: 95.2 }
+      - { vanaf: 69493, eersteKind: 90.5, volgendKind: 94.6 }
+      - { vanaf: 73293, eersteKind: 88.2, volgendKind: 94.2 }
+      - { vanaf: 77095, eersteKind: 85.9, volgendKind: 93.9 }
+      - { vanaf: 80892, eersteKind: 83.7, volgendKind: 93.2 }
+      - { vanaf: 84694, eersteKind: 81.2, volgendKind: 92.7 }
+      - { vanaf: 88492, eersteKind: 78.9, volgendKind: 92.2 }
+      - { vanaf: 92292, eersteKind: 76.7, volgendKind: 91.5 }
+      - { vanaf: 96092, eersteKind: 74.3, volgendKind: 90.9 }
+      - { vanaf: 99890, eersteKind: 72.1, volgendKind: 90.5 }
+      - { vanaf: 103695, eersteKind: 69.6, volgendKind: 90.2 }
+      - { vanaf: 107493, eersteKind: 67.3, volgendKind: 89.5 }
+      - { vanaf: 111291, eersteKind: 65.1, volgendKind: 89.1 }
+      - { vanaf: 115091, eersteKind: 62.7, volgendKind: 88.6 }
+      - { vanaf: 118964, eersteKind: 60.6, volgendKind: 87.9 }
+      - { vanaf: 122858, eersteKind: 58.5, volgendKind: 87.4 }
+      - { vanaf: 126748, eersteKind: 56.4, volgendKind: 87 }
+      - { vanaf: 130639, eersteKind: 54.2, volgendKind: 86.7 }
+      - { vanaf: 134528, eersteKind: 52.3, volgendKind: 86 }
+      - { vanaf: 138421, eersteKind: 50.4, volgendKind: 85.4 }
+      - { vanaf: 142313, eersteKind: 48.5, volgendKind: 85 }
+      - { vanaf: 146206, eersteKind: 46.5, volgendKind: 84.4 }
+      - { vanaf: 150093, eersteKind: 44.5, volgendKind: 84 }
+      - { vanaf: 153983, eersteKind: 42.5, volgendKind: 83.3 }
+      - { vanaf: 157878, eersteKind: 40.5, volgendKind: 82.7 }
+      - { vanaf: 161767, eersteKind: 38.5, volgendKind: 81.7 }
+      - { vanaf: 165658, eersteKind: 36.5, volgendKind: 81.4 }
+      - { vanaf: 169548, eersteKind: 36.5, volgendKind: 80.6 }
+      - { vanaf: 173441, eersteKind: 36.5, volgendKind: 79.7 }
+      - { vanaf: 177336, eersteKind: 36.5, volgendKind: 79.1 }
+      - { vanaf: 181224, eersteKind: 36.5, volgendKind: 78.2 }
+      - { vanaf: 185115, eersteKind: 36.5, volgendKind: 77.7 }
+      - { vanaf: 189003, eersteKind: 36.5, volgendKind: 76.9 }
+      - { vanaf: 192897, eersteKind: 36.5, volgendKind: 76.2 }
+      - { vanaf: 196790, eersteKind: 36.5, volgendKind: 75.5 }
+      - { vanaf: 200682, eersteKind: 36.5, volgendKind: 74.5 }
+      - { vanaf: 204572, eersteKind: 36.5, volgendKind: 74 }
+      - { vanaf: 208459, eersteKind: 36.5, volgendKind: 73.3 }
+      - { vanaf: 212354, eersteKind: 36.5, volgendKind: 72.5 }
+      - { vanaf: 216243, eersteKind: 36.5, volgendKind: 71.8 }
+      - { vanaf: 220135, eersteKind: 36.5, volgendKind: 71.2 }
+      - { vanaf: 224027, eersteKind: 36.5, volgendKind: 70.4 }
+      - { vanaf: 227916, eersteKind: 36.5, volgendKind: 69.6 }
+      - { vanaf: 231808, eersteKind: 36.5, volgendKind: 69.1 }
+      - { vanaf: 235698, eersteKind: 36.5, volgendKind: 68.2 }
 
 uitkeringen:
-  bron: "TODO: bron nodig. AOW-bedragen zijn ronde schattingen uit het prototype (HANDOFF §2, zwakke plek 3)."
-  aow: { alleenstaand: 19800, partners: 13600 }
-  # Netto-koppeling: in een scenario houden uitkeringen hun netto bedrag; de overheid betaalt het verschil bruto bij.
-  nettoKoppeling: true
+  bron: "SVB, AOW-bedragen (https://www.svb.nl/nl/aow/bedragen-aow/aow-bedragen): bedragen vanaf 1 juli 2026 en vakantiegeld. Bedragen 1 januari 2026: ANBO-PCOB (https://anbo-pcob.nl/nieuws/nieuwsberichten/aow-uitkering-stijgt-opnieuw-per-1-januari-2026/)."
+  # Bruto AOW per persoon, zoals de SVB ze publiceert. Per jaar = 6 × eerste halfjaar + 6 × tweede halfjaar
+  # + 12 × vakantiegeld.
+  aow:
+    alleenstaand:
+      { perMaandEersteHalfjaar: 1637.57, perMaandTweedeHalfjaar: 1662.16, vakantiegeldPerMaand: 104.78 }
+    partners:
+      { perMaandEersteHalfjaar: 1122.12, perMaandTweedeHalfjaar: 1139.39, vakantiegeldPerMaand: 74.85 }
+  # Netto-koppeling: in een scenario houdt deze uitkering haar netto bedrag; de overheid betaalt het verschil
+  # bruto bij. AOW en bijstand zijn gekoppeld aan het netto minimumloon; WW en WIA zijn een percentage van het
+  # vroegere bruto loon.
+  nettoKoppeling: { aow: true, bijstand: true, werknemersverzekering: false }
 
 zorg:
-  bron: "TODO: bron nodig. Ronde schatting uit het prototype."
-  nominalePremiePerVolwassene: 2000
+  bron: "Nominale premie: Rijksoverheid, Wat kost een zorgverzekering? (https://www.rijksoverheid.nl/vraag-en-antwoord/zorgverzekering/premie-zorgverzekering). Zvw-bijdrage: Belastingdienst, Tarieven loonheffingen 2026, tabel 11 en 12 (https://download.belastingdienst.nl/belastingdienst/docs/bijlage-nieuwsbrief-loonheffingen-2026-lh2091b63fd.pdf)."
+  # Gemiddelde nominale premie per volwassene per jaar.
+  nominalePremiePerVolwassene: 1884
+  # Inkomensafhankelijke bijdrage Zvw die mensen zelf betalen (zoals AOW'ers over AOW en pensioen).
+  # Voor werknemers en uitkeringen betaalt de werkgever of uitkeringsinstantie; dat valt buiten het model.
+  zvwBijdrage: 4.85
+  zvwMaximumInkomen: 79409
 
 kinderbijslag:
-  bron: "TODO: bron nodig. Ronde schatting uit het prototype; leeftijdsafhankelijke bedragen volgen in fase 2."
-  perKind: 1400
+  bron: "SVB, Bedragen kinderbijslag 2026 (https://www.svb.nl/nl/kinderbijslag/bedragen-betaaldagen/bedragen-kinderbijslag)"
+  niveau: 100
+  # Bedrag per kind per kwartaal, per leeftijdsgroep. Per jaar = 2 × eerste halfjaar + 2 × tweede halfjaar.
+  perKwartaal:
+    - { totLeeftijd: 6, eersteHalfjaar: 295.07, tweedeHalfjaar: 298.4 }
+    - { totLeeftijd: 12, eersteHalfjaar: 358.3, tweedeHalfjaar: 362.35 }
+    - { totLeeftijd: 18, eersteHalfjaar: 421.53, tweedeHalfjaar: 426.29 }
 
 gedrag:
   bron: "Modelkeuze. 0 = geen gedragseffect (statische doorrekening)."

@@ -1,0 +1,126 @@
+# Voorbeeldhuishoudens, getoond in het scenariolab. Overgenomen uit het prototype.
+# Bedragen per jaar, huur per maand. "soort2: null" betekent geen partner.
+# Soorten inkomen: werk, uitkering, aow, geen.
+
+huishoudens:
+  - id: p10
+    label: P10
+    omschrijving: "Alleenstaand, bijstand, huur"
+    invoer:
+      {
+        inkomen1: 20000,
+        soort1: uitkering,
+        soort2: null,
+        inkomen2: 0,
+        kinderLeeftijden: [],
+        huurPerMaand: 750,
+        hypotheekrente: 0,
+        woz: 0,
+        kinderopvangKosten: 0,
+        uitkeringSoort: bijstand,
+      }
+  - id: p20
+    label: P20
+    omschrijving: "AOW'er alleenstaand, huur"
+    invoer:
+      {
+        inkomen1: 25000,
+        soort1: aow,
+        soort2: null,
+        inkomen2: 0,
+        kinderLeeftijden: [],
+        huurPerMaand: 650,
+        hypotheekrente: 0,
+        woz: 0,
+        kinderopvangKosten: 0,
+      }
+  - id: p30
+    label: P30
+    omschrijving: "Alleenstaand werkend, huur"
+    invoer:
+      {
+        inkomen1: 32000,
+        soort1: werk,
+        soort2: null,
+        inkomen2: 0,
+        kinderLeeftijden: [],
+        huurPerMaand: 850,
+        hypotheekrente: 0,
+        woz: 0,
+        kinderopvangKosten: 0,
+      }
+  - id: p50
+    label: P50
+    omschrijving: "Stel, 2 kinderen, koop"
+    invoer:
+      {
+        inkomen1: 48000,
+        soort1: werk,
+        soort2: werk,
+        inkomen2: 22000,
+        kinderLeeftijden: [4, 8],
+        huurPerMaand: 0,
+        hypotheekrente: 9000,
+        woz: 400000,
+        kinderopvangKosten: 0,
+      }
+  - id: p75
+    label: P75
+    omschrijving: "Stel, 2 kinderen, koop"
+    invoer:
+      {
+        inkomen1: 62000,
+        soort1: werk,
+        soort2: werk,
+        inkomen2: 40000,
+        kinderLeeftijden: [4, 8],
+        huurPerMaand: 0,
+        hypotheekrente: 12000,
+        woz: 500000,
+        kinderopvangKosten: 0,
+      }
+  - id: p90
+    label: P90
+    omschrijving: "Tweeverdieners, koop"
+    invoer:
+      {
+        inkomen1: 110000,
+        soort1: werk,
+        soort2: werk,
+        inkomen2: 60000,
+        kinderLeeftijden: [],
+        huurPerMaand: 0,
+        hypotheekrente: 15000,
+        woz: 650000,
+        kinderopvangKosten: 0,
+      }
+  - id: p99
+    label: P99
+    omschrijving: "Topinkomen, koop"
+    invoer:
+      {
+        inkomen1: 350000,
+        soort1: werk,
+        soort2: werk,
+        inkomen2: 50000,
+        kinderLeeftijden: [],
+        huurPerMaand: 0,
+        hypotheekrente: 20000,
+        woz: 1200000,
+        kinderopvangKosten: 0,
+      }
+  - id: jij
+    label: Jij
+    omschrijving: "Jouw huishouden (voorbeeld)"
+    invoer:
+      {
+        inkomen1: 45000,
+        soort1: werk,
+        soort2: werk,
+        inkomen2: 30000,
+        kinderLeeftijden: [4],
+        huurPerMaand: 1100,
+        hypotheekrente: 0,
+        woz: 0,
+        kinderopvangKosten: 8000,
+      }
