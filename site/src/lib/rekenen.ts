@@ -92,3 +92,13 @@ export async function maakBudgetneutraal(
   await klaar;
   return vraag<Oplossing>({ soort: "neutraal", params: kopie(params), via });
 }
+
+let laatsteVergelijking = 0;
+
+/** Rekent een tweede scenario door om mee te vergelijken; los van simuleerScenario, zodat ze elkaar niet afbreken. */
+export async function simuleerVergelijking(params: Parameters): Promise<UitkomstSamenvatting | null> {
+  await klaar;
+  const mijn = ++laatsteVergelijking;
+  const u = await vraag<UitkomstSamenvatting>({ soort: "simuleer", params: kopie(params) });
+  return mijn === laatsteVergelijking ? u : null;
+}

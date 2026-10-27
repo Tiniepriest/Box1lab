@@ -1,0 +1,48 @@
+---
+titel: "Hoe werken toeslagen?"
+samenvatting: "Zorgtoeslag, huurtoeslag, kindgebonden budget en kinderopvangtoeslag in het kort."
+volgorde: 3
+---
+
+import MiniToeslagen from "../../components/uitleg/MiniToeslagen.svelte";
+import { params } from "../../lib/data.ts";
+import { euro, procent } from "../../lib/format.ts";
+
+export const t = params.toeslagen;
+
+Toeslagen zijn bijdragen van de overheid voor mensen met een laag of middeninkomen. Er zijn er vier. Hoeveel je
+krijgt, hangt af van je inkomen (het **toetsingsinkomen**), je huishouden en soms je vermogen.
+
+## Zorgtoeslag
+
+Een bijdrage in de premie van je zorgverzekering. Je krijgt het verschil tussen de **standaardpremie**
+({euro(t.zorgtoeslag.standaardpremie)} per volwassene in {params.jaar}) en een **normpremie** die stijgt met je
+inkomen. Boven een inkomen van {euro(t.zorgtoeslag.maxToetsingsinkomen.alleenstaand)} (alleenstaand) of
+{euro(t.zorgtoeslag.maxToetsingsinkomen.partners)} (met partner) krijg je niets.
+
+## Huurtoeslag
+
+Voor huurders met een niet te hoge huur. Je betaalt altijd zelf een **basishuur** (ongeveer
+{euro(t.huurtoeslag.basishuur.eenpersoons)} per maand); van het deel daarboven krijg je een stuk vergoed: tot
+{euro(t.huurtoeslag.kwaliteitskortingsgrens)} helemaal, daarboven {procent(t.huurtoeslag.vergoeding.totAftoppingsgrens, 0)}
+en boven de aftoppingsgrens {procent(t.huurtoeslag.vergoeding.totHuurgrens, 0)}. Verdien je meer dan een bepaald
+bedrag, dan gaat er per extra euro inkomen een deel van de toeslag af. Sinds {params.jaar} is dat een vast
+percentage van je inkomen boven een grens; daarvoor was de berekening ingewikkelder.
+
+## Kindgebonden budget
+
+Voor ouders met kinderen onder de 18. Per kind {euro(t.kindgebondenBudget.perKind)} per jaar, meer voor kinderen
+vanaf 12 jaar, en een extra bedrag voor alleenstaande ouders. Boven een drempelinkomen gaat er
+{procent(t.kindgebondenBudget.afbouw, 1)} van elke extra euro af.
+
+## Kinderopvangtoeslag
+
+Voor werkende ouders met kinderen op de opvang. Je krijgt een percentage van de kosten terug: tot
+{procent(t.kinderopvangtoeslag.tabel[0].eersteKind, 0)} bij lage inkomens, minder bij hogere inkomens, met een
+maximum per uur en per maand.
+
+## Probeer het zelf
+
+<MiniToeslagen client:visible params={params} />
+
+Deze bedragen zijn een benadering. Voor je echte toeslag kijk je op de website van Dienst Toeslagen.

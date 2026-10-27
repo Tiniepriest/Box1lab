@@ -1,0 +1,49 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { pad } from "../../lib/data.ts";
+
+export async function getStaticPaths() {
+  return (await getCollection("uitleg")).map((artikel) => ({
+    params: { id: artikel.id },
+    props: { artikel },
+  }));
+}
+
+const { artikel } = Astro.props;
+const { Content } = await render(artikel);
+---
+
+<Base title={`${artikel.data.titel} — Box1lab`} description={artikel.data.samenvatting}>
+  <article class="artikel">
+    <p class="kruimel">
+      <a href={pad("uitleg")}>Uitleg</a>
+    </p>
+    <h1>{artikel.data.titel}</h1>
+    <p class="lead">{artikel.data.samenvatting}</p>
+    <Content />
+  </article>
+</Base>
+
+<style>
+  .artikel {
+    max-width: 70ch;
+  }
+  .kruimel {
+    margin: 0 0 4px;
+    font-size: 14px;
+  }
+  h1 {
+    font-size: clamp(28px, 4.5vw, 38px);
+    margin: 0 0 6px;
+  }
+  .lead {
+    font-size: 18px;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+  .artikel :global(h2) {
+    font-size: 21px;
+    margin: 28px 0 6px;
+  }
+</style>

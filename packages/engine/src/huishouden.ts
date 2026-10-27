@@ -192,8 +192,6 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
   const kb = berekenKinderbijslag(h.kinderen, p);
   const zorgpremie = (volwassenen + meerderjarig) * p.zorg.nominalePremiePerVolwassene;
   const toeslagen = zt + ht + kg + ko;
-  const eq = p.methodiek.equivalentie;
-  const ouderKinderen = h.kinderen.filter((l) => l >= eq.kindVanafLeeftijd).length;
 
   return {
     bruto,
@@ -213,11 +211,22 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     besteedbaar: bruto - belasting - zvw + toeslagen + kb - zorgpremie,
     volwassenen,
     kinderen: h.kinderen.length,
-    equivalentie:
-      1 +
-      eq.extraVolwassene * (volwassenen - 1 + ouderKinderen) +
-      eq.kind * (h.kinderen.length - ouderKinderen),
+    equivalentie: equivalentiefactor(volwassenen, h.kinderen, p),
   };
+}
+
+/**
+ * Equivalentiefactor van een huishouden: de eerste volwassene telt 1, iedere volgende persoon vanaf
+ * `kindVanafLeeftijd` telt als extra volwassene, jongere kinderen als kind (parameters in methodiek.equivalentie).
+ */
+export function equivalentiefactor(
+  volwassenen: number,
+  kinderLeeftijden: readonly number[],
+  p: Parameters,
+): number {
+  const eq = p.methodiek.equivalentie;
+  const ouder = kinderLeeftijden.filter((l) => l >= eq.kindVanafLeeftijd).length;
+  return 1 + eq.extraVolwassene * (volwassenen - 1 + ouder) + eq.kind * (kinderLeeftijden.length - ouder);
 }
 
 /** Eenvoudige invoer, zoals in de voorbeeldhuishoudens en (straks) het invoerformulier. */

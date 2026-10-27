@@ -1,0 +1,36 @@
+---
+titel: "Wat is een deciel?"
+samenvatting: "Hoe we huishoudens in tien inkomensgroepen verdelen, en waarom we corrigeren voor de grootte."
+volgorde: 5
+---
+
+import MiniDeciel from "../../components/uitleg/MiniDeciel.svelte";
+import { decielGrenzen } from "../../lib/basis.ts";
+import { params } from "../../lib/data.ts";
+import { pad } from "../../lib/pad.ts";
+
+export const eq = params.methodiek.equivalentie;
+export const gezin = 1 + eq.extraVolwassene + 2 * eq.kind;
+
+Op deze site zie je vaak "groep 1" tot en met "groep 10". Dat zijn **decielen**: we zetten alle mensen in Nederland
+op een rij van laag naar hoog inkomen en verdelen die rij in tien even grote groepen. Groep 1 zijn de 10% met het
+laagste inkomen, groep 10 de 10% met het hoogste.
+
+## Waarom corrigeren voor de grootte?
+
+Een gezin met drie kinderen heeft meer geld nodig dan iemand die alleen woont. Om dat eerlijk te vergelijken, delen
+we het besteedbaar inkomen door een **equivalentiefactor**. De eerste volwassene telt als 1. Iedere volgende persoon
+vanaf {eq.kindVanafLeeftijd} jaar telt als {eq.extraVolwassene.toLocaleString("nl-NL")}, en jongere kinderen tellen als
+{eq.kind.toLocaleString("nl-NL")}. Een stel met twee jonge kinderen telt dus als
+{gezin.toLocaleString("nl-NL")} keer een alleenstaande. Dat werkt omdat je samen
+dingen deelt, zoals de huur en de keuken.
+
+## Probeer het zelf
+
+<MiniDeciel client:visible params={params} grenzen={decielGrenzen} />
+
+## Waar komt dit vandaan?
+
+De groepsgrenzen komen uit de nagebootste bevolking van Box1lab, die is afgestemd op de inkomensverdeling van het
+CBS. Het CBS gebruikt een iets andere equivalentieschaal, dus de grenzen zijn niet precies gelijk aan die van het
+CBS. Meer daarover op de pagina <a href={pad("methodiek")}>Methodiek</a>.

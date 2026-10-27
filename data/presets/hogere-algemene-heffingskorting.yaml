@@ -1,0 +1,10 @@
+id: hogere-algemene-heffingskorting
+naam: "Algemene heffingskorting + € 500"
+omschrijving: "De algemene heffingskorting gaat € 500 omhoog (voor AOW'ers € 250, de helft, zoals nu ook de verhouding is)."
+uitleg: "Een hogere algemene heffingskorting verlaagt de belasting voor bijna iedereen met een inkomen. Omdat de korting boven een inkomen van ongeveer € 30.000 wordt afgebouwd, komt een groter deel terecht bij lagere en middeninkomens. Wie (bijna) geen belasting betaalt, merkt er weinig van: de korting is nooit hoger dan de belasting zelf."
+volgorde: 70
+wijzigingen:
+  - { parameter: heffingskortingen.algemeen.staffel.0.bedrag, plus: 500 }
+  - { parameter: heffingskortingen.algemeen.staffel.1.bedrag, plus: 500 }
+  - { parameter: heffingskortingen.algemeen.staffelAow.0.bedrag, plus: 250 }
+  - { parameter: heffingskortingen.algemeen.staffelAow.1.bedrag, plus: 250 }

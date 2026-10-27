@@ -239,3 +239,21 @@ Invoer blijft in de browser. Onthouden in `localStorage` alleen als de bezoeker 
 ### D-037 Lighthouse
 
 Gemeten lokaal met Lighthouse 12 (mobiel profiel): alle vijf pagina's 98–100 op prestaties, toegankelijkheid, best practices en SEO.
+
+## Fase 5
+
+### D-038 Voorstellen met eigen pagina en deelafbeelding
+
+Elk voorstel uit `data/presets/` krijgt een kaart op `/voorstellen` en een eigen pagina (`/voorstellen/<id>`) met kerncijfers, een tabel per inkomensgroep en een knop naar het lab. De cijfers worden tijdens de build uitgerekend op de volledige populatie, dus zonder JavaScript in de browser. Een preset kan een `uitleg` hebben. Toegevoegd: toeslagen afschaffen, hypotheekrenteaftrek naar 30%, algemene heffingskorting + € 500. Het voorstel "basisinkomen" uit de handoff zit er niet in: daarvoor is een nieuwe regeling nodig (een uitkering voor iedereen), die past bij `docs/NIEUWE-REGELING.md`.
+
+### D-039 Deelafbeeldingen tijdens de build
+
+Per voorstel en één algemene: 1200 × 630, gemaakt met Satori (opmaak naar SVG) en resvg (SVG naar PNG), in IBM Plex uit `@fontsource`. Geen externe dienst. Gedeelde scenariolinks uit het lab krijgen de algemene afbeelding, want er is geen server (HANDOFF §6). `npm audit` meldt een matig lek in `fflate` (via Satori: oneindige lus bij kapotte ZIP-bestanden). Satori draait alleen tijdens de build op onze eigen lettertypen en komt niet in de browser; niet uitbuitbaar, dus geaccepteerd.
+
+### D-040 Uitleg als MDX met rekenende voorbeelden
+
+Vijf artikelen in `site/src/content/uitleg/` (armoedeval, marginale druk, toeslagen, hypotheekrenteaftrek, decielen). Bedragen in de tekst komen rechtstreeks uit het parameterbestand, zodat de artikelen na een jaarlijkse update kloppen. Elk artikel heeft een klein interactief voorbeeld dat met de engine rekent. MDX-bestanden staan in `.prettierignore`, omdat Prettier uitdrukkingen in MDX kapotmaakte (`*` werd `\*`).
+
+### D-041 Vergelijken
+
+In het lab kun je je scenario naast een voorstel zetten: kerncijfers en verandering per inkomensgroep in één tabel.

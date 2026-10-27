@@ -23,6 +23,7 @@
   import {
     maakBudgetneutraal,
     simuleerScenario,
+    simuleerVergelijking,
     startRekenen,
     type BasisSamenvatting,
     type UitkomstSamenvatting,
@@ -209,6 +210,47 @@
           ? `de overheid houdt ${miljard(saldo).replace("+", "")} per jaar over`
           : `het kost de overheid ${miljard(-saldo).replace("+", "")} per jaar`;
     return `Met dit scenario gaat ${getal(achteruit)}% van de mensen erop achteruit en ${getal(vooruit)}% erop vooruit; ${overheid}.`;
+  });
+
+  // Vergelijken met een voorstel
+  let vergelijkId = $state("");
+  let vergelijking = $state<UitkomstSamenvatting | null>(null);
+  $effect(() => {
+    const pr = presets.find((x) => x.id === vergelijkId);
+    if (!pr || !basis) {
+      vergelijking = null;
+      return;
+    }
+    simuleerVergelijking(pasToe(params, pr.wijzigingen)).then((u) => {
+      if (u) vergelijking = u;
+    });
+  });
+  const vergelijkNaam = $derived(presets.find((x) => x.id === vergelijkId)?.naam ?? "");
+  const rijenVergelijking = $derived.by(() => {
+    if (!uitkomst || !vergelijking) return [];
+    const ach = (u: UitkomstSamenvatting) => u.winnaars[0]! + u.winnaars[1]!;
+    const voor = (u: UitkomstSamenvatting) => u.winnaars[3]! + u.winnaars[4]!;
+    return [
+      { label: "Overheid per saldo", a: miljard(uitkomst.saldoMld), b: miljard(vergelijking.saldoMld) },
+      {
+        label: "Armoederisico",
+        a: procent(uitkomst.armoede.personen),
+        b: procent(vergelijking.armoede.personen),
+      },
+      {
+        label: "Armoede onder kinderen",
+        a: procent(uitkomst.armoede.kinderen),
+        b: procent(vergelijking.armoede.kinderen),
+      },
+      { label: "Gini", a: getal(uitkomst.gini, 3), b: getal(vergelijking.gini, 3) },
+      { label: "Erop achteruit", a: `${getal(ach(uitkomst))}%`, b: `${getal(ach(vergelijking))}%` },
+      { label: "Erop vooruit", a: `${getal(voor(uitkomst))}%`, b: `${getal(voor(vergelijking))}%` },
+      ...uitkomst.decielen.map((d, i) => ({
+        label: `Groep ${i + 1}${i === 0 ? " (laagste inkomens)" : i === 9 ? " (hoogste inkomens)" : ""}`,
+        a: procentVerschil(d.relatief),
+        b: procentVerschil(vergelijking!.decielen[i]!.relatief),
+      })),
+    ];
   });
 
   // Curves
@@ -666,6 +708,38 @@
             </table>
           {/snippet}
         </Figuur>
+      </div>
+
+      <div class="kaart">
+        <div class="kop-met-keuze">
+          <h2>Vergelijk met een voorstel</h2>
+          <label>
+            <span class="visueel-verborgen">Voorstel om mee te vergelijken</span>
+            <select bind:value={vergelijkId}>
+              <option value="">Kies een voorstel…</option>
+              {#each presets.filter((p) => p.wijzigingen.length) as pr (pr.id)}<option value={pr.id}
+                  >{pr.naam}</option
+                >{/each}
+            </select>
+          </label>
+        </div>
+        {#if vergelijking && rijenVergelijking.length}
+          <div class="tabel-wrap">
+            <table class="data">
+              <thead><tr><th></th><th>Jouw scenario</th><th>{vergelijkNaam}</th></tr></thead>
+              <tbody>
+                {#each rijenVergelijking as rij (rij.label)}
+                  <tr><td>{rij.label}</td><td class="num">{rij.a}</td><td class="num">{rij.b}</td></tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
+          <p class="notitie">
+            Groepen: gemiddelde verandering van het besteedbaar inkomen ten opzichte van het huidige stelsel.
+          </p>
+        {:else}
+          <p class="notitie">Zet je eigen scenario naast een bekend voorstel.</p>
+        {/if}
       </div>
 
       <div class="kaart">

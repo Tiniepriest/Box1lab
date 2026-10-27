@@ -1,0 +1,7 @@
+id: hypotheekrenteaftrek-30
+naam: "Hypotheekrenteaftrek naar 30%"
+omschrijving: "Hypotheekrente is nog maar aftrekbaar tegen hoogstens 30% in plaats van 37,56%."
+uitleg: "De hypotheekrenteaftrek wordt al jaren stap voor stap beperkt. Dit voorstel verlaagt het hoogste aftrektarief verder naar 30%. Wie een hypotheek heeft en in de tweede of derde schijf valt, gaat er iets op achteruit; huurders merken er niets van."
+volgorde: 45
+wijzigingen:
+  - { parameter: eigenWoning.aftrekMaxTarief, zet: 30 }

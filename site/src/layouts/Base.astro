@@ -11,18 +11,25 @@ interface Props {
   description?: string;
   /** Breed: voor het lab en de calculator. */
   breed?: boolean;
+  /** Deelafbeelding (pad binnen de site); standaard de algemene. */
+  afbeelding?: string;
 }
 
 const {
   title,
   description = "Wat betekent het belasting- en toeslagenstelsel voor jou? Reken je eigen situatie door en speel minister van Financiën.",
   breed = false,
+  afbeelding = pad("og/standaard.png"),
 } = Astro.props;
+const afbeeldingUrl = new URL(afbeelding, Astro.site).href;
+const paginaUrl = new URL(Astro.url.pathname, Astro.site).href;
 const buildDatum = new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
 const huidig = Astro.url.pathname.replace(/\/$/, "");
 const menu = [
   { href: pad("jouw-situatie"), label: "Jouw situatie" },
   { href: pad("lab"), label: "Scenariolab" },
+  { href: pad("voorstellen"), label: "Voorstellen" },
+  { href: pad("uitleg"), label: "Uitleg" },
   { href: pad("methodiek"), label: "Methodiek" },
   { href: pad("over"), label: "Over" },
 ];
@@ -37,6 +44,15 @@ const menu = [
     <meta name="theme-color" content="#1f4e8c" />
     <link rel="icon" type="image/svg+xml" href={pad("favicon.svg")} />
     <title>{title}</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={paginaUrl} />
+    <meta property="og:image" content={afbeeldingUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="nl_NL" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <a class="skip" href="#inhoud">

@@ -1,6 +1,7 @@
 id: zonder-huurtoeslag
 naam: "Zonder huurtoeslag"
 omschrijving: "Het huidige stelsel, maar de huurtoeslag wordt afgeschaft."
+uitleg: "De huurtoeslag helpt huurders met een laag inkomen. Dit voorbeeld laat zien wie hem nu krijgt en wat het afschaffen betekent voor hun inkomen en voor de armoede."
 volgorde: 30
 wijzigingen:
   - { parameter: toeslagen.huurtoeslag.niveau, zet: 0 }

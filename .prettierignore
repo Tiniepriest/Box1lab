@@ -7,3 +7,4 @@ coverage/
 package-lock.json
 data/populatie/*.json
 packages/engine/test/golden/
+site/src/content/**/*.mdx

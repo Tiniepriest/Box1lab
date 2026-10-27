@@ -51,7 +51,15 @@
 - [x] Lighthouse 98–100 op alle pagina's; 375 px zonder horizontaal scrollen; licht en donker gecontroleerd
 - [x] Browsercontrole en schermafdrukken in CI
 
-## Fase 5: Content en delen — nog niet begonnen
+## Fase 5: Content en delen — klaar (PR #6)
+
+- [x] Voorstellengalerij met 8 voorstellen, elk met eigen pagina, uitleg en "open in het lab"
+- [x] 5 uitlegartikelen met interactief voorbeeld
+- [x] Deelafbeeldingen (Open Graph) per voorstel en algemeen
+- [x] Scenario vergelijken met een voorstel
+- [x] Browsercontrole uitgebreid naar alle nieuwe pagina's; Lighthouse 99–100
+
+## Fase 6: Verkiezingsmodule — bezig
 
 ## Open vragen voor de eigenaar
 

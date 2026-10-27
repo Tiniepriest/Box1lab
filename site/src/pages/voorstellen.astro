@@ -1,0 +1,132 @@
+---
+import MiniDecielen from "../components/MiniDecielen.astro";
+import Base from "../layouts/Base.astro";
+import { getal, miljard, procent } from "../lib/format.ts";
+import { pad, params } from "../lib/data.ts";
+import { kerncijfers, kernzin } from "../lib/voorstellen.ts";
+---
+
+<Base
+  title="Voorstellen — Box1lab"
+  description="Bekende ideeën voor belastingen en toeslagen, doorgerekend: wat kost het en wie gaat erop vooruit?"
+>
+  <h1>Voorstellen doorgerekend</h1>
+  <p class="intro">
+    Bekende ideeën voor belastingen en toeslagen, met één klik door te rekenen. Elk voorstel is een voorbeeld,
+    geen plan van een partij. Open het in het lab om zelf verder te schuiven.
+  </p>
+
+  <div class="galerij">
+    {kerncijfers.map((k) => (
+      <article class="kaart voorstel" id={k.preset.id}>
+        <h2>{k.preset.naam}</h2>
+        <p class="omschrijving">{k.preset.omschrijving}</p>
+        <p class="kern">{kernzin(k)}</p>
+        <div class="cijfers">
+          <MiniDecielen
+            waarden={k.decielen}
+            label={`Verandering van het besteedbaar inkomen per inkomensgroep bij ${k.preset.naam}`}
+          />
+          <dl>
+            <dt>Overheid per saldo</dt>
+            <dd class="num">{miljard(k.saldoMld)}</dd>
+            <dt>Armoederisico</dt>
+            <dd class="num">
+              {procent(k.armoedeNu)} → {procent(k.armoede)}
+            </dd>
+            <dt>Achteruit / vooruit</dt>
+            <dd class="num">
+              {getal(k.achteruit)}% / {getal(k.vooruit)}%
+            </dd>
+          </dl>
+        </div>
+        {k.preset.uitleg && (
+          <details>
+            <summary>Waar gaat dit over?</summary>
+            <p>{k.preset.uitleg}</p>
+          </details>
+        )}
+        <a class="knop" href={`${pad("lab")}#${k.code}`}>
+          Open in het lab →
+        </a>
+      </article>
+    ))}
+  </div>
+  <p class="notitie">
+    Statische doorrekening voor {params.jaar}, zonder gedragseffecten. De grafiekjes tonen de gemiddelde
+    verandering per inkomensgroep, van de laagste (links) naar de hoogste (rechts).{" "}
+    <a href={pad("methodiek")}>Hoe rekenen we?</a>
+  </p>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(28px, 4.5vw, 38px);
+    margin: 0 0 8px;
+  }
+  .intro {
+    color: var(--muted);
+    max-width: 65ch;
+    margin: 0 0 24px;
+  }
+  .galerij {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .voorstel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .voorstel h2 {
+    font-size: 19px;
+    margin: 0;
+  }
+  .voorstel h2 a {
+    color: var(--fg);
+  }
+  .omschrijving {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .kern {
+    margin: 0;
+    font-size: 15px;
+  }
+  .cijfers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    align-items: center;
+  }
+  dl {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 2px 10px;
+    margin: 0;
+    font-size: 13px;
+  }
+  dt {
+    color: var(--muted);
+  }
+  dd {
+    margin: 0;
+    font-family: var(--f-num);
+  }
+  details {
+    font-size: 14px;
+  }
+  summary {
+    cursor: pointer;
+    color: var(--accent);
+  }
+  .knop {
+    margin-top: auto;
+    align-self: flex-start;
+    font-weight: 600;
+    color: var(--accent);
+  }
+</style>
