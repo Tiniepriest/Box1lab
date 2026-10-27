@@ -1,23 +1,130 @@
 ---
+import { inkomenscurve, maakHuishouden } from "@box1lab/engine";
+import Lijnen from "../components/grafieken/Lijnen.svelte";
 import Base from "../layouts/Base.astro";
+import { pad, params, voorbeelden } from "../lib/data.ts";
+import { procent } from "../lib/format.ts";
+
+// Opvallende visual (HANDOFF §3.1): de marginale druk van een eenoudergezin, berekend tijdens de build.
+const type = voorbeelden.curves.find((c) => c.id === "eenouder") ?? voorbeelden.curves[0]!;
+const x: number[] = [];
+for (let v = 5000; v <= 100000; v += 1000) x.push(v);
+const curve = inkomenscurve(
+  (b) => maakHuishouden({ ...type.invoer, inkomen1: b }, params),
+  params,
+  params,
+  x,
+  1000,
+);
+const piek = Math.max(...curve.marginaleDruk);
 ---
 
 <Base title="Box1lab — wat betekent het belastingstelsel voor jou?">
-  <h1>Wat betekent het belastingstelsel voor jou?</h1>
-  <p class="lead">
-    Deze site is in opbouw. Straks kun je hier zien wat belastingen en toeslagen voor jouw huishouden
-    betekenen, zelf de regels veranderen en de plannen van partijen doorrekenen.
-  </p>
+  <section class="held">
+    <h1>Wat betekent het belastingstelsel voor jou?</h1>
+    <p class="lead">
+      Zie wat je betaalt en wat je terugkrijgt, verander zelf de regels, en ontdek wat dat doet voor jou en
+      voor Nederland. Gratis, onafhankelijk, en alles blijft in je eigen browser.
+    </p>
+  </section>
+
+  <section class="tegels" aria-label="Wat kun je hier doen?">
+    <a class="tegel" href={pad("jouw-situatie")}>
+      <h2>Jouw situatie</h2>
+      <p>Hoeveel belasting betaal je, welke toeslagen krijg je, en wat houd je over van € 100 extra?</p>
+      <span class="actie">Reken het uit →</span>
+    </a>
+    <a class="tegel" href={pad("lab")}>
+      <h2>Speel minister van Financiën</h2>
+      <p>Verander tarieven, kortingen en toeslagen. Wie gaat erop vooruit, en wat kost het?</p>
+      <span class="actie">Naar het scenariolab →</span>
+    </a>
+    <div class="tegel binnenkort" aria-disabled="true">
+      <h2>Verkiezingen</h2>
+      <p>Wat betekenen de plannen van partijen voor jouw portemonnee? Deze module volgt.</p>
+      <span class="actie">Binnenkort</span>
+    </div>
+  </section>
+
+  <section class="kaart visual">
+    <figure class="figuur">
+      <figcaption>
+        <h2>Hoeveel houdt een alleenstaande ouder over van een extra euro?</h2>
+        <p class="notitie">
+          Bij sommige inkomens verdwijnt tot {procent(piek, 0)} van elke extra euro aan belasting en minder
+          toeslagen. Dat heet de armoedeval. ({type.label}, {params.jaar}.)
+        </p>
+      </figcaption>
+      <Lijnen
+        client:visible
+        x={x}
+        reeksen={[{ naam: "Marginale druk", waarden: curve.marginaleDruk, soort: "scenario" }]}
+        yEenheid="procent"
+        yMin={-20}
+        yMax={110}
+        beschrijving="Marginale druk van een eenoudergezin bij verschillende bruto inkomens"
+      />
+    </figure>
+    <p class="notitie">
+      Bekijk het voor je eigen situatie op <a href={pad("jouw-situatie")}>Jouw situatie</a>.
+    </p>
+  </section>
 </Base>
 
 <style>
-  h1 {
-    font-size: clamp(28px, 5vw, 40px);
-    margin: 0 0 12px;
+  .held h1 {
+    font-size: clamp(30px, 5.5vw, 46px);
+    margin: 8px 0 12px;
+    max-width: 20ch;
   }
   .lead {
+    font-size: 19px;
     color: var(--muted);
     max-width: 60ch;
-    font-size: 18px;
+    margin: 0 0 28px;
+  }
+  .tegels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .tegel {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  a.tegel:hover {
+    border-color: var(--accent);
+  }
+  .tegel h2 {
+    font-size: 20px;
+    margin: 0;
+  }
+  .tegel p {
+    margin: 0;
+    color: var(--muted);
+    flex: 1;
+  }
+  .actie {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .figuur {
+    margin: 0;
+  }
+  .figuur h2 {
+    font-family: var(--f-body);
+    font-size: 16px;
+    margin: 0 0 4px;
+  }
+  .binnenkort .actie {
+    color: var(--muted);
   }
 </style>

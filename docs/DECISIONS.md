@@ -205,3 +205,37 @@ De doelen uit het prototype bleken deels onjuist. Nu: toeslagen volgens Dienst T
 - Geen vermogen, dus de vermogenstoetsen van de toeslagen doen in de populatie niets.
 - De verdeling boven P90 en de verdeling binnen decielen volgen uit de aannames.
 - Niet-gebruik van toeslagen wordt niet apart gemodelleerd; de herweging vangt het grotendeels op via de ontvangersaantallen.
+
+## Fase 4
+
+### D-030 Kleuren winst en verlies gevalideerd
+
+De vijf klassen (verlies groot, verlies, ~0, winst, winst groot) zijn per modus doorgerekend met de dataviz-validator: aangrenzende klassen zijn ook bij rood-groen-kleurenblindheid te onderscheiden (ΔE ≥ 12) en bij normaal zicht (ΔE ≥ 15). Daarvoor zijn de lichte tussentinten en het neutrale midden iets aangepast; de polen blauw `#2a78d6` en oranje `#eb6834` uit de handoff blijven. Tekst in de betekeniskleuren krijgt eigen, donkerdere tokens (`--gain-tekst`, `--loss-tekst`) die voldoen aan WCAG AA (≥ 5,4:1).
+
+### D-031 Rekenen in een Web Worker
+
+Laden van de populatie, de basis bouwen, scenario's doorrekenen en de oplosser draaien in een Web Worker (`site/src/lib/rekenwerker.ts`), zoals HANDOFF §5.1 voorstelt. Alleen samenvattingen gaan terug naar de pagina. Bij snel schuiven telt alleen het laatste antwoord. Gevolg: blokkeertijd op de labpagina van 370 naar 60 ms; de oplosser (45 doorrekeningen) bevriest de pagina niet meer. De browser valideert het populatiebestand niet opnieuw tegen het schema; dat doen de build en CI al.
+
+### D-032 Grafieken op ware breedte
+
+Eigen SVG-componenten (`site/src/components/grafieken/`) die op de werkelijke breedte van hun container tekenen in plaats van te schalen. Zo blijft tekst op een telefoon even groot als op een groot scherm. Elke grafiek heeft een titel als vraag, een zin uitleg, een legenda, een tooltip en een tabelweergave (HANDOFF §7).
+
+### D-033 Rekenregels voor de site in de engine
+
+Ook wat de site nodig heeft voor invoer zit in de engine, zodat de site geen eigen rekenregels heeft: het invoerformulier en de omzetting naar een huishouden (`invoer.ts`, met vakantiegeld en AOW-leeftijd als parameter), de scenariocode (`scenario/code.ts`), "je plek in Nederland" (`metrics/positie.ts`) en de marginale druk van één persoon. "Weet ik niet" in het formulier gebruikt de mediaan uit de populatie, geen verzonnen bedrag.
+
+### D-034 Labknoppen als data
+
+De knoppen in het scenariolab staan in `data/lab/knoppen.yaml`. Een regeling in het lab zetten is een regel in dat bestand; CI controleert dat elke knop naar een bestaande parameter van het juiste type wijst. De huishoudtypes voor de curves staan in `data/voorbeelden/huishoudens.yaml`.
+
+### D-035 Privacy
+
+Invoer blijft in de browser. Onthouden in `localStorage` alleen als de bezoeker dat aanzet; "Wis mijn gegevens" haalt het weg; zonder `localStorage` werkt alles gewoon. Geen cookies, geen externe lettertypen of scripts.
+
+### D-036 Browsercontrole in CI
+
+`npm run schermafdrukken` start de gebouwde site, opent alle pagina's in Chrome (375 en 1280 px, licht en donker), faalt bij fouten in de console of horizontaal scrollen, controleert of het rekenen werkt (preset, budgetneutraal, calculator) en bewaart schermafdrukken. In CI is dat een aparte job; de schermafdrukken staan als artefact bij elke run.
+
+### D-037 Lighthouse
+
+Gemeten lokaal met Lighthouse 12 (mobiel profiel): alle vijf pagina's 98–100 op prestaties, toegankelijkheid, best practices en SEO.

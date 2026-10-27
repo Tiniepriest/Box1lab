@@ -7,4 +7,6 @@ export default defineConfig({
   base: "/Box1lab",
   trailingSlash: "ignore",
   integrations: [svelte()],
+  // Kleine stylesheet: inline in de HTML, zodat er geen blokkerend verzoek nodig is.
+  build: { inlineStylesheets: "always" },
 });

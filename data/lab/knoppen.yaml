@@ -1,0 +1,208 @@
+# Knoppen in het scenariolab. Elke knop wijst naar één parameter in data/parameters/<jaar>.yaml.
+# Een regeling toevoegen aan het lab: voeg hier een knop toe. De build controleert dat de parameter bestaat.
+#
+# eenheid: procent | euro | euroPerMaand | getal | niveau (100 = huidige wet, 0 = afgeschaft) | aanUit
+# gevorderd: true = alleen zichtbaar onder "Meer instellingen".
+# De schijven van box 1 hebben een eigen bediening in het lab en staan hier niet.
+
+groepen:
+  - id: tarief
+    titel: "Tarief box 1"
+    uitleg: "Inkomstenbelasting plus premies volksverzekeringen."
+    knoppen:
+      - {
+          parameter: box1.vrijstelling,
+          label: "Belastingvrije voet per persoon",
+          eenheid: euro,
+          min: 0,
+          max: 40000,
+          stap: 500,
+        }
+      - parameter: box1.aowVerlagingEersteSchijf
+        label: "AOW'ers: lager tarief in de eerste schijf"
+        uitleg: "In procentpunten; AOW'ers betalen geen AOW-premie."
+        eenheid: procent
+        min: 0
+        max: 30
+        stap: 0.05
+        gevorderd: true
+  - id: kortingen
+    titel: "Heffingskortingen"
+    uitleg: "Een korting op de belasting die je betaalt. 100% is zoals nu."
+    knoppen:
+      - {
+          parameter: heffingskortingen.algemeen.niveau,
+          label: "Algemene heffingskorting",
+          eenheid: niveau,
+          min: 0,
+          max: 200,
+          stap: 5,
+        }
+      - {
+          parameter: heffingskortingen.arbeid.niveau,
+          label: "Arbeidskorting",
+          eenheid: niveau,
+          min: 0,
+          max: 200,
+          stap: 5,
+        }
+      - {
+          parameter: heffingskortingen.ouderen.niveau,
+          label: "Ouderenkorting",
+          eenheid: niveau,
+          min: 0,
+          max: 200,
+          stap: 5,
+        }
+      - parameter: heffingskortingen.alleenstaandeOuderen.niveau
+        label: "Alleenstaande-ouderenkorting"
+        eenheid: niveau
+        min: 0
+        max: 200
+        stap: 5
+        gevorderd: true
+      - {
+          parameter: heffingskortingen.combinatie.niveau,
+          label: "Combinatiekorting (werkende ouders)",
+          eenheid: niveau,
+          min: 0,
+          max: 200,
+          stap: 5,
+        }
+  - id: woning
+    titel: "Eigen woning en aftrekposten"
+    knoppen:
+      - parameter: eigenWoning.aftrekMaxTarief
+        label: "Hypotheekrenteaftrek: hoogste aftrektarief"
+        uitleg: "0 = geen hypotheekrenteaftrek."
+        eenheid: procent
+        min: 0
+        max: 49.5
+        stap: 0.01
+      - {
+          parameter: eigenWoning.forfait.niveau,
+          label: "Eigenwoningforfait",
+          eenheid: niveau,
+          min: 0,
+          max: 300,
+          stap: 5,
+        }
+      - parameter: eigenWoning.hillenAftrek
+        label: "Aftrek bij weinig of geen hypotheek (Wet Hillen)"
+        eenheid: procent
+        min: 0
+        max: 100
+        stap: 1
+        gevorderd: true
+      - {
+          parameter: overigeAftrekposten.niveau,
+          label: "Overige aftrekposten",
+          eenheid: niveau,
+          min: 0,
+          max: 100,
+          stap: 5,
+          gevorderd: true,
+        }
+  - id: toeslagen
+    titel: "Toeslagen en kinderbijslag"
+    uitleg: "100% is zoals nu, 0% is afgeschaft."
+    knoppen:
+      - {
+          parameter: toeslagen.zorgtoeslag.niveau,
+          label: "Zorgtoeslag",
+          eenheid: niveau,
+          min: 0,
+          max: 200,
+          stap: 5,
+        }
+      - {
+          parameter: toeslagen.huurtoeslag.niveau,
+          label: "Huurtoeslag",
+          eenheid: niveau,
+          min: 0,
+          max: 200,
+          stap: 5,
+        }
+      - {
+          parameter: toeslagen.kindgebondenBudget.niveau,
+          label: "Kindgebonden budget",
+          eenheid: niveau,
+          min: 0,
+          max: 200,
+          stap: 5,
+        }
+      - {
+          parameter: toeslagen.kinderopvangtoeslag.niveau,
+          label: "Kinderopvangtoeslag",
+          eenheid: niveau,
+          min: 0,
+          max: 150,
+          stap: 5,
+        }
+      - {
+          parameter: kinderbijslag.niveau,
+          label: "Kinderbijslag",
+          eenheid: niveau,
+          min: 0,
+          max: 200,
+          stap: 5,
+        }
+      - parameter: toeslagen.zorgtoeslag.normpremieAfbouw
+        label: "Zorgtoeslag: afbouw per extra euro inkomen"
+        eenheid: procent
+        min: 0
+        max: 40
+        stap: 0.1
+        gevorderd: true
+      - parameter: toeslagen.huurtoeslag.afbouw.eenpersoons
+        label: "Huurtoeslag: afbouw, eenpersoonshuishouden"
+        eenheid: procent
+        min: 0
+        max: 60
+        stap: 1
+        gevorderd: true
+      - parameter: toeslagen.huurtoeslag.afbouw.meerpersoons
+        label: "Huurtoeslag: afbouw, meerpersoonshuishouden"
+        eenheid: procent
+        min: 0
+        max: 60
+        stap: 1
+        gevorderd: true
+      - parameter: toeslagen.kindgebondenBudget.perKind
+        label: "Kindgebonden budget: bedrag per kind"
+        eenheid: euro
+        min: 0
+        max: 6000
+        stap: 50
+        gevorderd: true
+      - parameter: toeslagen.kindgebondenBudget.afbouw
+        label: "Kindgebonden budget: afbouw per extra euro"
+        eenheid: procent
+        min: 0
+        max: 20
+        stap: 0.1
+        gevorderd: true
+  - id: uitkeringen
+    titel: "Uitkeringen en gedrag"
+    knoppen:
+      - parameter: uitkeringen.nettoKoppeling.aow
+        label: "AOW houdt het netto bedrag"
+        uitleg: "De overheid past de bruto AOW aan als de belasting verandert."
+        eenheid: aanUit
+      - {
+          parameter: uitkeringen.nettoKoppeling.bijstand,
+          label: "Bijstand houdt het netto bedrag",
+          eenheid: aanUit,
+        }
+      - parameter: uitkeringen.nettoKoppeling.werknemersverzekering
+        label: "WW en WIA houden het netto bedrag"
+        eenheid: aanUit
+        gevorderd: true
+      - parameter: gedrag.eti
+        label: "Gedragseffect (elasticiteit belastbaar inkomen)"
+        uitleg: "0 = geen gedragseffect. Hoger = werkenden passen hun inkomen meer aan op het tarief."
+        eenheid: getal
+        min: 0
+        max: 0.6
+        stap: 0.05
+        gevorderd: true

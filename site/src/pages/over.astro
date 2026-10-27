@@ -1,0 +1,59 @@
+---
+import Base from "../layouts/Base.astro";
+import { pad } from "../lib/data.ts";
+---
+
+<Base title="Over — Box1lab">
+  <article class="tekst">
+    <h1>Over Box1lab</h1>
+
+    <h2>Waarom</h2>
+    <p>
+      Belastingen en toeslagen raken iedereen, maar bijna niemand kan zien hoe ze precies uitpakken. Box1lab
+      maakt dat zichtbaar: voor je eigen huishouden, en voor heel Nederland als je de regels verandert.
+    </p>
+
+    <h2>Neutraal</h2>
+    <p>
+      Box1lab geeft geen oordeel en geen stemadvies. We laten cijfers zien, en zeggen er eerlijk bij hoe zeker
+      ze zijn en wat er niet in zit. Alle regels en bronnen staan op de pagina{" "}
+      <a href={pad("methodiek")}>Methodiek</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <ul>
+      <li>Wat je invult, blijft in je eigen browser. Er gaat niets naar een server.</li>
+      <li>
+        Alleen als je zelf "Onthoud op dit apparaat" aanzet, bewaren we je invoer in deze browser. Met "Wis
+        mijn gegevens" haal je het weg.
+      </li>
+      <li>Deze site gebruikt geen cookies en laadt geen lettertypen of scripts van andere partijen.</li>
+    </ul>
+
+    <h2>Open</h2>
+    <p>
+      De broncode, alle cijfers en de keuzes die we hebben gemaakt, staan openbaar op
+      <a href="https://github.com/Tiniepriest/Box1lab">GitHub</a>.
+    </p>
+
+    <h2>Een fout gezien?</h2>
+    <p>
+      Meld het via <a href="https://github.com/Tiniepriest/Box1lab/issues">GitHub</a>. Noem als het kan de
+      pagina, wat je invulde en wat je verwachtte.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .tekst {
+    max-width: 70ch;
+  }
+  h1 {
+    font-size: clamp(28px, 4.5vw, 38px);
+    margin: 0 0 8px;
+  }
+  h2 {
+    font-size: 22px;
+    margin: 28px 0 6px;
+  }
+</style>

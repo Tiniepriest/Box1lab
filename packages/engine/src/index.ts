@@ -31,3 +31,7 @@ export * from "./simulatie.ts";
 export * from "./oplosser.ts";
 export * from "./scenario/preset.ts";
 export * from "./voorbeelden.ts";
+export * from "./invoer.ts";
+export * from "./lab.ts";
+export * from "./metrics/positie.ts";
+export * from "./scenario/code.ts";

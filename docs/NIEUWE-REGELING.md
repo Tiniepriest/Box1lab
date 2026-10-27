@@ -28,7 +28,22 @@ Exporteer hem in `packages/engine/src/index.ts`.
 - `packages/engine/src/simulatie.ts`: tel het mee in `totalen`, voeg een post toe aan `POSTEN` en reken het effect uit in `simuleer`.
 - Als er een begrotingstotaal bestaat: voeg een doel toe aan `data/kalibratie/<jaar>.yaml` en het `kalibratieSchema`.
 
-## 5. Tests
+## 5. In het lab
+
+Wil je de regeling in het scenariolab kunnen aanpassen? Voeg een knop toe aan `data/lab/knoppen.yaml`, bijvoorbeeld:
+
+```yaml
+- {
+    parameter: toeslagen.energietoeslag.niveau,
+    label: "Energietoeslag",
+    eenheid: niveau,
+    min: 0,
+    max: 200,
+    stap: 5,
+  }
+```
+
+## 6. Tests
 
 In `packages/engine/test/`: minimaal vijf gevallen uit officiële rekenvoorbeelden (Belastingdienst, proefberekening toeslagen, Nibud), inclusief net onder en net boven elke grens. Voeg ook een geval toe aan de niveau-knoppentest in `eigenschappen.test.ts`.
 

@@ -32,6 +32,18 @@ export const voorbeeldenSchema = z.strictObject({
       }),
     )
     .min(1),
+  /** Huishoudtypes voor de grafieken van netto inkomen en marginale druk in het lab. */
+  curves: z
+    .array(
+      z.strictObject({
+        id: z.string().regex(/^[a-z0-9-]+$/),
+        label: z.string().min(1),
+        invoer: eenvoudigeInvoerSchema,
+        /** Inkomen van de partner als deel van dat van de eerste persoon (tweeverdieners). */
+        partnerAandeel: z.number().min(0).max(1).optional(),
+      }),
+    )
+    .min(1),
 });
 
 export type Voorbeelden = z.infer<typeof voorbeeldenSchema>;

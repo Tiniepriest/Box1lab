@@ -26,7 +26,8 @@
     "golden": "tsx scripts/golden.ts",
     "vergelijk": "tsx scripts/vergelijk-prototype.ts",
     "kalibreer": "tsx scripts/kalibreer.ts",
-    "kalibreer:controle": "tsx scripts/kalibreer.ts --controle"
+    "kalibreer:controle": "tsx scripts/kalibreer.ts --controle",
+    "schermafdrukken": "tsx scripts/schermafdrukken.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -35,6 +36,7 @@
     "eslint-plugin-astro": "^3.2.1",
     "eslint-plugin-svelte": "^3.23.1",
     "globals": "^17.13.0",
+    "playwright-core": "^1.64.1",
     "prettier": "^3.9.10",
     "prettier-plugin-astro": "^1.1.2",
     "prettier-plugin-svelte": "^4.1.1",

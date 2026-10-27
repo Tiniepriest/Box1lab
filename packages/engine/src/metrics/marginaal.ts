@@ -25,3 +25,29 @@ export function inkomenscurve(
   const marginaleDruk = bruto.map((x, i) => (1 - (b(x + stap) - besteedbaar[i]!) / stap) * 100);
   return { bruto: [...bruto], besteedbaar, marginaleDruk };
 }
+
+/** Het huishouden met een ander bruto inkomen voor één persoon (bij een uitkering verandert de uitkering mee). */
+export function metInkomen(h: Huishouden, lid: number, bruto: number): Huishouden {
+  return {
+    ...h,
+    leden: h.leden.map((l, i) => {
+      if (i !== lid) return l;
+      if (l.soort === "uitkering") return { ...l, inkomen: bruto, uitkering: bruto };
+      if (l.soort === "aow") return { ...l, inkomen: Math.max(bruto, l.uitkering) };
+      return { ...l, inkomen: bruto, soort: l.soort === "geen" && bruto > 0 ? "werk" : l.soort };
+    }),
+  };
+}
+
+/** Marginale druk (procent) van één persoon in een huishouden: wat gaat er af van `stap` euro extra bruto? */
+export function marginaleDrukVan(
+  h: Huishouden,
+  p: Parameters,
+  lid = 0,
+  stap = 100,
+  basis?: Parameters,
+): number {
+  const nu = berekenHuishouden(h, p, basis).besteedbaar;
+  const meer = berekenHuishouden(metInkomen(h, lid, h.leden[lid]!.inkomen + stap), p, basis).besteedbaar;
+  return (1 - (meer - nu) / stap) * 100;
+}

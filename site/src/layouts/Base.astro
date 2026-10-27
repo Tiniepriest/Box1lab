@@ -4,16 +4,28 @@ import "@fontsource/ibm-plex-sans/600.css";
 import "@fontsource/ibm-plex-serif/600.css";
 import "@fontsource/ibm-plex-mono/400.css";
 import "../styles/global.css";
-import { MODEL_VERSIE } from "@box1lab/engine";
+import { MODEL_VERSIE, params, pad } from "../lib/data.ts";
 
 interface Props {
   title: string;
   description?: string;
+  /** Breed: voor het lab en de calculator. */
+  breed?: boolean;
 }
 
-const { title, description = "Wat betekent het belasting- en toeslagenstelsel voor jou?" } = Astro.props;
-const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const {
+  title,
+  description = "Wat betekent het belasting- en toeslagenstelsel voor jou? Reken je eigen situatie door en speel minister van Financiën.",
+  breed = false,
+} = Astro.props;
 const buildDatum = new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+const huidig = Astro.url.pathname.replace(/\/$/, "");
+const menu = [
+  { href: pad("jouw-situatie"), label: "Jouw situatie" },
+  { href: pad("lab"), label: "Scenariolab" },
+  { href: pad("methodiek"), label: "Methodiek" },
+  { href: pad("over"), label: "Over" },
+];
 ---
 
 <!doctype html>
@@ -22,7 +34,8 @@ const buildDatum = new Date().toLocaleDateString("nl-NL", { day: "numeric", mont
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <meta name="theme-color" content="#1f4e8c" />
+    <link rel="icon" type="image/svg+xml" href={pad("favicon.svg")} />
     <title>{title}</title>
   </head>
   <body>
@@ -30,21 +43,33 @@ const buildDatum = new Date().toLocaleDateString("nl-NL", { day: "numeric", mont
       Naar de inhoud
     </a>
     <header class="site-header">
-      <div class="wrap">
-        <a class="logo" href={`${base}/`}>
+      <div class="wrap kop">
+        <a class="logo" href={pad("")}>
           Box1lab
         </a>
+        <nav aria-label="Hoofdmenu">
+          <ul>
+            {menu.map((m) => (
+              <li>
+                <a href={m.href} aria-current={huidig === m.href ? "page" : undefined}>
+                  {m.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </header>
-    <main id="inhoud" class="wrap">
+    <main id="inhoud" class:list={["wrap", { breed }]}>
       <slot />
     </main>
     <footer class="site-footer">
       <div class="wrap">
         <p>
-          Parameterjaar 2026 · Modelversie {MODEL_VERSIE} · Bijgewerkt {buildDatum}
+          Parameterjaar {params.jaar} · Modelversie {MODEL_VERSIE} · Bijgewerkt {buildDatum}
         </p>
         <p>
+          Geen stemadvies en geen officiële berekening. <a href={pad("methodiek")}>Hoe rekenen we?</a> ·
           <a href="https://github.com/Tiniepriest/Box1lab">Broncode</a> ·
           <a href="https://github.com/Tiniepriest/Box1lab/issues">Meld een fout</a>
         </p>
@@ -55,9 +80,12 @@ const buildDatum = new Date().toLocaleDateString("nl-NL", { day: "numeric", mont
 
 <style>
   .wrap {
-    max-width: 1200px;
+    max-width: 1080px;
     margin: 0 auto;
     padding-inline: 16px;
+  }
+  .wrap.breed {
+    max-width: 1320px;
   }
   .skip {
     position: absolute;
@@ -74,8 +102,14 @@ const buildDatum = new Date().toLocaleDateString("nl-NL", { day: "numeric", mont
     border-bottom: 1px solid var(--line);
     background: var(--panel);
   }
-  .site-header .wrap {
-    padding-block: 14px;
+  .kop {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 20px;
+    padding-block: 12px;
+    max-width: 1320px;
   }
   .logo {
     font-family: var(--f-display);
@@ -84,8 +118,29 @@ const buildDatum = new Date().toLocaleDateString("nl-NL", { day: "numeric", mont
     color: var(--fg);
     text-decoration: none;
   }
+  nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 0;
+    padding: 0;
+  }
+  nav a {
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 6px 0;
+    display: inline-block;
+  }
+  nav a:hover,
+  nav a[aria-current="page"] {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
   main {
-    padding-block: 32px 64px;
+    padding-block: 28px 56px;
     min-height: 60vh;
   }
   .site-footer {
@@ -98,5 +153,6 @@ const buildDatum = new Date().toLocaleDateString("nl-NL", { day: "numeric", mont
   }
   .site-footer .wrap {
     padding-block: 18px;
+    max-width: 1320px;
   }
 </style>
