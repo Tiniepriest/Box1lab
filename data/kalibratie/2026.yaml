@@ -1,0 +1,33 @@
+# Kalibratiedoelen 2026: totalen uit de begroting waarop het model wordt afgestemd.
+# De schaalfactor per post (doel ÷ model) rekent scenario-effecten om naar officiële bedragen.
+# Bedragen in miljard euro per jaar.
+#
+# Status: fase 1, waarden uit het prototype. In fase 3 worden ze gecontroleerd tegen de Miljoenennota 2026
+# en uitgebreid met CBS-marges.
+
+jaar: 2026
+doelen:
+  ibNaHra:
+    omschrijving: "Loon- en inkomstenbelasting + premies volksverzekeringen, na hypotheekrenteaftrek"
+    waardeMld: 165.0
+    bron: "Prototype; te controleren tegen Miljoenennota 2026, bijlagen (https://www.rijksfinancien.nl/miljoenennota/2026/bijlage)"
+  hypotheekrente:
+    omschrijving: "Afgetrokken hypotheekrente (grondslag)"
+    waardeMld: 24.0
+    bron: "TODO: bron nodig (prototype)"
+  zorgtoeslag:
+    omschrijving: "Uitgaven zorgtoeslag"
+    waardeMld: 6.4
+    bron: "Prototype; te controleren tegen Miljoenennota 2026"
+  huurtoeslag:
+    omschrijving: "Uitgaven huurtoeslag"
+    waardeMld: 5.6
+    bron: "Prototype; te controleren tegen Miljoenennota 2026"
+  kindgebondenBudget:
+    omschrijving: "Uitgaven kindgebonden budget"
+    waardeMld: 3.6
+    bron: "Prototype; te controleren tegen Miljoenennota 2026"
+  kinderopvangtoeslag:
+    omschrijving: "Uitgaven kinderopvangtoeslag"
+    waardeMld: 6.6
+    bron: "Prototype; te controleren tegen Miljoenennota 2026"

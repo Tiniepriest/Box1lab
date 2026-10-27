@@ -1,0 +1,23 @@
+id: drie-schijven-35-40-45
+naam: "35 / 40 / 45%"
+omschrijving: "Drie schijven: 35% tot €50.000, 40% tot €150.000 en 45% daarboven, met een belastingvrije voet van €18.000 per persoon. Alle heffingskortingen, aftrekposten en toeslagen vervallen."
+volgorde: 20
+wijzigingen:
+  - { parameter: box1.vrijstelling, zet: 18000 }
+  - parameter: box1.schijven
+    zet:
+      - { tot: 50000, tarief: 35 }
+      - { tot: 150000, tarief: 40 }
+      - { tot: null, tarief: 45 }
+  - { parameter: box1.aowVerlagingEersteSchijf, zet: 0 }
+  - { parameter: heffingskortingen.algemeen.niveau, zet: 0 }
+  - { parameter: heffingskortingen.arbeid.niveau, zet: 0 }
+  - { parameter: heffingskortingen.ouderen.niveau, zet: 0 }
+  - { parameter: heffingskortingen.combinatie.niveau, zet: 0 }
+  - { parameter: eigenWoning.aftrekMaxTarief, zet: 0 }
+  - { parameter: eigenWoning.forfait, zet: 0 }
+  - { parameter: overigeAftrekposten.niveau, zet: 0 }
+  - { parameter: toeslagen.zorgtoeslag.niveau, zet: 0 }
+  - { parameter: toeslagen.huurtoeslag.niveau, zet: 0 }
+  - { parameter: toeslagen.kindgebondenBudget.niveau, zet: 0 }
+  - { parameter: toeslagen.kinderopvangtoeslag.niveau, zet: 0 }

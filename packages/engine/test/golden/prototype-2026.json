@@ -1,0 +1,1642 @@
+{
+ "bron": "prototype/engine.js + macro-logica uit prototype/belastinglab.html, gegenereerd door scripts/prototype-golden.cjs",
+ "kalibratie": {
+  "modelMld": {
+   "ib": 166.2771676477489,
+   "hypotheekrente": 23.683869402449684,
+   "zorgtoeslag": 5.373154043360567,
+   "huurtoeslag": 6.221254565829391,
+   "kgb": 4.121209840319933,
+   "kot": 6.255177231702127
+  },
+  "huishoudens": 8250000,
+  "personen": 16927000
+ },
+ "armoedegrens": 21168.69305544424,
+ "scenarios": [
+  {
+   "naam": "Huidig 2026",
+   "saldoMld": 0,
+   "posten": {
+    "box1": 0,
+    "eigenWoning": 0,
+    "overigeAftrek": 0,
+    "zorgtoeslag": 0,
+    "huurtoeslag": 0,
+    "kgb": 0,
+    "kot": 0,
+    "uitkeringen": 0
+   },
+   "armoede": 11.311809535062327,
+   "armoedeKinderen": 12.639936029243772,
+   "gini": 0.2709207809434081,
+   "decielen": [
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": 0,
+     "relatief": 0,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    }
+   ],
+   "alle": [
+    0,
+    0,
+    100,
+    0,
+    0
+   ]
+  },
+  {
+   "naam": "Flat 40% / €18k",
+   "saldoMld": 30.748054996907502,
+   "posten": {
+    "box1": -3.1481482833805994,
+    "eigenWoning": 5.461136924955661,
+    "overigeAftrek": 4,
+    "zorgtoeslag": 6.400000000000001,
+    "huurtoeslag": 5.6,
+    "kgb": 3.6,
+    "kot": 6.599999999999999,
+    "uitkeringen": 2.235066355332441
+   },
+   "armoede": 23.43149997046139,
+   "armoedeKinderen": 23.42357779300891,
+   "gini": 0.3305461884858084,
+   "decielen": [
+    {
+     "gemiddeld": -6770.072800909113,
+     "relatief": -29.80339378868939,
+     "aandelen": [
+      100,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -5062.983159163269,
+     "relatief": -16.038897320276526,
+     "aandelen": [
+      97.72428884026259,
+      2.2757111597374178,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -5068.986591951439,
+     "relatief": -15.380713832688544,
+     "aandelen": [
+      91.38461538461539,
+      5.758241758241758,
+      0,
+      0,
+      2.857142857142857
+     ]
+    },
+    {
+     "gemiddeld": -4756.881795641143,
+     "relatief": -12.64891736007546,
+     "aandelen": [
+      77.33333333333333,
+      16.311111111111114,
+      0,
+      6.355555555555556,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -5652.879189994799,
+     "relatief": -12.145294703218536,
+     "aandelen": [
+      82.49443207126949,
+      11.625835189309578,
+      2.6726057906458798,
+      0.8908685968819599,
+      2.316258351893096
+     ]
+    },
+    {
+     "gemiddeld": -5838.219430274294,
+     "relatief": -10.728163009642957,
+     "aandelen": [
+      84.60743801652893,
+      6.227863046044864,
+      3.320543093270366,
+      1.770956316410862,
+      4.073199527744982
+     ]
+    },
+    {
+     "gemiddeld": -4865.321763200108,
+     "relatief": -7.370617258115068,
+     "aandelen": [
+      56.53710247349824,
+      31.463486454652532,
+      3.1654888103651357,
+      5.742049469964664,
+      3.091872791519435
+     ]
+    },
+    {
+     "gemiddeld": -3055.0981254573107,
+     "relatief": -4.018522071047852,
+     "aandelen": [
+      41.54603790479033,
+      26.801969855245485,
+      17.80331293836741,
+      7.685420086554245,
+      6.163259215042531
+     ]
+    },
+    {
+     "gemiddeld": 485.10381391770153,
+     "relatief": 0.5111419925110211,
+     "aandelen": [
+      13.836937463471655,
+      28.85739333722969,
+      15.254237288135593,
+      21.814728229105786,
+      20.23670368205728
+     ]
+    },
+    {
+     "gemiddeld": 11462.344666890052,
+     "relatief": 8.223072453991907,
+     "aandelen": [
+      0,
+      1.7356475300400533,
+      6.720071206052515,
+      23.690847055333037,
+      67.8534342085744
+     ]
+    }
+   ],
+   "alle": [
+    64.54924085780115,
+    13.115141489927334,
+    4.888639451763455,
+    6.799787322029893,
+    10.647190878478172
+   ]
+  },
+  {
+   "naam": "35 / 40 / 45%",
+   "saldoMld": 20.76275995797088,
+   "posten": {
+    "box1": -13.413369523919473,
+    "eigenWoning": 5.461136924955661,
+    "overigeAftrek": 4,
+    "zorgtoeslag": 6.400000000000001,
+    "huurtoeslag": 5.6,
+    "kgb": 3.6,
+    "kot": 6.599999999999999,
+    "uitkeringen": 2.5149925569346907
+   },
+   "armoede": 22.728481124830154,
+   "armoedeKinderen": 23.08087731322824,
+   "gini": 0.32960762531984444,
+   "decielen": [
+    {
+     "gemiddeld": -6685.9183861743095,
+     "relatief": -29.432926995324742,
+     "aandelen": [
+      100,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -4807.468281015785,
+     "relatief": -15.229458148630584,
+     "aandelen": [
+      95.1422319474836,
+      2.5820568927789935,
+      2.2757111597374178,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -4614.327996521704,
+     "relatief": -14.00115331876248,
+     "aandelen": [
+      82.46153846153847,
+      8.923076923076923,
+      1.7582417582417582,
+      4,
+      2.857142857142857
+     ]
+    },
+    {
+     "gemiddeld": -3921.391693283957,
+     "relatief": -10.427284426173083,
+     "aandelen": [
+      71.46666666666667,
+      15.733333333333333,
+      6.444444444444445,
+      1.7333333333333332,
+      4.622222222222222
+     ]
+    },
+    {
+     "gemiddeld": -4387.2273610900675,
+     "relatief": -9.426022994578036,
+     "aandelen": [
+      60,
+      27.438752783964365,
+      2.89532293986637,
+      7.349665924276169,
+      2.316258351893096
+     ]
+    },
+    {
+     "gemiddeld": -4141.574988964831,
+     "relatief": -7.610452489653587,
+     "aandelen": [
+      53.099173553719005,
+      33.39728453364817,
+      4.338842975206612,
+      4.206021251475797,
+      4.958677685950414
+     ]
+    },
+    {
+     "gemiddeld": -2796.406801740636,
+     "relatief": -4.23635788891033,
+     "aandelen": [
+      33.7603062426384,
+      27.67962308598351,
+      20.55359246171967,
+      9.172555948174322,
+      8.8339222614841
+     ]
+    },
+    {
+     "gemiddeld": -745.7542102824407,
+     "relatief": -0.980927495789766,
+     "aandelen": [
+      24.90673033875541,
+      20.176093120429787,
+      17.221310252201164,
+      27.60781972839875,
+      10.088046560214893
+     ]
+    },
+    {
+     "gemiddeld": 3035.1445222444486,
+     "relatief": 3.1980573521570665,
+     "aandelen": [
+      5.698421975452952,
+      13.004091174751608,
+      12.72647574517826,
+      31.29748684979544,
+      37.273524254821744
+     ]
+    },
+    {
+     "gemiddeld": 12987.200374406157,
+     "relatief": 9.317002127997258,
+     "aandelen": [
+      0,
+      0,
+      0,
+      17.99436285417594,
+      82.00563714582407
+     ]
+    }
+   ],
+   "alle": [
+    52.65847462633663,
+    14.888934837833048,
+    6.824895137945294,
+    10.3355585750576,
+    15.292136822827434
+   ]
+  },
+  {
+   "naam": "Huidig zonder huurtoeslag",
+   "saldoMld": 5.600000000038706,
+   "posten": {
+    "box1": -1.3170989445762489e-11,
+    "eigenWoning": 0,
+    "overigeAftrek": 0,
+    "zorgtoeslag": -3.2985799137288166e-12,
+    "huurtoeslag": 5.6,
+    "kgb": 0,
+    "kot": 0,
+    "uitkeringen": 5.517581196648009e-11
+   },
+   "armoede": 14.940627400011817,
+   "armoedeKinderen": 14.050719671007538,
+   "gini": 0.2820918517886086,
+   "decielen": [
+    {
+     "gemiddeld": -3087.790565602941,
+     "relatief": -13.593153407642337,
+     "aandelen": [
+      87.75601734190462,
+      4.664374345941098,
+      7.579608312154283,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -1906.6624036310113,
+     "relatief": -6.040067990532945,
+     "aandelen": [
+      49.861415025528814,
+      12.035010940919037,
+      38.10357403355215,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -1414.0860596573914,
+     "relatief": -4.29073003525373,
+     "aandelen": [
+      36.38095238095238,
+      6.490842490842491,
+      57.128205128205124,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -328.2098012237865,
+     "relatief": -0.8727352982053488,
+     "aandelen": [
+      5.688888888888889,
+      11.807407407407407,
+      82.5037037037037,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -43.760077291788924,
+     "relatief": -0.09401917449166056,
+     "aandelen": [
+      0.4454342984409799,
+      3.11804008908686,
+      96.43652561247215,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -2.359182645155165e-9,
+     "relatief": -4.335173812669825e-12,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -1.33122473381293e-9,
+     "relatief": -2.0167110162550744e-12,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -8.347059446360167e-10,
+     "relatief": -1.097930123227248e-12,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -4.146281062174625e-10,
+     "relatief": -4.3688346758498157e-13,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -1.4591707589150548e-10,
+     "relatief": -1.0468073698712438e-13,
+     "aandelen": [
+      0,
+      0,
+      100,
+      0,
+      0
+     ]
+    }
+   ],
+   "alle": [
+    17.996396289950965,
+    3.8208188101849117,
+    78.18278489986412,
+    0,
+    0
+   ]
+  },
+  {
+   "naam": "Huidig zonder HRA",
+   "saldoMld": 9.436944031336841,
+   "posten": {
+    "box1": -1.3170989445762489e-11,
+    "eigenWoning": 9.436944031305712,
+    "overigeAftrek": 0,
+    "zorgtoeslag": -3.2985799137288166e-12,
+    "huurtoeslag": -7.576718497662894e-12,
+    "kgb": 0,
+    "kot": 0,
+    "uitkeringen": 5.517581196648009e-11
+   },
+   "armoede": 11.542210669344835,
+   "armoedeKinderen": 13.085446652958648,
+   "gini": 0.2653099174476369,
+   "decielen": [
+    {
+     "gemiddeld": -8.29739248548765,
+     "relatief": -0.03652700095501093,
+     "aandelen": [
+      0,
+      2.332187172970549,
+      97.66781282702945,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -105.42122742823332,
+     "relatief": -0.3339612613640195,
+     "aandelen": [
+      0,
+      18.045222465353756,
+      81.95477753464624,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -134.1664150436186,
+     "relatief": -0.4070981838894921,
+     "aandelen": [
+      0,
+      25.069597069597073,
+      74.93040293040293,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -262.1914494130263,
+     "relatief": -0.6971873842193671,
+     "aandelen": [
+      0,
+      39.837037037037035,
+      60.162962962962965,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -472.17527577973436,
+     "relatief": -1.01447557663507,
+     "aandelen": [
+      0,
+      51.625835189309576,
+      48.374164810690424,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -1030.82953271648,
+     "relatief": -1.894226038300328,
+     "aandelen": [
+      0,
+      78.49763872491145,
+      21.502361275088546,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -1537.5916540057617,
+     "relatief": -2.3293422578272422,
+     "aandelen": [
+      0,
+      91.41637220259128,
+      8.583627797408717,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -2144.724269860737,
+     "relatief": -2.821062192055536,
+     "aandelen": [
+      0,
+      96.32890613341293,
+      3.6710938665870767,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -2986.95418966269,
+     "relatief": -3.1472803804885077,
+     "aandelen": [
+      0,
+      98.20280537697253,
+      1.7971946230274694,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -4133.58352304491,
+     "relatief": -2.965427911342658,
+     "aandelen": [
+      0,
+      99.18409731493844,
+      0.8159026850615635,
+      0,
+      0
+     ]
+    }
+   ],
+   "alle": [
+    0,
+    60.05198794824837,
+    39.94801205175164,
+    0,
+    0
+   ]
+  },
+  {
+   "naam": "Zonder HRA en forfait",
+   "saldoMld": 5.46113692498679,
+   "posten": {
+    "box1": -1.3170989445762489e-11,
+    "eigenWoning": 5.461136924955661,
+    "overigeAftrek": 0,
+    "zorgtoeslag": -3.2985799137288166e-12,
+    "huurtoeslag": -7.576718497662894e-12,
+    "kgb": 0,
+    "kot": 0,
+    "uitkeringen": 5.517581196648009e-11
+   },
+   "armoede": 11.542210669344835,
+   "armoedeKinderen": 13.085446652958648,
+   "gini": 0.2675896794951341,
+   "decielen": [
+    {
+     "gemiddeld": -4.558249708489028,
+     "relatief": -0.020066447591381067,
+     "aandelen": [
+      0,
+      2.332187172970549,
+      97.66781282702945,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -48.42266202316393,
+     "relatief": -0.15339693610443134,
+     "aandelen": [
+      0,
+      8.884026258205688,
+      91.1159737417943,
+      0,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -32.64397409493155,
+     "relatief": -0.09905088814262349,
+     "aandelen": [
+      0,
+      10.813186813186814,
+      88.26373626373626,
+      0.9230769230769231,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -89.00793726511827,
+     "relatief": -0.23667900343643428,
+     "aandelen": [
+      0,
+      18.755555555555556,
+      76.07407407407408,
+      5.17037037037037,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -220.2129984475768,
+     "relatief": -0.4731308902477513,
+     "aandelen": [
+      0,
+      37.00074239049741,
+      54.209354120267264,
+      8.789903489235337,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -599.2595603420881,
+     "relatief": -1.101184072510074,
+     "aandelen": [
+      0,
+      66.48465171192444,
+      27.52361275088548,
+      5.991735537190083,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -958.1379985426604,
+     "relatief": -1.4515110842472565,
+     "aandelen": [
+      0,
+      86.7343934040047,
+      9.83510011778563,
+      3.4305064782096584,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -1385.4154584105427,
+     "relatief": -1.8223056571579948,
+     "aandelen": [
+      0,
+      95.70213400984927,
+      2.148932995075362,
+      2.148932995075362,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -1871.63851551167,
+     "relatief": -1.972099605552278,
+     "aandelen": [
+      0,
+      94.73991817650497,
+      3.9596727060198713,
+      1.3004091174751609,
+      0
+     ]
+    },
+    {
+     "gemiddeld": -2252.7186387535103,
+     "relatief": -1.6160976766330402,
+     "aandelen": [
+      0,
+      82.00563714582407,
+      17.178460169114373,
+      0.8159026850615635,
+      0
+     ]
+    }
+   ],
+   "alle": [
+    0,
+    50.33674011933598,
+    46.81130737874402,
+    2.8519525019200094,
+    0
+   ]
+  }
+ ],
+ "voorbeeldhuishoudens": [
+  {
+   "pc": "P10",
+   "invoer": {
+    "pc": "P10",
+    "x1": 20000,
+    "s1": "uitk",
+    "x2": 0,
+    "s2": "",
+    "kids": 0,
+    "kids12": false,
+    "huur": 750,
+    "rente": 0,
+    "woz": 0,
+    "kotKosten": 0
+   },
+   "scenarios": [
+    {
+     "bruto": 20000,
+     "belasting": 4035,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1575,
+     "huurtoeslag": 3603.6000000000004,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 19143.6
+    },
+    {
+     "bruto": 15965.000000014697,
+     "belasting": 0,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": -4034.9999999853026,
+     "besteedbaar": 13965.000000014697
+    },
+    {
+     "bruto": 15965.000000014697,
+     "belasting": 0,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": -4034.9999999853026,
+     "besteedbaar": 13965.000000014697
+    },
+    {
+     "bruto": 19999.99999998181,
+     "belasting": 4034.999999993497,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1575,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": -1.8189894035458565e-8,
+     "besteedbaar": 15539.999999988315
+    },
+    {
+     "bruto": 19999.99999998181,
+     "belasting": 4034.999999993497,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1575,
+     "huurtoeslag": 3603.6000000000004,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": -1.8189894035458565e-8,
+     "besteedbaar": 19143.599999988313
+    },
+    {
+     "bruto": 19999.99999998181,
+     "belasting": 4034.999999993497,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1575,
+     "huurtoeslag": 3603.6000000000004,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": -1.8189894035458565e-8,
+     "besteedbaar": 19143.599999988313
+    }
+   ]
+  },
+  {
+   "pc": "P20",
+   "invoer": {
+    "pc": "P20",
+    "x1": 25000,
+    "s1": "aow",
+    "x2": 0,
+    "s2": "",
+    "kids": 0,
+    "kids12": false,
+    "huur": 650,
+    "rente": 0,
+    "woz": 0,
+    "kotKosten": 0
+   },
+   "scenarios": [
+    {
+     "bruto": 25000,
+     "belasting": 827,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1575,
+     "huurtoeslag": 1198.5999999999997,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 24946.6
+    },
+    {
+     "bruto": 26200.000000016917,
+     "belasting": 3280.0000000067666,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 1200.0000000169166,
+     "besteedbaar": 20920.00000001015
+    },
+    {
+     "bruto": 25969.230769221576,
+     "belasting": 2789.2307692275517,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 969.2307692215763,
+     "besteedbaar": 21179.999999994026
+    },
+    {
+     "bruto": 24999.999999981992,
+     "belasting": 826.9999999967959,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1575,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": -1.800799509510398e-8,
+     "besteedbaar": 23747.999999985197
+    },
+    {
+     "bruto": 24999.999999981992,
+     "belasting": 826.9999999967959,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1575,
+     "huurtoeslag": 1198.6000000058523,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": -1.800799509510398e-8,
+     "besteedbaar": 24946.59999999105
+    },
+    {
+     "bruto": 24999.999999981992,
+     "belasting": 826.9999999967959,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1575,
+     "huurtoeslag": 1198.6000000058523,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": -1.800799509510398e-8,
+     "besteedbaar": 24946.59999999105
+    }
+   ]
+  },
+  {
+   "pc": "P30",
+   "invoer": {
+    "pc": "P30",
+    "x1": 32000,
+    "s1": "werk",
+    "x2": 0,
+    "s2": "",
+    "kids": 0,
+    "kids12": false,
+    "huur": 850,
+    "rente": 0,
+    "woz": 0,
+    "kotKosten": 0
+   },
+   "scenarios": [
+    {
+     "bruto": 32000,
+     "belasting": 3049.8282199999994,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1164,
+     "huurtoeslag": 483.6,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 28597.77178
+    },
+    {
+     "bruto": 32000,
+     "belasting": 5600,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 24400
+    },
+    {
+     "bruto": 32000,
+     "belasting": 4900,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 25100
+    },
+    {
+     "bruto": 32000,
+     "belasting": 3049.8282199999994,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1164,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 28114.17178
+    },
+    {
+     "bruto": 32000,
+     "belasting": 3049.8282199999994,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1164,
+     "huurtoeslag": 483.6,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 28597.77178
+    },
+    {
+     "bruto": 32000,
+     "belasting": 3049.8282199999994,
+     "eigenWoning": 0,
+     "zorgtoeslag": 1164,
+     "huurtoeslag": 483.6,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 28597.77178
+    }
+   ]
+  },
+  {
+   "pc": "P50",
+   "invoer": {
+    "pc": "P50",
+    "x1": 48000,
+    "s1": "werk",
+    "x2": 22000,
+    "s2": "werk",
+    "kids": 2,
+    "kids12": true,
+    "huur": 0,
+    "rente": 9000,
+    "woz": 400000,
+    "kotKosten": 0
+   },
+   "scenarios": [
+    {
+     "bruto": 70000,
+     "belasting": 9850.30922,
+     "eigenWoning": 2854.56,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 1114.1,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 62918.35078000001
+    },
+    {
+     "bruto": 70000,
+     "belasting": 13600,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 55200
+    },
+    {
+     "bruto": 70000,
+     "belasting": 11900,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 56900
+    },
+    {
+     "bruto": 70000,
+     "belasting": 9850.30922,
+     "eigenWoning": 2854.56,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 1114.1,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 62918.35078000001
+    },
+    {
+     "bruto": 70000,
+     "belasting": 9850.30922,
+     "eigenWoning": -525.84,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 1114.1,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 59537.95078000001
+    },
+    {
+     "bruto": 70000,
+     "belasting": 9850.30922,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 1114.1,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 60063.79078
+    }
+   ]
+  },
+  {
+   "pc": "P75",
+   "invoer": {
+    "pc": "P75",
+    "x1": 62000,
+    "s1": "werk",
+    "x2": 40000,
+    "s2": "werk",
+    "kids": 2,
+    "kids12": true,
+    "huur": 0,
+    "rente": 12000,
+    "woz": 500000,
+    "kotKosten": 0
+   },
+   "scenarios": [
+    {
+     "bruto": 102000,
+     "belasting": 20169.71514,
+     "eigenWoning": 3849.9,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 84480.18486
+    },
+    {
+     "bruto": 102000,
+     "belasting": 26400,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 74400
+    },
+    {
+     "bruto": 102000,
+     "belasting": 23700,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 77100
+    },
+    {
+     "bruto": 102000,
+     "belasting": 20169.71514,
+     "eigenWoning": 3849.9,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 84480.18486
+    },
+    {
+     "bruto": 102000,
+     "belasting": 20169.71514,
+     "eigenWoning": -657.3,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 79972.98486
+    },
+    {
+     "bruto": 102000,
+     "belasting": 20169.71514,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 80630.28486
+    }
+   ]
+  },
+  {
+   "pc": "P90",
+   "invoer": {
+    "pc": "P90",
+    "x1": 110000,
+    "s1": "werk",
+    "x2": 60000,
+    "s2": "werk",
+    "kids": 0,
+    "kids12": false,
+    "huur": 0,
+    "rente": 15000,
+    "woz": 650000,
+    "kotKosten": 0
+   },
+   "scenarios": [
+    {
+     "bruto": 170000,
+     "belasting": 58796.58332,
+     "eigenWoning": 4779.51,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 111982.92667999999
+    },
+    {
+     "bruto": 170000,
+     "belasting": 53600,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 112400
+    },
+    {
+     "bruto": 170000,
+     "belasting": 50400,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 115600
+    },
+    {
+     "bruto": 170000,
+     "belasting": 58796.58332,
+     "eigenWoning": 4779.51,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 111982.92667999999
+    },
+    {
+     "bruto": 170000,
+     "belasting": 58796.58332,
+     "eigenWoning": -1126.125,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 106077.29168
+    },
+    {
+     "bruto": 170000,
+     "belasting": 58796.58332,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 107203.41668
+    }
+   ]
+  },
+  {
+   "pc": "P99",
+   "invoer": {
+    "pc": "P99",
+    "x1": 350000,
+    "s1": "werk",
+    "x2": 50000,
+    "s2": "werk",
+    "kids": 0,
+    "kids12": false,
+    "huur": 0,
+    "rente": 20000,
+    "woz": 1200000,
+    "kotKosten": 0
+   },
+   "scenarios": [
+    {
+     "bruto": 400000,
+     "belasting": 174041.82252000002,
+     "eigenWoning": 5934.48,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 227892.65748
+    },
+    {
+     "bruto": 400000,
+     "belasting": 145600,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 250400
+    },
+    {
+     "bruto": 400000,
+     "belasting": 152400,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 243600
+    },
+    {
+     "bruto": 400000,
+     "belasting": 174041.82252000002,
+     "eigenWoning": 5934.48,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 227892.65748
+    },
+    {
+     "bruto": 400000,
+     "belasting": 174041.82252000002,
+     "eigenWoning": -2079,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 219879.17747999998
+    },
+    {
+     "bruto": 400000,
+     "belasting": 174041.82252000002,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 221958.17747999998
+    }
+   ]
+  },
+  {
+   "pc": "Jij",
+   "invoer": {
+    "pc": "Jij",
+    "x1": 45000,
+    "s1": "werk",
+    "x2": 30000,
+    "s2": "werk",
+    "kids": 1,
+    "kids12": true,
+    "huur": 1100,
+    "rente": 0,
+    "woz": 0,
+    "kotKosten": 8000
+   },
+   "scenarios": [
+    {
+     "bruto": 75000,
+     "belasting": 8386.285920000002,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 7131.574164705882,
+     "uitkeringKosten": 0,
+     "besteedbaar": 71145.28824470588
+    },
+    {
+     "bruto": 75000,
+     "belasting": 15600,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 56800
+    },
+    {
+     "bruto": 75000,
+     "belasting": 13650,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 0,
+     "uitkeringKosten": 0,
+     "besteedbaar": 58750
+    },
+    {
+     "bruto": 75000,
+     "belasting": 8386.285920000002,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 7131.574164705882,
+     "uitkeringKosten": 0,
+     "besteedbaar": 71145.28824470588
+    },
+    {
+     "bruto": 75000,
+     "belasting": 8386.285920000002,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 7131.574164705882,
+     "uitkeringKosten": 0,
+     "besteedbaar": 71145.28824470588
+    },
+    {
+     "bruto": 75000,
+     "belasting": 8386.285920000002,
+     "eigenWoning": 0,
+     "zorgtoeslag": 0,
+     "huurtoeslag": 0,
+     "kgb": 0,
+     "kot": 7131.574164705882,
+     "uitkeringKosten": 0,
+     "besteedbaar": 71145.28824470588
+    }
+   ]
+  }
+ ],
+ "curves": [
+  [
+   {
+    "x": 12000,
+    "huidig": 15790.453150000001,
+    "flat": 10000
+   },
+   {
+    "x": 25000,
+    "huidig": 26549.12315,
+    "flat": 20200
+   },
+   {
+    "x": 40000,
+    "huidig": 31782.11408,
+    "flat": 29200
+   },
+   {
+    "x": 60000,
+    "huidig": 42093.53078,
+    "flat": 41200
+   },
+   {
+    "x": 90000,
+    "huidig": 56311.8859,
+    "flat": 59200
+   },
+   {
+    "x": 140000,
+    "huidig": 78767.8467,
+    "flat": 89200
+   }
+  ],
+  [
+   {
+    "x": 12000,
+    "huidig": 22938.6,
+    "flat": 11400
+   },
+   {
+    "x": 25000,
+    "huidig": 34313.6,
+    "flat": 21600
+   },
+   {
+    "x": 40000,
+    "huidig": 40767.71408,
+    "flat": 30600
+   },
+   {
+    "x": 60000,
+    "huidig": 49079.13078,
+    "flat": 42600
+   },
+   {
+    "x": 90000,
+    "huidig": 60743.8859,
+    "flat": 60600
+   },
+   {
+    "x": 140000,
+    "huidig": 83199.8467,
+    "flat": 90600
+   }
+  ],
+  [
+   {
+    "x": 12000,
+    "huidig": 22761.45315,
+    "flat": 10800
+   },
+   {
+    "x": 25000,
+    "huidig": 35145.12315,
+    "flat": 21000
+   },
+   {
+    "x": 40000,
+    "huidig": 38825.81408,
+    "flat": 30000
+   },
+   {
+    "x": 60000,
+    "huidig": 45007.63078,
+    "flat": 42000
+   },
+   {
+    "x": 90000,
+    "huidig": 57111.8859,
+    "flat": 60000
+   },
+   {
+    "x": 140000,
+    "huidig": 79567.8467,
+    "flat": 90000
+   }
+  ],
+  [
+   {
+    "x": 12000,
+    "huidig": 18094.7518,
+    "flat": 10800
+   },
+   {
+    "x": 25000,
+    "huidig": 31239.45815,
+    "flat": 23800
+   },
+   {
+    "x": 40000,
+    "huidig": 44744.96414999999,
+    "flat": 36400
+   },
+   {
+    "x": 60000,
+    "huidig": 58011.390779999994,
+    "flat": 49200
+   },
+   {
+    "x": 90000,
+    "huidig": 77061.70584,
+    "flat": 67200
+   },
+   {
+    "x": 140000,
+    "huidig": 103919.15956,
+    "flat": 97200
+   }
+  ]
+ ],
+ "oplosser": {
+  "flatVrijstelling": 26674.8052777892,
+  "flatTariefFactor": 0.8146114667487936
+ }
+}

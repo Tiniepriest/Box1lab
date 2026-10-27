@@ -1,0 +1,97 @@
+# Specificatie van de synthetische populatie (fase 1: overgenomen uit het prototype).
+# Fase 3 vervangt dit door een grotere populatie die offline wordt herwogen naar CBS-marges.
+#
+# Per huishoudtype: aantal huishoudens in Nederland (N), lognormaal inkomen (mediaan, spreiding),
+# aandeel met een uitkering, aandeel koopwoning, en voor paren het aandeel tweeverdieners.
+
+bron: "Prototype: met de hand gekozen parameters (HANDOFF §2, zwakke plek 6)."
+huishoudensPerType: 200
+
+types:
+  - {
+      id: a1,
+      naam: "Alleenstaand",
+      N: 2400000,
+      partners: false,
+      aow: false,
+      mediaan: 36000,
+      spreiding: 0.62,
+      uitkering: 0.20,
+      koop: 0.42,
+    }
+  - {
+      id: ao,
+      naam: "Alleenstaand 67+",
+      N: 1050000,
+      partners: false,
+      aow: true,
+      pensioenMediaan: 8500,
+      pensioenSpreiding: 0.95,
+      koop: 0.45,
+    }
+  - {
+      id: p0,
+      naam: "Paar zonder kinderen",
+      N: 1500000,
+      partners: true,
+      aow: false,
+      mediaan: 52000,
+      spreiding: 0.58,
+      uitkering: 0.07,
+      koop: 0.72,
+      tweeverdieners: 0.80,
+      partnerAandeel: 0.65,
+    }
+  - {
+      id: po,
+      naam: "Paar 67+",
+      N: 850000,
+      partners: true,
+      aow: true,
+      pensioenMediaan: 15000,
+      pensioenSpreiding: 0.85,
+      koop: 0.70,
+    }
+  - {
+      id: pk,
+      naam: "Paar met kinderen",
+      N: 1950000,
+      partners: true,
+      aow: false,
+      mediaan: 58000,
+      spreiding: 0.55,
+      uitkering: 0.04,
+      koop: 0.78,
+      tweeverdieners: 0.86,
+      partnerAandeel: 0.55,
+      kinderen: true,
+    }
+  - {
+      id: ek,
+      naam: "Eenoudergezin",
+      N: 500000,
+      partners: false,
+      aow: false,
+      mediaan: 32000,
+      spreiding: 0.55,
+      uitkering: 0.24,
+      koop: 0.38,
+      kinderen: true,
+    }
+
+# Correctiefactoren waarmee het prototype op de begrotingstotalen uitkwam.
+correctie: { inkomen: 1.3, hypotheekrente: 0.55, kinderopvang: 0.75 }
+
+uitkering: { minimum: 17500, bereik: 9000 }
+pensioenVerdelingPartners: 0.65
+woning:
+  wozPerBrutoInkomen: { werkend: 4.6, aow: 7 }
+  wozMinimum: 260000
+  wozMaximum: 2500000
+  hypotheekPerBrutoInkomen: 3.6
+  hypotheekMaximum: 700000
+  hypotheekrentePct: 3.4
+  aowHypotheekrente: 2600
+# Kale huur per maand = basis + aandeel × bruto jaarinkomen, met een maximum.
+huur: { basisPerMaand: 560, aandeelBrutoInkomen: 0.009, maximumPerMaand: 1300 }
+kinderopvang: { kostenPerKind: 9500, maxKinderen: 2 }

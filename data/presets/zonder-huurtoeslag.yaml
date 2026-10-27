@@ -1,0 +1,6 @@
+id: zonder-huurtoeslag
+naam: "Zonder huurtoeslag"
+omschrijving: "Het huidige stelsel, maar de huurtoeslag wordt afgeschaft."
+volgorde: 30
+wijzigingen:
+  - { parameter: toeslagen.huurtoeslag.niveau, zet: 0 }
