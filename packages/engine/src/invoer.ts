@@ -15,11 +15,13 @@ const bedrag = z.number().finite().nonnegative();
 export const persoonInvoerSchema = z.strictObject({
   leeftijd: z.number().int().min(15).max(110),
   soort: z.enum(["loondienst", "zzp", "bijstand", "werknemersverzekering", "aow", "geen"]),
-  /** Bruto inkomen uit werk of uitkering; bij "aow" het aanvullend pensioen. */
+  /** Bruto inkomen uit werk of uitkering; bij "zzp" de winst; bij "aow" het aanvullend pensioen. */
   bedrag,
   periode: z.enum(["jaar", "maand"]),
-  /** Alleen bij periode "maand": zit het vakantiegeld al in het maandbedrag? */
+  /** Alleen bij loondienst en uitkering per maand: zit het vakantiegeld al in het maandbedrag? */
   inclusiefVakantiegeld: z.boolean(),
+  /** Alleen bij loondienst: bruto extra per jaar, zoals een 13e maand, eindejaarsuitkering of bonus. */
+  extraPerJaar: bedrag.default(0),
 });
 
 export const invoerSchema = z.strictObject({
@@ -34,7 +36,8 @@ export const invoerSchema = z.strictObject({
       uurprijs: bedrag,
     }),
   ),
-  wonen: z.enum(["huur", "koop", "anders"]),
+  /** Wie inwoont of geen woonlasten heeft, kiest "huur" met huur 0: dat rekent hetzelfde. */
+  wonen: z.enum(["huur", "koop"]),
   huurPerMaand: bedrag,
   woz: bedrag,
   hypotheekrente: bedrag,
@@ -50,11 +53,16 @@ export function valideerInvoer(data: unknown): Invoer {
   return r.data;
 }
 
-/** Bruto jaarinkomen uit wat iemand invult (per maand of per jaar, met of zonder vakantiegeld). */
+/**
+ * Bruto jaarinkomen uit wat iemand invult: per maand of per jaar, met of zonder vakantiegeld, plus wat er bij
+ * loondienst eens per jaar bij komt. Een zzp'er krijgt geen vakantiegeld.
+ */
 export function jaarbedrag(persoon: PersoonInvoer, p: Parameters): number {
-  if (persoon.periode === "jaar") return persoon.bedrag;
-  const vakantiegeld = persoon.inclusiefVakantiegeld ? 1 : 1 + p.loon.vakantiegeld / 100;
-  return persoon.bedrag * 12 * vakantiegeld;
+  const extra = persoon.soort === "loondienst" ? persoon.extraPerJaar : 0;
+  if (persoon.periode === "jaar") return persoon.bedrag + extra;
+  const metVakantiegeld = persoon.soort !== "zzp" && !persoon.inclusiefVakantiegeld;
+  const factor = metVakantiegeld ? 1 + p.loon.vakantiegeld / 100 : 1;
+  return persoon.bedrag * 12 * factor + extra;
 }
 
 function lid(persoon: PersoonInvoer, partners: boolean, p: Parameters): Lid {

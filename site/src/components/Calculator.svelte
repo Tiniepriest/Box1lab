@@ -37,8 +37,6 @@
     );
   });
 
-  const standaarden = $derived(basis?.standaarden ?? null);
-
   const geldig = $derived(invoerSchema.safeParse($state.snapshot(invoer)));
   const huishouden = $derived(geldig.success ? huishoudenUitInvoer(geldig.data, params) : null);
   const r = $derived(huishouden ? berekenHuishouden(huishouden, params) : null);
@@ -93,7 +91,7 @@
 <div class="calculator">
   <section class="kaart formulier" aria-labelledby="titel-invoer">
     <h2 id="titel-invoer">Vul je situatie in</h2>
-    <InvoerFormulier bind:invoer {params} {standaarden} />
+    <InvoerFormulier bind:invoer {params} />
   </section>
 
   <section class="uitkomsten" aria-live="polite" aria-labelledby="titel-uitkomst">
