@@ -1,0 +1,39 @@
+---
+titel: "De armoedeval"
+samenvatting: "Waarom meer verdienen soms bijna niets oplevert."
+volgorde: 1
+---
+
+import MiniInkomen from "../../components/uitleg/MiniInkomen.svelte";
+import { params, voorbeelden } from "../../lib/data.ts";
+import { pad } from "../../lib/pad.ts";
+
+export const eenouder = voorbeelden.curves.find((c) => c.id === "eenouder");
+
+Je zou verwachten dat je er altijd flink op vooruitgaat als je meer gaat verdienen. Voor veel mensen met een laag
+of middeninkomen is dat niet zo. Van elke extra euro gaat een deel naar belasting, en tegelijk krijg je minder
+toeslag. Samen kan dat oplopen tot meer dan de helft, soms zelfs tot bijna alles. Dat heet de **armoedeval**: het
+is moeilijk om er met meer werk financieel op vooruit te gaan.
+
+## Hoe ontstaat het?
+
+Toeslagen zijn bedoeld voor mensen met een laag inkomen. Daarom worden ze kleiner als je meer verdient. Dat heet
+**afbouwen**. Bij de zorgtoeslag gaat er bijvoorbeeld {params.toeslagen.zorgtoeslag.normpremieAfbouw.toLocaleString("nl-NL")}%
+van elke extra euro inkomen af, bij de huurtoeslag {params.toeslagen.huurtoeslag.afbouw.eenpersoons}% voor een
+eenpersoonshuishouden. Daar komt de belasting nog bij. Krijg je meerdere toeslagen tegelijk, dan tellen die
+afbouwpercentages op.
+
+## Probeer het zelf
+
+Hieronder zie je een alleenstaande ouder met één kind en een huur van € 850 per maand. Schuif met het inkomen en
+kijk hoeveel er overblijft van € 100 extra bruto.
+
+<MiniInkomen client:visible params={params} invoer={eenouder.invoer} start={32000} />
+
+## Waarom is dat een probleem?
+
+Een hoge marginale druk maakt het minder aantrekkelijk om meer uren te werken of een betere baan te zoeken. En wie
+er toch op vooruitgaat, ziet weinig terug van de moeite. Tegelijk is het niet simpel op te lossen: toeslagen minder
+snel afbouwen kost geld, en dan krijgen ook mensen met een hoger inkomen toeslag.
+
+In het <a href={pad("lab")}>scenariolab</a> kun je zelf de afbouw van de toeslagen veranderen en zien wat dat doet.

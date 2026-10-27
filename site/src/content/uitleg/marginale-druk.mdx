@@ -1,0 +1,39 @@
+---
+titel: "Marginale druk"
+samenvatting: "Wat er overblijft van een extra euro, en waarom dat iets anders is dan het belastingtarief."
+volgorde: 2
+---
+
+import MiniInkomen from "../../components/uitleg/MiniInkomen.svelte";
+import { params, voorbeelden } from "../../lib/data.ts";
+import { pad } from "../../lib/pad.ts";
+import { euro, procent } from "../../lib/format.ts";
+
+export const alleen = voorbeelden.curves.find((c) => c.id === "alleenstaand-huur");
+export const s = params.box1.schijven;
+
+De **marginale druk** is het deel van een extra euro dat je niet overhoudt. Is je marginale druk 40%, dan houd je
+van € 100 extra bruto € 60 over.
+
+## Niet hetzelfde als het tarief
+
+In {params.jaar} betaal je {procent(s[0].tarief, 2)} belasting en premies over je inkomen tot {euro(s[0].tot)},
+daarboven {procent(s[1].tarief, 2)} en boven {euro(s[1].tot)} {procent(s[2].tarief, 1)}. Toch is de marginale druk
+vaak hoger of lager dan die tarieven. Drie dingen spelen mee:
+
+- **Heffingskortingen.** De algemene heffingskorting wordt kleiner als je meer verdient. Dat verhoogt de druk.
+  De arbeidskorting wordt bij lage inkomens juist groter, en dat verlaagt de druk.
+- **Toeslagen.** Toeslagen nemen af als je inkomen stijgt. Elke euro minder toeslag telt als druk.
+- **Premies.** In de eerste schijf zit ook de premie voor de volksverzekeringen, zoals de AOW.
+
+## Probeer het zelf
+
+Een alleenstaande met een huur van € 850 per maand. Bij lage inkomens zie je vooral het effect van minder toeslag;
+bij hogere inkomens vooral de belasting.
+
+<MiniInkomen client:visible params={params} invoer={alleen.invoer} start={40000} max={120000} />
+
+## Gemiddeld en marginaal
+
+Naast de marginale druk bestaat de **gemiddelde** of **effectieve druk**: hoeveel van je hele inkomen er per saldo
+naar belasting gaat, min je toeslagen. Die is bijna altijd lager dan de marginale druk. Op de pagina <a href={pad("jouw-situatie")}>Jouw situatie</a> zie je beide voor je eigen huishouden.

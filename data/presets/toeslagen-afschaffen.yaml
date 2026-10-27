@@ -1,0 +1,10 @@
+id: toeslagen-afschaffen
+naam: "Toeslagen afschaffen"
+omschrijving: "Zorgtoeslag, huurtoeslag, kindgebonden budget en kinderopvangtoeslag verdwijnen. Belastingen blijven gelijk."
+uitleg: "Het toeslagenstelsel staat al jaren ter discussie, vooral na de toeslagenaffaire. Dit voorstel laat zien wat er gebeurt als de vier toeslagen zonder vervanging verdwijnen: de overheid houdt veel geld over, maar huishoudens met lage inkomens en gezinnen met kinderen leveren fors in. In echte voorstellen komt er meestal iets voor terug, zoals een hogere heffingskorting of lagere huren."
+volgorde: 60
+wijzigingen:
+  - { parameter: toeslagen.zorgtoeslag.niveau, zet: 0 }
+  - { parameter: toeslagen.huurtoeslag.niveau, zet: 0 }
+  - { parameter: toeslagen.kindgebondenBudget.niveau, zet: 0 }
+  - { parameter: toeslagen.kinderopvangtoeslag.niveau, zet: 0 }

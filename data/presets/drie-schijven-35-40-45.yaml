@@ -1,6 +1,7 @@
 id: drie-schijven-35-40-45
 naam: "35 / 40 / 45%"
 omschrijving: "Drie schijven: 35% tot €50.000, 40% tot €150.000 en 45% daarboven, met een belastingvrije voet van €18.000 per persoon. Alle heffingskortingen, aftrekposten en toeslagen vervallen."
+uitleg: "Een variant op de vlaktaks met drie oplopende tarieven. Net als bij de vlaktaks vervallen kortingen, aftrekposten en toeslagen; de hogere tarieven bovenin vangen een deel van het effect op."
 volgorde: 20
 wijzigingen:
   - { parameter: box1.vrijstelling, zet: 18000 }

@@ -1,0 +1,39 @@
+---
+titel: "Hypotheekrenteaftrek en eigenwoningforfait"
+samenvatting: "Waarom huiseigenaren rente aftrekken en tegelijk iets bijtellen."
+volgorde: 4
+---
+
+import MiniEigenWoning from "../../components/uitleg/MiniEigenWoning.svelte";
+import { params } from "../../lib/data.ts";
+import { pad } from "../../lib/pad.ts";
+import { procent } from "../../lib/format.ts";
+
+export const ew = params.eigenWoning;
+
+Wie in een eigen huis woont, krijgt in de inkomstenbelasting met twee dingen te maken.
+
+## Het eigenwoningforfait
+
+De belastingdienst ziet wonen in je eigen huis als een soort inkomen: je hoeft geen huur te betalen. Daarom tel je
+een klein percentage van de WOZ-waarde op bij je inkomen. Voor de meeste woningen is dat
+{procent(ew.forfait.tabel[ew.forfait.tabel.length - 1].percentage, 2)} per jaar. Voor dure woningen geldt boven een
+grens een hoger percentage.
+
+## De hypotheekrenteaftrek
+
+De rente die je betaalt over je hypotheek mag je juist aftrekken van je inkomen. Dat levert belastingvoordeel op,
+maar hoogstens tegen {procent(ew.aftrekMaxTarief, 2)}, ook als je in de hoogste schijf zit.
+
+## Weinig of geen hypotheek: de Wet Hillen
+
+Is het forfait hoger dan je rente, bijvoorbeeld omdat je hypotheek bijna is afgelost? Dan hoef je volgens de Wet
+Hillen een groot deel van dat verschil niet bij te tellen: in {params.jaar} mag je nog
+{procent(ew.hillenAftrek, 1)} ervan aftrekken. Dat percentage wordt elk jaar kleiner.
+
+## Probeer het zelf
+
+<MiniEigenWoning client:visible params={params} />
+
+In het <a href={pad("lab")}>scenariolab</a> kun je de aftrek beperken of afschaffen en zien wat dat betekent voor de schatkist
+en voor huishoudens.

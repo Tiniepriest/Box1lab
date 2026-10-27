@@ -1,0 +1,58 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { pad } from "../../lib/data.ts";
+
+const artikelen = (await getCollection("uitleg")).sort((a, b) => a.data.volgorde - b.data.volgorde);
+---
+
+<Base
+  title="Uitleg — Box1lab"
+  description="Korte uitleg over belastingen en toeslagen, met voorbeelden om zelf te proberen."
+>
+  <h1>Uitleg</h1>
+  <p class="intro">
+    Korte stukken over hoe belastingen en toeslagen werken. Bij elk stuk kun je zelf iets uitproberen.
+  </p>
+  <ul class="lijst">
+    {artikelen.map((a) => (
+      <li class="kaart">
+        <h2>
+          <a href={pad(`uitleg/${a.id}`)}>{a.data.titel}</a>
+        </h2>
+        <p>{a.data.samenvatting}</p>
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(28px, 4.5vw, 38px);
+    margin: 0 0 8px;
+  }
+  .intro {
+    color: var(--muted);
+    max-width: 60ch;
+    margin: 0 0 24px;
+  }
+  .lijst {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 14px;
+  }
+  h2 {
+    font-size: 19px;
+    margin: 0 0 4px;
+  }
+  h2 a {
+    color: var(--fg);
+  }
+  p {
+    margin: 0;
+    color: var(--muted);
+  }
+</style>

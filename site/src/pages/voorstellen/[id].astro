@@ -1,0 +1,106 @@
+---
+import MiniDecielen from "../../components/MiniDecielen.astro";
+import Base from "../../layouts/Base.astro";
+import { pad, params } from "../../lib/data.ts";
+import { getal, miljard, procent, procentVerschil } from "../../lib/format.ts";
+import { kerncijfers, kernzin, type Kerncijfers } from "../../lib/voorstellen.ts";
+
+export function getStaticPaths() {
+  return kerncijfers.map((k) => ({ params: { id: k.preset.id }, props: { k } }));
+}
+
+const { k } = Astro.props as { k: Kerncijfers };
+---
+
+<Base title={`${k.preset.naam} — Box1lab`} description={kernzin(k)} afbeelding={pad(`og/${k.preset.id}.png`)}>
+  <p class="kruimel">
+    <a href={pad("voorstellen")}>Voorstellen</a>
+  </p>
+  <h1>{k.preset.naam}</h1>
+  <p class="lead">{k.preset.omschrijving}</p>
+  <p class="kern">{kernzin(k)}</p>
+  {k.preset.uitleg && <p>{k.preset.uitleg}</p>}
+
+  <div class="kerngetallen">
+    <div class="kerngetal">
+      <div class="l">Overheid per saldo</div>
+      <div class="w">{miljard(k.saldoMld)}</div>
+      <div class="t">per jaar</div>
+    </div>
+    <div class="kerngetal">
+      <div class="l">Armoederisico</div>
+      <div class="w">
+        {procent(k.armoedeNu)} → {procent(k.armoede)}
+      </div>
+    </div>
+    <div class="kerngetal">
+      <div class="l">Achteruit / vooruit</div>
+      <div class="w">
+        {getal(k.achteruit)}% / {getal(k.vooruit)}%
+      </div>
+      <div class="t">van alle personen, meer dan 1% verschil</div>
+    </div>
+  </div>
+
+  <section class="kaart">
+    <h2>Verandering per inkomensgroep</h2>
+    <MiniDecielen waarden={k.decielen} label={`Verandering per inkomensgroep bij ${k.preset.naam}`} />
+    <table class="data">
+      <thead>
+        <tr>
+          <th>Groep</th>
+          <th>Verandering besteedbaar inkomen</th>
+        </tr>
+      </thead>
+      <tbody>
+        {k.decielen.map((d, i) => (
+          <tr>
+            <td>{i + 1}</td>
+            <td class="num">{procentVerschil(d)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <p>
+    <a class="knop" href={`${pad("lab")}#${k.code}`}>
+      Open dit voorstel in het lab →
+    </a>
+  </p>
+  <p class="notitie">
+    Statische doorrekening voor {params.jaar}. <a href={pad("methodiek")}>Hoe rekenen we?</a>
+  </p>
+</Base>
+
+<style>
+  .kruimel {
+    margin: 0 0 4px;
+    font-size: 14px;
+  }
+  h1 {
+    font-size: clamp(28px, 4.5vw, 38px);
+    margin: 0 0 6px;
+  }
+  .lead {
+    color: var(--muted);
+    font-size: 18px;
+    margin: 0 0 12px;
+  }
+  .kern {
+    font-size: 18px;
+  }
+  .kerngetallen {
+    margin: 20px 0;
+  }
+  h2 {
+    font-size: 18px;
+    margin: 0 0 8px;
+  }
+  .kaart {
+    max-width: 520px;
+  }
+  .knop {
+    font-weight: 600;
+  }
+</style>

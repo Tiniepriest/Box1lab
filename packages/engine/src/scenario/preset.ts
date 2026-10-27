@@ -10,6 +10,8 @@ export const presetSchema = z.strictObject({
   id: z.string().regex(/^[a-z0-9-]+$/, "Een id bestaat uit kleine letters, cijfers en streepjes."),
   naam: z.string().min(1),
   omschrijving: z.string().min(1),
+  /** Langere uitleg voor de voorstellenpagina: wat houdt het in, en waar moet je op letten? */
+  uitleg: z.string().optional(),
   /** Volgorde in lijsten (laag eerst). */
   volgorde: z.number().int().default(100),
   wijzigingen: z.array(wijzigingSchema),

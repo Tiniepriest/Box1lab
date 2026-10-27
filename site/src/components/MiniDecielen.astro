@@ -1,0 +1,39 @@
+---
+/*
+ * Kleine statische grafiek: verandering per inkomensgroep (groep 1 links, groep 10 rechts). Vaste afmeting,
+ * zodat hij zonder JavaScript scherp blijft. De getallen staan in de tabel ernaast.
+ */
+interface Props {
+  waarden: number[];
+  label: string;
+}
+const { waarden, label } = Astro.props;
+const B = 220;
+const H = 64;
+const max = Math.max(1, ...waarden.map((v) => Math.abs(v)));
+const w = B / waarden.length;
+const y0 = H / 2;
+---
+
+<svg width={B} height={H + 14} viewBox={`0 0 ${B} ${H + 14}`} role="img" aria-label={label}>
+  <line x1="0" x2={B} y1={y0} y2={y0} stroke="var(--zero)" stroke-width="1" />
+  {waarden.map((v, i) => {
+    const h = (Math.abs(v) / max) * (H / 2 - 2);
+    return (
+      <rect
+        x={i * w + 2}
+        y={v >= 0 ? y0 - h : y0}
+        width={w - 4}
+        height={Math.max(1, h)}
+        rx="2"
+        fill={Math.abs(v) < 0.05 ? "var(--zero)" : v > 0 ? "var(--gain)" : "var(--loss)"}
+      />
+    );
+  })}
+  <text x="0" y={H + 12} font-size="10" fill="var(--muted)">
+    laag inkomen
+  </text>
+  <text x={B} y={H + 12} font-size="10" fill="var(--muted)" text-anchor="end">
+    hoog
+  </text>
+</svg>

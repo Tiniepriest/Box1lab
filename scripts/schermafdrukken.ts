@@ -13,7 +13,21 @@ import { chromium } from "playwright-core";
 const uit = process.argv[2] ?? "schermafdrukken";
 mkdirSync(uit, { recursive: true });
 const BASIS = "http://localhost:4321/Box1lab";
-const PAGINAS = ["", "jouw-situatie", "lab", "methodiek", "over"];
+const PAGINAS = [
+  "",
+  "jouw-situatie",
+  "lab",
+  "voorstellen",
+  "voorstellen/vlaktaks-40",
+  "uitleg",
+  "uitleg/armoedeval",
+  "uitleg/toeslagen",
+  "uitleg/hypotheekrenteaftrek",
+  "uitleg/inkomensgroepen",
+  "uitleg/marginale-druk",
+  "methodiek",
+  "over",
+];
 
 const server = spawn("npm", ["run", "preview", "-w", "site", "--", "--port", "4321"], { shell: true });
 // Wacht tot de server antwoordt.
@@ -52,13 +66,15 @@ try {
         await pagina.waitForTimeout(800);
         const scroll = await pagina.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
         if (scroll > 0) console.warn(`  horizontaal scrollen op /${p} (${breedte}px): ${scroll}px te breed`);
-        const naam = `${p || "home"}-${breedte}-${schema}.png`;
+        const naam = `${(p || "home").replaceAll("/", "_")}-${breedte}-${schema}.png`;
         await pagina.screenshot({ path: join(uit, naam), fullPage: true });
         // Losse grafieken op ware grootte, om tekst en labels te kunnen beoordelen.
         if (breedte === 375 && schema === "light") {
           const figuren = await pagina.locator("figure").all();
           for (const [i, f] of figuren.entries()) {
-            await f.screenshot({ path: join(uit, `${p || "home"}-figuur${i + 1}.png`) });
+            await f.screenshot({
+              path: join(uit, `${(p || "home").replaceAll("/", "_")}-figuur${i + 1}.png`),
+            });
           }
         }
       }
@@ -91,6 +107,23 @@ try {
     /Vrijstelling op/.test((await pg.textContent("body")) ?? ""),
     "lab: budgetneutraal via vrijstelling",
   );
+  await pg.locator("select").filter({ hasText: "Kies een voorstel" }).selectOption("toeslagen-afschaffen");
+  await pg.waitForFunction(
+    () =>
+      /Toeslagen afschaffen/.test(document.querySelector("thead")?.textContent ?? "") ||
+      [...document.querySelectorAll("thead")].some((t) => /Toeslagen afschaffen/.test(t.textContent ?? "")),
+    null,
+    { timeout: 30000 },
+  );
+  controleer(true, "lab: vergelijken met een voorstel");
+  await pg.goto(`${BASIS}/uitleg/armoedeval`, { waitUntil: "networkidle" });
+  const mini = pg.locator(".mini input[type=range]").first();
+  await mini.scrollIntoViewIfNeeded();
+  await pg.waitForTimeout(500);
+  const voor = (await pg.locator(".mini p").first().textContent()) ?? "";
+  await mini.fill("20000");
+  const na = (await pg.locator(".mini p").first().textContent()) ?? "";
+  controleer(voor !== na && /houd/.test(na), "uitleg: interactief voorbeeld reageert");
   await pg.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
   await pg.waitForFunction(() => /van de mensen heeft minder/.test(document.body.textContent ?? ""), null, {
     timeout: 30000,
