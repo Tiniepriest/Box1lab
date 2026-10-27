@@ -46,8 +46,9 @@
     if (!r) return [];
     const s: { label: string; bedrag: number; soort: "totaal" | "plus" | "min" }[] = [
       { label: "Bruto inkomen", bedrag: r.bruto, soort: "totaal" },
-      { label: "Belasting en premies", bedrag: r.belasting, soort: "min" },
     ];
+    if (r.pensioenpremie > 0) s.push({ label: "Pensioenpremie", bedrag: r.pensioenpremie, soort: "min" });
+    s.push({ label: "Belasting en premies", bedrag: r.belasting, soort: "min" });
     if (r.zvw > 0) s.push({ label: "Bijdrage zorgverzekering", bedrag: r.zvw, soort: "min" });
     if (r.zorgtoeslag > 0) s.push({ label: "Zorgtoeslag", bedrag: r.zorgtoeslag, soort: "plus" });
     if (r.huurtoeslag > 0) s.push({ label: "Huurtoeslag", bedrag: r.huurtoeslag, soort: "plus" });
@@ -69,8 +70,9 @@
     return { aandeel, deciel: Math.min(10, Math.floor(aandeel * 10) + 1) };
   });
 
+  // Bij bijstand zegt een curve over het bruto inkomen weinig: bijverdienen gaat van de uitkering af.
   const curve = $derived.by(() => {
-    if (!huishouden) return null;
+    if (!huishouden || invoer.personen[0]!.soort === "bijstand") return null;
     const nu = huishouden.leden[0]!.inkomen;
     const max = Math.max(120000, Math.ceil((nu * 1.6) / 10000) * 10000);
     const x: number[] = [];
@@ -105,11 +107,19 @@
       </p>
 
       <div class="kerngetallen">
-        <div class="kerngetal">
-          <div class="l">Van € 100 extra bruto houd je over</div>
-          <div class="w">{euro(100 - marginaal)}</div>
-          <div class="t">marginale druk {procent(marginaal, 0)}</div>
-        </div>
+        {#if invoer.personen[0]!.soort === "bijstand"}
+          <div class="kerngetal">
+            <div class="l">Van € 100 bijverdienen houd je over</div>
+            <div class="w">weinig of niets</div>
+            <div class="t">wat je verdient, gaat van je bijstand af (soms mag je een deel houden)</div>
+          </div>
+        {:else}
+          <div class="kerngetal">
+            <div class="l">Van € 100 extra bruto houd je over</div>
+            <div class="w">{euro(100 - marginaal)}</div>
+            <div class="t">marginale druk {procent(marginaal, 0)}</div>
+          </div>
+        {/if}
         <div class="kerngetal">
           <div class="l">Belasting min toeslagen</div>
           <div class="w">{procent(effectief, 0)}</div>

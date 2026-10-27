@@ -5,7 +5,7 @@
  * - langer op dit apparaat (localStorage), alleen als de bezoeker "Onthoud op dit apparaat" aanzet.
  * "Wis mijn gegevens" haalt beide weg. Opslag kan ontbreken of geblokkeerd zijn; dan werkt alles gewoon zonder.
  */
-import { invoerSchema, type Invoer } from "@box1lab/engine";
+import { invoerSchema, persoonInvoerSchema, type Invoer } from "@box1lab/engine";
 
 const SLEUTEL = "box1lab.invoer.v1";
 
@@ -64,14 +64,13 @@ export function wisInvoer(): void {
 export function voorbeeldInvoer(): Invoer {
   return {
     personen: [
-      {
+      persoonInvoerSchema.parse({
         leeftijd: 35,
         soort: "loondienst",
         bedrag: 3200,
         periode: "maand",
         inclusiefVakantiegeld: false,
-        extraPerJaar: 0,
-      },
+      }),
     ],
     kinderen: [],
     wonen: "huur",

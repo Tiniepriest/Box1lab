@@ -324,3 +324,30 @@ Golden-verschil: alleen de voorstellen die de overige aftrekposten afschaffen ve
 ### D-055 Sitemap
 
 `@astrojs/sitemap` maakt `sitemap-index.xml` tijdens de build, zonder verkiezingen met fictieve partijen. Een `robots.txt` heeft geen zin: zoekmachines lezen die alleen op de hoofdmap van het domein (`tiniepriest.github.io/robots.txt`), en die valt buiten deze repo. Om Google de sitemap te laten gebruiken, kan de eigenaar hem gratis aanmelden in Google Search Console.
+
+## Fase 8b: bijstand, zzp en pensioen (verbeterlijst punten 1, 6 en 8)
+
+### D-056 Bijstand volgt uit de norm
+
+Je vult bij bijstand geen bedrag meer in. Het model neemt de netto norm per maand inclusief vakantiegeld (Rijksoverheid, 1 januari en 1 juli 2026) en rekent terug naar het bruto bedrag waarover de gemeente loonheffing inhoudt (`brutoVoorNetto`, dezelfde bisectie als de netto-koppeling). Een alleenstaande krijgt de alleenstaandennorm, een paar in de bijstand ieder de helft van de gezinsnorm, en als de partner werkt, vult de bijstand aan tot de gezinsnorm (min het netto inkomen van de partner). Niet in het model: jongerennormen (onder 21), de kostendelersnorm, vrijlatingen en de AOW-normen (AIO). In de calculator staat bij bijstand geen marginale druk en geen inkomenscurve, want bijverdienen gaat van de uitkering af. De voorbeeldhuishoudens en de nagebootste bevolking gebruiken dezelfde regel.
+
+### D-057 Zelfstandigen
+
+Een zzp'er vult de winst in. Het model trekt de zelfstandigenaftrek (€ 1.200, alleen met urencriterium), eventueel de startersaftrek (€ 2.123) en daarna de mkb-winstvrijstelling (12,7%) af, en rekent de inkomensafhankelijke bijdrage Zvw (4,85%) over de belastbare winst. De arbeidskorting gaat over de winst vóór die aftrekposten (Wet IB 2001, art. 8.11 lid 2: "winst uit onderneming", niet de belastbare winst). Verliesverrekening en investeringsaftrek zitten er niet in. Zelfstandigenaftrek en mkb-winstvrijstelling zijn knoppen in het lab.
+
+In de nagebootste bevolking is 13% van de werkenden zelfstandig (60% met urencriterium); de herweging stemt het aantal huishoudens met een zelfstandige af op CBS (1,19 mln, 84493NED, 2024). De zelfstandigenaftrek en de mkb-winstvrijstelling zijn daardoor uit de overige aftrekposten gehaald (die zijn nu € 2,932 mld); starters- en meewerkaftrek blijven daar, want de bevolking heeft geen starters of meewerkende partners. Controle: de winst in het model is € 72,4 mld tegen € 65,2 mld bij CBS (geïndexeerd), 11% hoger.
+
+### D-058 Pensioenpremie van werknemers
+
+Werknemers betalen het werknemersdeel van de pensioenpremie; dat wordt op het loon ingehouden en verlaagt het fiscale loon, dus ook de belasting, de arbeidskorting en het toetsingsinkomen voor de toeslagen. Standaard rekent het model met de regeling van ABP, het grootste fonds: 8,13% van het loon tussen € 19.200 en € 137.800. In het formulier kun je kiezen voor de schatting, het bedrag van je loonstrook of geen pensioen. In de nagebootste bevolking betaalt iedere werknemer de standaardpremie: samen € 22,1 mld, tegen € 21,0 mld bij CBS (geïndexeerd, +5%). Dat een deel van de werknemers geen pensioen opbouwt en andere fondsen anders rekenen, valt daar ongeveer tegen weg.
+
+De marginale druk laat de pensioenpremie buiten beschouwing: het is opbouw voor later, geen verlies. Besteedbaar inkomen is wel na pensioenpremie, net als bij CBS.
+
+### D-059 Herweging en golden-verschillen
+
+De nagebootste bevolking is opnieuw gemaakt (andere toevalsreeks door de nieuwe kenmerken) en herwogen met de extra marge voor zelfstandigen. Alle schaalfactoren blijven 1,00 en de decielgrenzen kloppen binnen 0,1%. De belastingopbrengst in het model daalt van € 152,0 naar € 144,1 mld, vooral door de pensioenpremie en de ondernemersaftrek; dat is nu vrijwel gelijk aan de € 144,7 mld box 1 en box 2 uit de Miljoenennota. Armoede 9,9% → 10,3%, Gini 0,227 → 0,225.
+
+Golden-verschillen (modelversie 0.3.0):
+
+- Saldo van de voorstellen: vlaktaks € 43,59 → € 41,86 mld; drie schijven € 31,32 → € 29,62 mld; hogere algemene heffingskorting −€ 4,45 → −€ 4,50 mld; de andere voorstellen veranderen minder dan € 0,1 mld. De oplosser geeft een vrijstelling van € 27.836 (was € 28.322).
+- Voorbeeldhuishoudens: werkenden betalen nu pensioenpremie, dus minder belasting en iets meer toeslag, maar minder besteedbaar (P50 € 65.743 → € 64.536). P10 (bijstand) krijgt de norm: netto precies € 16.926, besteedbaar € 21.033 → € 21.993.

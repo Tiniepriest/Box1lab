@@ -26,6 +26,9 @@ const NAMEN: Record<string, string> = {
   "toeslagen.kindgebondenBudget": "Kindgebonden budget",
   "toeslagen.kinderopvangtoeslag": "Kinderopvangtoeslag",
   uitkeringen: "AOW en uitkeringen",
+  bijstand: "Bijstandsnormen",
+  ondernemers: "Zelfstandigen",
+  pensioenpremie: "Pensioenpremie werknemers",
   zorg: "Zorgpremie en Zvw-bijdrage",
   kinderbijslag: "Kinderbijslag",
   loon: "Vakantiegeld",
@@ -97,7 +100,7 @@ const metLinks = (t: string) =>
       <dt>Marginale druk</dt>
       <dd>
         Welk deel van een extra euro bruto verdwijnt aan belasting en lagere toeslagen. Boven de 50% spreken
-        we van een armoedeval.
+        we van een armoedeval. Pensioenpremie telt niet mee: dat is opbouw voor later.
       </dd>
       <dt>Overheid per saldo</dt>
       <dd>
@@ -110,7 +113,18 @@ const metLinks = (t: string) =>
     <h2>Wat zit er niet in?</h2>
     <ul>
       <li>Box 2 (aanmerkelijk belang) en box 3 (sparen en beleggen).</li>
-      <li>Ondernemers: de zelfstandigenaftrek en de mkb-winstvrijstelling. Winst telt als loon.</li>
+      <li>
+        Ondernemers: verliezen, de startersaftrek en de meewerkaftrek in de nagebootste bevolking (die tellen
+        mee als vast bedrag bij de overige aftrekposten), en de aftrek van investeringen.
+      </li>
+      <li>
+        Pensioen: iedere werknemer in de nagebootste bevolking betaalt de standaard pensioenpremie (zoals bij
+        ABP). In werkelijkheid verschilt dat per fonds, en een deel van de werknemers bouwt geen pensioen op.
+      </li>
+      <li>
+        Bijstand: alleen de landelijke normen vanaf 21 jaar. Jongerennormen, de kostendelersnorm, vrijlatingen
+        bij bijverdienen en gemeentelijke regelingen zitten er niet in.
+      </li>
       <li>Gedrag: standaard rekenen we statisch. In het lab kun je een eenvoudig gedragseffect aanzetten.</li>
       <li>
         Vermogen in de nagebootste bevolking. De vermogensgrenzen van de toeslagen werken wel als je zelf

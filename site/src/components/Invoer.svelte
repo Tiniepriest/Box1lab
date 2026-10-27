@@ -1,6 +1,16 @@
 <script lang="ts">
-  import { heeftAowLeeftijd, type Invoer, type Parameters, type PersoonInvoer } from "@box1lab/engine";
+  import {
+    bijstandsnormPerJaar,
+    heeftAowLeeftijd,
+    jaarbedrag,
+    persoonInvoerSchema,
+    standaardPensioenpremie,
+    type Invoer,
+    type Parameters,
+    type PersoonInvoer,
+  } from "@box1lab/engine";
   import { untrack } from "svelte";
+  import { euro, getal, procent } from "../lib/format.ts";
   import { bewaarInvoer, leesBewaard, wisInvoer } from "../lib/opslag.ts";
 
   /*
@@ -36,14 +46,13 @@
   const partner = $derived(invoer.personen.length === 2);
 
   function nieuwePersoon(): PersoonInvoer {
-    return {
+    return persoonInvoerSchema.parse({
       leeftijd: 35,
       soort: "loondienst",
       bedrag: 0,
       periode: "maand",
       inclusiefVakantiegeld: false,
-      extraPerJaar: 0,
-    };
+    });
   }
   function zetPartner(aan: boolean) {
     invoer.personen = aan ? [invoer.personen[0]!, nieuwePersoon()] : [invoer.personen[0]!];
@@ -71,7 +80,7 @@
     onthouden = false;
     melding = "Je gegevens zijn gewist uit deze browser.";
   }
-  function getal(e: Event): number {
+  function leesGetal(e: Event): number {
     const v = Number((e.currentTarget as HTMLInputElement).value);
     return Number.isFinite(v) && v >= 0 ? v : 0;
   }
@@ -120,12 +129,18 @@
         </select>
       </div>
       {#if persoon.soort === "zzp"}
+        <p class="notitie">Vul je winst in: je omzet min je kosten, vóór belasting.</p>
+      {/if}
+      {#if persoon.soort === "bijstand"}
         <p class="notitie">
-          Vul je winst in: je omzet min je kosten, vóór belasting. De zelfstandigenaftrek zit nog niet in het
-          model.
+          De bijstand is een vast bedrag: {euro(bijstandsnormPerJaar(params, partner) / 12)} netto per maand
+          {partner ? "voor jullie samen" : ""}, inclusief vakantiegeld (gemiddelde over {params.jaar}).
+          {#if partner}Heeft je partner inkomen, dan gaat dat er netto vanaf.{/if}
+          Niet in het model: lagere bedragen onder de {params.bijstand.minimumLeeftijd} jaar, de kostendelersnorm
+          als je met andere volwassenen woont, en bijverdienen.
         </p>
       {/if}
-      {#if persoon.soort !== "geen"}
+      {#if persoon.soort !== "geen" && persoon.soort !== "bijstand"}
         <div class="rij">
           <label for="bedrag-{i}">
             {persoon.soort === "aow"
@@ -157,6 +172,52 @@
             Bruto, zonder vakantiegeld. Bijvoorbeeld een 13e maand, eindejaarsuitkering of bonus. Op je
             loonstrook gaat daar meer belasting van af; dat wordt in je aangifte verrekend. Wij rekenen meteen
             met het hele jaar.
+          </p>
+        {/if}
+        {#if persoon.soort === "loondienst"}
+          <div class="rij">
+            <label for="pensioen-{i}">Pensioen via je werk</label>
+            <select id="pensioen-{i}" bind:value={persoon.pensioen}>
+              <option value="standaard">Ja, schat de premie</option>
+              <option value="bedrag">Ja, ik weet het bedrag</option>
+              <option value="geen">Nee</option>
+            </select>
+          </div>
+          {#if persoon.pensioen === "standaard"}
+            <p class="notitie">
+              We schatten {euro(standaardPensioenpremie(jaarbedrag(persoon, params), params) / 12)} per maand:
+              {procent(params.pensioenpremie.werknemer, 2)} van je loon boven {euro(
+                params.pensioenpremie.franchise,
+              )} per jaar, zoals bij ABP. Andere fondsen rekenen anders; het echte bedrag staat op je loonstrook.
+            </p>
+          {:else if persoon.pensioen === "bedrag"}
+            <div class="rij">
+              <label for="premie-{i}"
+                >Pensioenpremie per maand <span class="hint">staat op je loonstrook</span></label
+              >
+              <input
+                id="premie-{i}"
+                type="number"
+                min="0"
+                step="10"
+                bind:value={persoon.pensioenpremiePerMaand}
+              />
+            </div>
+          {/if}
+        {/if}
+        {#if persoon.soort === "zzp"}
+          <label class="vinkje">
+            <input type="checkbox" bind:checked={persoon.urencriterium} />
+            Ik werk minstens {getal(params.ondernemers.urencriterium)} uur per jaar voor mijn bedrijf
+          </label>
+          <label class="vinkje">
+            <input type="checkbox" bind:checked={persoon.starter} />
+            Ik ben starter en mag de startersaftrek gebruiken
+          </label>
+          <p class="notitie">
+            We trekken de zelfstandigenaftrek ({euro(params.ondernemers.zelfstandigenaftrek)}) en de
+            mkb-winstvrijstelling ({procent(params.ondernemers.mkbWinstvrijstelling, 1)}) af en rekenen de
+            inkomensafhankelijke bijdrage voor de zorgverzekering mee.
           </p>
         {/if}
         {#if persoon.soort === "aow"}
@@ -264,7 +325,7 @@
         min="0"
         step="1000"
         value={invoer.vermogen}
-        oninput={(e) => (invoer.vermogen = getal(e))}
+        oninput={(e) => (invoer.vermogen = leesGetal(e))}
       />
     </div>
     <p class="notitie">Nodig voor de vermogensgrens van toeslagen. Box 3 zit nog niet in het model.</p>

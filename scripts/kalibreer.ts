@@ -138,6 +138,12 @@ const restricties: Restrictie[] = [
     doel: ib.betaaldeHypotheekrenteMln * 1e6,
   },
   { naam: "huurwaarde eigen woning", waarden: huurwaarde, doel: huurwaardeDoel },
+  // CBS telt huishoudens met inkomen uit een eigen onderneming (jaar van de inkomensbestanddelen, niet geïndexeerd).
+  {
+    naam: "huishoudens met zelfstandig ondernemer",
+    waarden: indicator((x) => x.leden.some((l) => !!l.ondernemer)),
+    doel: ib.huishoudensMetZelfstandigOndernemer,
+  },
   ...grenzen.map((g, k) => ({
     naam: `besteedbaar inkomen onder P${(k + 1) * 10} (€ ${Math.round(g).toLocaleString("nl-NL")})`,
     waarden: res.map((r, i) => (besteedbaarCbs(r, i) <= g ? 1 : 0)),
@@ -235,6 +241,12 @@ const bt = basis.totalen;
 const controle = kal.controle.loonEnInkomensheffingMld - kal.controle.box3Mld;
 const cbsBelasting =
   ((ib.belastingOpInkomenMln + ib.premiesVolksverzekeringenMln) / 1e3) * kal.indexatie.factor;
+const gewogenSom = (f: (x: PopulatieHuishouden, i: number) => number) =>
+  herwogen.reduce((s, x, i) => s + x.gewicht * f(x, i), 0) / 1e9;
+const modelPensioenpremie = gewogenSom((_, i) => basis.resultaten[i]!.pensioenpremie);
+const modelWinst = gewogenSom((x) => x.leden.reduce((s, l) => s + (l.ondernemer ? l.inkomen : 0), 0));
+const cbsPensioenpremie = (ib.pensioenpremieWerknemerMln / 1e3) * kal.indexatie.factor;
+const cbsWinst = (ib.inkomenZelfstandigOndernemerMln / 1e3) * kal.indexatie.factor;
 const rapport = `# Kalibratierapport ${jaar}
 
 Gegenereerd door \`npm run kalibreer\` op ${new Date().toISOString().slice(0, 10)} (model ${MODEL_VERSIE}). Niet met de hand bewerken.
@@ -273,12 +285,17 @@ ${decielen.map((d) => `| P${d.k} | € ${nl(d.doel)} | € ${nl(d.model)} | ${pc
 
 ## Controle: belastingopbrengst
 
-Het model rekent € ${nl(bt.belasting, 1)} mld box 1-belasting (inclusief premies volksverzekeringen, na de eigen woning) en € ${nl(bt.zvw, 1)} mld Zvw-bijdrage van AOW'ers.
+Het model rekent € ${nl(bt.belasting, 1)} mld box 1-belasting (inclusief premies volksverzekeringen, na de eigen woning) en € ${nl(bt.zvw, 1)} mld Zvw-bijdrage die AOW'ers en zelfstandigen zelf betalen.
 
 - Volgens CBS betaalden huishoudens in ${ib.jaar} € ${nl((ib.belastingOpInkomenMln + ib.premiesVolksverzekeringenMln) / 1e3, 1)} mld belasting op inkomen en premies volksverzekeringen (alle boxen, inclusief ondernemers); geïndexeerd naar ${jaar} is dat € ${nl(cbsBelasting, 1)} mld. Het model komt uit op ${nl((bt.belasting / cbsBelasting) * 100, 0)}% daarvan.
 - De loon- en inkomensheffing in de Miljoenennota ${jaar} is € ${nl(kal.controle.loonEnInkomensheffingMld, 1)} mld, waarvan € ${nl(kal.controle.box3Mld, 1)} mld box 3; de rest (€ ${nl(controle, 1)} mld) is box 1 en box 2. Het model komt uit op ${nl((bt.belasting / controle) * 100, 0)}% daarvan.
 
-Het model bevat alleen box 1 voor werknemers, uitkeringsgerechtigden en gepensioneerden. Box 2, box 3 en de winst van ondernemers zitten er niet in; hun inkomen telt in het model als loon. De modelopbrengst hoort daarom iets lager uit te komen dan beide controlegetallen.
+Het model bevat alleen box 1. Box 2 en box 3 zitten er niet in, en ook niet de aftrekposten die het model niet per huishouden berekent (zie "overige aftrekposten" in het parameterbestand). De modelopbrengst hoort daarom iets lager uit te komen dan de CBS-opbrengst.
+
+## Controle: pensioenpremie en winst
+
+- Werknemersdeel pensioenpremie: model € ${nl(modelPensioenpremie, 1)} mld (standaardregeling voor elke werknemer); CBS ${ib.jaar} € ${nl(ib.pensioenpremieWerknemerMln / 1e3, 1)} mld, geïndexeerd € ${nl(cbsPensioenpremie, 1)} mld (${pct(modelPensioenpremie / cbsPensioenpremie - 1)}).
+- Winst van zelfstandig ondernemers: model € ${nl(modelWinst, 1)} mld; CBS ${ib.jaar} € ${nl(ib.inkomenZelfstandigOndernemerMln / 1e3, 1)} mld, geïndexeerd € ${nl(cbsWinst, 1)} mld (${pct(modelWinst / cbsWinst - 1)}).
 
 ## Uitkomsten huidig beleid
 
