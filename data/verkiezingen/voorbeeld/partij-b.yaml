@@ -1,0 +1,40 @@
+# FICTIEF: testpartij, geen echte partij en geen echt programma.
+id: partij-b
+naam: "Partij B"
+programma:
+  titel: "Voorbeeldprogramma Partij B (fictief)"
+  url: https://example.org/partij-b.pdf
+  geraadpleegd: 2026-10-27
+bronnen:
+  cpb: https://example.org/cpb-doorrekening-partij-b.pdf
+status: gepubliceerd
+gecontroleerd_door: "test"
+maatregelen:
+  - id: eerste-schijf-omlaag
+    omschrijving: "Tarief eerste schijf 1 procentpunt lager"
+    categorie: belasting
+    parameter: box1.schijven.0.tarief
+    wijziging: { type: plus, waarde: -1 }
+    bron:
+      {
+        document: programma,
+        pagina: 8,
+        citaat: "We verlagen het tarief van de eerste schijf met een procentpunt.",
+      }
+    zekerheid: hoog
+  - id: kindgebonden-budget-hoger
+    omschrijving: "Kindgebonden budget € 250 per kind hoger"
+    categorie: toeslagen
+    parameter: toeslagen.kindgebondenBudget.perKind
+    wijziging: { type: plus, waarde: 250 }
+    bron: { document: cpb, pagina: 4 }
+    zekerheid: hoog
+  - id: hypotheekrenteaftrek-beperken
+    omschrijving: "Hypotheekrenteaftrek tegen hoogstens 30%"
+    categorie: wonen
+    parameter: eigenWoning.aftrekMaxTarief
+    wijziging: { type: zet, waarde: 30 }
+    bron: { document: programma, pagina: 30, citaat: "De hypotheekrenteaftrek wordt beperkt tot 30 procent." }
+    zekerheid: hoog
+niet_gemodelleerd:
+  - "Btw-verlaging op groente en fruit (btw zit niet in het model)"

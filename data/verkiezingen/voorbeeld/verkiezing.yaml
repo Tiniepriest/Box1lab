@@ -1,0 +1,9 @@
+# Voorbeeldverkiezing met FICTIEVE partijen, om de verkiezingsmodule te testen (HANDOFF §9, fase 6).
+# Echte partijen komen er pas in na akkoord van de eigenaar; zie docs/METHODIEK-VERKIEZINGEN.md.
+id: voorbeeld
+naam: "Voorbeeldverkiezing"
+datum: 2027-03-17
+basispad:
+  jaar: 2026
+  toelichting: "Basispad is het huidige stelsel van 2026. Voor een echte verkiezing hoort hier het vastgestelde beleid voor het eerste kabinetsjaar volgens de CPB-raming."
+fictief: true

@@ -257,3 +257,25 @@ Vijf artikelen in `site/src/content/uitleg/` (armoedeval, marginale druk, toesla
 ### D-041 Vergelijken
 
 In het lab kun je je scenario naast een voorstel zetten: kerncijfers en verandering per inkomensgroep in één tabel.
+
+## Fase 6
+
+### D-042 Partij = lijst maatregelen op het basispad
+
+Elke partij is één YAML-bestand in `data/verkiezingen/<verkiezing>/`, met per maatregel een parameterwijziging (`plus`, `factor` of `zet`), een bron met verplicht paginanummer en een zekerheid (`hoog`, `middel`, `laag`). Zo is een partijprogramma hetzelfde als een preset: een diff op een parameterset, die bij een nieuw parameterjaar vanzelf meegaat. Raakt één belofte meerdere parameters (bijvoorbeeld beide knikken van de algemene heffingskorting), dan staat dat onder `wijzigingen` in één maatregel, zodat de site het als één belofte toont. Schema en controles in `packages/engine/src/verkiezing.ts`; de werkwijze in `docs/METHODIEK-VERKIEZINGEN.md`.
+
+### D-043 Controles in CI en vier-ogen-principe
+
+`npm run valideer` controleert elk partijbestand, ook concepten: bestaan alle parameters, verwijst elke bron naar een bekend document, heeft elke maatregel met zekerheid `middel` of `laag` een toelichting, levert het programma een geldige parameterset op. `status: gepubliceerd` zonder `gecontroleerd_door` laat de build falen. De site toont alleen gepubliceerde partijen; `PUBLIC_VERKIEZINGEN_PREVIEW=1 npm run build` maakt een previewbuild met concepten, gemarkeerd als concept.
+
+### D-044 Effect per maatregel stapelend
+
+Het effect per maatregel op een huishouden wordt berekend door de maatregelen in volgorde van het bestand op te stapelen: het effect van maatregel n is het verschil tussen "maatregel 1 t/m n" en "1 t/m n−1". Zo tellen de effecten precies op tot het totaal (getest). Nadeel: bij maatregelen die op elkaar inwerken hangt de toerekening af van de volgorde. Dat staat in de methodiek; een volgorde-onafhankelijke toerekening (Shapley) kan later, maar kost veel meer rekenwerk.
+
+### D-045 Basispad voorlopig 2026
+
+HANDOFF §4.3 vraagt het vastgestelde beleid voor het eerste kabinetsjaar. Dat parameterbestand bestaat nog niet; de voorbeeldverkiezing rekent daarom op 2026 en de site zegt dat erbij (`basispad.toelichting`).
+
+### D-046 Alleen fictieve partijen
+
+Echte partijdata pas na akkoord van de eigenaar (HANDOFF §10). De voorbeeldverkiezing heeft drie verzonnen partijen (A en B gepubliceerd, C concept) met bronnen op example.org. De pagina `/verkiezingen/voorbeeld` heeft een duidelijke waarschuwing, staat niet in het menu of op de home en heeft `noindex`. Weergave volgens HANDOFF §4.1: alfabetisch met sorteerknop op uitkomst, winst blauw en verlies oranje, geen partijkleuren of logo's, disclaimer dat het CPB leidend is.

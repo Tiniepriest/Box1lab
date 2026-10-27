@@ -1,0 +1,38 @@
+# FICTIEF: testpartij, geen echte partij en geen echt programma.
+id: partij-a
+naam: "Partij A"
+programma:
+  titel: "Voorbeeldprogramma Partij A (fictief)"
+  url: https://example.org/partij-a.pdf
+  geraadpleegd: 2026-10-27
+status: gepubliceerd
+gecontroleerd_door: "test"
+maatregelen:
+  - id: ahk-verhogen
+    omschrijving: "Algemene heffingskorting € 300 hoger"
+    categorie: belasting
+    # Het hogere bedrag geldt op beide knikken van de staffel, dus ook in de afbouw.
+    wijzigingen:
+      - { parameter: heffingskortingen.algemeen.staffel.0.bedrag, wijziging: { type: plus, waarde: 300 } }
+      - { parameter: heffingskortingen.algemeen.staffel.1.bedrag, wijziging: { type: plus, waarde: 300 } }
+    bron: { document: programma, pagina: 12, citaat: "De algemene heffingskorting gaat met € 300 omhoog." }
+    zekerheid: middel
+    toelichting: "Het programma zegt niets over de afbouw; we nemen aan dat de € 300 ook in de afbouw geldt."
+  - id: toptarief-omhoog
+    omschrijving: "Toptarief box 1 van 49,5% naar 51%"
+    categorie: belasting
+    parameter: box1.schijven.2.tarief
+    wijziging: { type: zet, waarde: 51 }
+    bron: { document: programma, pagina: 13, citaat: "Het hoogste tarief wordt 51 procent." }
+    zekerheid: hoog
+  - id: huurtoeslag-ruimer
+    omschrijving: "Huurtoeslag 10% hoger"
+    categorie: toeslagen
+    parameter: toeslagen.huurtoeslag.niveau
+    wijziging: { type: factor, waarde: 1.1 }
+    bron: { document: programma, pagina: 21 }
+    zekerheid: laag
+    toelichting: "Het programma spreekt van een 'flinke verhoging' zonder bedrag. Volgens de vertaalregels zou dit niet gemodelleerd worden; hier toch opgenomen om de module te testen."
+niet_gemodelleerd:
+  - "Verlaging eigen risico zorgverzekering (zorg zit nog niet in het model)"
+  - "Hogere vermogensbelasting in box 3 (box 3 zit niet in het model)"
