@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { berekenHuishouden, type Huishouden } from "./huishouden.ts";
+import { datumSchema as datum } from "./datum.ts";
 import { formatteerFouten, type Parameters } from "./parameters/schema.ts";
 import { bestaatParameter, pasToe, type Wijziging } from "./parameters/wijzig.ts";
 
@@ -7,11 +8,6 @@ import { bestaatParameter, pasToe, type Wijziging } from "./parameters/wijzig.ts
  * Verkiezingsmodule (HANDOFF §4). Elke partij is een scenario als lijst maatregelen op het basispad, in een eigen
  * bestand: data/verkiezingen/<verkiezing>/<partij>.yaml. De werkwijze staat in docs/METHODIEK-VERKIEZINGEN.md.
  */
-
-const datum = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, "Een datum schrijf je als JJJJ-MM-DD.")
-  .or(z.date().transform((d) => d.toISOString().slice(0, 10)));
 
 export const verkiezingSchema = z.strictObject({
   id: z.string().regex(/^[a-z0-9-]+$/),

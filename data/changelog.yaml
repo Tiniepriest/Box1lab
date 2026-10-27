@@ -1,0 +1,70 @@
+# Publieke lijst van wijzigingen, getoond op /wijzigingen. Nieuwste bovenaan.
+#
+# Voeg een regel toe bij elke wijziging die bezoekers merken: nieuwe cijfers (jaarlijkse update), andere
+# rekenregels, een nieuwe pagina, en altijd bij een correctie. Veranderen de rekenregels, verhoog dan MODEL_VERSIE
+# in packages/engine/src/versie.ts en zet die versie hier bij `modelversie`; `npm run valideer` controleert dat.
+#
+# soort: nieuw | cijfers | model | correctie
+
+- datum: 2026-10-27
+  soort: nieuw
+  titel: Lijst van wijzigingen en "Meld een fout"
+  tekst: >-
+    Deze pagina laat zien wat er aan de site is veranderd. Onderaan elke pagina staat een knop om een fout te
+    melden.
+  links:
+    - { tekst: Pull request, url: "https://github.com/Tiniepriest/Box1lab/pull/8" }
+
+- datum: 2026-10-27
+  soort: nieuw
+  titel: Verkiezingsmodule (voorbeeld)
+  tekst: >-
+    Een opzet om verkiezingsprogramma's door te rekenen, met bronnen per maatregel en controle door twee
+    personen. Voorlopig alleen met verzonnen partijen, om de werkwijze te testen.
+  links:
+    - { tekst: Pull request, url: "https://github.com/Tiniepriest/Box1lab/pull/7" }
+
+- datum: 2026-10-27
+  soort: nieuw
+  titel: Voorstellen, uitleg en vergelijken
+  tekst: >-
+    Acht doorgerekende voorstellen met een eigen pagina, vijf uitlegartikelen met een rekenvoorbeeld, en in het
+    lab je eigen scenario naast een voorstel zetten.
+  links:
+    - { tekst: Pull request, url: "https://github.com/Tiniepriest/Box1lab/pull/6" }
+
+- datum: 2026-10-27
+  soort: nieuw
+  titel: Eerste versie van de site
+  tekst: >-
+    De calculator voor je eigen situatie, het scenariolab en de pagina's Methodiek en Over.
+  links:
+    - { tekst: Pull request, url: "https://github.com/Tiniepriest/Box1lab/pull/5" }
+
+- datum: 2026-10-26
+  soort: cijfers
+  titel: Bevolking op basis van CBS-cijfers
+  tekst: >-
+    De voorbeeldbevolking van ruim 4.000 huishoudens is opgebouwd uit CBS-cijfers en zo gewogen dat aantallen,
+    inkomens en toeslagen kloppen met CBS en Dienst Toeslagen.
+  links:
+    - { tekst: Pull request, url: "https://github.com/Tiniepriest/Box1lab/pull/4" }
+
+- datum: 2026-10-26
+  soort: model
+  modelversie: 0.2.0
+  titel: Rekenregels volgens de officiële regels van 2026
+  tekst: >-
+    De toeslagen, de heffingskortingen, de eigen woning, de AOW en de kinderbijslag rekenen nu zoals de
+    Belastingdienst en Dienst Toeslagen dat doen.
+  links:
+    - { tekst: Pull request, url: "https://github.com/Tiniepriest/Box1lab/pull/3" }
+
+- datum: 2026-10-26
+  soort: model
+  modelversie: 0.1.0
+  titel: Rekenkern overgezet uit het prototype
+  tekst: >-
+    De berekeningen van het eerste prototype, overgezet naar getest TypeScript met dezelfde uitkomsten.
+  links:
+    - { tekst: Pull request, url: "https://github.com/Tiniepriest/Box1lab/pull/2" }

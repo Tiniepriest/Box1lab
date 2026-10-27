@@ -4,7 +4,8 @@ import { join } from "node:path";
 import { DATA_MAP } from "@box1lab/engine/node";
 import { marked } from "marked";
 import Base from "../layouts/Base.astro";
-import { MODEL_VERSIE, kalibratie, params } from "../lib/data.ts";
+import { MODEL_VERSIE, kalibratie, pad, params } from "../lib/data.ts";
+import { REPO, meldFoutUrl } from "../lib/project.ts";
 
 // Het kalibratierapport wordt door `npm run kalibreer` gemaakt; hier tonen we het zoals het is.
 const rapportPad = join(DATA_MAP, "..", "docs", `kalibratie-${params.jaar}.md`);
@@ -155,12 +156,13 @@ const metLinks = (t: string) =>
 
     <h2>Controleerbaar</h2>
     <p>
-      De volledige broncode, alle cijfers en alle beslissingen staan openbaar op
-      <a href="https://github.com/Tiniepriest/Box1lab">GitHub</a>. Daar staat ook de
-      <a href="https://github.com/Tiniepriest/Box1lab/commits/main">lijst van wijzigingen</a>. Zie je een
-      fout?
-      <a href="https://github.com/Tiniepriest/Box1lab/issues">Meld hem</a>, dan passen we het aan. Modelversie{" "}
-      {MODEL_VERSIE}.
+      De volledige broncode, alle cijfers en alle beslissingen staan openbaar op <a href={REPO}>GitHub</a>.
+      Elke wijziging aan cijfers of rekenregels staat in de{" "}
+      <a href={pad("wijzigingen")}>lijst van wijzigingen</a>. Zie je een fout?
+      <a href={meldFoutUrl(`parameterjaar ${params.jaar}, model ${MODEL_VERSIE}`)} data-meldfout>
+        Meld hem
+      </a>
+      , dan passen we het aan. Modelversie {MODEL_VERSIE}.
     </p>
   </article>
 </Base>

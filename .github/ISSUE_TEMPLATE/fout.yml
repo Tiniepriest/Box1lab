@@ -1,0 +1,31 @@
+name: Fout melden
+description: Een verkeerd bedrag, een rekenfout, een kapotte pagina of een onduidelijke tekst.
+title: "Fout: "
+labels: ["fout"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Dank je wel! Deze melding is **openbaar**. Zet er geen persoonlijke gegevens in, zoals je naam, adres of BSN.
+  - type: input
+    id: pagina
+    attributes:
+      label: Pagina
+      description: De link naar de pagina. Bij het lab staat je scenario in de link.
+  - type: textarea
+    id: wat
+    attributes:
+      label: Wat klopt er niet?
+      description: Wat zag je? Wat had je ingevuld, als dat nodig is om de fout te zien?
+    validations:
+      required: true
+  - type: textarea
+    id: verwacht
+    attributes:
+      label: Wat had je verwacht?
+      description: Liefst met een bron, bijvoorbeeld een link naar de Belastingdienst of Dienst Toeslagen.
+  - type: input
+    id: versie
+    attributes:
+      label: Versie
+      description: Staat onderaan elke pagina.

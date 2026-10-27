@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    MODEL_VERSIE,
     effectVoorHuishouden,
     huishoudenUitInvoer,
     invoerSchema,
@@ -11,6 +12,7 @@
   import { euroVerschil, getal, miljard, procent, procentVerschil } from "../../lib/format.ts";
   import { leesInvoer, voorbeeldInvoer } from "../../lib/opslag.ts";
   import { pad } from "../../lib/pad.ts";
+  import { REPO, meldFoutUrl } from "../../lib/project.ts";
   import Figuur from "../grafieken/Figuur.svelte";
   import StavenDivergent from "../grafieken/StavenDivergent.svelte";
   import InvoerFormulier from "../Invoer.svelte";
@@ -331,9 +333,11 @@
       </li>
       <li><strong>Basispad.</strong> {verkiezing.basispad.toelichting}</li>
       <li>
-        Hoe we programma's vertalen, staat in de <a
-          href="https://github.com/Tiniepriest/Box1lab/blob/main/docs/METHODIEK-VERKIEZINGEN.md">methodiek</a
-        >. Zie je een fout? <a href="https://github.com/Tiniepriest/Box1lab/issues">Meld het</a>.
+        Hoe we programma's vertalen, staat in de <a href="{REPO}/blob/main/docs/METHODIEK-VERKIEZINGEN.md"
+          >methodiek</a
+        >. Zie je een fout?
+        <a href={meldFoutUrl(`parameterjaar ${params.jaar}, model ${MODEL_VERSIE}`)} data-meldfout>Meld het</a
+        >.
       </li>
     </ul>
     <p class="notitie"><a href={pad("methodiek")}>Hoe rekent Box1lab?</a></p>

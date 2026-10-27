@@ -28,6 +28,7 @@ const PAGINAS = [
   "verkiezingen/voorbeeld",
   "methodiek",
   "over",
+  "wijzigingen",
 ];
 
 const server = spawn("npm", ["run", "preview", "-w", "site", "--", "--port", "4321"], { shell: true });
@@ -98,6 +99,10 @@ try {
     `lab: preset geeft een uitkomst ("${kern.slice(0, 70)}…")`,
   );
   controleer(pg.url().includes("#"), "lab: scenario staat in de link");
+  const meld = pg.locator("main a[data-meldfout]");
+  await meld.dispatchEvent("pointerdown");
+  const meldPagina = new URL((await meld.getAttribute("href")) ?? "").searchParams.get("pagina") ?? "";
+  controleer(meldPagina === pg.url(), "lab: 'Meld een fout' neemt de pagina met scenario mee");
   await pg.getByRole("button", { name: "Via de vrijstelling" }).click();
   await pg.waitForFunction(
     () => /Vrijstelling op|Niet mogelijk|Zelfs zonder/.test(document.body.textContent ?? ""),

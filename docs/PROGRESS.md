@@ -67,16 +67,16 @@
 - [x] Methodiek in `docs/METHODIEK-VERKIEZINGEN.md`
 - [x] Alleen fictieve testpartijen; pagina niet in het menu en `noindex`
 
-## Fase 7: Lancering — wacht op de eigenaar
+## Fase 7: Afronding — klaar (PR #8)
 
-Analytics, eigen domein en de naam van de site vragen een keuze van de eigenaar (HANDOFF §10).
+- [x] Changelog-pagina `/wijzigingen` uit `data/changelog.yaml`, gecontroleerd tegen de modelversie
+- [x] "Meld een fout" met een ingevuld GitHub-formulier, onderaan elke pagina en bij alle uitkomsten
+- [x] Besluiten eigenaar vastgelegd: geen analytics, geen licentie, GitHub Pages (D-049 t/m D-051)
 
 ## Open vragen voor de eigenaar
 
-- Licentie van de broncode (bijvoorbeeld MIT voor code en CC BY voor teksten). Nog niet gekozen; er staat geen LICENSE-bestand.
-- Naam en domein van de site.
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
-- Analytics: geen, of een privacyvriendelijke dienst (bijvoorbeeld Plausible of GoatCounter)?
+- Advertenties: de eigenaar wil die misschien later. Eerst beslissen hoe, zonder tracking en zonder de neutraliteit te schaden (D-049).
 - Tekst van de pagina Over: wie zit erachter? Nu staat er alleen dat het project open en neutraal is.
 
 ## TODO: bron nodig

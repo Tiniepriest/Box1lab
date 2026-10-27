@@ -1,5 +1,5 @@
 /*
- * Controleert alle databestanden: parameters, kalibratie, populatie-spec en presets.
+ * Controleert alle databestanden: parameters, kalibratie, populatie, presets, voorbeelden, lab, verkiezingen en de changelog.
  * Faalt (exit 1) bij een fout; meldt waarden zonder bron als waarschuwing.
  *
  * Gebruik: npm run valideer
@@ -16,6 +16,7 @@ import {
   laadLabKnoppen,
   laadVerkiezing,
   laadVerkiezingen,
+  laadChangelog,
 } from "@box1lab/engine/node";
 
 let fouten = 0;
@@ -58,6 +59,7 @@ controleer(`data/lab/knoppen.yaml (tegen parameters ${laatste})`, () =>
 for (const v of laadVerkiezingen()) {
   controleer(`data/verkiezingen/${v}/ (alle partijen, ook concepten)`, () => laadVerkiezing(v, true));
 }
+controleer("data/changelog.yaml", () => laadChangelog());
 
 if (todo.length) {
   console.log(`\nWaarschuwing: ${todo.length} waarde(n) met 'TODO: bron nodig':`);

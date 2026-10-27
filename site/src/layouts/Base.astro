@@ -4,7 +4,8 @@ import "@fontsource/ibm-plex-sans/600.css";
 import "@fontsource/ibm-plex-serif/600.css";
 import "@fontsource/ibm-plex-mono/400.css";
 import "../styles/global.css";
-import { MODEL_VERSIE, params, pad } from "../lib/data.ts";
+import { MODEL_VERSIE, changelog, params, pad } from "../lib/data.ts";
+import { REPO, meldFoutUrl } from "../lib/project.ts";
 
 interface Props {
   title: string;
@@ -26,7 +27,13 @@ const {
 } = Astro.props;
 const afbeeldingUrl = new URL(afbeelding, Astro.site).href;
 const paginaUrl = new URL(Astro.url.pathname, Astro.site).href;
-const buildDatum = new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+// "Bijgewerkt" is de nieuwste regel uit de changelog, niet de builddatum: die verandert ook bij een tikfout.
+const bijgewerkt = new Date(changelog[0]!.datum).toLocaleDateString("nl-NL", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+const versie = `parameterjaar ${params.jaar}, model ${MODEL_VERSIE}`;
 const huidig = Astro.url.pathname.replace(/\/$/, "");
 const menu = [
   { href: pad("jouw-situatie"), label: "Jouw situatie" },
@@ -86,15 +93,21 @@ const menu = [
     <footer class="site-footer">
       <div class="wrap">
         <p>
-          Parameterjaar {params.jaar} · Modelversie {MODEL_VERSIE} · Bijgewerkt {buildDatum}
+          Parameterjaar {params.jaar} · Modelversie {MODEL_VERSIE} · Bijgewerkt {bijgewerkt} ·{" "}
+          <a href={pad("wijzigingen")}>Wat is er veranderd?</a>
         </p>
         <p>
-          Geen stemadvies en geen officiële berekening. <a href={pad("methodiek")}>Hoe rekenen we?</a> ·
-          <a href="https://github.com/Tiniepriest/Box1lab">Broncode</a> ·
-          <a href="https://github.com/Tiniepriest/Box1lab/issues">Meld een fout</a>
+          Geen stemadvies en geen officiële berekening. <a href={pad("methodiek")}>Hoe rekenen we?</a> ·{" "}
+          <a href={REPO}>Broncode</a> ·{" "}
+          <a href={meldFoutUrl(versie)} data-meldfout>
+            Meld een fout
+          </a>
         </p>
       </div>
     </footer>
+    <script>
+      import "../lib/meldfout.ts";
+    </script>
   </body>
 </html>
 

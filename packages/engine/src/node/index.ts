@@ -11,6 +11,7 @@ import {
   valideerLabKnoppen,
   valideerPartij,
   valideerVerkiezing,
+  valideerChangelog,
   type Kalibratie,
   type Parameters,
   type Populatie,
@@ -19,6 +20,7 @@ import {
   type LabKnoppen,
   type Partij,
   type Verkiezing,
+  type Changelog,
 } from "../index.ts";
 
 /*
@@ -99,4 +101,9 @@ export function laadVerkiezing(
     .filter((p) => metConcepten || p.status === "gepubliceerd")
     .sort((a, b) => a.naam.localeCompare(b.naam, "nl"));
   return { verkiezing, partijen };
+}
+
+/** De publieke lijst van wijzigingen, nieuwste bovenaan. */
+export function laadChangelog(): Changelog {
+  return valideerChangelog(lees("changelog.yaml"), "data/changelog.yaml");
 }
