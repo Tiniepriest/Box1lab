@@ -2,7 +2,10 @@
 import Calculator from "../components/Calculator.svelte";
 import MeldFout from "../components/MeldFout.astro";
 import Base from "../layouts/Base.astro";
-import { kalibratie, pad, params } from "../lib/data.ts";
+import { kalibratie, pad, params, presets, volgendJaar } from "../lib/data.ts";
+import { zonderBron } from "../lib/secties.ts";
+
+const volgend = volgendJaar ? { params: volgendJaar, nogNiet: zonderBron(volgendJaar) } : null;
 ---
 
 <Base title="Jouw situatie — Box1lab" breed>
@@ -10,7 +13,14 @@ import { kalibratie, pad, params } from "../lib/data.ts";
   <p class="intro">
     Vul je situatie in en zie hoeveel belasting je betaalt, welke toeslagen je krijgt en wat je overhoudt.
   </p>
-  <Calculator client:load {params} {kalibratie} populatieUrl={pad("data/populatie-2026.json")} />
+  <Calculator
+    client:load
+    {params}
+    {kalibratie}
+    {presets}
+    {volgend}
+    populatieUrl={pad("data/populatie-2026.json")}
+  />
   <MeldFout />
 </Base>
 

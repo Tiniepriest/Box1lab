@@ -4,6 +4,12 @@ Twee keer per jaar veranderen de cijfers: rond **Prinsjesdag** (september, voorl
 
 ## Stappen
 
+### 0. Voorlopig jaar (na Prinsjesdag)
+
+Na Prinsjesdag liggen de plannen voor het nieuwe jaar er, maar nog niet alle bedragen. Je kunt dan al een parameterbestand maken met `status: voorlopig` en een `toelichting` (zie `data/parameters/2027.yaml` als voorbeeld). Vul in wat officieel bekend is (Belastingplan, memorie van toelichting, nota's van wijziging) en laat de rest op het oude bedrag staan met `TODO: bron nodig` in de bron. De site laat op Jouw situatie dan "Wat verandert er?" zien, met een duidelijke melding dat het voorlopig is en welke bedragen nog ontbreken. Kalibratie en bevolking hoeven dan nog niet.
+
+Zijn alle bedragen definitief, werk dan het bestand af volgens de stappen hieronder, zet `status: definitief` en haal de `toelichting` weg.
+
 ### 1. Nieuw parameterbestand
 
 Kopieer het bestand van het vorige jaar:
@@ -34,6 +40,7 @@ Kopieer `data/kalibratie/<jaar>.yaml` en `data/populatie/spec-<jaar>.yaml` naar 
 | Koop, corporatie, particuliere huur                | CBS StatLine 82900NED                                             |
 | Decielgrenzen besteedbaar inkomen                  | CBS StatLine 83934NED (nieuwste jaar)                             |
 | Huurwaarde eigen woning, hypotheekrente, belasting | CBS StatLine 84493NED (nieuwste jaar)                             |
+| Pensioenpremie werknemers, winst zelfstandigen     | CBS StatLine 84493NED, posten 11.4.1.1 en 2.1                     |
 | Indexatie naar het modeljaar                       | CPB, kerngegevenstabel van de nieuwste MEV (cao-loon marktsector) |
 | Ontvangers en uitgaven per toeslag                 | Dienst Toeslagen, Aantallen en bedragen (overtoeslagen.nl)        |
 | Controle belastingopbrengst                        | Miljoenennota, bijlage belasting- en premieontvangsten            |

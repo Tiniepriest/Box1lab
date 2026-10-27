@@ -16,9 +16,25 @@ import { laadLabKnoppen, laadParameters } from "../src/node/index.ts";
 
 const p = laadParameters(2026);
 
+/** Velden met een standaardwaarde in het schema. */
+const STANDAARD = {
+  extraPerJaar: 0,
+  pensioen: "standaard" as const,
+  pensioenpremiePerMaand: 0,
+  urencriterium: true,
+  starter: false,
+};
+
 const basisInvoer: Invoer = {
   personen: [
-    { leeftijd: 40, soort: "loondienst", bedrag: 3000, periode: "maand", inclusiefVakantiegeld: false },
+    {
+      leeftijd: 40,
+      soort: "loondienst",
+      bedrag: 3000,
+      periode: "maand",
+      inclusiefVakantiegeld: false,
+      ...STANDAARD,
+    },
   ],
   kinderen: [],
   wonen: "huur",
@@ -31,8 +47,27 @@ const basisInvoer: Invoer = {
 describe("invoerformulier", () => {
   it("maandloon zonder vakantiegeld wordt jaarloon met 8% vakantiegeld", () => {
     expect(jaarbedrag(basisInvoer.personen[0]!, p)).toBeCloseTo(3000 * 12 * 1.08, 6);
-    expect(jaarbedrag({ ...basisInvoer.personen[0]!, inclusiefVakantiegeld: true }, p)).toBe(36000);
+    expect(jaarbedrag({ ...basisInvoer.personen[0]!, inclusiefVakantiegeld: true, ...STANDAARD }, p)).toBe(
+      36000,
+    );
     expect(jaarbedrag({ ...basisInvoer.personen[0]!, periode: "jaar", bedrag: 40000 }, p)).toBe(40000);
+  });
+
+  it("een 13e maand of bonus telt mee bij loondienst, niet bij een uitkering", () => {
+    const loon = { ...basisInvoer.personen[0]!, extraPerJaar: 2500 };
+    expect(jaarbedrag(loon, p)).toBeCloseTo(3000 * 12 * 1.08 + 2500, 6);
+    expect(jaarbedrag({ ...loon, periode: "jaar", bedrag: 40000 }, p)).toBe(42500);
+    expect(jaarbedrag({ ...loon, soort: "werknemersverzekering" }, p)).toBeCloseTo(3000 * 12 * 1.08, 6);
+  });
+
+  it("een zzp'er krijgt geen vakantiegeld", () => {
+    const zzp = { ...basisInvoer.personen[0]!, soort: "zzp" as const };
+    expect(jaarbedrag(zzp, p)).toBe(36000);
+  });
+
+  it("oude invoer zonder extraPerJaar blijft geldig", () => {
+    const { extraPerJaar: _e, ...oud } = basisInvoer.personen[0]!;
+    expect(valideerInvoer({ ...basisInvoer, personen: [oud] }).personen[0]!.extraPerJaar).toBe(0);
   });
 
   it("AOW plus pensioen: de AOW volgt uit de parameters", () => {
@@ -40,7 +75,14 @@ describe("invoerformulier", () => {
       {
         ...basisInvoer,
         personen: [
-          { leeftijd: 70, soort: "aow", bedrag: 9000, periode: "jaar", inclusiefVakantiegeld: true },
+          {
+            leeftijd: 70,
+            soort: "aow",
+            bedrag: 9000,
+            periode: "jaar",
+            inclusiefVakantiegeld: true,
+            ...STANDAARD,
+          },
         ],
       },
       p,
@@ -113,8 +155,9 @@ describe("marginale druk en positie", () => {
     expect(m).toBeGreaterThan(30);
     expect(m).toBeLessThan(100);
   });
-  it("zonder belasting en toeslagen is de marginale druk nul", () => {
+  it("zonder belasting, toeslagen en pensioenpremie is de marginale druk nul", () => {
     const niets = pasToe(p, [
+      { parameter: "pensioenpremie.werknemer", zet: 0 },
       { parameter: "box1.schijven", zet: [{ tot: null, tarief: 0 }] },
       { parameter: "toeslagen.huurtoeslag.niveau", zet: 0 },
       { parameter: "toeslagen.zorgtoeslag.niveau", zet: 0 },

@@ -1,43 +1,76 @@
 /*
- * Lokaal onthouden van het invoerformulier (HANDOFF §3.3): alleen als de bezoeker dat aanzet, alleen in deze
- * browser, en altijd te wissen. localStorage kan ontbreken of geblokkeerd zijn; dan werkt alles gewoon zonder.
+ * Onthouden van het invoerformulier, alleen in deze browser (D-052):
+ * - zolang het tabblad openstaat (sessionStorage), zodat je situatie meegaat naar het lab, de voorstellen en de
+ *   verkiezingen. Sluit je het tabblad, dan is het weg.
+ * - langer op dit apparaat (localStorage), alleen als de bezoeker "Onthoud op dit apparaat" aanzet.
+ * "Wis mijn gegevens" haalt beide weg. Opslag kan ontbreken of geblokkeerd zijn; dan werkt alles gewoon zonder.
  */
-import { invoerSchema, type Invoer } from "@box1lab/engine";
+import { invoerSchema, persoonInvoerSchema, type Invoer } from "@box1lab/engine";
 
 const SLEUTEL = "box1lab.invoer.v1";
 
-export function leesInvoer(): Invoer | null {
+export type Bewaard = { invoer: Invoer; opApparaat: boolean };
+
+function lees(opslag: () => Storage): Invoer | null {
   try {
-    const tekst = localStorage.getItem(SLEUTEL);
+    const tekst = opslag().getItem(SLEUTEL);
     if (!tekst) return null;
-    const r = invoerSchema.safeParse(JSON.parse(tekst));
+    const data = JSON.parse(tekst);
+    // Vóór D-053 kon je bij wonen "anders" kiezen; dat rekent hetzelfde als huur zonder huurbedrag.
+    if (data?.wonen === "anders") Object.assign(data, { wonen: "huur", huurPerMaand: 0 });
+    const r = invoerSchema.safeParse(data);
     return r.success ? r.data : null;
   } catch {
     return null;
   }
 }
 
-export function bewaarInvoer(invoer: Invoer): void {
+function zet(opslag: () => Storage, invoer: Invoer | null): void {
   try {
-    localStorage.setItem(SLEUTEL, JSON.stringify(invoer));
+    if (invoer) opslag().setItem(SLEUTEL, JSON.stringify(invoer));
+    else opslag().removeItem(SLEUTEL);
   } catch {
     /* opslag niet beschikbaar: niets aan te doen */
   }
 }
 
+const sessie = () => sessionStorage;
+const apparaat = () => localStorage;
+
+/** De bewaarde situatie: eerst van dit apparaat, anders van dit tabblad. */
+export function leesBewaard(): Bewaard | null {
+  const opApparaat = lees(apparaat);
+  if (opApparaat) return { invoer: opApparaat, opApparaat: true };
+  const tabblad = lees(sessie);
+  return tabblad ? { invoer: tabblad, opApparaat: false } : null;
+}
+
+export function leesInvoer(): Invoer | null {
+  return leesBewaard()?.invoer ?? null;
+}
+
+/** Bewaart voor dit tabblad, en op dit apparaat als de bezoeker dat heeft aangezet. */
+export function bewaarInvoer(invoer: Invoer, opApparaat: boolean): void {
+  zet(sessie, invoer);
+  zet(apparaat, opApparaat ? invoer : null);
+}
+
 export function wisInvoer(): void {
-  try {
-    localStorage.removeItem(SLEUTEL);
-  } catch {
-    /* idem */
-  }
+  zet(sessie, null);
+  zet(apparaat, null);
 }
 
 /** Startwaarden van het formulier: een voorbeeld, duidelijk te herkennen als voorbeeld. */
 export function voorbeeldInvoer(): Invoer {
   return {
     personen: [
-      { leeftijd: 35, soort: "loondienst", bedrag: 3200, periode: "maand", inclusiefVakantiegeld: false },
+      persoonInvoerSchema.parse({
+        leeftijd: 35,
+        soort: "loondienst",
+        bedrag: 3200,
+        periode: "maand",
+        inclusiefVakantiegeld: false,
+      }),
     ],
     kinderen: [],
     wonen: "huur",

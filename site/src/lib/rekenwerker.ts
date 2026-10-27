@@ -6,7 +6,6 @@
 import {
   budgetneutraalViaTarieven,
   budgetneutraalViaVrijstelling,
-  gewogenMediaan,
   maakBasis,
   simuleer,
   type Basis,
@@ -30,36 +29,12 @@ function samenvatUitkomst(u: ReturnType<typeof simuleer>): UitkomstSamenvatting 
 }
 
 function samenvatBasis(b: Basis): BasisSamenvatting {
-  const pop = b.populatie;
-  const mediaan = (f: (i: number) => boolean, v: (i: number) => number) => {
-    const idx = pop.map((_, i) => i).filter(f);
-    return Math.round(
-      gewogenMediaan(
-        idx.map(v),
-        idx.map((i) => pop[i]!.gewicht),
-      ),
-    );
-  };
   return {
-    aantal: pop.length,
+    aantal: b.populatie.length,
     armoede: b.armoede,
     gini: b.gini,
     gestandaardiseerd: b.resultaten.map((r) => r.besteedbaar / r.equivalentie),
     persoonsgewichten: b.persoonsgewichten,
-    standaarden: {
-      huur: mediaan(
-        (i) => pop[i]!.huurPerMaand > 0,
-        (i) => pop[i]!.huurPerMaand,
-      ),
-      woz: mediaan(
-        (i) => pop[i]!.woz > 0,
-        (i) => pop[i]!.woz,
-      ),
-      rente: mediaan(
-        (i) => pop[i]!.woz > 0,
-        (i) => pop[i]!.hypotheekrente,
-      ),
-    },
   };
 }
 
