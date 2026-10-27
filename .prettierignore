@@ -1,0 +1,8 @@
+prototype/
+HANDOFF.md
+node_modules/
+dist/
+.astro/
+coverage/
+package-lock.json
+data/populatie/*.json

@@ -1,0 +1,65 @@
+/* Design tokens (HANDOFF §7). Blauw = vooruit, oranje = achteruit; nooit rood/groen. */
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --fg: #14181f;
+  --muted: #5a6270;
+  --line: #dde1e7;
+  --soft: #eef1f5;
+  --accent: #1f4e8c;
+  --accent-soft: #e3ebf6;
+  --gain: #2a78d6;
+  --gain2: #9ec5f4;
+  --loss: #eb6834;
+  --loss2: #f6b99d;
+  --zero: #a3abb7;
+  --neutral: #d7dbe2;
+  --warn-bg: #fdf5e4;
+  --warn: #8a5a00;
+  --f-display: "IBM Plex Serif", Georgia, serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171c;
+    --panel: #1c2027;
+    --fg: #eceef2;
+    --muted: #a3abb8;
+    --line: #2f3540;
+    --soft: #232832;
+    --accent: #8db4ea;
+    --accent-soft: #233149;
+    --gain: #3987e5;
+    --gain2: #25507f;
+    --loss: #d95926;
+    --loss2: #7c3a1f;
+    --zero: #6b7380;
+    --neutral: #3a404b;
+    --warn-bg: #2e2716;
+    --warn: #e8c06a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #14171c;
+  --panel: #1c2027;
+  --fg: #eceef2;
+  --muted: #a3abb8;
+  --line: #2f3540;
+  --soft: #232832;
+  --accent: #8db4ea;
+  --accent-soft: #233149;
+  --gain: #3987e5;
+  --gain2: #25507f;
+  --loss: #d95926;
+  --loss2: #7c3a1f;
+  --zero: #6b7380;
+  --neutral: #3a404b;
+  --warn-bg: #2e2716;
+  --warn: #e8c06a;
+  color-scheme: dark;
+}
