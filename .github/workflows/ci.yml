@@ -22,3 +22,22 @@ jobs:
       - run: npm run kalibreer:controle
       - run: npm test
       - run: npm run build
+
+  browser:
+    # Bouwt de site, controleert hem in Chrome (fouten in de console, rekenen in de browser, geen horizontaal
+    # scrollen) en bewaart schermafdrukken van alle pagina's als downloadbaar artefact.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run schermafdrukken -- schermafdrukken
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: schermafdrukken
+          path: schermafdrukken/

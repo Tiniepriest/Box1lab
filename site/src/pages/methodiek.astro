@@ -1,0 +1,218 @@
+---
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { DATA_MAP } from "@box1lab/engine/node";
+import { marked } from "marked";
+import Base from "../layouts/Base.astro";
+import { MODEL_VERSIE, kalibratie, params } from "../lib/data.ts";
+
+// Het kalibratierapport wordt door `npm run kalibreer` gemaakt; hier tonen we het zoals het is.
+const rapportPad = join(DATA_MAP, "..", "docs", `kalibratie-${params.jaar}.md`);
+const rapport = await marked.parse(readFileSync(rapportPad, "utf8").replace(/^# .*\n/, ""));
+
+// Bronnen: rechtstreeks uit de "bron"-velden van het parameterbestand, zodat deze lijst altijd klopt.
+const NAMEN: Record<string, string> = {
+  box1: "Tarieven box 1",
+  "heffingskortingen.algemeen": "Algemene heffingskorting",
+  "heffingskortingen.arbeid": "Arbeidskorting",
+  "heffingskortingen.ouderen": "Ouderenkorting",
+  "heffingskortingen.alleenstaandeOuderen": "Alleenstaande-ouderenkorting",
+  "heffingskortingen.combinatie": "Combinatiekorting",
+  eigenWoning: "Eigen woning",
+  overigeAftrekposten: "Overige aftrekposten",
+  "toeslagen.zorgtoeslag": "Zorgtoeslag",
+  "toeslagen.huurtoeslag": "Huurtoeslag",
+  "toeslagen.kindgebondenBudget": "Kindgebonden budget",
+  "toeslagen.kinderopvangtoeslag": "Kinderopvangtoeslag",
+  uitkeringen: "AOW en uitkeringen",
+  zorg: "Zorgpremie en Zvw-bijdrage",
+  kinderbijslag: "Kinderbijslag",
+  loon: "Vakantiegeld",
+  gedrag: "Gedragseffect",
+  methodiek: "Uitkomstmaten",
+};
+const bronnen: { naam: string; bron: string }[] = [];
+const loop = (o: unknown, pad: string) => {
+  if (typeof o !== "object" || o === null || Array.isArray(o)) return;
+  const r = o as Record<string, unknown>;
+  if (typeof r.bron === "string") bronnen.push({ naam: NAMEN[pad] ?? pad, bron: r.bron });
+  for (const [k, v] of Object.entries(r)) if (k !== "bron") loop(v, pad ? `${pad}.${k}` : k);
+};
+loop(params, "");
+const metLinks = (t: string) =>
+  t.replace(/</g, "&lt;").replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" rel="noopener">$1</a>');
+---
+
+<Base title="Methodiek — Box1lab">
+  <article class="tekst">
+    <h1>Hoe rekenen we?</h1>
+    <p class="lead">
+      Box1lab rekent met de regels van {params.jaar} en een nagebootste bevolking van Nederland. Op deze
+      pagina staat hoe dat werkt, waar de cijfers vandaan komen en wat er niet in zit.
+    </p>
+
+    <h2>In het kort</h2>
+    <ol>
+      <li>
+        <strong>De regels.</strong> Alle tarieven, kortingen en toeslagen van {params.jaar} staan in één
+        bestand, elk met een officiële bron. De rekenregels volgen de wet en de rekenvoorbeelden van de
+        Belastingdienst en Dienst Toeslagen; die voorbeelden zitten in onze automatische tests.
+      </li>
+      <li>
+        <strong>De bevolking.</strong> We gebruiken geen gegevens van echte mensen. In plaats daarvan maken we
+        ruim 4.000 voorbeeldhuishoudens die samen lijken op Nederland: even veel huishoudens van elk type als
+        bij het CBS, dezelfde inkomensverdeling, en even veel mensen met toeslag als bij Dienst Toeslagen.
+      </li>
+      <li>
+        <strong>Het doorrekenen.</strong> Voor elk huishouden berekenen we belasting, toeslagen en het
+        besteedbaar inkomen, nu en in jouw scenario. Daaruit volgen de effecten per inkomensgroep, op armoede
+        en voor de schatkist.
+      </li>
+    </ol>
+
+    <h2>Wat betekenen de uitkomsten?</h2>
+    <dl>
+      <dt>Besteedbaar inkomen</dt>
+      <dd>
+        Bruto inkomen min belasting en premies, plus toeslagen en kinderbijslag, min de premie voor de
+        zorgverzekering. Huur, hypotheek en kinderopvang moet je hier nog van betalen.
+      </dd>
+      <dt>Inkomensgroepen</dt>
+      <dd>
+        Tien even grote groepen van de bevolking, van laag naar hoog besteedbaar inkomen. Om huishoudens van
+        verschillende grootte te kunnen vergelijken, delen we het inkomen door een factor: 1 voor de eerste
+        volwassene, 0,5 voor iedere volgende persoon vanaf 14 jaar en 0,3 voor jongere kinderen.
+      </dd>
+      <dt>Armoederisico</dt>
+      <dd>
+        Het aandeel mensen in een huishouden met minder dan {params.methodiek.armoedegrens}% van het middelste
+        (mediane) gecorrigeerde inkomen. De grens blijft in elk scenario gelijk aan die van het huidige
+        stelsel.
+      </dd>
+      <dt>Gini</dt>
+      <dd>
+        Een maat voor ongelijkheid: 0 betekent dat iedereen evenveel heeft, 1 dat één persoon alles heeft.
+      </dd>
+      <dt>Marginale druk</dt>
+      <dd>
+        Welk deel van een extra euro bruto verdwijnt aan belasting en lagere toeslagen. Boven de 50% spreken
+        we van een armoedeval.
+      </dd>
+      <dt>Overheid per saldo</dt>
+      <dd>
+        Het verschil in belastingopbrengst en uitgaven aan toeslagen, kinderbijslag en uitkeringen. De
+        toeslagen zijn geschaald naar de raming van Dienst Toeslagen; de belasting volgt rechtstreeks uit de
+        nagebootste bevolking.
+      </dd>
+    </dl>
+
+    <h2>Wat zit er niet in?</h2>
+    <ul>
+      <li>Box 2 (aanmerkelijk belang) en box 3 (sparen en beleggen).</li>
+      <li>Ondernemers: de zelfstandigenaftrek en de mkb-winstvrijstelling. Winst telt als loon.</li>
+      <li>Gedrag: standaard rekenen we statisch. In het lab kun je een eenvoudig gedragseffect aanzetten.</li>
+      <li>
+        Vermogen in de nagebootste bevolking. De vermogensgrenzen van de toeslagen werken wel als je zelf
+        vermogen invult.
+      </li>
+      <li>
+        Huurtoeslag voor jongeren onder 21 en medebewoners, woonlandfactoren, gemeentelijke regelingen en
+        afronding door de Belastingdienst.
+      </li>
+      <li>
+        Netto-koppeling: AOW en bijstand houden in een scenario hun netto bedrag (de overheid betaalt het
+        verschil); WW en WIA niet.
+      </li>
+    </ul>
+
+    <h2>Kalibratierapport</h2>
+    <p>
+      Hoe goed lijkt de nagebootste bevolking op Nederland? Dit rapport wordt bij elke update automatisch
+      gemaakt.
+    </p>
+    <div class="rapport" set:html={rapport} />
+
+    <h2>Bronnen van de regels {params.jaar}</h2>
+    <table class="data bronnen">
+      <thead>
+        <tr>
+          <th>Onderdeel</th>
+          <th>Bron</th>
+        </tr>
+      </thead>
+      <tbody>
+        {bronnen.map((b) => (
+          <tr>
+            <td>{b.naam}</td>
+            <td set:html={metLinks(b.bron)} />
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="notitie">
+      Bronnen van de bevolking en de kalibratie: zie het rapport hierboven ({kalibratie.jaar}).
+    </p>
+
+    <h2>Controleerbaar</h2>
+    <p>
+      De volledige broncode, alle cijfers en alle beslissingen staan openbaar op
+      <a href="https://github.com/Tiniepriest/Box1lab">GitHub</a>. Daar staat ook de
+      <a href="https://github.com/Tiniepriest/Box1lab/commits/main">lijst van wijzigingen</a>. Zie je een
+      fout?
+      <a href="https://github.com/Tiniepriest/Box1lab/issues">Meld hem</a>, dan passen we het aan. Modelversie{" "}
+      {MODEL_VERSIE}.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .tekst {
+    max-width: 78ch;
+  }
+  h1 {
+    font-size: clamp(28px, 4.5vw, 38px);
+    margin: 0 0 8px;
+  }
+  h2 {
+    font-size: 22px;
+    margin: 32px 0 8px;
+  }
+  .lead {
+    font-size: 18px;
+    color: var(--muted);
+  }
+  dt {
+    font-weight: 600;
+    margin-top: 10px;
+  }
+  dd {
+    margin: 2px 0 0;
+  }
+  .rapport {
+    overflow-x: auto;
+    font-size: 14px;
+  }
+  .rapport :global(table) {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    margin: 8px 0 16px;
+  }
+  .rapport :global(th),
+  .rapport :global(td) {
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+  .rapport :global(h2) {
+    font-size: 17px;
+    margin: 20px 0 6px;
+  }
+  .bronnen td {
+    white-space: normal;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+</style>

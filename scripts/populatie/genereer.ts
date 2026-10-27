@@ -75,7 +75,7 @@ export function genereerPopulatie(spec: Spec, kal: Kalibratie, p: Parameters): P
       const q = (j + 0.5) / n; // inkomenspositie binnen de cel
       const zq = inverseNormaal(q);
       const leeftijd = Math.min(cel.tot - 1, Math.floor(cel.van + (cel.tot - cel.van) * toeval.uniform()));
-      const aow = leeftijd >= spec.aowLeeftijd;
+      const aow = leeftijd >= p.uitkeringen.aowLeeftijd;
 
       // Inkomen
       let leden: Lid[];

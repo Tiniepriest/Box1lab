@@ -41,12 +41,23 @@
 - [x] Kalibratiedoelen vervangen door officiële bronnen; hypotheekrente uit CBS
 - [x] CI controleert of de populatie actueel is (`npm run kalibreer:controle`)
 
-## Fase 4: Site MVP — bezig
+## Fase 4: Site MVP — klaar (PR #5)
+
+- [x] Pagina's Home, Jouw situatie, Scenariolab, Methodiek, Over
+- [x] Gedeeld invoerformulier (§3.3) met privacy, lokaal onthouden en wissen, "weet ik niet"
+- [x] Calculator: waterval bruto → netto, marginale en effectieve druk, € 100 extra, curves, plek in Nederland
+- [x] Lab met alle functies van het prototype; scenario delen via de link; rekenen in een Web Worker
+- [x] Methodiek met automatisch kalibratierapport en bronnenlijst uit het parameterbestand
+- [x] Lighthouse 98–100 op alle pagina's; 375 px zonder horizontaal scrollen; licht en donker gecontroleerd
+- [x] Browsercontrole en schermafdrukken in CI
+
+## Fase 5: Content en delen — nog niet begonnen
 
 ## Open vragen voor de eigenaar
 
 - Licentie van de broncode (bijvoorbeeld MIT voor code en CC BY voor teksten). Nog niet gekozen; er staat geen LICENSE-bestand.
 - Naam en domein van de site.
+- Tekst van de pagina Over: wie zit erachter? Nu staat er alleen dat het project open en neutraal is.
 
 ## TODO: bron nodig
 

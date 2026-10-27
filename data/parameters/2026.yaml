@@ -215,7 +215,8 @@ toeslagen:
       - { vanaf: 235698, eersteKind: 36.5, volgendKind: 68.2 }
 
 uitkeringen:
-  bron: "SVB, AOW-bedragen (https://www.svb.nl/nl/aow/bedragen-aow/aow-bedragen): bedragen vanaf 1 juli 2026 en vakantiegeld. Bedragen 1 januari 2026: ANBO-PCOB (https://anbo-pcob.nl/nieuws/nieuwsberichten/aow-uitkering-stijgt-opnieuw-per-1-januari-2026/)."
+  bron: "AOW-leeftijd: Rijksoverheid, AOW-leeftijd 2025–2031 (https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd). SVB, AOW-bedragen (https://www.svb.nl/nl/aow/bedragen-aow/aow-bedragen): bedragen vanaf 1 juli 2026 en vakantiegeld. Bedragen 1 januari 2026: ANBO-PCOB (https://anbo-pcob.nl/nieuws/nieuwsberichten/aow-uitkering-stijgt-opnieuw-per-1-januari-2026/)."
+  aowLeeftijd: 67
   # Bruto AOW per persoon, zoals de SVB ze publiceert. Per jaar = 6 × eerste halfjaar + 6 × tweede halfjaar
   # + 12 × vakantiegeld.
   aow:
@@ -247,6 +248,12 @@ kinderbijslag:
     - { totLeeftijd: 6, eersteHalfjaar: 295.07, tweedeHalfjaar: 298.4 }
     - { totLeeftijd: 12, eersteHalfjaar: 358.3, tweedeHalfjaar: 362.35 }
     - { totLeeftijd: 18, eersteHalfjaar: 421.53, tweedeHalfjaar: 426.29 }
+
+loon:
+  bron: "Wet minimumloon en minimumvakantiebijslag, artikel 15: vakantiebijslag minimaal 8% (https://wetten.overheid.nl/BWBR0002638)"
+  # Wettelijk minimum vakantiegeld als percentage van het loon; gebruikt om een maandloon zonder vakantiegeld
+  # om te rekenen naar een jaarinkomen.
+  vakantiegeld: 8
 
 gedrag:
   bron: "Modelkeuze. 0 = geen gedragseffect (statische doorrekening)."

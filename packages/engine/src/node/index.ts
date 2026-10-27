@@ -8,11 +8,13 @@ import {
   valideerPopulatie,
   valideerPreset,
   valideerVoorbeelden,
+  valideerLabKnoppen,
   type Kalibratie,
   type Parameters,
   type Populatie,
   type Preset,
   type Voorbeelden,
+  type LabKnoppen,
 } from "../index.ts";
 
 /*
@@ -55,4 +57,8 @@ export function laadPresets(params: Parameters): Preset[] {
 
 export function laadVoorbeelden(): Voorbeelden {
   return valideerVoorbeelden(lees("voorbeelden/huishoudens.yaml"), "data/voorbeelden/huishoudens.yaml");
+}
+
+export function laadLabKnoppen(params: Parameters): LabKnoppen {
+  return valideerLabKnoppen(lees("lab/knoppen.yaml"), params, "data/lab/knoppen.yaml");
 }

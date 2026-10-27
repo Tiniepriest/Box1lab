@@ -149,6 +149,7 @@ export const parametersSchema = z.strictObject({
 
   uitkeringen: z.strictObject({
     bron,
+    aowLeeftijd: z.number().int().positive(),
     aow: perHuishouden(aowBedragen),
     nettoKoppeling: z.strictObject({
       aow: z.boolean(),
@@ -182,6 +183,8 @@ export const parametersSchema = z.strictObject({
         "De leeftijdsgroepen van de kinderbijslag lopen op.",
       ),
   }),
+
+  loon: z.strictObject({ bron, vakantiegeld: pct }),
 
   gedrag: z.strictObject({ bron, eti: z.number().min(0).max(2) }),
 

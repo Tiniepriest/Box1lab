@@ -1,4 +1,8 @@
-/* Design tokens (HANDOFF §7). Blauw = vooruit, oranje = achteruit; nooit rood/groen. */
+/*
+ * Design tokens (HANDOFF §7). Blauw = vooruit, oranje = achteruit; nooit rood/groen.
+ * De vijf klassen winst/verlies (loss, loss2, neutral, gain2, gain) zijn per modus gecontroleerd met de
+ * dataviz-validator: aangrenzende klassen zijn ook bij kleurenblindheid te onderscheiden (zie D-030).
+ */
 :root {
   --bg: #f6f7f9;
   --panel: #ffffff;
@@ -9,11 +13,14 @@
   --accent: #1f4e8c;
   --accent-soft: #e3ebf6;
   --gain: #2a78d6;
-  --gain2: #9ec5f4;
+  --gain2: #8ab5e8;
   --loss: #eb6834;
-  --loss2: #f6b99d;
+  --loss2: #f4ac8f;
+  /* Tekst in de betekeniskleuren: donkerder, zodat het voldoet aan WCAG AA (4,5:1). */
+  --gain-tekst: #1f62b3;
+  --loss-tekst: #b5461a;
   --zero: #a3abb7;
-  --neutral: #d7dbe2;
+  --neutral: #e6e9ee;
   --warn-bg: #fdf5e4;
   --warn: #8a5a00;
   --f-display: "IBM Plex Serif", Georgia, serif;
@@ -33,11 +40,15 @@
     --accent: #8db4ea;
     --accent-soft: #233149;
     --gain: #3987e5;
-    --gain2: #25507f;
+    --gain2: #2c5990;
     --loss: #d95926;
-    --loss2: #7c3a1f;
+    --loss2: #8d4226;
+    --gain-tekst: #7fb3f0;
+    --loss-tekst: #f08a5d;
+    --gain-tekst: #7fb3f0;
+    --loss-tekst: #f08a5d;
     --zero: #6b7380;
-    --neutral: #3a404b;
+    --neutral: #262b33;
     --warn-bg: #2e2716;
     --warn: #e8c06a;
     color-scheme: dark;
@@ -54,11 +65,11 @@
   --accent: #8db4ea;
   --accent-soft: #233149;
   --gain: #3987e5;
-  --gain2: #25507f;
+  --gain2: #2c5990;
   --loss: #d95926;
-  --loss2: #7c3a1f;
+  --loss2: #8d4226;
   --zero: #6b7380;
-  --neutral: #3a404b;
+  --neutral: #262b33;
   --warn-bg: #2e2716;
   --warn: #e8c06a;
   color-scheme: dark;

@@ -25,6 +25,18 @@ export type Wijziging = z.infer<typeof wijzigingSchema>;
 
 type Container = Record<string, unknown> | unknown[];
 
+/**
+ * Diepe kopie van gewone data (getallen, tekst, ja/nee, null, lijsten en objecten). Anders dan structuredClone
+ * werkt dit ook op proxies, zoals de reactieve objecten van Svelte.
+ */
+export function kopie<T>(x: T): T {
+  if (Array.isArray(x)) return x.map(kopie) as T;
+  if (typeof x === "object" && x !== null) {
+    return Object.fromEntries(Object.entries(x).map(([k, v]) => [k, kopie(v)])) as T;
+  }
+  return x;
+}
+
 function isContainer(v: unknown): v is Container {
   return typeof v === "object" && v !== null;
 }
@@ -64,7 +76,7 @@ function pasEenToe(params: Parameters, w: Wijziging): void {
   }
   const o = ouder as Record<string, unknown>;
   if ("zet" in w) {
-    o[laatste] = structuredClone(w.zet);
+    o[laatste] = kopie(w.zet);
     return;
   }
   const huidig = o[laatste];
@@ -82,9 +94,9 @@ function pasEenToe(params: Parameters, w: Wijziging): void {
  */
 export function pasToe(params: Parameters, wijzigingen: readonly Wijziging[], bron = "scenario"): Parameters {
   if (wijzigingen.length === 0) return params;
-  const kopie = structuredClone(params);
-  for (const w of wijzigingen) pasEenToe(kopie, w);
-  return valideerParameters(kopie, bron);
+  const nieuw = kopie(params);
+  for (const w of wijzigingen) pasEenToe(nieuw, w);
+  return valideerParameters(nieuw, bron);
 }
 
 /**

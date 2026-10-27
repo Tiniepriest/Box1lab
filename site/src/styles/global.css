@@ -51,3 +51,162 @@ a {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------- Formulieren en knoppen ---------- */
+button,
+input,
+select {
+  font: inherit;
+  font-size: 15px;
+  color: var(--fg);
+}
+button {
+  border: 1px solid var(--line);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+button:hover {
+  border-color: var(--accent);
+}
+button.primair {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--panel);
+}
+button.stil {
+  background: transparent;
+}
+button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--panel);
+}
+input[type="number"],
+input[type="text"],
+select {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  padding: 6px 8px;
+  min-height: 36px;
+}
+input[type="number"] {
+  font-family: var(--f-num);
+  font-variant-numeric: tabular-nums;
+}
+input[type="range"],
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--accent);
+}
+input:disabled,
+select:disabled {
+  opacity: 0.55;
+}
+label {
+  font-size: 14px;
+}
+
+/* ---------- Bouwstenen ---------- */
+.kaart {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px;
+  min-width: 0;
+}
+.notitie {
+  color: var(--muted);
+  font-size: 13px;
+}
+.waarschuwing {
+  background: var(--warn-bg);
+  color: var(--warn);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+.visueel-verborgen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+table.data {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+table.data th,
+table.data td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  white-space: nowrap;
+}
+table.data th:first-child,
+table.data td:first-child {
+  text-align: left;
+}
+table.data th {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+table.data td.num {
+  font-family: var(--f-num);
+}
+.kerngetallen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+.kerngetal {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.kerngetal .l {
+  font-size: 13px;
+  color: var(--muted);
+}
+.kerngetal .w {
+  font-family: var(--f-num);
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+.kerngetal .t {
+  font-size: 12px;
+  color: var(--muted);
+}
+.vooruit {
+  color: var(--gain-tekst);
+}
+.achteruit {
+  color: var(--loss-tekst);
+}
+.legenda-blok {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: -1px;
+}
+.legenda-lijn {
+  display: inline-block;
+  width: 16px;
+  height: 0;
+  border-top: 2px solid;
+  margin-right: 5px;
+  vertical-align: 3px;
+}

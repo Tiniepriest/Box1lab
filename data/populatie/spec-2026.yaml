@@ -16,9 +16,6 @@ minimaleCel: 1000
 # Zaadje voor de toevalsgenerator: dezelfde waarde geeft altijd dezelfde populatie.
 zaad: 2026
 
-# AOW-leeftijd in 2026 (Rijksoverheid, AOW-leeftijd 2025–2031).
-aowLeeftijd: 67
-
 inkomen:
   # Mediaan bruto jaarinkomen van de hoofdverdiener tussen 40 en 55 jaar, en de verhouding per leeftijdsgroep.
   mediaanHoofdverdiener: 64000

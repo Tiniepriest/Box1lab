@@ -17,6 +17,7 @@ Lees eerst `docs/PROGRESS.md` (waar staan we) en `docs/DECISIONS.md` (wat is al 
 | `npm run kalibreer:controle`      | Controleert (in CI) of de populatie actueel is                                                  |
 | `npm run golden`                  | Schrijft de kerncijfers naar het golden-bestand (na een bewuste wijziging)                      |
 | `npm run vergelijk`               | Vergelijkt de engine met de prototype-baseline                                                  |
+| `npm run schermafdrukken`         | Bouw eerst; controleert de site in Chrome en maakt schermafdrukken                              |
 | `npm run ci`                      | Alles wat CI doet, in volgorde                                                                  |
 
 Node 24 (`.nvmrc`). npm-workspaces: `packages/engine` en `site`.

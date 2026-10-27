@@ -13,6 +13,7 @@ import {
   laadPopulatie,
   laadPresets,
   laadVoorbeelden,
+  laadLabKnoppen,
 } from "@box1lab/engine/node";
 
 let fouten = 0;
@@ -49,6 +50,9 @@ for (const jaar of jaren) {
 const laatste = Math.max(...jaren);
 controleer(`data/presets/ (tegen parameters ${laatste})`, () => laadPresets(laadParameters(laatste)));
 controleer("data/voorbeelden/huishoudens.yaml", () => laadVoorbeelden());
+controleer(`data/lab/knoppen.yaml (tegen parameters ${laatste})`, () =>
+  laadLabKnoppen(laadParameters(laatste)),
+);
 
 if (todo.length) {
   console.log(`\nWaarschuwing: ${todo.length} waarde(n) met 'TODO: bron nodig':`);

@@ -1,0 +1,25 @@
+---
+import Calculator from "../components/Calculator.svelte";
+import Base from "../layouts/Base.astro";
+import { kalibratie, pad, params } from "../lib/data.ts";
+---
+
+<Base title="Jouw situatie — Box1lab" breed>
+  <h1>Wat betekent het belastingstelsel voor jou?</h1>
+  <p class="intro">
+    Vul je situatie in en zie hoeveel belasting je betaalt, welke toeslagen je krijgt en wat je overhoudt.
+  </p>
+  <Calculator client:load {params} {kalibratie} populatieUrl={pad("data/populatie-2026.json")} />
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(26px, 4vw, 34px);
+    margin: 0 0 6px;
+  }
+  .intro {
+    color: var(--muted);
+    margin: 0 0 20px;
+    max-width: 65ch;
+  }
+</style>

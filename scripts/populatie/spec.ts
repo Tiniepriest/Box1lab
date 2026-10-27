@@ -12,7 +12,6 @@ export const specSchema = z.strictObject({
   minimumPerCel: z.number().int().positive(),
   minimaleCel: z.number().nonnegative(),
   zaad: z.number().int(),
-  aowLeeftijd: z.number().int(),
   inkomen: z.strictObject({
     mediaanHoofdverdiener: getal,
     leeftijdsprofiel: z.array(z.strictObject({ vanaf: getal, factor: getal })).min(1),

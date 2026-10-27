@@ -124,3 +124,64 @@ huishoudens:
         woz: 0,
         kinderopvangKosten: 8000,
       }
+
+# Huishoudtypes voor de grafieken "netto inkomen en marginale druk" in het lab. Het inkomen van de eerste persoon
+# loopt van laag naar hoog; bij tweeverdieners verdient de partner steeds "partnerAandeel" daarvan.
+curves:
+  - id: alleenstaand-huur
+    label: "Alleenstaand, huur € 850 per maand"
+    invoer:
+      {
+        inkomen1: 0,
+        soort1: werk,
+        soort2: null,
+        inkomen2: 0,
+        kinderLeeftijden: [],
+        huurPerMaand: 850,
+        hypotheekrente: 0,
+        woz: 0,
+        kinderopvangKosten: 0,
+      }
+  - id: eenouder
+    label: "Eenoudergezin, 1 kind van 6, huur € 850 per maand"
+    invoer:
+      {
+        inkomen1: 0,
+        soort1: werk,
+        soort2: null,
+        inkomen2: 0,
+        kinderLeeftijden: [6],
+        huurPerMaand: 850,
+        hypotheekrente: 0,
+        woz: 0,
+        kinderopvangKosten: 0,
+      }
+  - id: alleenverdiener
+    label: "Alleenverdiener, partner zonder inkomen, 2 kinderen, huur € 950 per maand"
+    invoer:
+      {
+        inkomen1: 0,
+        soort1: werk,
+        soort2: geen,
+        inkomen2: 0,
+        kinderLeeftijden: [5, 9],
+        huurPerMaand: 950,
+        hypotheekrente: 0,
+        woz: 0,
+        kinderopvangKosten: 0,
+      }
+  - id: tweeverdieners-koop
+    label: "Tweeverdieners 60/40, 2 kinderen, koopwoning (WOZ € 400.000, rente € 8.000)"
+    partnerAandeel: 0.667
+    invoer:
+      {
+        inkomen1: 0,
+        soort1: werk,
+        soort2: werk,
+        inkomen2: 0,
+        kinderLeeftijden: [5, 9],
+        huurPerMaand: 0,
+        hypotheekrente: 8000,
+        woz: 400000,
+        kinderopvangKosten: 0,
+      }
