@@ -6,43 +6,13 @@ import { marked } from "marked";
 import Base from "../layouts/Base.astro";
 import { MODEL_VERSIE, kalibratie, pad, params } from "../lib/data.ts";
 import { REPO, meldFoutUrl } from "../lib/project.ts";
+import { bronnen } from "../lib/secties.ts";
 
 // Het kalibratierapport wordt door `npm run kalibreer` gemaakt; hier tonen we het zoals het is.
 const rapportPad = join(DATA_MAP, "..", "docs", `kalibratie-${params.jaar}.md`);
 const rapport = await marked.parse(readFileSync(rapportPad, "utf8").replace(/^# .*\n/, ""));
 
-// Bronnen: rechtstreeks uit de "bron"-velden van het parameterbestand, zodat deze lijst altijd klopt.
-const NAMEN: Record<string, string> = {
-  box1: "Tarieven box 1",
-  "heffingskortingen.algemeen": "Algemene heffingskorting",
-  "heffingskortingen.arbeid": "Arbeidskorting",
-  "heffingskortingen.ouderen": "Ouderenkorting",
-  "heffingskortingen.alleenstaandeOuderen": "Alleenstaande-ouderenkorting",
-  "heffingskortingen.combinatie": "Combinatiekorting",
-  eigenWoning: "Eigen woning",
-  overigeAftrekposten: "Overige aftrekposten",
-  "toeslagen.zorgtoeslag": "Zorgtoeslag",
-  "toeslagen.huurtoeslag": "Huurtoeslag",
-  "toeslagen.kindgebondenBudget": "Kindgebonden budget",
-  "toeslagen.kinderopvangtoeslag": "Kinderopvangtoeslag",
-  uitkeringen: "AOW en uitkeringen",
-  bijstand: "Bijstandsnormen",
-  ondernemers: "Zelfstandigen",
-  pensioenpremie: "Pensioenpremie werknemers",
-  zorg: "Zorgpremie en Zvw-bijdrage",
-  kinderbijslag: "Kinderbijslag",
-  loon: "Vakantiegeld",
-  gedrag: "Gedragseffect",
-  methodiek: "Uitkomstmaten",
-};
-const bronnen: { naam: string; bron: string }[] = [];
-const loop = (o: unknown, pad: string) => {
-  if (typeof o !== "object" || o === null || Array.isArray(o)) return;
-  const r = o as Record<string, unknown>;
-  if (typeof r.bron === "string") bronnen.push({ naam: NAMEN[pad] ?? pad, bron: r.bron });
-  for (const [k, v] of Object.entries(r)) if (k !== "bron") loop(v, pad ? `${pad}.${k}` : k);
-};
-loop(params, "");
+const lijst = bronnen(params);
 const metLinks = (t: string) =>
   t.replace(/</g, "&lt;").replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" rel="noopener">$1</a>');
 ---
@@ -156,7 +126,7 @@ const metLinks = (t: string) =>
         </tr>
       </thead>
       <tbody>
-        {bronnen.map((b) => (
+        {lijst.map((b) => (
           <tr>
             <td>{b.naam}</td>
             <td set:html={metLinks(b.bron)} />

@@ -1,0 +1,314 @@
+# Parameters belastingjaar 2026
+#
+# Afspraken (zie ook docs/JAARLIJKSE-UPDATE.md):
+# - Percentages schrijf je als percentage: 35,75% wordt 35.75.
+# - Bedragen in euro per jaar, tenzij de naam iets anders zegt (bijvoorbeeld "perMaand").
+# - Een punt is de decimaal: € 1.575,50 schrijf je als 1575.50.
+# - Elke sectie heeft een "bron". Weet je de bron niet? Schrijf "TODO: bron nodig".
+# - "niveau" is een knop voor scenario's: 100 = zoals de wet nu is, 0 = afgeschaft.
+#
+# Status: fase 2. Alle bedragen zijn gecontroleerd tegen officiële bronnen (zie "bron" per sectie).
+
+jaar: 2027
+# Voorlopig: zie de toelichting. Zet op "definitief" als alle bedragen officieel zijn en geen TODO meer hebben.
+status: voorlopig
+toelichting: "Gebaseerd op het Belastingplan 2027 zoals ingediend op 15 september 2026, met de tweede nota van wijziging van 20 oktober 2026. Het voorstel is nog niet aangenomen door de Tweede en Eerste Kamer. Bedragen die nog niet bekend zijn, staan op het niveau van 2026."
+
+box1:
+  bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen."
+  # Belastingvrij deel per persoon. Bestaat nu niet (0); handig voor scenario's als een vlaktaks.
+  vrijstelling: 0
+  # Inkomstenbelasting plus premies volksverzekeringen. De laatste schijf heeft "tot: null" (geen bovengrens).
+  schijven:
+    - { tot: 39247, tarief: 36.23 }
+    # Aanvangspunt toptarief volgens de tweede nota van wijziging (was € 78.426 in het voorstel).
+    - { tot: 80578, tarief: 38.16 }
+    - { tot: null, tarief: 49.5 }
+  # AOW'ers betalen geen AOW-premie: hun tarief in de eerste schijf is zoveel procentpunt lager
+  # (36,23% − 18,33% voor AOW'ers geboren in of na 1946 = 17,90).
+  aowVerlagingEersteSchijf: 17.9
+
+# Een heffingskorting is een "staffel": een reeks stukken die elk beginnen bij een inkomen ("vanaf").
+# Op elk stuk is de korting: bedrag + tarief% × (inkomen − vanaf). Een negatief tarief is afbouw.
+# De korting is nooit lager dan 0 en nooit hoger dan "maximum" (als dat er staat).
+# "staffelAow" geldt voor wie het hele jaar de AOW-leeftijd heeft.
+heffingskortingen:
+  algemeen:
+    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen. Het afbouwpercentage is afgeleid: de korting is nul bij het aanvangspunt van het toptarief, zoals in eerdere jaren. Het afbouwpunt hangt af van het minimumloon (november 2026)."
+    niveau: 100
+    staffel:
+      - { vanaf: 0, bedrag: 3154, tarief: 0 }
+      # 3.154 / (80.578 − 30.910) = 6,350%
+      - { vanaf: 30910, bedrag: 3154, tarief: -6.35 }
+    staffelAow:
+      - { vanaf: 0, bedrag: 1596, tarief: 0 }
+      # 1.596 / (80.578 − 30.910) = 3,213%
+      - { vanaf: 30910, bedrag: 1596, tarief: -3.213 }
+  arbeid:
+    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen. Deelbedragen: tabel 1 min € 40 (verhoging € 133 in plaats van € 173). De inkomensgrenzen van de eerste twee knikken zijn die van 2026 × 1,01248 (beperkte indexatie volgens de memorie van toelichting) en de percentages zijn daaruit afgeleid. Bedragen voor AOW'ers: TODO: bron nodig, tijdelijk die van 2026."
+    niveau: 100
+    staffel:
+      - { vanaf: 0, bedrag: 0, tarief: 9.427 }
+      - { vanaf: 12114, bedrag: 1142, tarief: 31.009 }
+      - { vanaf: 26168, bedrag: 5500, tarief: 1.795 }
+      - { vanaf: 47834, bedrag: 5889, tarief: -6.51 }
+    staffelAow:
+      - { vanaf: 0, bedrag: 0, tarief: 4.156 }
+      - { vanaf: 11965, bedrag: 498, tarief: 15.483 }
+      - { vanaf: 25845, bedrag: 2647, tarief: 0.974 }
+      - { vanaf: 45592, bedrag: 2840, tarief: -3.25 }
+  ouderen:
+    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen."
+    niveau: 100
+    staffel:
+      - { vanaf: 0, bedrag: 1993, tarief: 0 }
+      - { vanaf: 46577, bedrag: 1993, tarief: -15 }
+  alleenstaandeOuderen:
+    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen."
+    niveau: 100
+    # Voor AOW'ers zonder partner.
+    bedrag: 547
+  combinatie:
+    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen. Bedragen voor AOW'ers: TODO: bron nodig, tijdelijk die van 2026."
+    niveau: 100
+    staffel:
+      - { vanaf: 0, bedrag: 0, tarief: 0 }
+      - { vanaf: 6316, bedrag: 0, tarief: 11.45 }
+    maximum: 2918
+    staffelAow:
+      - { vanaf: 0, bedrag: 0, tarief: 0 }
+      - { vanaf: 6239, bedrag: 0, tarief: 5.72 }
+    maximumAow: 1514
+
+eigenWoning:
+  bron: "Maximaal aftrektarief: gelijk aan het tarief van de tweede schijf, zoals in 2025 en 2026 (Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen.) Forfait, villataks en Wet Hillen: TODO: bron nodig, tijdelijk de bedragen van 2026."
+  forfait:
+    niveau: 100
+    # Eigenwoningforfait als percentage van de hele WOZ-waarde, afhankelijk van de WOZ-waarde.
+    tabel:
+      - { vanaf: 0, percentage: 0 }
+      - { vanaf: 12500, percentage: 0.1 }
+      - { vanaf: 25000, percentage: 0.2 }
+      - { vanaf: 50000, percentage: 0.25 }
+      - { vanaf: 75000, percentage: 0.35 }
+    # Boven deze WOZ-waarde: het forfait op de grens, plus dit percentage van het deel daarboven.
+    villataks: { vanaf: 1350000, percentage: 2.35 }
+  # Hoogste tarief waartegen de aftrek eigen woning werkt. 0 = geen hypotheekrenteaftrek.
+  aftrekMaxTarief: 38.16
+  # Wet Hillen: is het forfait hoger dan de aftrekbare rente, dan is dit percentage van het verschil aftrekbaar.
+  hillenAftrek: 71.867
+
+overigeAftrekposten:
+  bron: "Miljoenennota 2027, bijlage Fiscale regelingen, tabel 4.3.2 'Overzicht budgettair belang per fiscale regeling', kolom 2027 (Kamerstukken II 2026/27, 37 020, nr. 2, 15 september 2026; https://www.tweedekamer.nl/downloads/document?id=2026D38820)."
+  # Aftrekposten in box 1 die het model niet per huishouden berekent: hun budgettair belang in miljard euro per
+  # jaar. De knop 'niveau' schaalt ze samen (100 = huidig, 0 = afgeschaft).
+  posten:
+    # Categorietotaal: giften, specifieke zorgkosten, alimentatie en dergelijke.
+    persoonsgebondenAftrek: 0.811
+    lijfrentePremieaftrek: 1.424
+    arbeidsongeschiktheidsverzekeringPremieaftrek: 0.652
+    # De zelfstandigenaftrek en de mkb-winstvrijstelling rekent het model per huishouden (sectie ondernemers).
+    # De modelbevolking heeft geen starters en geen meewerkende partners; die aftrek staat daarom hier.
+    startersaftrek: 0.003
+    meewerkaftrek: 0.002
+  niveau: 100
+
+toeslagen:
+  zorgtoeslag:
+    bron: "TODO: bron nodig. De bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+    niveau: 100
+    # Per volwassene; voor partners geldt twee keer de standaardpremie.
+    standaardpremie: 2119
+    drempelinkomen: 29736
+    # Normpremie = percentage van het drempelinkomen + afbouwpercentage × (toetsingsinkomen − drempelinkomen).
+    normpremieDrempel: { alleenstaand: 1.912, partners: 4.289 }
+    normpremieAfbouw: 13.73
+    maxToetsingsinkomen: { alleenstaand: 40857, partners: 51142 }
+    maxVermogen: { alleenstaand: 146011, partners: 184633 }
+  huurtoeslag:
+    bron: "TODO: bron nodig. De bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+    niveau: 100
+    # Bedragen in deze sectie zijn per maand, behalve inkomens en vermogen.
+    huurgrens: 932.93
+    basishuur: { eenpersoons: 202.52, meerpersoons: 200.71 }
+    kwaliteitskortingsgrens: 498.2
+    aftoppingsgrens: { eenOfTweePersonen: 713.02, drieOfMeerPersonen: 764.14 }
+    # Vergoeding van de huur tot de kwaliteitskortingsgrens, tot de aftoppingsgrens en tot de huurgrens.
+    vergoeding: { totKwaliteitskortingsgrens: 100, totAftoppingsgrens: 65, totHuurgrens: 40 }
+    # Inkomensafhankelijke correctie: afbouw% × (rekeninkomen − inkomensijkpunt), per jaar.
+    inkomensijkpunt: { eenpersoons: 23425, meerpersoons: 31500 }
+    afbouw: { eenpersoons: 27, meerpersoons: 22 }
+    # Van inwonende kinderen jonger dan 23 telt alleen het inkomen boven dit bedrag mee in het rekeninkomen.
+    inkomensvrijstellingKind: 6218
+    maxVermogen: { alleenstaand: 38479, partners: 76958 }
+  kindgebondenBudget:
+    bron: "TODO: bron nodig. De bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+    niveau: 100
+    perKind: 2580
+    verhogingKind12tot16: 724
+    verhogingKind16en17: 964
+    alleenstaandeOuderkop: 3416
+    drempelinkomen: { alleenstaand: 29736, partners: 39141 }
+    afbouw: 7.6
+    maxVermogen: { alleenstaand: 146011, partners: 184633 }
+  kinderopvangtoeslag:
+    bron: "TODO: bron nodig. De bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+    niveau: 100
+    maxUurprijs: { dagopvang: 11.23, buitenschoolse: 9.98, gastouder: 8.49 }
+    maxUrenPerMaand: 230
+    # Vergoedingspercentage per (gezamenlijk) toetsingsinkomen, vanaf dat inkomen. "eersteKind" is het kind met
+    # de meeste opvanguren; "volgendKind" geldt voor de andere kinderen.
+    tabel:
+      - { vanaf: 0, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 24150, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 25757, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 27364, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 28974, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 30580, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 32190, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 33796, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 35401, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 37130, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 38856, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 40587, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 42314, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 44047, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 45777, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 47547, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 49319, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 51093, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 52865, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 54642, eersteKind: 96, volgendKind: 96 }
+      - { vanaf: 56413, eersteKind: 95.5, volgendKind: 95.6 }
+      - { vanaf: 58185, eersteKind: 94.8, volgendKind: 95.6 }
+      - { vanaf: 59958, eersteKind: 93.9, volgendKind: 95.6 }
+      - { vanaf: 61896, eersteKind: 92.4, volgendKind: 95.6 }
+      - { vanaf: 65696, eersteKind: 91.6, volgendKind: 95.2 }
+      - { vanaf: 69493, eersteKind: 90.5, volgendKind: 94.6 }
+      - { vanaf: 73293, eersteKind: 88.2, volgendKind: 94.2 }
+      - { vanaf: 77095, eersteKind: 85.9, volgendKind: 93.9 }
+      - { vanaf: 80892, eersteKind: 83.7, volgendKind: 93.2 }
+      - { vanaf: 84694, eersteKind: 81.2, volgendKind: 92.7 }
+      - { vanaf: 88492, eersteKind: 78.9, volgendKind: 92.2 }
+      - { vanaf: 92292, eersteKind: 76.7, volgendKind: 91.5 }
+      - { vanaf: 96092, eersteKind: 74.3, volgendKind: 90.9 }
+      - { vanaf: 99890, eersteKind: 72.1, volgendKind: 90.5 }
+      - { vanaf: 103695, eersteKind: 69.6, volgendKind: 90.2 }
+      - { vanaf: 107493, eersteKind: 67.3, volgendKind: 89.5 }
+      - { vanaf: 111291, eersteKind: 65.1, volgendKind: 89.1 }
+      - { vanaf: 115091, eersteKind: 62.7, volgendKind: 88.6 }
+      - { vanaf: 118964, eersteKind: 60.6, volgendKind: 87.9 }
+      - { vanaf: 122858, eersteKind: 58.5, volgendKind: 87.4 }
+      - { vanaf: 126748, eersteKind: 56.4, volgendKind: 87 }
+      - { vanaf: 130639, eersteKind: 54.2, volgendKind: 86.7 }
+      - { vanaf: 134528, eersteKind: 52.3, volgendKind: 86 }
+      - { vanaf: 138421, eersteKind: 50.4, volgendKind: 85.4 }
+      - { vanaf: 142313, eersteKind: 48.5, volgendKind: 85 }
+      - { vanaf: 146206, eersteKind: 46.5, volgendKind: 84.4 }
+      - { vanaf: 150093, eersteKind: 44.5, volgendKind: 84 }
+      - { vanaf: 153983, eersteKind: 42.5, volgendKind: 83.3 }
+      - { vanaf: 157878, eersteKind: 40.5, volgendKind: 82.7 }
+      - { vanaf: 161767, eersteKind: 38.5, volgendKind: 81.7 }
+      - { vanaf: 165658, eersteKind: 36.5, volgendKind: 81.4 }
+      - { vanaf: 169548, eersteKind: 36.5, volgendKind: 80.6 }
+      - { vanaf: 173441, eersteKind: 36.5, volgendKind: 79.7 }
+      - { vanaf: 177336, eersteKind: 36.5, volgendKind: 79.1 }
+      - { vanaf: 181224, eersteKind: 36.5, volgendKind: 78.2 }
+      - { vanaf: 185115, eersteKind: 36.5, volgendKind: 77.7 }
+      - { vanaf: 189003, eersteKind: 36.5, volgendKind: 76.9 }
+      - { vanaf: 192897, eersteKind: 36.5, volgendKind: 76.2 }
+      - { vanaf: 196790, eersteKind: 36.5, volgendKind: 75.5 }
+      - { vanaf: 200682, eersteKind: 36.5, volgendKind: 74.5 }
+      - { vanaf: 204572, eersteKind: 36.5, volgendKind: 74 }
+      - { vanaf: 208459, eersteKind: 36.5, volgendKind: 73.3 }
+      - { vanaf: 212354, eersteKind: 36.5, volgendKind: 72.5 }
+      - { vanaf: 216243, eersteKind: 36.5, volgendKind: 71.8 }
+      - { vanaf: 220135, eersteKind: 36.5, volgendKind: 71.2 }
+      - { vanaf: 224027, eersteKind: 36.5, volgendKind: 70.4 }
+      - { vanaf: 227916, eersteKind: 36.5, volgendKind: 69.6 }
+      - { vanaf: 231808, eersteKind: 36.5, volgendKind: 69.1 }
+      - { vanaf: 235698, eersteKind: 36.5, volgendKind: 68.2 }
+
+uitkeringen:
+  bron: "AOW-leeftijd: Rijksoverheid, AOW-leeftijd 2025–2031 (https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd). AOW-bedragen: TODO: bron nodig. De AOW-bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+  aowLeeftijd: 67
+  # Bruto AOW per persoon, zoals de SVB ze publiceert. Per jaar = 6 × eerste halfjaar + 6 × tweede halfjaar
+  # + 12 × vakantiegeld.
+  aow:
+    alleenstaand:
+      { perMaandEersteHalfjaar: 1637.57, perMaandTweedeHalfjaar: 1662.16, vakantiegeldPerMaand: 104.78 }
+    partners:
+      { perMaandEersteHalfjaar: 1122.12, perMaandTweedeHalfjaar: 1139.39, vakantiegeldPerMaand: 74.85 }
+  # Netto-koppeling: in een scenario houdt deze uitkering haar netto bedrag; de overheid betaalt het verschil
+  # bruto bij. AOW en bijstand zijn gekoppeld aan het netto minimumloon; WW en WIA zijn een percentage van het
+  # vroegere bruto loon.
+  nettoKoppeling: { aow: true, bijstand: true, werknemersverzekering: false }
+
+bijstand:
+  bron: "TODO: bron nodig. De bijstandsnormen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+  # Netto bijstandsnorm per maand inclusief vakantiegeld, 21 jaar tot de AOW-leeftijd. Per jaar = 6 × eerste
+  # halfjaar + 6 × tweede halfjaar. De norm voor gehuwden geldt voor het paar samen.
+  alleenstaand: { eersteHalfjaar: 1401.50, tweedeHalfjaar: 1419.46 }
+  gehuwden: { eersteHalfjaar: 2002.13, tweedeHalfjaar: 2027.79 }
+  # Onder deze leeftijd gelden lagere jongerennormen; die zitten niet in het model.
+  minimumLeeftijd: 21
+
+ondernemers:
+  bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen. Startersaftrek 2027: € 10 (memorie van toelichting, paragraaf 5.5); in 2028 afgeschaft."
+  # Ondernemersaftrek: alleen bij het urencriterium. De startersaftrek komt erbij in de eerste jaren.
+  zelfstandigenaftrek: 900
+  startersaftrek: 10
+  # Vrijstelling over de winst na ondernemersaftrek, ook zonder urencriterium.
+  mkbWinstvrijstelling: 12.7
+  urencriterium: 1225
+
+zorg:
+  bron: "TODO: bron nodig. De nominale premie en de Zvw-bijdrage voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+  # Gemiddelde nominale premie per volwassene per jaar.
+  nominalePremiePerVolwassene: 1884
+  # Inkomensafhankelijke bijdrage Zvw die mensen zelf betalen: AOW'ers over AOW en pensioen, zelfstandigen over hun
+  # belastbare winst. Voor werknemers en uitkeringen betaalt de werkgever of uitkeringsinstantie; dat valt buiten
+  # het model.
+  zvwBijdrage: 4.85
+  zvwMaximumInkomen: 79409
+  # Vanaf deze leeftijd betaalt iemand zelf de nominale premie en kan diegene zorgtoeslag krijgen (Zvw).
+  volwassenVanaf: 18
+
+kinderbijslag:
+  bron: "TODO: bron nodig. De bedragen van de kinderbijslag voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+  niveau: 100
+  # Bedrag per kind per kwartaal, per leeftijdsgroep. Per jaar = 2 × eerste halfjaar + 2 × tweede halfjaar.
+  perKwartaal:
+    - { totLeeftijd: 6, eersteHalfjaar: 295.07, tweedeHalfjaar: 298.4 }
+    - { totLeeftijd: 12, eersteHalfjaar: 358.3, tweedeHalfjaar: 362.35 }
+    - { totLeeftijd: 18, eersteHalfjaar: 421.53, tweedeHalfjaar: 426.29 }
+
+loon:
+  bron: "Wet minimumloon en minimumvakantiebijslag, artikel 15: vakantiebijslag minimaal 8% (https://wetten.overheid.nl/BWBR0002638)"
+  # Wettelijk minimum vakantiegeld als percentage van het loon; gebruikt om een maandloon zonder vakantiegeld
+  # om te rekenen naar een jaarinkomen.
+  vakantiegeld: 8
+
+pensioenpremie:
+  bron: "TODO: bron nodig. De premiepercentages van ABP (nieuw pensioenstelsel per 2027) voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+  # Standaard als iemand in loondienst niet weet wat er op de loonstrook staat: de regeling van ABP, het grootste
+  # pensioenfonds. Fondsen verschillen; op "Jouw situatie" kun je het echte bedrag invullen.
+  werknemer: 8.13
+  franchise: 19200
+  aftoppingsgrens: 137800
+
+gedrag:
+  bron: "Modelkeuze. 0 = geen gedragseffect (statische doorrekening)."
+  # Elasticiteit van het belastbaar inkomen voor werkenden.
+  eti: 0
+
+methodiek:
+  bron: "Modelkeuze, zoals in het prototype."
+  # Equivalentieschaal (OECD-gemodificeerd): eerste volwassene telt als 1, elke volgende persoon vanaf
+  # "kindVanafLeeftijd" als extraVolwassene, jongere kinderen als kind.
+  equivalentie: { extraVolwassene: 0.5, kind: 0.3, kindVanafLeeftijd: 14 }
+  # Armoederisicogrens als percentage van het mediane gestandaardiseerde besteedbaar inkomen.
+  armoedegrens: 60
+  # Grenzen (in procent verandering van het besteedbaar inkomen) voor de vijf klassen winnaars en verliezers:
+  # verlies > 5%, verlies 1–5%, minder dan 1%, winst 1–5%, winst > 5%.
+  winnaarsGrenzen: [-5, -1, 1, 5]

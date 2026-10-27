@@ -4,6 +4,12 @@ Twee keer per jaar veranderen de cijfers: rond **Prinsjesdag** (september, voorl
 
 ## Stappen
 
+### 0. Voorlopig jaar (na Prinsjesdag)
+
+Na Prinsjesdag liggen de plannen voor het nieuwe jaar er, maar nog niet alle bedragen. Je kunt dan al een parameterbestand maken met `status: voorlopig` en een `toelichting` (zie `data/parameters/2027.yaml` als voorbeeld). Vul in wat officieel bekend is (Belastingplan, memorie van toelichting, nota's van wijziging) en laat de rest op het oude bedrag staan met `TODO: bron nodig` in de bron. De site laat op Jouw situatie dan "Wat verandert er?" zien, met een duidelijke melding dat het voorlopig is en welke bedragen nog ontbreken. Kalibratie en bevolking hoeven dan nog niet.
+
+Zijn alle bedragen definitief, werk dan het bestand af volgens de stappen hieronder, zet `status: definitief` en haal de `toelichting` weg.
+
 ### 1. Nieuw parameterbestand
 
 Kopieer het bestand van het vorige jaar:

@@ -144,6 +144,11 @@ try {
   const zin = (await pg.locator(".kernzin").textContent()) ?? "";
   controleer(/per maand/.test(zin), `calculator: "${zin.trim().slice(0, 60)}…"`);
   controleer(true, "calculator: plek in de inkomensverdeling geladen");
+  const jaarKaart = (await pg.locator(".jaar").textContent()) ?? "";
+  controleer(
+    /Wat verandert er in 2027/.test(jaarKaart) && /Voorlopig/.test(jaarKaart),
+    "calculator: wat verandert er in 2027 (voorlopig)",
+  );
   const leesSessie = () => pg.evaluate(() => sessionStorage.getItem("box1lab.invoer.v1"));
   controleer((await leesSessie()) === null, "formulier: het voorbeeld wordt niet bewaard");
   await pg.locator("#soort-0").selectOption("zzp");

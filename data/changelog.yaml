@@ -7,6 +7,15 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-10-28
+  soort: cijfers
+  titel: Wat verandert er in 2027? (voorlopig)
+  tekst: >-
+    Op Jouw situatie zie je wat de plannen voor 2027 voor jou betekenen, bij hetzelfde bruto inkomen. Voorlopig:
+    gebaseerd op het Belastingplan 2027 zoals het nu bij de Tweede Kamer ligt (tarieven, heffingskortingen,
+    zelfstandigenaftrek). Toeslagen, AOW, bijstand, kinderbijslag en zorgpremie voor 2027 zijn nog niet bekend;
+    daarvoor rekenen we tijdelijk met de bedragen van 2026.
+
+- datum: 2026-10-28
   soort: nieuw
   titel: Zie wat een scenario of voorstel voor jou betekent
   tekst: >-
