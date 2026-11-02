@@ -1,76 +1,82 @@
 /*
- * Design tokens (HANDOFF §7). Blauw = vooruit, oranje = achteruit; nooit rood/groen.
+ * Design tokens: stijl "Papier" (D-069). Warm gebroken wit, serif koppen, schreefloze tekst, vlakken zonder randen.
+ * Groen = erop vooruit, rood = erop achteruit (keuze van de eigenaar, wijkt af van HANDOFF §7).
  * De vijf klassen winst/verlies (loss, loss2, neutral, gain2, gain) zijn per modus gecontroleerd met de
- * dataviz-validator: aangrenzende klassen zijn ook bij kleurenblindheid te onderscheiden (zie D-030).
+ * dataviz-validator: aangrenzende klassen zijn ook bij rood-groenblindheid te onderscheiden. Het rood is donkerder
+ * dan het groen, zodat ze ook in helderheid verschillen. Tekst in de betekeniskleuren heeft eigen tokens
+ * (`--gain-tekst`, `--loss-tekst`) die voldoen aan WCAG AA.
  */
 :root {
-  --bg: #f6f7f9;
-  --panel: #ffffff;
-  --fg: #14181f;
-  --muted: #5a6270;
-  --line: #dde1e7;
-  --soft: #eef1f5;
-  --accent: #1f4e8c;
-  --accent-soft: #e3ebf6;
-  --gain: #2a78d6;
-  --gain2: #8ab5e8;
-  --loss: #eb6834;
-  --loss2: #f4ac8f;
-  /* Tekst in de betekeniskleuren: donkerder, zodat het voldoet aan WCAG AA (4,5:1). */
-  --gain-tekst: #1f62b3;
-  --loss-tekst: #b5461a;
-  --zero: #a3abb7;
-  --neutral: #e6e9ee;
+  --bg: #f6f2ea;
+  --panel: #fffdf8;
+  --fg: #1d1b18;
+  --muted: #6a6359;
+  --line: #e2dbcd;
+  --soft: #efe9de;
+  --accent: #26365e;
+  --accent-soft: #e6e8ef;
+  --gain: #169065;
+  --gain2: #6fcea3;
+  --loss: #a82418;
+  --loss2: #d9897b;
+  --gain-tekst: #056c4a;
+  --loss-tekst: #a82418;
+  --zero: #9a948a;
+  --neutral: #e6e2da;
   --warn-bg: #fdf5e4;
   --warn: #8a5a00;
-  --f-display: "IBM Plex Serif", Georgia, serif;
-  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-num: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --schaduw: 0 1px 2px rgb(60 45 20 / 6%), 0 4px 16px rgb(60 45 20 / 5%);
+  --radius: 4px;
+  --f-display: "Source Serif 4", Georgia, serif;
+  --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #14171c;
-    --panel: #1c2027;
-    --fg: #eceef2;
-    --muted: #a3abb8;
-    --line: #2f3540;
-    --soft: #232832;
-    --accent: #8db4ea;
-    --accent-soft: #233149;
-    --gain: #3987e5;
-    --gain2: #2c5990;
-    --loss: #d95926;
-    --loss2: #8d4226;
-    --gain-tekst: #7fb3f0;
-    --loss-tekst: #f08a5d;
-    --gain-tekst: #7fb3f0;
-    --loss-tekst: #f08a5d;
-    --zero: #6b7380;
-    --neutral: #262b33;
-    --warn-bg: #2e2716;
+    --bg: #1a1814;
+    --panel: #24211c;
+    --fg: #eee9df;
+    --muted: #aca392;
+    --line: #3a352c;
+    --soft: #2e2a23;
+    --accent: #a9b9e4;
+    --accent-soft: #2a2f40;
+    --gain: #58c295;
+    --gain2: #2e644d;
+    --loss: #d95544;
+    --loss2: #822d22;
+    --gain-tekst: #68c79d;
+    --loss-tekst: #ea846e;
+    --zero: #7d776c;
+    --neutral: #2c2a26;
+    --warn-bg: #2b2716;
     --warn: #e8c06a;
+    --schaduw: 0 1px 2px rgb(0 0 0 / 30%);
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #14171c;
-  --panel: #1c2027;
-  --fg: #eceef2;
-  --muted: #a3abb8;
-  --line: #2f3540;
-  --soft: #232832;
-  --accent: #8db4ea;
-  --accent-soft: #233149;
-  --gain: #3987e5;
-  --gain2: #2c5990;
-  --loss: #d95926;
-  --loss2: #8d4226;
-  --zero: #6b7380;
-  --neutral: #262b33;
-  --warn-bg: #2e2716;
+  --bg: #1a1814;
+  --panel: #24211c;
+  --fg: #eee9df;
+  --muted: #aca392;
+  --line: #3a352c;
+  --soft: #2e2a23;
+  --accent: #a9b9e4;
+  --accent-soft: #2a2f40;
+  --gain: #58c295;
+  --gain2: #2e644d;
+  --loss: #d95544;
+  --loss2: #822d22;
+  --gain-tekst: #68c79d;
+  --loss-tekst: #ea846e;
+  --zero: #7d776c;
+  --neutral: #2c2a26;
+  --warn-bg: #2b2716;
   --warn: #e8c06a;
+  --schaduw: 0 1px 2px rgb(0 0 0 / 30%);
   color-scheme: dark;
 }

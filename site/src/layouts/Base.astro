@@ -1,8 +1,10 @@
 ---
-import "@fontsource/ibm-plex-sans/400.css";
-import "@fontsource/ibm-plex-sans/600.css";
-import "@fontsource/ibm-plex-serif/600.css";
-import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/source-serif-4/400.css";
+import "@fontsource/source-serif-4/600.css";
+import "@fontsource/source-serif-4/600-italic.css";
 import "../styles/global.css";
 import { MODEL_VERSIE, actueel, changelog, params, pad } from "../lib/data.ts";
 import { SLEUTEL } from "../lib/opslag.ts";
@@ -60,7 +62,8 @@ const bijmenu = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#1f4e8c" />
+    <meta name="theme-color" content="#f6f2ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1814" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href={pad("favicon.svg")} />
     <link rel="sitemap" href={pad("sitemap-index.xml")} />
     <title>{title}</title>
@@ -183,7 +186,7 @@ const bijmenu = [
   }
   .site-header {
     border-bottom: 1px solid var(--line);
-    background: var(--panel);
+    background: var(--bg);
   }
   .kop {
     display: flex;
@@ -196,7 +199,8 @@ const bijmenu = [
   .logo {
     font-family: var(--f-display);
     font-weight: 600;
-    font-size: 20px;
+    font-style: italic;
+    font-size: 26px;
     color: var(--fg);
     text-decoration: none;
   }
@@ -232,7 +236,7 @@ const bijmenu = [
     font-size: 14px;
     color: var(--muted);
     border: 1px solid var(--line);
-    border-radius: 6px;
+    border-radius: var(--radius);
     padding: 4px 10px;
   }
   .bij-uitklap summary::-webkit-details-marker {
@@ -245,7 +249,7 @@ const bijmenu = [
     z-index: 20;
     background: var(--panel);
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: var(--radius);
     padding: 4px 14px;
     min-width: 160px;
     box-shadow: 0 6px 18px rgb(0 0 0 / 12%);
@@ -275,7 +279,7 @@ const bijmenu = [
     padding: 10px 16px 8px;
     border-bottom: 3px solid transparent;
     color: var(--fg);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 16px;
     text-decoration: none;
   }

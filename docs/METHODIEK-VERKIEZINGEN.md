@@ -56,6 +56,6 @@ Welke parameters er zijn, zie je in `data/parameters/<jaar>.yaml`. Ontbreekt er 
 ## Weergave (HANDOFF §4.1)
 
 - Standaard alfabetisch, met een knop om op uitkomst te sorteren.
-- Winst blauw, verlies oranje; geen partijkleuren of logo's.
+- Winst groen, verlies rood (D-069); geen partijkleuren of logo's.
 - Per partij: de maatregelen met hun effect op jouw huishouden, de bronnen, de zekerheid, wat niet is meegenomen, en het macrobeeld (saldo, armoede, Gini, effect per inkomensgroep).
 - Een duidelijke disclaimer: vereenvoudigde doorrekening, geen stemadvies, het CPB is leidend.

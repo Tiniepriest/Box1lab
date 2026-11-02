@@ -128,8 +128,10 @@
     gap: 8px;
     padding: 14px;
   }
+  /* Een voorbeeld ligt plat op het papier; een eigen situatie is een vlak. */
   .voorbeeld {
-    border-style: dashed;
+    background: var(--soft);
+    box-shadow: none;
   }
   .kop {
     display: flex;

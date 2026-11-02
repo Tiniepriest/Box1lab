@@ -336,9 +336,7 @@
   }
   .privacy {
     font-size: 13px;
-    background: var(--accent-soft);
-    border-radius: 8px;
-    padding: 8px 10px;
+    color: var(--muted);
     margin: 0;
   }
   fieldset {

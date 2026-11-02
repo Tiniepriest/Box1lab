@@ -384,7 +384,9 @@
     padding: 14px;
   }
   .stap:hover {
-    border-color: var(--accent);
+    box-shadow:
+      0 0 0 1px var(--accent),
+      var(--schaduw);
   }
   .stap > strong {
     font-size: 16px;
@@ -431,16 +433,17 @@
     min-width: 0;
   }
   .kernzin {
-    font-size: 19px;
+    font-family: var(--f-display);
+    font-size: 23px;
+    line-height: 1.35;
     margin: 0;
   }
   .voorbeeld {
     margin: 0 0 12px;
     font-size: 14px;
-    border: 1px dashed var(--warn);
-    background: var(--warn-bg);
-    border-radius: 8px;
-    padding: 8px 10px;
+    background: var(--soft);
+    border-radius: var(--radius);
+    padding: 10px 12px;
   }
   .snelbalk {
     display: none;

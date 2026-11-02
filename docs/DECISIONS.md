@@ -212,6 +212,8 @@ De doelen uit het prototype bleken deels onjuist. Nu: toeslagen volgens Dienst T
 
 De vijf klassen (verlies groot, verlies, ~0, winst, winst groot) zijn per modus doorgerekend met de dataviz-validator: aangrenzende klassen zijn ook bij rood-groen-kleurenblindheid te onderscheiden (ΔE ≥ 12) en bij normaal zicht (ΔE ≥ 15). Daarvoor zijn de lichte tussentinten en het neutrale midden iets aangepast; de polen blauw `#2a78d6` en oranje `#eb6834` uit de handoff blijven. Tekst in de betekeniskleuren krijgt eigen, donkerdere tokens (`--gain-tekst`, `--loss-tekst`) die voldoen aan WCAG AA (≥ 5,4:1).
 
+Vervangen door D-069 (groen en rood, op verzoek van de eigenaar).
+
 ### D-031 Rekenen in een Web Worker
 
 Laden van de populatie, de basis bouwen, scenario's doorrekenen en de oplosser draaien in een Web Worker (`site/src/lib/rekenwerker.ts`), zoals HANDOFF §5.1 voorstelt. Alleen samenvattingen gaan terug naar de pagina. Bij snel schuiven telt alleen het laatste antwoord. Gevolg: blokkeertijd op de labpagina van 370 naar 60 ms; de oplosser (45 doorrekeningen) bevriest de pagina niet meer. De browser valideert het populatiebestand niet opnieuw tegen het schema; dat doen de build en CI al.
@@ -514,3 +516,22 @@ Vraag van de eigenaar (2 november 2026): met 80% belasting boven € 100.000 gin
 **Gevolg.** Box 1 levert in het model € 149,9 mld op (was € 145,3 mld). Dat is 93% van de CBS-belasting van huishoudens over alle boxen (€ 160,6 mld; box 2 en 3 zitten niet in het model, dus lager hoort zo) en 104% van de Miljoenennota-opbrengst voor box 1 en 2 samen (kasbasis). De twee controles liggen ongeveer € 10 mld uit elkaar; het model zit ertussen. Gini 0,225 → 0,233, armoede 10,3% → 10,2%.
 
 Golden-verschil: alle cijfers die van de bevolking afhangen, niet de voorbeeldhuishoudens. Saldo vlaktaks −€ 1,66 → −€ 3,14 mld (de hoogste inkomens profiteren meer van 35%); drie schijven € 29,17 → € 28,93 mld; de andere voorstellen veranderen minder dan € 0,1 mld. Oplosser: vrijstelling € 23.555 → € 23.167. Het scenario van de eigenaar (vlaktaks met 30% tot € 100.000 en 80% daarboven): hoogste groep +4,7% → +0,4%, saldo −€ 0,9 → +€ 3,2 mld. De hoogste groep gaat er gemiddeld nog net op vooruit, omdat de meeste mensen daarin tweeverdieners zijn met elk minder dan ongeveer € 155.000; boven dat bedrag gaat iedereen erop achteruit.
+
+## Fase 14: nieuw uiterlijk
+
+### D-069 Stijl "Papier", groen voor vooruit en rood voor achteruit
+
+De eigenaar vond het uiterlijk te veel een dashboard en wilde iets in de richting van De Correspondent. Drie richtingen zijn op de echte pagina's vergeleken, licht en donker, op telefoon en computer: "Krant" (wit, zwart, alles serif, alleen lijnen), "Papier" en "Data" (schreefloos, dikke zwarte lijnen, markeerstift). De eigenaar koos Papier.
+
+**Papier.** Warm gebroken wit papier (`#f6f2ea`) met vlakken zonder rand en een zachte schaduw; in donkere modus een warm donkergrijs (`#1a1814`) in plaats van koud blauwgrijs. Koppen, inleidingen, de kernzin en grote getallen in Source Serif 4; de rest in Inter. Inter vervangt ook IBM Plex Mono voor getallen, met `tabular-nums` zodat kolommen recht blijven. Knoppen in donker inktblauw (`#26365e`), dat niet botst met rood en groen. De grootte van de paginakop en de inleiding staat nu één keer in `global.css` in plaats van per pagina. Lettertypen blijven lokaal via `@fontsource` (D-004), geen externe dienst.
+
+**Groen en rood.** Op verzoek van de eigenaar is groen erop vooruit en rood erop achteruit. Dat wijkt af van HANDOFF §7 ("nooit rood/groen") en vervangt de kleuren van D-030; de reden in de handoff was kleurenblindheid. Daarom:
+
+- Het rood is donker en het groen lichter, zodat ze ook in helderheid verschillen. Gecontroleerd met de dataviz-validator (simulatie Machado 2009): de polen verschillen bij rood-groenblindheid ΔE 11,1 (licht, `#a82418` en `#169065`) en 12,6 (donker, `#d95544` en `#58c295`); doel ≥ 8. Bij normaal zicht ΔE 28,6 en 29,1.
+- De vijf klassen (verlies groot, verlies, ~0, winst, winst groot) zijn per modus nagerekend: de kleinste afstand tussen buren is ΔE 10,4 (licht) en 8,7 (donker) bij kleurenblindheid, 17,2 en 17,8 bij normaal zicht. Het neutrale midden is grijs en de tussentinten zijn lichter (licht) of donkerder (donker) dan de polen, zoals bij een tweezijdige schaal hoort.
+- Het groen in donkere modus is iets lichter dan de helderheidsband die de validator voor gewone categorieën aanhoudt (0,74 tegen 0,67). Een donkerder groen zou dichter bij het rood komen voor kleurenblinde lezers; dat weegt zwaarder.
+- Kleur is nooit het enige signaal: bedragen hebben een plus- of minteken, grafieken hebben een tabelweergave en de tekst noemt "erop vooruit" of "erop achteruit".
+- Tekst in groen en rood heeft eigen tokens met een contrast van minstens 5,3:1 op alle achtergronden (WCAG AA). Gedempte tekst haalt minstens 4,9:1.
+- Lijnen die niet goed of slecht zijn (zoals de marginale druk) zijn inktblauw, nooit rood of groen.
+
+Ook aangepast: de deelafbeeldingen (kleuren en lettertypen), het favicon en de kleur van de browserbalk (licht en donker). In het `[data-theme="dark"]`-blok ontbraken `--gain-tekst` en `--loss-tekst`; die staan er nu wel.

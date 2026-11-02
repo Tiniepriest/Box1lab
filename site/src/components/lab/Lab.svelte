@@ -950,8 +950,8 @@
       flex-wrap: wrap;
       justify-content: space-between;
       background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: var(--radius);
+      box-shadow: var(--schaduw);
       padding: 8px 12px;
       font-size: 13px;
     }
@@ -960,7 +960,9 @@
     }
   }
   .kernzin {
-    font-size: 18px;
+    font-family: var(--f-display);
+    font-size: 23px;
+    line-height: 1.35;
     margin: 0;
     max-width: 70ch;
   }
