@@ -1,9 +1,8 @@
 ---
 import { inkomenscurve, maakHuishouden } from "@box1lab/engine";
-import { laadVerkiezing, laadVerkiezingen } from "@box1lab/engine/node";
 import Lijnen from "../components/grafieken/Lijnen.svelte";
 import Base from "../layouts/Base.astro";
-import { pad, params, voorbeelden } from "../lib/data.ts";
+import { actueel, pad, params, voorbeelden } from "../lib/data.ts";
 import { procent } from "../lib/format.ts";
 
 // Opvallende visual (HANDOFF §3.1): de marginale druk van een eenoudergezin, berekend tijdens de build.
@@ -18,12 +17,6 @@ const curve = inkomenscurve(
   1000,
 );
 const piek = Math.max(...curve.marginaleDruk);
-
-// Actuele vergelijking (verkiezing of routes naar een akkoord): de nieuwste die niet fictief is.
-const actueel = laadVerkiezingen()
-  .map((id) => laadVerkiezing(id).verkiezing)
-  .filter((v) => !v.fictief)
-  .sort((a, b) => b.datum.localeCompare(a.datum))[0];
 ---
 
 <Base title="Box1lab — wat betekent het belastingstelsel voor jou?">
