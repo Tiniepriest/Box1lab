@@ -1,6 +1,8 @@
 ---
+import Situatie from "../../components/Situatie.svelte";
 import Verkiezingen from "../../components/verkiezingen/Verkiezingen.svelte";
 import Base from "../../layouts/Base.astro";
+import { params as nu } from "../../lib/data.ts";
 import { PREVIEW, verkiezingData, verkiezingIds, type VerkiezingData } from "../../lib/verkiezingen.ts";
 
 export function getStaticPaths() {
@@ -33,7 +35,10 @@ const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
       ? `Stemming in de Tweede Kamer gepland op ${datum}. Per route: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland.`
       : `Verkiezing van ${datum}. Per partij: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland.`}
   </p>
-  <Verkiezingen client:load {params} {verkiezing} {partijen} {macro} preview={PREVIEW} />
+  <div class="met-situatie">
+    <Situatie client:load params={nu} plakken />
+    <Verkiezingen client:load {params} {verkiezing} {partijen} {macro} preview={PREVIEW} />
+  </div>
 </Base>
 
 <style>

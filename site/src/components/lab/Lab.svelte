@@ -31,6 +31,7 @@
   } from "../../lib/rekenen.ts";
   import { voorbeeldInvoer } from "../../lib/opslag.ts";
   import JouwEffect from "../JouwEffect.svelte";
+  import Situatie from "../Situatie.svelte";
   import { pad } from "../../lib/pad.ts";
   import Figuur from "../grafieken/Figuur.svelte";
   import Gestapeld, { KLASSEN } from "../grafieken/Gestapeld.svelte";
@@ -271,11 +272,11 @@
     return { x, nu, sc };
   });
 
-  // Jouw situatie (blok "Wat betekent dit voor jou?") en de voorbeeldhuishoudens, met "jij" als je die hebt.
+  // Jouw situatie (kolom links en "Wat betekent dit voor jou?") en de voorbeeldhuishoudens, met "jij" als je die hebt.
   let invoer = $state(voorbeeldInvoer());
-  let ingevuld = $state(false);
+  let eigen = $state(false);
   const jij = $derived.by(() => {
-    if (!ingevuld) return null;
+    if (!eigen) return null;
     const geldig = invoerSchema.safeParse($state.snapshot(invoer));
     return geldig.success ? huishoudenUitInvoer(geldig.data, params) : null;
   });
@@ -342,131 +343,134 @@
 {/snippet}
 
 <div class="lab">
-  <aside class="instellingen kaart" aria-label="Instellingen">
-    <button
-      type="button"
-      class="paneel-knop"
-      aria-expanded={paneelOpen}
-      aria-controls="lab-instellingen"
-      onclick={() => (paneelOpen = !paneelOpen)}
-      >{paneelOpen ? "Instellingen verbergen" : "Instellingen aanpassen"}</button
-    >
-    <div id="lab-instellingen" class="paneel-inhoud" class:open={paneelOpen}>
-      <div class="groep">
-        <h2 class="groepkop">Begin bij een voorstel</h2>
-        <div class="presets">
-          {#each presets as pr (pr.id)}
-            <button
-              type="button"
-              aria-pressed={actievePreset === pr.id}
-              onclick={() => kiesPreset(pr)}
-              title={pr.omschrijving}>{pr.naam}</button
-            >
-          {/each}
-        </div>
-      </div>
-
-      <div class="groep">
-        <h2 class="groepkop">Schijven box 1</h2>
-        <table class="schijven">
-          <thead
-            ><tr
-              ><th>Inkomen tot</th><th>Tarief</th><th><span class="visueel-verborgen">Verwijder</span></th
-              ></tr
-            ></thead
-          >
-          <tbody>
-            {#each scenario.box1.schijven as s, i (i)}
-              <tr>
-                <td>
-                  {#if s.tot === null}<span class="notitie">en hoger</span>{:else}
-                    <input
-                      type="number"
-                      step="1000"
-                      min="0"
-                      bind:value={s.tot}
-                      aria-label="Schijf {i + 1} tot"
-                    />
-                  {/if}
-                </td>
-                <td
-                  ><input
-                    type="number"
-                    step="0.05"
-                    min="0"
-                    max="100"
-                    bind:value={s.tarief}
-                    aria-label="Tarief schijf {i + 1}"
-                  /></td
-                >
-                <td>
-                  {#if scenario.box1.schijven.length > 1}
-                    <button
-                      type="button"
-                      class="stil"
-                      onclick={() => schijfWeg(i)}
-                      aria-label="Verwijder schijf {i + 1}">×</button
-                    >
-                  {/if}
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-        <button type="button" class="stil" onclick={schijfErbij}>+ schijf</button>
-      </div>
-
-      {#each groepenBasis as g (g.id)}
+  <div class="links">
+    <Situatie {params} bind:invoer bind:eigen zelfstandig={false} />
+    <aside class="instellingen kaart" aria-label="Instellingen">
+      <button
+        type="button"
+        class="paneel-knop"
+        aria-expanded={paneelOpen}
+        aria-controls="lab-instellingen"
+        onclick={() => (paneelOpen = !paneelOpen)}
+        >{paneelOpen ? "Instellingen verbergen" : "Instellingen aanpassen"}</button
+      >
+      <div id="lab-instellingen" class="paneel-inhoud" class:open={paneelOpen}>
         <div class="groep">
-          <h2 class="groepkop">{g.titel}</h2>
-          {#if g.uitleg}<p class="notitie">{g.uitleg}</p>{/if}
-          {#each g.knoppen as k (k.parameter)}{@render knopVeld(k)}{/each}
+          <h2 class="groepkop">Begin bij een voorstel</h2>
+          <div class="presets">
+            {#each presets as pr (pr.id)}
+              <button
+                type="button"
+                aria-pressed={actievePreset === pr.id}
+                onclick={() => kiesPreset(pr)}
+                title={pr.omschrijving}>{pr.naam}</button
+              >
+            {/each}
+          </div>
         </div>
-      {/each}
 
-      <details class="gevorderd">
-        <summary>Meer instellingen</summary>
-        {#each groepenGevorderd as g (g.id)}
+        <div class="groep">
+          <h2 class="groepkop">Schijven box 1</h2>
+          <table class="schijven">
+            <thead
+              ><tr
+                ><th>Inkomen tot</th><th>Tarief</th><th><span class="visueel-verborgen">Verwijder</span></th
+                ></tr
+              ></thead
+            >
+            <tbody>
+              {#each scenario.box1.schijven as s, i (i)}
+                <tr>
+                  <td>
+                    {#if s.tot === null}<span class="notitie">en hoger</span>{:else}
+                      <input
+                        type="number"
+                        step="1000"
+                        min="0"
+                        bind:value={s.tot}
+                        aria-label="Schijf {i + 1} tot"
+                      />
+                    {/if}
+                  </td>
+                  <td
+                    ><input
+                      type="number"
+                      step="0.05"
+                      min="0"
+                      max="100"
+                      bind:value={s.tarief}
+                      aria-label="Tarief schijf {i + 1}"
+                    /></td
+                  >
+                  <td>
+                    {#if scenario.box1.schijven.length > 1}
+                      <button
+                        type="button"
+                        class="stil"
+                        onclick={() => schijfWeg(i)}
+                        aria-label="Verwijder schijf {i + 1}">×</button
+                      >
+                    {/if}
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+          <button type="button" class="stil" onclick={schijfErbij}>+ schijf</button>
+        </div>
+
+        {#each groepenBasis as g (g.id)}
           <div class="groep">
             <h2 class="groepkop">{g.titel}</h2>
+            {#if g.uitleg}<p class="notitie">{g.uitleg}</p>{/if}
             {#each g.knoppen as k (k.parameter)}{@render knopVeld(k)}{/each}
           </div>
         {/each}
-      </details>
 
-      <div class="groep">
-        <h2 class="groepkop">Budgetneutraal maken</h2>
-        <div class="knoppenrij">
-          <button type="button" disabled={!basis || bezig} onclick={() => neutraal("vrijstelling")}
-            >Via de vrijstelling</button
-          >
-          <button type="button" disabled={!basis || bezig} onclick={() => neutraal("tarieven")}
-            >Via alle tarieven</button
-          >
-        </div>
-        <p class="notitie" role="status">
-          {neutraalMelding ||
-            "Past de vrijstelling of alle tarieven aan tot de overheid per saldo niets wint of verliest."}
-        </p>
-      </div>
+        <details class="gevorderd">
+          <summary>Meer instellingen</summary>
+          {#each groepenGevorderd as g (g.id)}
+            <div class="groep">
+              <h2 class="groepkop">{g.titel}</h2>
+              {#each g.knoppen as k (k.parameter)}{@render knopVeld(k)}{/each}
+            </div>
+          {/each}
+        </details>
 
-      <div class="groep">
-        <h2 class="groepkop">Delen</h2>
-        <div class="knoppenrij">
-          <button type="button" onclick={kopieerLink} disabled={!toestand.w.length}
-            >Kopieer link naar dit scenario</button
-          >
-          <button
-            type="button"
-            class="stil"
-            onclick={() => (scenario = kloon(params))}
-            disabled={!toestand.w.length}>Terug naar huidig</button
-          >
+        <div class="groep">
+          <h2 class="groepkop">Budgetneutraal maken</h2>
+          <div class="knoppenrij">
+            <button type="button" disabled={!basis || bezig} onclick={() => neutraal("vrijstelling")}
+              >Via de vrijstelling</button
+            >
+            <button type="button" disabled={!basis || bezig} onclick={() => neutraal("tarieven")}
+              >Via alle tarieven</button
+            >
+          </div>
+          <p class="notitie" role="status">
+            {neutraalMelding ||
+              "Past de vrijstelling of alle tarieven aan tot de overheid per saldo niets wint of verliest."}
+          </p>
         </div>
-        <p class="notitie" role="status">{deelMelding}</p>
+
+        <div class="groep">
+          <h2 class="groepkop">Delen</h2>
+          <div class="knoppenrij">
+            <button type="button" onclick={kopieerLink} disabled={!toestand.w.length}
+              >Kopieer link naar dit scenario</button
+            >
+            <button
+              type="button"
+              class="stil"
+              onclick={() => (scenario = kloon(params))}
+              disabled={!toestand.w.length}>Terug naar huidig</button
+            >
+          </div>
+          <p class="notitie" role="status">{deelMelding}</p>
+        </div>
       </div>
-    </div>
-  </aside>
+    </aside>
+  </div>
 
   <section class="uitkomsten" aria-live="polite" aria-labelledby="titel-uitkomsten">
     <h2 id="titel-uitkomsten" class="visueel-verborgen">Uitkomsten</h2>
@@ -518,7 +522,7 @@
         </div>
       </div>
 
-      <JouwEffect {params} scenario={toestand.p} bind:invoer bind:ingevuld />
+      <JouwEffect {params} scenario={toestand.p} situatie={{ invoer, eigen }} />
 
       <div class="kaart twee">
         <Figuur
@@ -664,7 +668,7 @@
           titel="Wat betekent het voor deze huishoudens?"
           uitleg={jij
             ? "Verandering van het besteedbaar inkomen per jaar. De onderste rij is jouw situatie."
-            : "Verandering van het besteedbaar inkomen per jaar. Vul hierboven je eigen situatie in om die hier te zien."}
+            : "Verandering van het besteedbaar inkomen per jaar. Vul je eigen situatie in om die hier te zien."}
         >
           {#snippet legenda()}
             <span><i class="legenda-blok" style="background: var(--gain)"></i>erop vooruit</span>
@@ -792,11 +796,17 @@
     gap: 20px;
     align-items: start;
   }
-  .instellingen {
+  /* Links: je situatie en de instellingen, samen in beeld bij het scrollen. */
+  .links {
     position: sticky;
     top: 12px;
     max-height: calc(100vh - 24px);
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .instellingen {
     padding: 14px;
   }
   .paneel-knop {
@@ -808,7 +818,7 @@
     .lab {
       grid-template-columns: minmax(0, 1fr);
     }
-    .instellingen {
+    .links {
       position: static;
       max-height: none;
     }

@@ -9,43 +9,44 @@
     type Wijziging,
   } from "@box1lab/engine";
   import { euro, euroVerschil } from "../lib/format.ts";
-  import { leesBewaard, voorbeeldInvoer } from "../lib/opslag.ts";
-  import InvoerFormulier from "./Invoer.svelte";
+  import { SITUATIE_GEWIJZIGD, leesInvoer } from "../lib/opslag.ts";
+  import { openSituatie } from "../lib/situatie.ts";
 
   /*
    * "Wat betekent dit voor jou?": het effect van een scenario of voorstel op het eigen huishouden, naast de
-   * landelijke cijfers. Gebruikt de situatie die in dit tabblad of op dit apparaat bewaard is (D-052); zonder
-   * bewaarde situatie kun je hem hier invullen.
+   * landelijke cijfers. Rekent met de situatie uit de kolom "Gerekend met" (D-064): die wordt meegegeven (lab), of
+   * gelezen uit de browser en bijgewerkt als hij verandert (voorstelpagina's). Zonder eigen situatie: een knop naar
+   * het formulier in die kolom.
    */
   let {
     params,
     scenario,
     wijzigingen,
-    invoer = $bindable(voorbeeldInvoer()),
-    ingevuld = $bindable(false),
+    situatie,
   }: {
     params: Parameters;
     /** Het scenario als parameterset (lab) ... */
     scenario?: Parameters;
     /** ... of als wijzigingen op de basis (voorstelpagina's). */
     wijzigingen?: Wijziging[];
-    invoer?: Invoer;
-    /** Er is een eigen situatie: bewaard, of hier ingevuld. */
-    ingevuld?: boolean;
+    /** De situatie uit de kolom op dezelfde pagina; zonder deze lezen we hem uit de browser. */
+    situatie?: { invoer: Invoer; eigen: boolean };
   } = $props();
 
-  let open = $state(false);
-
+  let bewaard = $state<Invoer | null>(null);
   $effect(() => {
-    const bewaard = leesBewaard();
-    if (bewaard) {
-      invoer = bewaard.invoer;
-      ingevuld = true;
-    }
+    if (situatie) return;
+    const lees = () => (bewaard = leesInvoer());
+    lees();
+    window.addEventListener(SITUATIE_GEWIJZIGD, lees);
+    return () => window.removeEventListener(SITUATIE_GEWIJZIGD, lees);
   });
+  const invoer = $derived(situatie ? (situatie.eigen ? situatie.invoer : null) : bewaard);
+  const ingevuld = $derived(invoer !== null);
 
   const nieuw = $derived(scenario ?? (wijzigingen ? pasToe(params, wijzigingen) : params));
   const uitkomst = $derived.by(() => {
+    if (!invoer) return null;
     const geldig = invoerSchema.safeParse($state.snapshot(invoer));
     if (!geldig.success) return null;
     const h = huishoudenUitInvoer(geldig.data, params);
@@ -53,12 +54,7 @@
     const b = nieuw === params ? a : berekenHuishouden(h, nieuw, params);
     return { a, b, d: b.besteedbaar - a.besteedbaar };
   });
-  const samen = $derived(invoer.personen.length > 1 || invoer.kinderen.length > 0);
-
-  function openFormulier() {
-    open = !open;
-    if (open) ingevuld = true;
-  }
+  const samen = $derived(!!invoer && (invoer.personen.length > 1 || invoer.kinderen.length > 0));
 </script>
 
 <section class="kaart jouw" aria-labelledby="titel-jouw">
@@ -107,12 +103,9 @@
       </tbody>
     </table>
   {/if}
-  <button type="button" class:primair={!ingevuld} aria-expanded={open} onclick={openFormulier}>
-    {open ? "Formulier sluiten" : ingevuld ? "Pas je situatie aan" : "Vul je situatie in"}
+  <button type="button" class:primair={!ingevuld} onclick={openSituatie}>
+    {ingevuld ? "Pas je situatie aan" : "Vul je situatie in"}
   </button>
-  {#if open}
-    <div class="formulier"><InvoerFormulier bind:invoer {params} /></div>
-  {/if}
 </section>
 
 <style>
@@ -138,9 +131,5 @@
   }
   .totaal td {
     font-weight: 600;
-  }
-  .formulier {
-    width: 100%;
-    max-width: 560px;
   }
 </style>

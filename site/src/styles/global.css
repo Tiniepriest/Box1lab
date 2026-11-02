@@ -110,6 +110,19 @@ label {
 }
 
 /* ---------- Bouwstenen ---------- */
+/* Pagina met de kolom "Gerekend met jouw situatie" links (D-064). */
+.met-situatie {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .met-situatie {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+}
 .kaart {
   background: var(--panel);
   border: 1px solid var(--line);
