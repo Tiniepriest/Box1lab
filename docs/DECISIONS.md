@@ -464,3 +464,25 @@ Besluiten van de eigenaar (2 november 2026) na een kritische blik op wie de site
 - **Jouw situatie laadt de bevolking niet meer.** "Je plek in Nederland" gebruikt een verdeling in duizend stukken die tijdens de build wordt gemaakt (`verdeling` in de engine, `plekGrenzen` in `site/src/lib/basis.ts`), tot op 0,1 procentpunt gelijk aan de berekening op de hele bevolking. Dat scheelt op die pagina ruim 1 MB aan data en de rekenwerker. Het lab laadt de bevolking nog wel.
 
 Niet gedaan, op besluit van de eigenaar: een waarschuwing bij de uitkomst voor 2027 (in plaats daarvan betere bedragen, D-065), een andere manier om fouten te melden, meer tekst op de pagina Over en uitleg bij moeilijke woorden.
+
+## Fase 12: vlaktaks als voorbeeld
+
+### D-067 Vlaktaks 35% boven € 24.000
+
+Besluit van de eigenaar (2 november 2026): het voorbeeld van een vlaktaks wordt 35% boven een belastingvrije voet van € 24.000 per persoon, in plaats van 40% boven € 18.000. De rest blijft gelijk: alle heffingskortingen, de hypotheekrenteaftrek, het forfait, de overige aftrekposten en alle toeslagen vervallen.
+
+- Nieuw adres `/voorstellen/vlaktaks-35`; het oude adres `/voorstellen/vlaktaks-40` stuurt door (`redirects` in `site/astro.config.mjs`), zodat gedeelde links blijven werken.
+- `npm run vergelijk` vergelijkt de vlaktaks niet meer met het prototype; dat had 40% boven € 18.000.
+
+Golden-verschil: alleen de vlaktaks en de oplosser veranderen.
+
+|                         | 40% boven € 18.000 | 35% boven € 24.000 |
+| ----------------------- | ------------------ | ------------------ |
+| Saldo voor de overheid  | +€ 41,40 mld       | −€ 1,66 mld        |
+| Armoede (personen)      | 19,6%              | 15,5%              |
+| Gini                    | 0,271              | 0,274              |
+| Achteruit (> 5% / 1–5%) | 71,2% / 12,4%      | 32,3% / 15,8%      |
+| Minder dan 1% verschil  | 4,3%               | 10,8%              |
+| Vooruit (1–5% / > 5%)   | 6,1% / 6,1%        | 15,9% / 25,2%      |
+
+De oplosser maakt de vlaktaks budgetneutraal: via de vrijstelling € 23.555 (was € 27.762), of via de tarieven × 1,014 (was × 0,742).

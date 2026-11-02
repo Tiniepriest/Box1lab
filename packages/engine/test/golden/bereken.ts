@@ -63,7 +63,7 @@ export function berekenGolden(jaar = 2026) {
     };
   });
 
-  const vlaktaks = presets.find((p) => p.id === "vlaktaks-40");
+  const vlaktaks = presets.find((p) => p.id === "vlaktaks-35");
   const oplosser = vlaktaks
     ? (() => {
         const s = pasToe(params, vlaktaks.wijzigingen);

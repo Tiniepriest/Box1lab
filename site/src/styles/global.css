@@ -207,6 +207,9 @@ table.data td.num {
 .achteruit {
   color: var(--loss-tekst);
 }
+.gelijk {
+  color: var(--muted);
+}
 .legenda-blok {
   display: inline-block;
   width: 10px;

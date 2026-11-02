@@ -11,6 +11,8 @@ export interface Kerncijfers {
   code: string;
   saldoMld: number;
   achteruit: number;
+  /** Minder dan de kleinste grens (methodiek.winnaarsGrenzen) verschil. */
+  gelijk: number;
   vooruit: number;
   armoedeNu: number;
   armoede: number;
@@ -28,6 +30,7 @@ export const kerncijfers: Kerncijfers[] = presets
       code: codeerScenario(preset.wijzigingen),
       saldoMld: u.saldoMld,
       achteruit: u.winnaars[0]! + u.winnaars[1]!,
+      gelijk: u.winnaars[2]!,
       vooruit: u.winnaars[3]! + u.winnaars[4]!,
       armoedeNu: basis.armoede.personen,
       armoede: u.armoede.personen,

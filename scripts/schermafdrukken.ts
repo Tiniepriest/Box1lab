@@ -18,7 +18,7 @@ const PAGINAS = [
   "jouw-situatie",
   "lab",
   "voorstellen",
-  "voorstellen/vlaktaks-40",
+  "voorstellen/vlaktaks-35",
   "uitleg",
   "uitleg/armoedeval",
   "uitleg/toeslagen",
@@ -92,7 +92,7 @@ try {
     console.log(`  ${ok ? "ok  " : "FOUT"} ${wat}`);
   };
   const tabblad = pg.getByRole("navigation", { name: "Hoofdmenu" }).getByRole("link");
-  await pg.goto(`${BASIS}/voorstellen/vlaktaks-40`, { waitUntil: "networkidle" });
+  await pg.goto(`${BASIS}/voorstellen/vlaktaks-35`, { waitUntil: "networkidle" });
   const tabs = await tabblad.allTextContents();
   controleer(
     tabs.length === 3 && /Belastingplan 2027/.test(tabs[1] ?? ""),
