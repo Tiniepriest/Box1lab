@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  heffingVoorKortingen,
+  heffingskortingen,
   leesParameter,
   pasToe,
   staffelWaarde,
@@ -140,5 +142,23 @@ describe("presets", () => {
         params,
       ),
     ).toThrow(/onbekende parameter 'toeslagen.huursubsidie.niveau'/);
+  });
+});
+
+describe("parameters 2027 (voorlopig)", () => {
+  const p27 = laadParameters(2027);
+  it("is voorlopig, met toelichting", () => {
+    expect(p27.status).toBe("voorlopig");
+    expect(p27.toelichting).toMatch(/Belastingplan 2027/);
+    expect(laadParameters(2026).status).toBe("definitief");
+  });
+  it("tarieven volgens het Belastingplan 2027 met de tweede nota van wijziging", () => {
+    // Eerste schijf 36,23% tot € 39.247; tweede 38,16% tot € 80.578
+    expect(heffingVoorKortingen(39247, p27, false)).toBeCloseTo(39247 * 0.3623, 2);
+    expect(heffingVoorKortingen(80578, p27, false)).toBeCloseTo(39247 * 0.3623 + (80578 - 39247) * 0.3816, 2);
+  });
+  it("de algemene heffingskorting is nul bij het aanvangspunt van het toptarief", () => {
+    const k = { werkt: false, aow: false, alleenstaand: true, combinatiekorting: false };
+    expect(heffingskortingen(80578, 0, p27, k).algemeen).toBeLessThan(5);
   });
 });

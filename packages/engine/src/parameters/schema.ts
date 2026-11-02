@@ -47,6 +47,10 @@ const halfjaren = z.strictObject({ eersteHalfjaar: nietNegatief, tweedeHalfjaar:
 
 export const parametersSchema = z.strictObject({
   jaar: z.number().int().min(2000).max(2100),
+  /** Voorlopig: nog niet alle bedragen zijn officieel; de site zegt dat erbij. */
+  status: z.enum(["definitief", "voorlopig"]).default("definitief"),
+  /** Uitleg bij een voorlopig parameterjaar, getoond op de site. */
+  toelichting: z.string().optional(),
 
   box1: z.strictObject({
     bron,

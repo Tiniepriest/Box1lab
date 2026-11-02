@@ -28,7 +28,15 @@
     kalibratie,
     populatieUrl,
     presets,
-  }: { params: Parameters; kalibratie: Kalibratie; populatieUrl: string; presets: Preset[] } = $props();
+    volgend = null,
+  }: {
+    params: Parameters;
+    kalibratie: Kalibratie;
+    populatieUrl: string;
+    presets: Preset[];
+    /** Parameters van volgend jaar, met de secties die nog geen bron hebben. */
+    volgend?: { params: Parameters; nogNiet: string[] } | null;
+  } = $props();
 
   // Wat doen de voorstellen met dit huishouden? De parametersets rekenen we één keer uit.
   const voorstelParams = presets
@@ -87,6 +95,13 @@
     const x: number[] = [];
     for (let v = 0; v <= max; v += max / 120) x.push(Math.round(v));
     return { x, ...inkomenscurve((b) => metInkomen(huishouden, 0, b), params, params, x, 100), nu };
+  });
+
+  // Hetzelfde huishouden met de regels van volgend jaar, bij hetzelfde bruto inkomen.
+  const volgendJaar = $derived.by(() => {
+    if (!volgend || !geldig.success || !r) return null;
+    const r2 = berekenHuishouden(huishoudenUitInvoer(geldig.data, volgend.params), volgend.params);
+    return { r2, d: r2.besteedbaar - r.besteedbaar };
   });
 
   const voorstellen = $derived(
@@ -224,6 +239,68 @@
           </Figuur>
         </div>
       {/if}
+      {#if volgend && volgendJaar}
+        {@const j = volgend.params.jaar}
+        <section class="kaart jaar" aria-labelledby="titel-jaar">
+          <h2 id="titel-jaar">
+            Wat verandert er in {j} voor {samen ? "jullie" : "jou"}?
+            {#if volgend.params.status === "voorlopig"}<span class="voorlopig">voorlopig</span>{/if}
+          </h2>
+          <p class="kern">
+            {#if Math.abs(volgendJaar.d) < 1}
+              Bij hetzelfde bruto inkomen {samen ? "houden jullie" : "houd je"} in {j} evenveel over.
+            {:else}
+              Bij hetzelfde bruto inkomen {samen ? "houden jullie" : "houd je"} in {j}
+              <strong class={volgendJaar.d > 0 ? "vooruit" : "achteruit"}
+                >{euroVerschil(volgendJaar.d / 12)} per maand</strong
+              >
+              {volgendJaar.d > 0 ? "meer" : "minder"} over ({euroVerschil(volgendJaar.d)} per jaar).
+            {/if}
+          </p>
+          <table class="data">
+            <thead><tr><th>Per jaar</th><th>{params.jaar}</th><th>{j}</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Belasting en premies</td><td class="num">{euro(r.belasting)}</td><td class="num"
+                  >{euro(volgendJaar.r2.belasting)}</td
+                >
+              </tr>
+              <tr>
+                <td>Toeslagen</td><td class="num">{euro(r.toeslagen)}</td><td class="num"
+                  >{euro(volgendJaar.r2.toeslagen)}</td
+                >
+              </tr>
+              {#if r.kinderbijslag > 0}
+                <tr>
+                  <td>Kinderbijslag</td><td class="num">{euro(r.kinderbijslag)}</td><td class="num"
+                    >{euro(volgendJaar.r2.kinderbijslag)}</td
+                  >
+                </tr>
+              {/if}
+              <tr class="totaal">
+                <td>Te besteden</td><td class="num">{euro(r.besteedbaar)}</td><td class="num"
+                  >{euro(volgendJaar.r2.besteedbaar)}</td
+                >
+              </tr>
+            </tbody>
+          </table>
+          <p class="notitie">
+            Meestal stijgen lonen en uitkeringen ook; dat zit hier niet in. Zo zie je alleen wat de nieuwe
+            regels doen.
+          </p>
+          {#if volgend.params.status === "voorlopig"}
+            <p class="notitie">
+              <strong>Voorlopig.</strong>
+              {volgend.params.toelichting}
+              {#if volgend.nogNiet.length}
+                Nog niet (helemaal) bekend, dus gerekend met de bedragen van {params.jaar}: {volgend.nogNiet.join(
+                  ", ",
+                )}.
+              {/if}
+            </p>
+          {/if}
+        </section>
+      {/if}
       {#if voorstellen.length}
         <div class="kaart">
           <Figuur
@@ -284,6 +361,29 @@
 </div>
 
 <style>
+  .jaar h2 {
+    font-size: 18px;
+    margin: 0 0 8px;
+  }
+  .voorlopig {
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--warn);
+    background: var(--warn-bg);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .jaar .kern {
+    margin: 0 0 10px;
+  }
+  .jaar table {
+    max-width: 480px;
+  }
+  .jaar .totaal td {
+    font-weight: 600;
+  }
   .calculator {
     display: grid;
     grid-template-columns: minmax(0, 380px) minmax(0, 1fr);

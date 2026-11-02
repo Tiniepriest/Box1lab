@@ -361,3 +361,22 @@ Eén component (`JouwEffect.svelte`) laat het effect van een scenario op het eig
 Op Jouw situatie staat een grafiek "Wat doen de voorstellen met jou?" met het verschil per maand per voorstel en een link naar het voorstel.
 
 De staafgrafiek zet labels boven de staven als ze er niet naast passen (vooral op een telefoon).
+
+## Fase 8d: cijfers 2027 (verbeterlijst punt 10)
+
+### D-061 Voorlopig parameterjaar 2027
+
+Besluit van de eigenaar: nu al live, duidelijk gemarkeerd als voorlopig. Een parameterbestand heeft daarvoor een `status` (`definitief` of `voorlopig`) en een `toelichting` die de site toont.
+
+`data/parameters/2027.yaml` bevat wat er op 28 oktober 2026 officieel bekend is:
+
+- Tarieven, algemene heffingskorting, arbeidskorting, ouderenkorting, alleenstaande-ouderenkorting en combinatiekorting: Belastingplan 2027, memorie van toelichting tabel 1 en 2, met de tweede nota van wijziging van 20 oktober 2026 (aanvangspunt toptarief € 80.578, arbeidskorting € 40 minder verhoogd). Afgeleid en zo vermeld: het afbouwpercentage van de algemene heffingskorting (nul bij het aanvangspunt van het toptarief, zoals in eerdere jaren) en de eerste twee knikken van de arbeidskorting (grenzen 2026 × 1,01248, de beperkte indexatie uit de memorie van toelichting).
+- Zelfstandigenaftrek € 900, startersaftrek € 10 (afschaffing in 2028), mkb-winstvrijstelling 12,7%.
+- Maximaal aftrektarief eigen woning 38,16%: gelijk aan het tarief van de tweede schijf, zoals in 2025 en 2026.
+- Overige aftrekposten: kolom 2027 van dezelfde Miljoenennota-tabel.
+
+Nog niet gepubliceerd, dus tijdelijk de bedragen van 2026 met `TODO: bron nodig`: de vier toeslagen, AOW-bedragen, bijstandsnormen, zorgpremie en Zvw-bijdrage, kinderbijslag, pensioenpremie (ABP gaat in 2027 over naar het nieuwe stelsel), eigenwoningforfait en Wet Hillen, en de kortingen voor AOW'ers die werken. `npm run valideer` noemt ze allemaal. De site noemt ze bij de vergelijking.
+
+Wat de site ermee doet: op Jouw situatie staat "Wat verandert er in 2027 voor jou?", bij hetzelfde bruto inkomen (lonen en uitkeringen stijgen meestal ook; dat staat erbij). Er is nog geen kalibratie of bevolking voor 2027, dus geen landelijke doorrekening; `npm run valideer` slaat die voor 2027 over.
+
+Bijwerken: zodra de bedragen definitief zijn (Belastingdienst half december, Dienst Toeslagen en SVB eind november en december), de TODO's invullen, de afgeleide waarden vervangen door de officiële en `status: definitief` zetten. Zie docs/JAARLIJKSE-UPDATE.md.
