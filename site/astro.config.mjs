@@ -12,6 +12,8 @@ export default defineConfig({
   site: "https://tiniepriest.github.io",
   base: "/Box1lab",
   trailingSlash: "ignore",
+  // Oude adressen van voorstellen die een nieuwe naam kregen, zodat gedeelde links blijven werken.
+  redirects: { "/voorstellen/vlaktaks-40": "/Box1lab/voorstellen/vlaktaks-35" },
   integrations: [
     svelte(),
     mdx(),

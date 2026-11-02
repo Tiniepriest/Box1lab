@@ -104,6 +104,10 @@ Punten 1, 2, 3, 6, 7 en 9 van 2 november 2026 (4, 5 en 8 niet).
 - [x] 11a: bedragen 2027 geraamd met de wettelijke indexatie (3, D-065). Bijwerken als de officiële bedragen er zijn (november en december 2026)
 - [x] 11b: uitkomst in beeld op een telefoon (1), modaal als voorbeeld (2), deelplaatje en deelknop (6), titels voor zoekmachines (7), lichtere pagina Jouw situatie (9) (D-066)
 
+## Fase 12: vlaktaks als voorbeeld — klaar
+
+- [x] Vlaktaks 35% boven € 24.000 in plaats van 40% boven € 18.000, oud adres stuurt door (D-067)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

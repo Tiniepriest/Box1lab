@@ -61,41 +61,41 @@
    ]
   },
   {
-   "id": "vlaktaks-40",
-   "saldoMld": 41.3983,
+   "id": "vlaktaks-35",
+   "saldoMld": -1.6645,
    "posten": {
-    "box1": 9.364,
-    "eigenWoning": 7.7898,
+    "box1": -32.959,
+    "eigenWoning": 4.8877,
     "overigeAftrek": 2.932,
     "zorgtoeslag": 6.3,
     "huurtoeslag": 5.6,
     "kgb": 4.7,
     "kot": 5.7,
     "kinderbijslag": 0,
-    "zvw": 0.1028,
-    "uitkeringen": -1.0903
+    "zvw": 0,
+    "uitkeringen": 1.1748
    },
-   "armoede": 19.6153,
-   "armoedeKinderen": 19.185,
-   "gini": 0.27107,
+   "armoede": 15.474,
+   "armoedeKinderen": 15.9367,
+   "gini": 0.27356,
    "decielenRelatief": [
-    -19.179,
-    -15.801,
-    -15.452,
-    -13.067,
-    -12.764,
-    -10.776,
-    -8.785,
-    -6.615,
-    -2.935,
-    3.834
+    -15.682,
+    -9.349,
+    -7.588,
+    -4.656,
+    -4.204,
+    -1.966,
+    0.179,
+    2.613,
+    6.418,
+    13.431
    ],
    "winnaars": [
-    71.202,
-    12.367,
-    4.262,
-    6.092,
-    6.078
+    32.313,
+    15.754,
+    10.781,
+    15.908,
+    25.244
    ]
   },
   {
@@ -374,7 +374,7 @@
      "toeslagen": 6951.71,
      "besteedbaar": 21993.47
     },
-    "vlaktaks-40": {
+    "vlaktaks-35": {
      "belasting": 0,
      "toeslagen": 0,
      "besteedbaar": 15041.76
@@ -424,10 +424,10 @@
      "toeslagen": 5857.4,
      "besteedbaar": 27461.4
     },
-    "vlaktaks-40": {
-     "belasting": 3614.86,
+    "vlaktaks-35": {
+     "belasting": 350,
      "toeslagen": 0,
-     "besteedbaar": 20226.99
+     "besteedbaar": 21553.5
     },
     "drie-schijven-35-40-45": {
      "belasting": 3025.89,
@@ -474,10 +474,10 @@
      "toeslagen": 5229.46,
      "besteedbaar": 31673.31
     },
-    "vlaktaks-40": {
-     "belasting": 5183.74,
+    "vlaktaks-35": {
+     "belasting": 2435.78,
      "toeslagen": 0,
-     "besteedbaar": 23891.62
+     "besteedbaar": 26639.58
     },
     "drie-schijven-35-40-45": {
      "belasting": 4535.78,
@@ -524,10 +524,10 @@
      "toeslagen": 3587.57,
      "besteedbaar": 64535.98
     },
-    "vlaktaks-40": {
-     "belasting": 12572.37,
+    "vlaktaks-35": {
+     "belasting": 7580.5,
      "toeslagen": 0,
-     "besteedbaar": 53718.79
+     "besteedbaar": 58710.66
     },
     "drie-schijven-35-40-45": {
      "belasting": 11000.82,
@@ -574,10 +574,10 @@
      "toeslagen": 1554.69,
      "besteedbaar": 84036.31
     },
-    "vlaktaks-40": {
-     "belasting": 24331.73,
+    "vlaktaks-35": {
+     "belasting": 17090.26,
      "toeslagen": 0,
-     "besteedbaar": 71357.83
+     "besteedbaar": 78599.3
     },
     "drie-schijven-35-40-45": {
      "belasting": 21716.28,
@@ -624,10 +624,10 @@
      "toeslagen": 0,
      "besteedbaar": 107324.57
     },
-    "vlaktaks-40": {
-     "belasting": 49320.37,
+    "vlaktaks-35": {
+     "belasting": 38955.32,
      "toeslagen": 0,
-     "besteedbaar": 106212.55
+     "besteedbaar": 116577.6
     },
     "drie-schijven-35-40-45": {
      "belasting": 46120.37,
@@ -674,10 +674,10 @@
      "toeslagen": 0,
      "besteedbaar": 222015.06
     },
-    "vlaktaks-40": {
-     "belasting": 140741.51,
+    "vlaktaks-35": {
+     "belasting": 118948.82,
      "toeslagen": 0,
-     "besteedbaar": 243344.27
+     "besteedbaar": 265136.96
     },
     "drie-schijven-35-40-45": {
      "belasting": 147184.61,
@@ -724,10 +724,10 @@
      "toeslagen": 7320.86,
      "besteedbaar": 69259.07
     },
-    "vlaktaks-40": {
-     "belasting": 14409.77,
+    "vlaktaks-35": {
+     "belasting": 8408.55,
      "toeslagen": 0,
-     "besteedbaar": 55033.59
+     "besteedbaar": 61034.81
     },
     "drie-schijven-35-40-45": {
      "belasting": 12608.55,
@@ -768,7 +768,7 @@
   }
  ],
  "oplosser": {
-  "vlaktaksVrijstelling": 27762,
-  "vlaktaksTariefFactor": 0.7418
+  "vlaktaksVrijstelling": 23555,
+  "vlaktaksTariefFactor": 1.0142
  }
 }
