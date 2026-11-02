@@ -43,7 +43,7 @@
      * Basispad in volgend jaar (zoals het Belastingplan): eerst wat dat met jou doet ten opzichte van nu (stap 1),
      * dan wat de partijen of routes daaraan veranderen (stap 2). D-064.
      */
-    vooraf?: { huidig: Parameters; nogNiet: string[] } | null;
+    vooraf?: { huidig: Parameters; nogNiet: string[]; geraamd: string[] } | null;
   } = $props();
 
   // Woorden: bij een akkoord gaat het om routes en bronnen, bij een verkiezing om partijen en programma's.
@@ -107,7 +107,7 @@
   {#if vooraf}
     <JaarVergelijking
       params={vooraf.huidig}
-      volgend={{ params, nogNiet: vooraf.nogNiet }}
+      volgend={{ params, nogNiet: vooraf.nogNiet, geraamd: vooraf.geraamd }}
       {invoer}
       titel={`Stap 1: wat doet het plan van het kabinet met ${samen ? "jullie" : "jou"}?`}
     />

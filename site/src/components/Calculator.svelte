@@ -37,7 +37,7 @@
     populatieUrl: string;
     presets: Preset[];
     /** Parameters van volgend jaar, met de secties die nog geen bron hebben. */
-    volgend?: { params: Parameters; nogNiet: string[] } | null;
+    volgend?: { params: Parameters; nogNiet: string[]; geraamd: string[] } | null;
     /** Het tabblad met de nieuwste verkiezing of het Belastingplan, voor "Volgende stap" (D-064). */
     actueel?: { href: string; naam: string; soort: "verkiezing" | "akkoord"; jaar: number } | null;
   } = $props();

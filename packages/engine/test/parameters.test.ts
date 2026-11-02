@@ -8,6 +8,7 @@ import {
   valideerParameters,
   valideerPreset,
   verschil,
+  zorgtoeslag,
 } from "../src/index.ts";
 import { laadParameters, laadPresets } from "../src/node/index.ts";
 
@@ -160,5 +161,26 @@ describe("parameters 2027 (voorlopig)", () => {
   it("de algemene heffingskorting is nul bij het aanvangspunt van het toptarief", () => {
     const k = { werkt: false, aow: false, alleenstaand: true, combinatiekorting: false };
     expect(heffingskortingen(80578, 0, p27, k).algemeen).toBeLessThan(5);
+  });
+  it("maximale zorgtoeslag zoals geraamd in de VWS-begroting 2027 (tabel 77)", () => {
+    expect(Math.round(zorgtoeslag(0, false, 0, p27))).toBe(1680);
+    expect(Math.round(zorgtoeslag(0, true, 0, p27))).toBe(3223);
+    // Boven het maximale toetsingsinkomen zou de zorgtoeslag onder € 24 per jaar komen.
+    const z = p27.toeslagen.zorgtoeslag;
+    expect(zorgtoeslag(z.maxToetsingsinkomen.alleenstaand, false, 0, p27)).toBeCloseTo(24, 0);
+    expect(zorgtoeslag(z.maxToetsingsinkomen.partners, true, 0, p27)).toBeCloseTo(24, 0);
+  });
+  it("ramingen staan als raming in de bron", () => {
+    for (const bron of [
+      p27.toeslagen.zorgtoeslag.bron,
+      p27.toeslagen.huurtoeslag.bron,
+      p27.toeslagen.kindgebondenBudget.bron,
+      p27.uitkeringen.bron,
+      p27.bijstand.bron,
+      p27.zorg.bron,
+      p27.kinderbijslag.bron,
+    ]) {
+      expect(bron).toMatch(/Raming:/);
+    }
   });
 });

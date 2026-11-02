@@ -6,7 +6,18 @@ Twee keer per jaar veranderen de cijfers: rond **Prinsjesdag** (september, voorl
 
 ### 0. Voorlopig jaar (na Prinsjesdag)
 
-Na Prinsjesdag liggen de plannen voor het nieuwe jaar er, maar nog niet alle bedragen. Je kunt dan al een parameterbestand maken met `status: voorlopig` en een `toelichting` (zie `data/parameters/2027.yaml` als voorbeeld). Vul in wat officieel bekend is (Belastingplan, memorie van toelichting, nota's van wijziging) en laat de rest op het oude bedrag staan met `TODO: bron nodig` in de bron. De site laat dan "Wat verandert er?" zien, met een duidelijke melding dat het voorlopig is en welke bedragen nog ontbreken: op de pagina van de verkiezing of het Belastingplan als stap 1 als die pagina dat jaar als basispad heeft, anders op Jouw situatie (D-064). Kalibratie en bevolking hoeven dan nog niet.
+Na Prinsjesdag liggen de plannen voor het nieuwe jaar er, maar nog niet alle bedragen. Je kunt dan al een parameterbestand maken met `status: voorlopig` en een `toelichting` (zie `data/parameters/2027.yaml` als voorbeeld). Vul in wat officieel bekend is (Belastingplan, memorie van toelichting, nota's van wijziging, de begrotingen, wetteksten met een "toekomstige tekst" op wetten.overheid.nl). Heeft een bedrag een wettelijke indexatieregel met een bekende factor, raam het dan en begin de bron met `Raming:` plus de berekening (D-065). Laat de rest op het oude bedrag staan met `TODO: bron nodig` in de bron.
+
+Vaste regels voor de ramingen:
+
+| Bedrag                                          | Raming                                                                        | Officieel                  |
+| ----------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------- |
+| Drempelinkomen toeslagen                        | 108% × 12 × referentiemaandloon per 1 januari (regeling minimumloon, oktober) | al in oktober              |
+| Standaardpremie, nominale premie, Zvw-bijdrage  | Rijksbegroting VWS, tabel "Premieoverzicht Zvw"                               | november                   |
+| Huurtoeslag, kindgebonden budget, kinderbijslag | × tabelcorrectiefactor (memorie van toelichting Belastingplan)                | eind november tot december |
+| AOW, bijstand                                   | bedrag per 1 juli + stijging referentiemaandloon per 1 januari                | december                   |
+
+`npm run valideer` toont alle ramingen, zodat je ze kunt vervangen als de officiële bedragen er zijn. De site laat dan "Wat verandert er?" zien, met een duidelijke melding dat het voorlopig is en welke bedragen nog ontbreken: op de pagina van de verkiezing of het Belastingplan als stap 1 als die pagina dat jaar als basispad heeft, anders op Jouw situatie (D-064). Kalibratie en bevolking hoeven dan nog niet.
 
 Zijn alle bedragen definitief, werk dan het bestand af volgens de stappen hieronder, zet `status: definitief` en haal de `toelichting` weg.
 

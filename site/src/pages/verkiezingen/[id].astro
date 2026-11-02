@@ -3,7 +3,7 @@ import Situatie from "../../components/Situatie.svelte";
 import Verkiezingen from "../../components/verkiezingen/Verkiezingen.svelte";
 import Base from "../../layouts/Base.astro";
 import { JAAR, params as nu } from "../../lib/data.ts";
-import { zonderBron } from "../../lib/secties.ts";
+import { nogNietOfficieel } from "../../lib/secties.ts";
 import { PREVIEW, verkiezingData, verkiezingIds, type VerkiezingData } from "../../lib/verkiezingen.ts";
 
 export function getStaticPaths() {
@@ -14,7 +14,7 @@ const { data } = Astro.props as { data: VerkiezingData };
 const { verkiezing, params, partijen, macro } = data;
 const akkoord = verkiezing.soort === "akkoord";
 // Basispad in volgend jaar: eerst wat dat met jou doet ten opzichte van nu (D-064).
-const vooraf = verkiezing.basispad.jaar > JAAR ? { huidig: nu, nogNiet: zonderBron(params) } : null;
+const vooraf = verkiezing.basispad.jaar > JAAR ? { huidig: nu, ...nogNietOfficieel(params) } : null;
 const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
   day: "numeric",
   month: "long",

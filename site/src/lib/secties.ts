@@ -47,3 +47,15 @@ export function zonderBron(params: Parameters): string[] {
     .filter((b) => b.bron.includes("TODO"))
     .map((b) => b.naam);
 }
+
+/** Secties waarvan (een deel van) de bedragen een raming is: afgeleid met de wettelijke indexatie, nog niet officieel. */
+export function geraamd(params: Parameters): string[] {
+  return bronnen(params)
+    .filter((b) => b.bron.includes("Raming:"))
+    .map((b) => b.naam);
+}
+
+/** Wat er van een (voorlopig) parameterjaar nog niet officieel is: voor de notitie bij "Wat verandert er?". */
+export function nogNietOfficieel(params: Parameters): { nogNiet: string[]; geraamd: string[] } {
+  return { nogNiet: zonderBron(params), geraamd: geraamd(params) };
+}

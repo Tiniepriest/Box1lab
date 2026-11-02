@@ -7,6 +7,15 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-11-02
+  soort: cijfers
+  titel: Betere bedragen voor 2027
+  tekst: >-
+    Voor 2027 rekenen we nu met de zorgtoeslag, zorgpremie, huurtoeslag, het kindgebonden budget, de
+    kinderbijslag, AOW en bijstand zoals ze waarschijnlijk worden: met de officiële bedragen waar die er al zijn
+    (minimumloon, percentages zorgtoeslag) en anders met de gewone jaarlijkse verhoging. Eerder stonden die op
+    het niveau van 2026. De officiële bedragen volgen in november en december; dan werken we ze bij.
+
+- datum: 2026-11-02
   soort: nieuw
   titel: Belastingplan 2027 op één pagina
   tekst: >-

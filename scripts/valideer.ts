@@ -1,6 +1,6 @@
 /*
  * Controleert alle databestanden: parameters, kalibratie, populatie, presets, voorbeelden, lab, verkiezingen en de changelog.
- * Faalt (exit 1) bij een fout; meldt waarden zonder bron als waarschuwing.
+ * Faalt (exit 1) bij een fout; meldt waarden zonder bron en ramingen als waarschuwing.
  *
  * Gebruik: npm run valideer
  */
@@ -22,10 +22,13 @@ import {
 
 let fouten = 0;
 const todo: string[] = [];
+const ramingen: string[] = [];
 
 function zoekTodo(o: unknown, pad: string, bestand: string): void {
-  if (typeof o === "string" && o.includes("TODO")) todo.push(`${bestand}: ${pad}`);
-  else if (typeof o === "object" && o !== null) {
+  if (typeof o === "string") {
+    if (o.includes("TODO")) todo.push(`${bestand}: ${pad}`);
+    if (o.includes("Raming:")) ramingen.push(`${bestand}: ${pad}`);
+  } else if (typeof o === "object" && o !== null) {
     for (const [k, v] of Object.entries(o)) zoekTodo(v, pad ? `${pad}.${k}` : k, bestand);
   }
 }
@@ -69,6 +72,11 @@ controleer("data/changelog.yaml", () => laadChangelog());
 if (todo.length) {
   console.log(`\nWaarschuwing: ${todo.length} waarde(n) met 'TODO: bron nodig':`);
   for (const t of todo) console.log(`  - ${t}`);
+}
+if (ramingen.length) {
+  console.log(`
+Waarschuwing: ${ramingen.length} raming(en); vervang ze door de officiële bedragen zodra die er zijn:`);
+  for (const r of ramingen) console.log(`  - ${r}`);
 }
 if (fouten) {
   console.error(`\n${fouten} fout(en) gevonden.`);
