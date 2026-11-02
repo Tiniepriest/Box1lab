@@ -73,7 +73,8 @@ function meld(bewaard: boolean): void {
 
 /**
  * Startwaarden van het formulier: een voorbeeld, duidelijk te herkennen als voorbeeld (D-066). Een alleenstaande met
- * een modaal inkomen; dat bedrag staat per jaar in het parameterbestand.
+ * een modaal inkomen. Dat staat per jaar inclusief vakantiegeld in het parameterbestand; het formulier vraagt het
+ * maandloon zonder vakantiegeld, zoals op de loonstrook.
  */
 export function voorbeeldInvoer(params: Parameters): Invoer {
   return {
@@ -81,8 +82,8 @@ export function voorbeeldInvoer(params: Parameters): Invoer {
       persoonInvoerSchema.parse({
         leeftijd: 35,
         soort: "loondienst",
-        bedrag: params.loon.modaal,
-        periode: "jaar",
+        bedrag: Math.round(params.loon.modaal / 12 / (1 + params.loon.vakantiegeld / 100)),
+        periode: "maand",
         inclusiefVakantiegeld: false,
       }),
     ],

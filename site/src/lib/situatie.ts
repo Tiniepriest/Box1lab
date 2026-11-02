@@ -16,7 +16,7 @@ function inkomen(p: PersoonInvoer): string {
   const bedrag = `${euro(p.bedrag)} per ${p.periode}`;
   switch (p.soort) {
     case "loondienst":
-      return `loondienst, ${bedrag} bruto`;
+      return `loondienst, ${bedrag} bruto${p.periode === "maand" && p.dertiendeMaand ? " + 13e maand" : ""}`;
     case "zzp":
       return `zzp, winst ${bedrag}`;
     case "bijstand":

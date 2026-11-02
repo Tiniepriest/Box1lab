@@ -20,7 +20,9 @@ export const persoonInvoerSchema = z.strictObject({
   periode: z.enum(["jaar", "maand"]),
   /** Alleen bij loondienst en uitkering per maand: zit het vakantiegeld al in het maandbedrag? */
   inclusiefVakantiegeld: z.boolean(),
-  /** Alleen bij loondienst: bruto extra per jaar, zoals een 13e maand, eindejaarsuitkering of bonus. */
+  /** Alleen bij loondienst per maand: een 13e maand, één maandbedrag extra per jaar. */
+  dertiendeMaand: z.boolean().default(false),
+  /** Alleen bij loondienst: bruto extra per jaar, zoals een bonus of eindejaarsuitkering. */
   extraPerJaar: bedrag.default(0),
   /** Alleen bij loondienst: het eigen deel van de pensioenpremie per maand, zoals op de loonstrook (0 = geen). */
   pensioenpremiePerMaand: bedrag.default(0),
@@ -61,14 +63,16 @@ export function valideerInvoer(data: unknown): Invoer {
 
 /**
  * Bruto jaarinkomen uit wat iemand invult: per maand of per jaar, met of zonder vakantiegeld, plus wat er bij
- * loondienst eens per jaar bij komt. Een zzp'er krijgt geen vakantiegeld.
+ * loondienst eens per jaar bij komt (13e maand, bonus). Een zzp'er krijgt geen vakantiegeld.
  */
 export function jaarbedrag(persoon: PersoonInvoer, p: Parameters): number {
-  const extra = persoon.soort === "loondienst" ? persoon.extraPerJaar : 0;
+  const loondienst = persoon.soort === "loondienst";
+  const extra = loondienst ? persoon.extraPerJaar : 0;
   if (persoon.periode === "jaar") return persoon.bedrag + extra;
   const metVakantiegeld = persoon.soort !== "zzp" && !persoon.inclusiefVakantiegeld;
   const factor = metVakantiegeld ? 1 + p.loon.vakantiegeld / 100 : 1;
-  return persoon.bedrag * 12 * factor + extra;
+  const dertiende = loondienst && persoon.dertiendeMaand ? persoon.bedrag : 0;
+  return persoon.bedrag * 12 * factor + dertiende + extra;
 }
 
 function lid(persoon: PersoonInvoer, partners: boolean, p: Parameters): Lid {

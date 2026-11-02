@@ -138,7 +138,7 @@
         <strong>Dit is een voorbeeld:</strong> een alleenstaande met een modaal inkomen ({euro(
           params.loon.modaal,
         )}
-        bruto per jaar) die huurt. Pas het aan naar jouw situatie.
+        bruto per jaar met vakantiegeld) die huurt. Pas het aan naar jouw situatie.
       </p>
     {/if}
     <InvoerFormulier bind:invoer {params} />

@@ -238,7 +238,7 @@ try {
   controleer(/^\s*In dit voorbeeld houd je/.test(zin), `calculator: "${zin.trim().slice(0, 60)}…"`);
   controleer(
     /modaal inkomen/.test((await pg.locator(".voorbeeld").textContent()) ?? "") &&
-      (await pg.locator("#bedrag-0").inputValue()) === "48000",
+      (await pg.locator("#bedrag-0").inputValue()) === "3704",
     "calculator: het voorbeeld is een modaal inkomen, en dat staat erbij",
   );
   controleer(bevolking.length === 0, "calculator: plek in de inkomensverdeling zonder de bevolking te laden");
@@ -258,10 +258,7 @@ try {
   controleer((await leesSessie()) === null, "formulier: het voorbeeld wordt niet bewaard");
   controleer(!(await vink.isVisible()), "menu: geen vinkje zonder eigen situatie");
   await pg.locator("#soort-0").selectOption("zzp");
-  controleer(
-    !(await pg.getByText("Vakantiegeld zit al in dit maandbedrag").isVisible()),
-    "formulier: geen vakantiegeld bij zzp",
-  );
+  controleer(!(await pg.getByLabel("Vakantiegeld").isVisible()), "formulier: geen vakantiegeld bij zzp");
   controleer(await pg.getByText("Ik werk minstens").isVisible(), "formulier: urencriterium bij zzp");
   await pg.locator("#soort-0").selectOption("bijstand");
   await pg.waitForTimeout(300);
@@ -282,6 +279,15 @@ try {
   await pg.getByLabel("Per maand of per jaar").first().selectOption("maand");
   await pg.locator("#bedrag-0").fill("2700");
   await pg.waitForTimeout(300);
+  const metDertiende = async (aan: boolean) => {
+    await pg.getByLabel("13e maand").setChecked(aan);
+    await pg.waitForTimeout(300);
+    return (await pg.locator(".kernzin").textContent()) ?? "";
+  };
+  controleer(
+    (await metDertiende(true)) !== (await metDertiende(false)),
+    "formulier: vinkjes vakantiegeld en 13e maand, 13e maand rekent mee",
+  );
   controleer(
     (await pg.locator(".voorbeeld").count()) === 0 &&
       /^\s*Je houdt/.test((await pg.locator(".kernzin").textContent()) ?? ""),
@@ -333,7 +339,7 @@ try {
   await pg.waitForTimeout(300);
   controleer((await leesSessie()) === null, "formulier: wissen haalt de situatie weg");
   controleer(
-    (await pg.locator("#bedrag-0").inputValue()) === "48000" && (await pg.locator(".voorbeeld").isVisible()),
+    (await pg.locator("#bedrag-0").inputValue()) === "3704" && (await pg.locator(".voorbeeld").isVisible()),
     "formulier: na wissen staat het voorbeeld er weer",
   );
   await ctx.close();

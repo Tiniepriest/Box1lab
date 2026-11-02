@@ -290,7 +290,8 @@ loon:
   # Wettelijk minimum vakantiegeld als percentage van het loon; gebruikt om een maandloon zonder vakantiegeld
   # om te rekenen naar een jaarinkomen.
   vakantiegeld: 8
-  # Bruto modaal inkomen per jaar: het voorbeeldhuishouden op de site verdient dit. Telt niet mee in de berekening.
+  # Bruto modaal inkomen per jaar, inclusief vakantiegeld: het voorbeeldhuishouden op de site verdient dit. Telt niet
+  # mee in de berekening.
   modaal: 50000
 
 pensioenpremie:

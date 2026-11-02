@@ -20,6 +20,7 @@ const p = laadParameters(2026);
 
 /** Velden met een standaardwaarde in het schema. */
 const STANDAARD = {
+  dertiendeMaand: false,
   extraPerJaar: 0,
   pensioenpremiePerMaand: 0,
   urencriterium: true,
@@ -66,6 +67,17 @@ describe("invoerformulier", () => {
     expect(jaarbedrag(zzp, p)).toBe(36000);
   });
 
+  it("een 13e maand is één maandbedrag extra, alleen bij loondienst per maand", () => {
+    const loon = { ...basisInvoer.personen[0]!, extraPerJaar: 0 };
+    const zonder = jaarbedrag(loon, p);
+    expect(jaarbedrag({ ...loon, dertiendeMaand: true }, p)).toBeCloseTo(zonder + loon.bedrag, 6);
+    expect(jaarbedrag({ ...loon, dertiendeMaand: true, periode: "jaar" }, p)).toBe(loon.bedrag);
+    expect(jaarbedrag({ ...loon, dertiendeMaand: true, soort: "zzp" }, p)).toBe(loon.bedrag * 12);
+  });
+  it("oude invoer zonder dertiendeMaand blijft geldig", () => {
+    const { dertiendeMaand: _d, ...oud } = valideerInvoer(basisInvoer).personen[0]!;
+    expect(valideerInvoer({ ...basisInvoer, personen: [oud] }).personen[0]!.dertiendeMaand).toBe(false);
+  });
   it("oude invoer zonder extraPerJaar blijft geldig", () => {
     const { extraPerJaar: _e, ...oud } = basisInvoer.personen[0]!;
     expect(valideerInvoer({ ...basisInvoer, personen: [oud] }).personen[0]!.extraPerJaar).toBe(0);
