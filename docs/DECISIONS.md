@@ -433,3 +433,22 @@ Besluiten van de eigenaar:
 - **Je situatie staat op elk tabblad links** (op een telefoon als balk bovenaan): wat er is ingevuld en wat je nu overhoudt, met een knop om het aan te passen. Zonder eigen situatie staat er dat met een voorbeeldhuishouden wordt gerekend.
 - **Eén pagina voor volgend jaar**: eerst wat het kabinetsplan voor jou betekent ten opzichte van dit jaar, dan wat de routes daar nog aan veranderen. Op Jouw situatie blijft een korte verwijzing.
 - **Een volgende stap** onder de uitkomst op Jouw situatie, en op de home één hoofdknop: "Begin met je situatie".
+
+## Fase 11: verbeteringen na een kritische blik
+
+### D-065 Bedragen 2027: ramen met de wettelijke indexatie
+
+Vraag van de eigenaar (2 november 2026): toeslagen, AOW, bijstand en kinderbijslag stonden voor 2027 op het niveau van 2026. Daardoor leek 2027 voor mensen met toeslagen slechter dan het wordt. Geen extra waarschuwing, wel betere bedragen.
+
+Besluit: wat officieel is, gaat erin; wat nog niet officieel is maar een wettelijke indexatieregel heeft met een bekende factor, wordt geraamd. De bron begint dan met `Raming:` en noemt de berekening. `npm run valideer` toont de ramingen als waarschuwing en de site noemt ze in de notitie bij "Wat verandert er?". Wat geen regel heeft, blijft `TODO: bron nodig` op het niveau van 2026.
+
+Stand op 2 november 2026:
+
+- **Officieel**: minimumloon per 1 januari 2027 (€ 15,29 per uur, referentiemaandloon € 2.385, +2,05%; regeling van 29 oktober 2026), dus drempelinkomen € 30.910. Percentages zorgtoeslag (1,930 / 4,307 / 13,760) en afbouw kindgebonden budget (8,05%) staan in de wettekst per 2027. Vermogensgrens zorgtoeslag en kindgebonden budget: wettekst per 2027 × tabelcorrectiefactor = € 119.122 / € 158.748.
+- **Raming uit de begroting**: standaardpremie € 2.277, nominale premie € 2.029, verlaagde Zvw-bijdrage 5,02% (VWS-begroting 2027, tabel 77); maximum bijdrage-inkomen € 82.547 (CPB, MEV 2027). Het model geeft daarmee precies de maximale zorgtoeslag uit de begroting (€ 1.680 en € 3.223); een test controleert dat.
+- **Raming met indexatie**: huurtoeslag, kindgebonden budget en kinderbijslag × 1,026 (de tabelcorrectiefactor; de beperking tot 48% uit het Belastingplan geldt alleen voor de inkomstenbelasting). AOW en bijstand: bedragen per 1 juli 2026 + 2,05%; de verhoging per 1 juli 2027 is nog onbekend en zit er niet in.
+- **Nog niet**: kinderopvangtoeslag, eigen woning (forfait), arbeids- en combinatiekorting voor AOW'ers, pensioenpremie ABP.
+
+Gevolg: bij hetzelfde bruto loon gaan toeslagen en de zorgpremie omhoog. Het voorbeeldhuishouden (€ 3.200 per maand, huur € 850) houdt in 2027 € 33 per maand meer over in plaats van € 8. De notitie bij de vergelijking zegt nu dat loon, pensioen en WW gelijk blijven en dat AOW, bijstand, kinderbijslag en toeslagen meegaan met de gewone verhoging.
+
+Bijwerken: zorgpremies (12 november), standaardpremie (november), huurtoeslag (Staatscourant, eind november), AOW, bijstand, kinderbijslag en kindgebonden budget (december).

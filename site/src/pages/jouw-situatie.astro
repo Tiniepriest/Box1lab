@@ -3,9 +3,9 @@ import Calculator from "../components/Calculator.svelte";
 import MeldFout from "../components/MeldFout.astro";
 import Base from "../layouts/Base.astro";
 import { actueel, kalibratie, pad, params, presets, volgendJaar } from "../lib/data.ts";
-import { zonderBron } from "../lib/secties.ts";
+import { nogNietOfficieel } from "../lib/secties.ts";
 
-const volgend = volgendJaar ? { params: volgendJaar, nogNiet: zonderBron(volgendJaar) } : null;
+const volgend = volgendJaar ? { params: volgendJaar, ...nogNietOfficieel(volgendJaar) } : null;
 const tabblad = actueel
   ? {
       href: pad(`verkiezingen/${actueel.id}`),

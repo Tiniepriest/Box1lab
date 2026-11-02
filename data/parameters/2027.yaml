@@ -1,18 +1,18 @@
-# Parameters belastingjaar 2026
+# Parameters belastingjaar 2027
 #
 # Afspraken (zie ook docs/JAARLIJKSE-UPDATE.md):
 # - Percentages schrijf je als percentage: 35,75% wordt 35.75.
 # - Bedragen in euro per jaar, tenzij de naam iets anders zegt (bijvoorbeeld "perMaand").
 # - Een punt is de decimaal: € 1.575,50 schrijf je als 1575.50.
 # - Elke sectie heeft een "bron". Weet je de bron niet? Schrijf "TODO: bron nodig".
+# - Een raming (nog niet officieel, wel afgeleid met de wettelijke indexatie) begint de bron met "Raming:". Vervang
+#   die zodra de officiële bedragen er zijn (zie docs/JAARLIJKSE-UPDATE.md).
 # - "niveau" is een knop voor scenario's: 100 = zoals de wet nu is, 0 = afgeschaft.
 #
-# Status: fase 2. Alle bedragen zijn gecontroleerd tegen officiële bronnen (zie "bron" per sectie).
-
 jaar: 2027
 # Voorlopig: zie de toelichting. Zet op "definitief" als alle bedragen officieel zijn en geen TODO meer hebben.
 status: voorlopig
-toelichting: "Gebaseerd op het Belastingplan 2027 zoals ingediend op 15 september 2026, met de tweede nota van wijziging van 20 oktober 2026. Het voorstel is nog niet aangenomen door de Tweede en Eerste Kamer. Bedragen die nog niet bekend zijn, staan op het niveau van 2026."
+toelichting: "Gebaseerd op het Belastingplan 2027 zoals ingediend op 15 september 2026, met de tweede nota van wijziging van 20 oktober 2026. Het voorstel is nog niet aangenomen door de Tweede en Eerste Kamer. Bedragen die nog niet officieel zijn, zijn geraamd met de gewone jaarlijkse verhoging; de officiële bedragen volgen in november en december 2026. Wat nog helemaal niet bekend is, staat op het niveau van 2026."
 
 box1:
   bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen."
@@ -115,42 +115,44 @@ overigeAftrekposten:
 
 toeslagen:
   zorgtoeslag:
-    bron: "TODO: bron nodig. De bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+    bron: "Raming: de standaardpremie is de raming uit de Rijksbegroting 2027, XVI Volksgezondheid, Welzijn en Sport, tabel 77 Premieoverzicht Zvw (Kamerstukken II 2026/27, 37 020 XVI, nr. 2; https://www.rijksfinancien.nl/memorie-van-toelichting/2027/OWB/XVI); de NZa stelt hem in november 2026 vast. Percentages: Wet op de zorgtoeslag, artikel 2, derde lid, tekst per 1 januari 2027 (https://wetten.overheid.nl/BWBR0018451/2027-01-01). Drempelinkomen: 108% van 12 × het referentiemaandloon van € 2.385,00 per 1 januari 2027 (Regeling indexatie wettelijk minimumloon per 1 januari 2027, 29 oktober 2026; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072), gelijk aan het afbouwpunt in het Belastingplan 2027. Maximaal toetsingsinkomen: afgeleid, het inkomen waarboven de zorgtoeslag lager is dan € 24 per jaar (Awir, artikel 14, vijfde lid), zoals in 2026. Vermogensgrens: Wet op de zorgtoeslag, artikel 3, tekst per 1 januari 2027 (€ 116.103 en € 154.725, na de verlaging met € 30.686 uit de VWS-begroting; https://wetten.overheid.nl/BWBR0018451/2027-01-01) × de tabelcorrectiefactor 2027 van 1,026 (Belastingplan 2027, memorie van toelichting, paragraaf 4: zonder de vrijheidsbijdrage 2,6%; de beperking tot 48% geldt alleen voor de inkomstenbelasting; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf)."
     niveau: 100
     # Per volwassene; voor partners geldt twee keer de standaardpremie.
-    standaardpremie: 2119
-    drempelinkomen: 29736
+    standaardpremie: 2277
+    drempelinkomen: 30910
     # Normpremie = percentage van het drempelinkomen + afbouwpercentage × (toetsingsinkomen − drempelinkomen).
-    normpremieDrempel: { alleenstaand: 1.912, partners: 4.289 }
-    normpremieAfbouw: 13.73
-    maxToetsingsinkomen: { alleenstaand: 40857, partners: 51142 }
-    maxVermogen: { alleenstaand: 146011, partners: 184633 }
+    normpremieDrempel: { alleenstaand: 1.930, partners: 4.307 }
+    normpremieAfbouw: 13.76
+    # 30.910 + (2.277 − 1,930% × 30.910 − 24) / 13,76% en 30.910 + (2 × 2.277 − 4,307% × 30.910 − 24) / 13,76%.
+    maxToetsingsinkomen: { alleenstaand: 42948, partners: 54156 }
+    maxVermogen: { alleenstaand: 119122, partners: 158748 }
   huurtoeslag:
-    bron: "TODO: bron nodig. De bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+    bron: "Raming: alle bedragen van 2026 × de tabelcorrectiefactor 2027 van 1,026 (Belastingplan 2027, memorie van toelichting, paragraaf 4: zonder de vrijheidsbijdrage 2,6%; de beperking tot 48% geldt alleen voor de inkomstenbelasting; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). Voor de huurgrens en de inkomens schrijft de Wet op de huurtoeslag (artikel 27, eerste lid) die factor voor; de andere grenzen en de basishuur stijgen met de huurprijsontwikkeling (artikel 27, derde lid; https://wetten.overheid.nl/BWBR0008659), die nog niet bekend is. Inkomens naar boven afgerond op € 25 (artikel 27, vijfde lid). De officiële bedragen komen eind november 2026 in de Staatscourant."
     niveau: 100
     # Bedragen in deze sectie zijn per maand, behalve inkomens en vermogen.
-    huurgrens: 932.93
-    basishuur: { eenpersoons: 202.52, meerpersoons: 200.71 }
-    kwaliteitskortingsgrens: 498.2
-    aftoppingsgrens: { eenOfTweePersonen: 713.02, drieOfMeerPersonen: 764.14 }
+    huurgrens: 957.19
+    basishuur: { eenpersoons: 207.79, meerpersoons: 205.93 }
+    kwaliteitskortingsgrens: 511.15
+    aftoppingsgrens: { eenOfTweePersonen: 731.56, drieOfMeerPersonen: 784.01 }
     # Vergoeding van de huur tot de kwaliteitskortingsgrens, tot de aftoppingsgrens en tot de huurgrens.
     vergoeding: { totKwaliteitskortingsgrens: 100, totAftoppingsgrens: 65, totHuurgrens: 40 }
     # Inkomensafhankelijke correctie: afbouw% × (rekeninkomen − inkomensijkpunt), per jaar.
-    inkomensijkpunt: { eenpersoons: 23425, meerpersoons: 31500 }
+    inkomensijkpunt: { eenpersoons: 24050, meerpersoons: 32325 }
     afbouw: { eenpersoons: 27, meerpersoons: 22 }
     # Van inwonende kinderen jonger dan 23 telt alleen het inkomen boven dit bedrag mee in het rekeninkomen.
-    inkomensvrijstellingKind: 6218
-    maxVermogen: { alleenstaand: 38479, partners: 76958 }
+    inkomensvrijstellingKind: 6380
+    maxVermogen: { alleenstaand: 39479, partners: 78959 }
   kindgebondenBudget:
-    bron: "TODO: bron nodig. De bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+    bron: "Raming: de bedragen van 2026 × de tabelcorrectiefactor 2027 van 1,026 (Belastingplan 2027, memorie van toelichting, paragraaf 4: zonder de vrijheidsbijdrage 2,6%; de beperking tot 48% geldt alleen voor de inkomstenbelasting; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), zoals de Wet op het kindgebonden budget voorschrijft (artikel 3, eerste lid), en daarna € 66 extra per kind (artikel 3, zevende en achtste lid). Afbouwpercentage: artikel 3, vijfde lid, tekst per 1 januari 2027 (https://wetten.overheid.nl/BWBR0022751/2027-01-01). Drempelinkomen: 108% van 12 × het referentiemaandloon van € 2.385,00 per 1 januari 2027 (Regeling indexatie wettelijk minimumloon per 1 januari 2027, 29 oktober 2026; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072), gelijk aan het afbouwpunt in het Belastingplan 2027. Voor partners komt daar € 9.405 × 1,026 = € 9.650 bij (artikel 2, achtste lid). Vermogensgrens: gelijk aan die van de zorgtoeslag (VWS-begroting 2027, artikel 8). De officiële bedragen volgen eind 2026. Het wetsvoorstel voor een snellere afbouw bij hogere inkomens (Kamerstukken 36 923) is aangehouden en zit hier niet in."
     niveau: 100
-    perKind: 2580
-    verhogingKind12tot16: 724
-    verhogingKind16en17: 964
-    alleenstaandeOuderkop: 3416
-    drempelinkomen: { alleenstaand: 29736, partners: 39141 }
-    afbouw: 7.6
-    maxVermogen: { alleenstaand: 146011, partners: 184633 }
+    # 2.580 × 1,026 + 66
+    perKind: 2713
+    verhogingKind12tot16: 743
+    verhogingKind16en17: 989
+    alleenstaandeOuderkop: 3505
+    drempelinkomen: { alleenstaand: 30910, partners: 40560 }
+    afbouw: 8.05
+    maxVermogen: { alleenstaand: 119122, partners: 158748 }
   kinderopvangtoeslag:
     bron: "TODO: bron nodig. De bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
     niveau: 100
@@ -230,26 +232,26 @@ toeslagen:
       - { vanaf: 235698, eersteKind: 36.5, volgendKind: 68.2 }
 
 uitkeringen:
-  bron: "AOW-leeftijd: Rijksoverheid, AOW-leeftijd 2025–2031 (https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd). AOW-bedragen: TODO: bron nodig. De AOW-bedragen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+  bron: "AOW-leeftijd: Rijksoverheid, AOW-leeftijd 2025–2031 (https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd). AOW-bedragen: Raming: de bedragen per 1 juli 2026 + 2,05%, de stijging van het referentiemaandloon per 1 januari 2027 (Regeling indexatie wettelijk minimumloon per 1 januari 2027, 29 oktober 2026; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072). De AOW volgt het netto minimumloon; de SVB publiceert de bedragen in december. De verhoging per 1 juli 2027 is nog niet bekend en zit er niet in."
   aowLeeftijd: 67
   # Bruto AOW per persoon, zoals de SVB ze publiceert. Per jaar = 6 × eerste halfjaar + 6 × tweede halfjaar
   # + 12 × vakantiegeld.
   aow:
     alleenstaand:
-      { perMaandEersteHalfjaar: 1637.57, perMaandTweedeHalfjaar: 1662.16, vakantiegeldPerMaand: 104.78 }
+      { perMaandEersteHalfjaar: 1696.23, perMaandTweedeHalfjaar: 1696.23, vakantiegeldPerMaand: 106.93 }
     partners:
-      { perMaandEersteHalfjaar: 1122.12, perMaandTweedeHalfjaar: 1139.39, vakantiegeldPerMaand: 74.85 }
+      { perMaandEersteHalfjaar: 1162.75, perMaandTweedeHalfjaar: 1162.75, vakantiegeldPerMaand: 76.38 }
   # Netto-koppeling: in een scenario houdt deze uitkering haar netto bedrag; de overheid betaalt het verschil
   # bruto bij. AOW en bijstand zijn gekoppeld aan het netto minimumloon; WW en WIA zijn een percentage van het
   # vroegere bruto loon.
   nettoKoppeling: { aow: true, bijstand: true, werknemersverzekering: false }
 
 bijstand:
-  bron: "TODO: bron nodig. De bijstandsnormen voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+  bron: "Raming: de normen per 1 juli 2026 + 2,05%, de stijging van het referentiemaandloon per 1 januari 2027 (Regeling indexatie wettelijk minimumloon per 1 januari 2027, 29 oktober 2026; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072). De bijstand volgt het netto minimumloon; SZW publiceert de normen half december. De verhoging per 1 juli 2027 is nog niet bekend en zit er niet in."
   # Netto bijstandsnorm per maand inclusief vakantiegeld, 21 jaar tot de AOW-leeftijd. Per jaar = 6 × eerste
   # halfjaar + 6 × tweede halfjaar. De norm voor gehuwden geldt voor het paar samen.
-  alleenstaand: { eersteHalfjaar: 1401.50, tweedeHalfjaar: 1419.46 }
-  gehuwden: { eersteHalfjaar: 2002.13, tweedeHalfjaar: 2027.79 }
+  alleenstaand: { eersteHalfjaar: 1448.56, tweedeHalfjaar: 1448.56 }
+  gehuwden: { eersteHalfjaar: 2069.36, tweedeHalfjaar: 2069.36 }
   # Onder deze leeftijd gelden lagere jongerennormen; die zitten niet in het model.
   minimumLeeftijd: 21
 
@@ -263,25 +265,25 @@ ondernemers:
   urencriterium: 1225
 
 zorg:
-  bron: "TODO: bron nodig. De nominale premie en de Zvw-bijdrage voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+  bron: "Raming: nominale premie en verlaagde Zvw-bijdrage uit de Rijksbegroting 2027, XVI Volksgezondheid, Welzijn en Sport, tabel 77 Premieoverzicht Zvw (Kamerstukken II 2026/27, 37 020 XVI, nr. 2; https://www.rijksfinancien.nl/memorie-van-toelichting/2027/OWB/XVI); de verzekeraars maken hun premies uiterlijk 12 november 2026 bekend. Maximum bijdrage-inkomen: CPB, Macro Economische Verkenning 2027, bijlage 17 Belasting- en premietarieven (https://www.cpb.nl/raming/raming-september-2026-mev-2027)."
   # Gemiddelde nominale premie per volwassene per jaar.
-  nominalePremiePerVolwassene: 1884
+  nominalePremiePerVolwassene: 2029
   # Inkomensafhankelijke bijdrage Zvw die mensen zelf betalen: AOW'ers over AOW en pensioen, zelfstandigen over hun
   # belastbare winst. Voor werknemers en uitkeringen betaalt de werkgever of uitkeringsinstantie; dat valt buiten
   # het model.
-  zvwBijdrage: 4.85
-  zvwMaximumInkomen: 79409
+  zvwBijdrage: 5.02
+  zvwMaximumInkomen: 82547
   # Vanaf deze leeftijd betaalt iemand zelf de nominale premie en kan diegene zorgtoeslag krijgen (Zvw).
   volwassenVanaf: 18
 
 kinderbijslag:
-  bron: "TODO: bron nodig. De bedragen van de kinderbijslag voor 2027 zijn nog niet gepubliceerd; tijdelijk de bedragen van 2026."
+  bron: "Raming: de bedragen van 2026 × de tabelcorrectiefactor 2027 van 1,026 (Belastingplan 2027, memorie van toelichting, paragraaf 4: zonder de vrijheidsbijdrage 2,6%; de beperking tot 48% geldt alleen voor de inkomstenbelasting; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). De kinderbijslag stijgt elk half jaar met de consumentenprijsindex (Algemene Kinderbijslagwet; https://wetten.overheid.nl/BWBR0002221); de tabelcorrectiefactor is op dezelfde prijsindex gebaseerd. De SVB publiceert de bedragen in december."
   niveau: 100
   # Bedrag per kind per kwartaal, per leeftijdsgroep. Per jaar = 2 × eerste halfjaar + 2 × tweede halfjaar.
   perKwartaal:
-    - { totLeeftijd: 6, eersteHalfjaar: 295.07, tweedeHalfjaar: 298.4 }
-    - { totLeeftijd: 12, eersteHalfjaar: 358.3, tweedeHalfjaar: 362.35 }
-    - { totLeeftijd: 18, eersteHalfjaar: 421.53, tweedeHalfjaar: 426.29 }
+    - { totLeeftijd: 6, eersteHalfjaar: 302.74, tweedeHalfjaar: 306.16 }
+    - { totLeeftijd: 12, eersteHalfjaar: 367.62, tweedeHalfjaar: 371.77 }
+    - { totLeeftijd: 18, eersteHalfjaar: 432.49, tweedeHalfjaar: 437.37 }
 
 loon:
   bron: "Wet minimumloon en minimumvakantiebijslag, artikel 15: vakantiebijslag minimaal 8% (https://wetten.overheid.nl/BWBR0002638)"

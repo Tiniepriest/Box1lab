@@ -20,8 +20,8 @@
   }: {
     /** De regels van nu. */
     params: Parameters;
-    /** De regels van volgend jaar (vaak voorlopig), met de secties die nog geen bron hebben. */
-    volgend: { params: Parameters; nogNiet: string[] };
+    /** De regels van volgend jaar (vaak voorlopig), met de secties die nog geen bron hebben of geraamd zijn. */
+    volgend: { params: Parameters; nogNiet: string[]; geraamd: string[] };
     invoer: Invoer;
     titel?: string;
   } = $props();
@@ -81,14 +81,17 @@
       </tbody>
     </table>
     <p class="notitie">
-      Meestal stijgen lonen en uitkeringen ook; dat zit hier niet in. Zo zie je alleen wat de nieuwe regels
-      doen.
+      Je bruto loon, pensioen en WW houden we gelijk, zodat je ziet wat de nieuwe regels doen. AOW, bijstand,
+      kinderbijslag en toeslagen gaan wel mee met de gewone jaarlijkse verhoging.
     </p>
   {/if}
   {#if volgend.params.status === "voorlopig"}
     <p class="notitie">
       <strong>Voorlopig.</strong>
       {volgend.params.toelichting}
+      {#if volgend.geraamd.length}
+        Geraamd met de gewone jaarlijkse verhoging: {volgend.geraamd.join(", ")}.
+      {/if}
       {#if volgend.nogNiet.length}
         Nog niet (helemaal) bekend, dus gerekend met de bedragen van {params.jaar}: {volgend.nogNiet.join(
           ", ",
