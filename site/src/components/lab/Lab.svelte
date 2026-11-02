@@ -200,6 +200,7 @@
     });
   });
   const achteruit = $derived(uitkomst ? uitkomst.winnaars[0]! + uitkomst.winnaars[1]! : 0);
+  const gelijk = $derived(uitkomst ? uitkomst.winnaars[2]! : 0);
   const vooruit = $derived(uitkomst ? uitkomst.winnaars[3]! + uitkomst.winnaars[4]! : 0);
   const kernzin = $derived.by(() => {
     if (!uitkomst) return "";
@@ -247,6 +248,11 @@
       },
       { label: "Gini", a: getal(uitkomst.gini, 3), b: getal(vergelijking.gini, 3) },
       { label: "Erop achteruit", a: `${getal(ach(uitkomst))}%`, b: `${getal(ach(vergelijking))}%` },
+      {
+        label: "Ongeveer gelijk",
+        a: `${getal(uitkomst.winnaars[2]!)}%`,
+        b: `${getal(vergelijking.winnaars[2]!)}%`,
+      },
       { label: "Erop vooruit", a: `${getal(voor(uitkomst))}%`, b: `${getal(voor(vergelijking))}%` },
       ...uitkomst.decielen.map((d, i) => ({
         label: `Groep ${i + 1}${i === 0 ? " (laagste inkomens)" : i === 9 ? " (hoogste inkomens)" : ""}`,
@@ -513,12 +519,15 @@
           <div class="t">0 = iedereen evenveel, 1 = één persoon alles</div>
         </div>
         <div class="kerngetal">
-          <div class="l">Erop achteruit / vooruit</div>
+          <div class="l">Achteruit / gelijk / vooruit</div>
           <div class="w">
             <span class="achteruit">{getal(achteruit)}%</span> /
+            <span class="gelijk">{getal(gelijk)}%</span> /
             <span class="vooruit">{getal(vooruit)}%</span>
           </div>
-          <div class="t">van alle personen, meer dan 1% verschil</div>
+          <div class="t">
+            van alle personen; gelijk is minder dan {getal(params.methodiek.winnaarsGrenzen[2]!)}% verschil
+          </div>
         </div>
       </div>
 

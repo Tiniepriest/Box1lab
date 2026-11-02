@@ -46,11 +46,14 @@ const { k } = Astro.props as { k: Kerncijfers };
           </div>
         </div>
         <div class="kerngetal">
-          <div class="l">Achteruit / vooruit</div>
+          <div class="l">Achteruit / gelijk / vooruit</div>
           <div class="w">
-            {getal(k.achteruit)}% / {getal(k.vooruit)}%
+            <span class="achteruit">{getal(k.achteruit)}%</span> /{" "}
+            <span class="gelijk">{getal(k.gelijk)}%</span> / <span class="vooruit">{getal(k.vooruit)}%</span>
           </div>
-          <div class="t">van alle personen, meer dan 1% verschil</div>
+          <div class="t">
+            van alle personen; gelijk is minder dan {getal(params.methodiek.winnaarsGrenzen[2]!)}% verschil
+          </div>
         </div>
       </div>
 
