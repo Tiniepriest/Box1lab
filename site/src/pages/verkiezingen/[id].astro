@@ -2,7 +2,8 @@
 import Situatie from "../../components/Situatie.svelte";
 import Verkiezingen from "../../components/verkiezingen/Verkiezingen.svelte";
 import Base from "../../layouts/Base.astro";
-import { params as nu } from "../../lib/data.ts";
+import { JAAR, params as nu } from "../../lib/data.ts";
+import { zonderBron } from "../../lib/secties.ts";
 import { PREVIEW, verkiezingData, verkiezingIds, type VerkiezingData } from "../../lib/verkiezingen.ts";
 
 export function getStaticPaths() {
@@ -12,6 +13,8 @@ export function getStaticPaths() {
 const { data } = Astro.props as { data: VerkiezingData };
 const { verkiezing, params, partijen, macro } = data;
 const akkoord = verkiezing.soort === "akkoord";
+// Basispad in volgend jaar: eerst wat dat met jou doet ten opzichte van nu (D-064).
+const vooraf = verkiezing.basispad.jaar > JAAR ? { huidig: nu, nogNiet: zonderBron(params) } : null;
 const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
   day: "numeric",
   month: "long",
@@ -32,12 +35,12 @@ const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
   <h1>{akkoord ? verkiezing.naam : `${verkiezing.naam}: wat betekenen de plannen voor jou?`}</h1>
   <p class="intro">
     {akkoord
-      ? `Stemming in de Tweede Kamer gepland op ${datum}. Per route: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland.`
+      ? `Stemming in de Tweede Kamer gepland op ${datum}. ${vooraf ? "Eerst: wat het plan van het kabinet voor jou betekent. Dan: wat de routes daaraan veranderen, voor jouw huishouden en voor Nederland." : "Per route: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland."}`
       : `Verkiezing van ${datum}. Per partij: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland.`}
   </p>
   <div class="met-situatie">
     <Situatie client:load params={nu} plakken />
-    <Verkiezingen client:load {params} {verkiezing} {partijen} {macro} preview={PREVIEW} />
+    <Verkiezingen client:load {params} {verkiezing} {partijen} {macro} {vooraf} preview={PREVIEW} />
   </div>
 </Base>
 

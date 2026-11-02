@@ -15,6 +15,7 @@
   import { REPO, meldFoutUrl } from "../../lib/project.ts";
   import Figuur from "../grafieken/Figuur.svelte";
   import StavenDivergent from "../grafieken/StavenDivergent.svelte";
+  import JaarVergelijking from "../JaarVergelijking.svelte";
 
   interface Macro {
     saldoMld: number;
@@ -31,12 +32,18 @@
     partijen,
     macro,
     preview,
+    vooraf = null,
   }: {
     params: Parameters;
     verkiezing: Verkiezing;
     partijen: Partij[];
     macro: Record<string, Macro>;
     preview: boolean;
+    /**
+     * Basispad in volgend jaar (zoals het Belastingplan): eerst wat dat met jou doet ten opzichte van nu (stap 1),
+     * dan wat de partijen of routes daaraan veranderen (stap 2). D-064.
+     */
+    vooraf?: { huidig: Parameters; nogNiet: string[] } | null;
   } = $props();
 
   // Woorden: bij een akkoord gaat het om routes en bronnen, bij een verkiezing om partijen en programma's.
@@ -53,6 +60,8 @@
     window.addEventListener(SITUATIE_GEWIJZIGD, lees);
     return () => window.removeEventListener(SITUATIE_GEWIJZIGD, lees);
   });
+
+  const samen = $derived(invoer.personen.length > 1 || invoer.kinderen.length > 0);
 
   let sorteren = $state<"alfabet" | "uitkomst">("alfabet");
 
@@ -94,6 +103,15 @@
   {/if}
   {#if verkiezing.uitleg}
     <p class="kaart uitleg">{verkiezing.uitleg}</p>
+  {/if}
+  {#if vooraf}
+    <JaarVergelijking
+      params={vooraf.huidig}
+      volgend={{ params, nogNiet: vooraf.nogNiet }}
+      {invoer}
+      titel={`Stap 1: wat doet het plan van het kabinet met ${samen ? "jullie" : "jou"}?`}
+    />
+    <h2 class="stapkop">Stap 2: wat veranderen de {W.meer} daaraan?</h2>
   {/if}
   {#if !verkiezing.vierOgen}
     <p class="waarschuwing" role="note">
@@ -366,6 +384,10 @@
   }
   .partij summary {
     cursor: pointer;
+  }
+  .stapkop {
+    font-size: 22px;
+    margin: 12px 0 0;
   }
   .sorteren {
     display: inline-flex;

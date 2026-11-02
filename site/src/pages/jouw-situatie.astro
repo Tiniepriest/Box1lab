@@ -2,10 +2,18 @@
 import Calculator from "../components/Calculator.svelte";
 import MeldFout from "../components/MeldFout.astro";
 import Base from "../layouts/Base.astro";
-import { kalibratie, pad, params, presets, volgendJaar } from "../lib/data.ts";
+import { actueel, kalibratie, pad, params, presets, volgendJaar } from "../lib/data.ts";
 import { zonderBron } from "../lib/secties.ts";
 
 const volgend = volgendJaar ? { params: volgendJaar, nogNiet: zonderBron(volgendJaar) } : null;
+const tabblad = actueel
+  ? {
+      href: pad(`verkiezingen/${actueel.id}`),
+      naam: actueel.menu ?? actueel.naam,
+      soort: actueel.soort,
+      jaar: actueel.basispad.jaar,
+    }
+  : null;
 ---
 
 <Base title="Jouw situatie — Box1lab" breed>
@@ -19,6 +27,7 @@ const volgend = volgendJaar ? { params: volgendJaar, nogNiet: zonderBron(volgend
     {kalibratie}
     {presets}
     {volgend}
+    actueel={tabblad}
     populatieUrl={pad("data/populatie-2026.json")}
   />
   <MeldFout />
