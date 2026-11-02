@@ -12,6 +12,8 @@ import { bestaatParameter, pasToe, type Wijziging } from "./parameters/wijzig.ts
 export const verkiezingSchema = z.strictObject({
   id: z.string().regex(/^[a-z0-9-]+$/),
   naam: z.string().min(1),
+  /** Korte naam voor het tabblad in het menu (standaard `naam`), bijvoorbeeld "Belastingplan 2027". */
+  menu: z.string().min(1).max(24).optional(),
   /** Datum van de verkiezing. */
   datum,
   /** Parameterjaar van het basispad (HANDOFF §4.3). */

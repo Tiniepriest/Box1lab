@@ -91,6 +91,29 @@ try {
     if (!ok) fouten++;
     console.log(`  ${ok ? "ok  " : "FOUT"} ${wat}`);
   };
+  const tabblad = pg.getByRole("navigation", { name: "Hoofdmenu" }).getByRole("link");
+  await pg.goto(`${BASIS}/voorstellen/vlaktaks-40`, { waitUntil: "networkidle" });
+  const tabs = await tabblad.allTextContents();
+  controleer(
+    tabs.length === 3 && /Belastingplan 2027/.test(tabs[1] ?? ""),
+    `menu: drie tabbladen (${tabs.map((t) => t.replace(/\s+/g, " ").trim()).join(" | ")})`,
+  );
+  controleer(
+    (await tabblad.filter({ hasText: "Scenariolab" }).getAttribute("aria-current")) === "true" &&
+      (await pg
+        .getByRole("navigation", { name: "Scenariolab" })
+        .getByRole("link", { name: /Kant-en-klare/ })
+        .getAttribute("aria-current")) === "true",
+    "menu: een voorstel hoort bij het Scenariolab",
+  );
+  const mobiel = await browser.newPage({ viewport: { width: 375, height: 800 } });
+  await mobiel.goto(`${BASIS}/`, { waitUntil: "networkidle" });
+  await mobiel.locator(".bij-uitklap summary").click();
+  controleer(
+    await mobiel.locator(".bij-uitklap").getByRole("link", { name: "Methodiek" }).isVisible(),
+    "menu: op een telefoon staan Uitleg, Methodiek en Over onder 'Meer'",
+  );
+  await mobiel.close();
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
   await pg.getByRole("button", { name: /Vlaktaks/ }).click();
   await pg.waitForFunction(() => document.querySelector(".kernzin")?.textContent?.includes("achteruit"));
@@ -160,7 +183,9 @@ try {
     "calculator: wat verandert er in 2027 (voorlopig)",
   );
   const leesSessie = () => pg.evaluate(() => sessionStorage.getItem("box1lab.invoer.v1"));
+  const vink = pg.getByRole("navigation", { name: "Hoofdmenu" }).locator(".vink");
   controleer((await leesSessie()) === null, "formulier: het voorbeeld wordt niet bewaard");
+  controleer(!(await vink.isVisible()), "menu: geen vinkje zonder eigen situatie");
   await pg.locator("#soort-0").selectOption("zzp");
   controleer(
     !(await pg.getByText("Vakantiegeld zit al in dit maandbedrag").isVisible()),
@@ -186,6 +211,7 @@ try {
   await pg.locator("#bedrag-0").fill("2700");
   await pg.waitForTimeout(300);
   controleer(/2700/.test((await leesSessie()) ?? ""), "formulier: situatie bewaard voor dit tabblad");
+  controleer(await vink.isVisible(), "menu: vinkje bij Jouw situatie");
   controleer(
     (await pg.evaluate(() => localStorage.getItem("box1lab.invoer.v1"))) === null,
     "formulier: niet op het apparaat zonder toestemming",

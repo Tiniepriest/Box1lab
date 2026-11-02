@@ -3,6 +3,8 @@
 # persoon (D-063). Werk dit bij als er amendementen, een akkoord of een stemuitslag is.
 id: belastingplan-2027
 naam: "Belastingplan 2027: twee routes"
+# Naam van het tabblad in het menu.
+menu: "Belastingplan 2027"
 soort: akkoord
 # Stemming in de Tweede Kamer.
 datum: 2026-11-12

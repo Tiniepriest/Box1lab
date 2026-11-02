@@ -1,4 +1,5 @@
 ---
+import LabMenu from "../../components/LabMenu.astro";
 import JouwEffect from "../../components/JouwEffect.svelte";
 import MiniDecielen from "../../components/MiniDecielen.astro";
 import MeldFout from "../../components/MeldFout.astro";
@@ -15,9 +16,7 @@ const { k } = Astro.props as { k: Kerncijfers };
 ---
 
 <Base title={`${k.preset.naam} — Box1lab`} description={kernzin(k)} afbeelding={pad(`og/${k.preset.id}.png`)}>
-  <p class="kruimel">
-    <a href={pad("voorstellen")}>Voorstellen</a>
-  </p>
+  <LabMenu />
   <h1>{k.preset.naam}</h1>
   <p class="lead">{k.preset.omschrijving}</p>
   <p class="kern">{kernzin(k)}</p>
@@ -79,10 +78,6 @@ const { k } = Astro.props as { k: Kerncijfers };
 </Base>
 
 <style>
-  .kruimel {
-    margin: 0 0 4px;
-    font-size: 14px;
-  }
   h1 {
     font-size: clamp(28px, 4.5vw, 38px);
     margin: 0 0 6px;

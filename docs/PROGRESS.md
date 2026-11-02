@@ -89,6 +89,14 @@ Punten 1–8 en 10–13 uit de lijst van 27 oktober 2026 (9, netto invullen, val
 - [x] Pagina `/verkiezingen/belastingplan-2027` met de routes PRO en Volt en JA21, BBB en SGP; link op de home
 - [ ] Bijwerken na het debat (4 november), een akkoord en de stemming (12 november)
 
+## Fase 10: indeling van de site — bezig
+
+Voorstellen van 2 november 2026, alle goedgekeurd (D-064).
+
+- [x] 10a: menu in twee lagen met tabbladen, "Belastingplan 2027" in het menu, Voorstellen onder het Scenariolab
+- [ ] 10b: je situatie links op elk tabblad
+- [ ] 10c: één pagina voor 2027, volgende stap op Jouw situatie, hoofdknop op de home
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
