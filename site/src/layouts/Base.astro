@@ -4,7 +4,7 @@ import "@fontsource/ibm-plex-sans/600.css";
 import "@fontsource/ibm-plex-serif/600.css";
 import "@fontsource/ibm-plex-mono/400.css";
 import "../styles/global.css";
-import { MODEL_VERSIE, changelog, params, pad } from "../lib/data.ts";
+import { MODEL_VERSIE, actueel, changelog, params, pad } from "../lib/data.ts";
 import { REPO, meldFoutUrl } from "../lib/project.ts";
 
 interface Props {
@@ -39,6 +39,8 @@ const menu = [
   { href: pad("jouw-situatie"), label: "Jouw situatie" },
   { href: pad("lab"), label: "Scenariolab" },
   { href: pad("voorstellen"), label: "Voorstellen" },
+  // De nieuwste echte verkiezing of vergelijking van routes, als die er is.
+  ...(actueel ? [{ href: pad(`verkiezingen/${actueel.id}`), label: "Actueel" }] : []),
   { href: pad("uitleg"), label: "Uitleg" },
   { href: pad("methodiek"), label: "Methodiek" },
   { href: pad("over"), label: "Over" },

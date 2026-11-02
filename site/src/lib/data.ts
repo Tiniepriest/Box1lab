@@ -6,6 +6,8 @@ import { MODEL_VERSIE } from "@box1lab/engine";
 import {
   laadChangelog,
   laadKalibratie,
+  laadVerkiezing,
+  laadVerkiezingen,
   laadLabKnoppen,
   laadParameters,
   laadPresets,
@@ -20,6 +22,12 @@ export const voorbeelden = laadVoorbeelden();
 export const labKnoppen = laadLabKnoppen(params);
 export const kalibratie = laadKalibratie(JAAR);
 export const changelog = laadChangelog();
+/** De nieuwste echte (niet fictieve) verkiezing of vergelijking van routes; voor het menu en de home. */
+export const actueel =
+  laadVerkiezingen()
+    .map((id) => laadVerkiezing(id).verkiezing)
+    .filter((v) => !v.fictief)
+    .sort((a, b) => b.datum.localeCompare(a.datum))[0] ?? null;
 /** Parameters van volgend jaar, als die er al zijn (vaak eerst voorlopig): voor "Wat verandert er?". */
 export const volgendJaar = parameterJaren().includes(JAAR + 1) ? laadParameters(JAAR + 1) : null;
 export { MODEL_VERSIE };
