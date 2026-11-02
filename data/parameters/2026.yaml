@@ -93,9 +93,19 @@ eigenWoning:
   hillenAftrek: 71.867
 
 overigeAftrekposten:
-  bron: "Prototype: vaste schatting voor aftrekposten die niet apart in het model zitten (HANDOFF §2, zwakke plek 8). TODO: bron nodig."
-  # Totaal in miljard euro per jaar. Wordt niet per huishouden berekend.
-  budgetMld: 4.0
+  bron: "Miljoenennota 2027, bijlage Fiscale regelingen, tabel 4.3.2 'Overzicht budgettair belang per fiscale regeling', kolom 2026 (Kamerstukken II 2026/27, 37 020, nr. 2, 15 september 2026; https://www.tweedekamer.nl/downloads/document?id=2026D38820)."
+  # Aftrekposten in box 1 die het model niet per huishouden berekent: hun budgettair belang in miljard euro per
+  # jaar. De knop 'niveau' schaalt ze samen (100 = huidig, 0 = afgeschaft).
+  posten:
+    # Categorietotaal: giften, specifieke zorgkosten, alimentatie en dergelijke.
+    persoonsgebondenAftrek: 0.804
+    lijfrentePremieaftrek: 1.378
+    arbeidsongeschiktheidsverzekeringPremieaftrek: 0.626
+    # Ondernemersfaciliteiten: de modelbevolking heeft geen aparte zelfstandigen, dus ze staan hier.
+    zelfstandigenaftrek: 0.306
+    startersaftrek: 0.117
+    meewerkaftrek: 0.007
+    mkbWinstvrijstelling: 2.730
   niveau: 100
 
 toeslagen:

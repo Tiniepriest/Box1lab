@@ -179,6 +179,10 @@ export interface Uitkomst {
   winnaars: number[];
 }
 
+function totaalOverig(posten: Record<string, number>): number {
+  return Object.values(posten).reduce((s, x) => s + x, 0);
+}
+
 /** Rekent een scenario door op de populatie en vergelijkt het met de basis. */
 export function simuleer(basis: Basis, scenario: Parameters): Uitkomst {
   const { populatie, schaal } = basis;
@@ -190,7 +194,7 @@ export function simuleer(basis: Basis, scenario: Parameters): Uitkomst {
   const posten: Record<PostId, number> = {
     box1: (t.belasting + t.eigenWoning - (bt.belasting + bt.eigenWoning)) * schaal.ib,
     eigenWoning: (bt.eigenWoning - t.eigenWoning) * schaal.ib,
-    overigeAftrek: overig.budgetMld * (1 - overig.niveau / 100),
+    overigeAftrek: totaalOverig(overig.posten) * (1 - overig.niveau / 100),
     zorgtoeslag: (bt.zorgtoeslag - t.zorgtoeslag) * schaal.zorgtoeslag,
     huurtoeslag: (bt.huurtoeslag - t.huurtoeslag) * schaal.huurtoeslag,
     kgb: (bt.kgb - t.kgb) * schaal.kgb,

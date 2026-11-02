@@ -301,3 +301,26 @@ Besluit van de eigenaar: voorlopig geen licentie. De code is openbaar te bekijke
 ### D-051 GitHub Pages, geen eigen domein
 
 Besluit van de eigenaar. Overstappen naar een eigen domein later: in `site/astro.config.mjs` `site` aanpassen en `base` weghalen, een `CNAME`-bestand in `site/public/`, en de DNS bij de domeinregistrar. Alle interne links gaan via `pad()` en de repolink via `site/src/lib/project.ts`, dus verder hoeft er niets te veranderen.
+
+## Fase 8a: formulier en privacy (verbeterlijst van de eigenaar)
+
+### D-052 Situatie onthouden zolang het tabblad openstaat
+
+Besluit van de eigenaar (punt 7b). Wat je invult, bewaren we in `sessionStorage`: alleen in deze browser, alleen voor dit tabblad, weg als je het sluit. Zo gaat je situatie mee naar het lab, de voorstellen en de verkiezingen. Langer bewaren (`localStorage`) blijft alleen op verzoek ("Onthoud ook als ik het tabblad sluit"). "Wis mijn gegevens" haalt beide weg. Het voorbeeld waarmee het formulier start, bewaren we pas als je iets verandert; anders zou het voorbeeld als "jouw situatie" in het lab verschijnen. De privacytekst bij het formulier en op de pagina Over is herschreven. Dit wijkt af van HANDOFF §3.3 ("optioneel lokaal onthouden"): er gaat nog steeds niets naar een server, en sessieopslag is functioneel en op verzoek van de bezoeker, dus geen toestemmingsbanner nodig.
+
+### D-053 Formulier eenvoudiger
+
+- "Weet ik niet" is weg. Het vulde een mediaan uit de modelbevolking in, en daar had niemand iets aan. Nu staat bij elk veld waar je het bedrag vindt (huurcontract, gemeentelijke aanslag of WOZ-waardeloket, jaaropgave hypotheek).
+- "Anders" bij wonen is weg: het rekende precies hetzelfde als huur met € 0. Oude bewaarde invoer met "anders" wordt bij het lezen omgezet naar huur € 0.
+- Nieuw veld bij loondienst: "Extra per jaar" (13e maand, eindejaarsuitkering, bonus), opgeteld bij het jaarinkomen. Het bijzonder tarief op de loonstrook speelt geen rol, want het model rekent met het hele jaar, zoals de aangifte.
+- Een zzp'er krijgt geen vakantiegeld bijgeteld, en vult zijn winst in.
+
+### D-054 Overige aftrekposten met bron
+
+De vaste € 4 mld uit het prototype (TODO: bron nodig) is vervangen door het budgettair belang per regeling uit de Miljoenennota 2027, tabel 4.3.2, kolom 2026: persoonsgebonden aftrek 0,804, lijfrentepremieaftrek 1,378, premieaftrek arbeidsongeschiktheidsverzekering 0,626, zelfstandigenaftrek 0,306, startersaftrek 0,117, meewerkaftrek 0,007 en mkb-winstvrijstelling 2,730; samen € 5,968 mld. In het parameterbestand staat nu per post een bedrag (`posten`), zodat de jaarlijkse update gewoon de nieuwe tabel overneemt. De ondernemersfaciliteiten staan hier omdat de modelbevolking geen aparte zelfstandigen heeft.
+
+Golden-verschil: alleen de voorstellen die de overige aftrekposten afschaffen veranderen. Vlaktaks 40%: saldo € 41,62 → € 43,59 mld; drie schijven: € 29,35 → € 31,32 mld (beide + € 1,968 mld, precies het verschil). De oplosser voor de budgetneutrale vlaktaks geeft daardoor een vrijstelling van € 28.322 in plaats van € 27.796 en tariefsfactor 0,7368 in plaats van 0,7487.
+
+### D-055 Sitemap
+
+`@astrojs/sitemap` maakt `sitemap-index.xml` tijdens de build, zonder verkiezingen met fictieve partijen. Een `robots.txt` heeft geen zin: zoekmachines lezen die alleen op de hoofdmap van het domein (`tiniepriest.github.io/robots.txt`), en die valt buiten deze repo. Om Google de sitemap te laten gebruiken, kan de eigenaar hem gratis aanmelden in Google Search Console.

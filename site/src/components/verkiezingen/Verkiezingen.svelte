@@ -101,7 +101,7 @@
     </p>
     <details>
       <summary>Pas je situatie aan</summary>
-      <InvoerFormulier bind:invoer {params} standaarden={null} />
+      <InvoerFormulier bind:invoer {params} />
     </details>
   </section>
 

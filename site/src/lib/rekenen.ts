@@ -28,8 +28,6 @@ export interface BasisSamenvatting {
   /** Gestandaardiseerd besteedbaar inkomen per huishouden, voor "je plek in Nederland". */
   gestandaardiseerd: number[];
   persoonsgewichten: number[];
-  /** Medianen voor "weet ik niet" in het invoerformulier. */
-  standaarden: { huur: number; woz: number; rente: number };
 }
 
 export type Bericht =
