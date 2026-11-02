@@ -3,7 +3,7 @@
   import Tooltip from "./Tooltip.svelte";
 
   /*
-   * Waterval van bruto naar besteedbaar: elke stap telt op (blauw) of trekt af (oranje); begin en eind zijn
+   * Waterval van bruto naar besteedbaar: elke stap telt op (groen) of trekt af (rood); begin en eind zijn
    * grijze totaalstaven. Horizontaal, zodat de labels ook op een telefoon leesbaar blijven.
    */
   let {

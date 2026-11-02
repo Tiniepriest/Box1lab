@@ -1,6 +1,6 @@
 /*
  * Deelafbeeldingen (Open Graph, 1200 × 630) tijdens de build: Satori zet een opmaak om naar SVG, resvg naar PNG.
- * Kleuren uit de lichte designtokens; lettertype IBM Plex (lokaal, geen externe dienst).
+ * Kleuren uit de lichte designtokens; lettertypen Inter en Source Serif 4 (lokaal, geen externe dienst).
  */
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -11,32 +11,38 @@ const require = createRequire(import.meta.url);
 const font = (pakket: string, bestand: string) => readFileSync(require.resolve(`${pakket}/files/${bestand}`));
 const LETTERS = [
   {
-    name: "Plex",
-    data: font("@fontsource/ibm-plex-sans", "ibm-plex-sans-latin-400-normal.woff"),
+    name: "Inter",
+    data: font("@fontsource/inter", "inter-latin-400-normal.woff"),
     weight: 400 as const,
   },
   {
-    name: "Plex",
-    data: font("@fontsource/ibm-plex-sans", "ibm-plex-sans-latin-600-normal.woff"),
+    name: "Inter",
+    data: font("@fontsource/inter", "inter-latin-600-normal.woff"),
     weight: 600 as const,
   },
   {
-    name: "PlexSerif",
-    data: font("@fontsource/ibm-plex-serif", "ibm-plex-serif-latin-600-normal.woff"),
+    name: "Serif",
+    data: font("@fontsource/source-serif-4", "source-serif-4-latin-600-normal.woff"),
     weight: 600 as const,
+  },
+  {
+    name: "Serif",
+    data: font("@fontsource/source-serif-4", "source-serif-4-latin-600-italic.woff"),
+    weight: 600 as const,
+    style: "italic" as const,
   },
 ];
 
 const KLEUR = {
-  bg: "#f6f7f9",
-  panel: "#ffffff",
-  fg: "#14181f",
-  muted: "#5a6270",
-  accent: "#1f4e8c",
-  gain: "#2a78d6",
-  loss: "#eb6834",
-  zero: "#a3abb7",
-  line: "#dde1e7",
+  bg: "#f6f2ea",
+  panel: "#fffdf8",
+  fg: "#1d1b18",
+  muted: "#6a6359",
+  accent: "#26365e",
+  gain: "#169065",
+  loss: "#a82418",
+  zero: "#9a948a",
+  line: "#e2dbcd",
 };
 
 type Knoop = { type: string; props: Record<string, unknown> & { children?: unknown } };
@@ -125,17 +131,21 @@ export async function maakAfbeelding(k: Kaart): Promise<ArrayBuffer> {
       background: KLEUR.bg,
       padding: 56,
       flexDirection: "column",
-      fontFamily: "Plex",
+      fontFamily: "Inter",
       color: KLEUR.fg,
     },
-    h("div", { fontFamily: "PlexSerif", fontSize: 30, fontWeight: 600, color: KLEUR.accent }, "Box1lab"),
+    h(
+      "div",
+      { fontFamily: "Serif", fontSize: 32, fontWeight: 600, fontStyle: "italic", color: KLEUR.accent },
+      "Box1lab",
+    ),
     h(
       "div",
       { height: 400, flexShrink: 0, alignItems: "center", gap: 48, marginTop: 24, marginBottom: 24 },
       h(
         "div",
         { flexDirection: "column", width: k.decielen ? 620 : 1088, flexShrink: 0, gap: 20 },
-        h("div", { fontFamily: "PlexSerif", fontSize: 52, fontWeight: 600, lineHeight: 1.1 }, k.titel),
+        h("div", { fontFamily: "Serif", fontSize: 52, fontWeight: 600, lineHeight: 1.1 }, k.titel),
         h("div", { fontSize: 30, lineHeight: 1.35, color: KLEUR.fg }, k.zin),
       ),
       ...(staven ? [staven] : []),

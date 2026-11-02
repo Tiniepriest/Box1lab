@@ -27,6 +27,18 @@ h3 {
   line-height: 1.2;
   text-wrap: balance;
 }
+h1 {
+  font-size: clamp(32px, 5vw, 50px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+/* De inleiding onder de kop van een pagina. */
+.intro,
+.lead {
+  font-family: var(--f-display);
+  font-size: clamp(18px, 2.4vw, 21px);
+  line-height: 1.5;
+}
 
 a {
   color: var(--accent);
@@ -63,7 +75,7 @@ select {
 button {
   border: 1px solid var(--line);
   background: var(--soft);
-  border-radius: 6px;
+  border-radius: var(--radius);
   padding: 6px 12px;
   cursor: pointer;
 }
@@ -87,8 +99,8 @@ input[type="number"],
 input[type="text"],
 select {
   border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--bg);
+  border-radius: var(--radius);
+  background: var(--panel);
   padding: 6px 8px;
   min-height: 36px;
 }
@@ -123,12 +135,18 @@ label {
     gap: 14px;
   }
 }
+/* Vlakken zonder rand: een zachte schaduw maakt ze los van het papier (D-069). */
 .kaart {
   background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 18px;
+  border-radius: var(--radius);
+  box-shadow: var(--schaduw);
+  padding: 22px;
   min-width: 0;
+}
+@media (max-width: 480px) {
+  .kaart {
+    padding: 18px;
+  }
 }
 .notitie {
   color: var(--muted);
@@ -137,7 +155,7 @@ label {
 .waarschuwing {
   background: var(--warn-bg);
   color: var(--warn);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 10px 12px;
   font-size: 14px;
 }
@@ -183,19 +201,21 @@ table.data td.num {
 }
 .kerngetal {
   background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 12px 14px;
+  border-radius: var(--radius);
+  box-shadow: var(--schaduw);
+  padding: 14px 16px;
 }
 .kerngetal .l {
   font-size: 13px;
   color: var(--muted);
 }
 .kerngetal .w {
-  font-family: var(--f-num);
-  font-size: 22px;
-  font-weight: 500;
+  font-family: var(--f-display);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
   margin-top: 2px;
+  font-variant-numeric: tabular-nums;
 }
 .kerngetal .t {
   font-size: 12px;

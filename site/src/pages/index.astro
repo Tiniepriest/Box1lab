@@ -89,12 +89,10 @@ const piek = Math.max(...curve.marginaleDruk);
 
 <style>
   .held h1 {
-    font-size: clamp(30px, 5.5vw, 46px);
     margin: 8px 0 12px;
     max-width: 20ch;
   }
   .lead {
-    font-size: 19px;
     color: var(--muted);
     max-width: 60ch;
     margin: 0 0 20px;
@@ -106,7 +104,7 @@ const piek = Math.max(...curve.marginaleDruk);
     font-weight: 600;
     font-size: 18px;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: var(--radius);
     padding: 12px 22px;
   }
   .hoofdknop:hover {
@@ -137,14 +135,16 @@ const piek = Math.max(...curve.marginaleDruk);
     flex-direction: column;
     gap: 6px;
     background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 18px;
+    border-radius: var(--radius);
+    box-shadow: var(--schaduw);
+    padding: 22px;
     color: var(--fg);
     text-decoration: none;
   }
   a.tegel:hover {
-    border-color: var(--accent);
+    box-shadow:
+      0 0 0 1px var(--accent),
+      var(--schaduw);
   }
   .tegel h2 {
     font-size: 20px;

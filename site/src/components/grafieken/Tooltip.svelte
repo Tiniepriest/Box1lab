@@ -18,7 +18,7 @@
     background: var(--panel);
     color: var(--fg);
     border: 1px solid var(--line);
-    border-radius: 6px;
+    border-radius: var(--radius);
     padding: 6px 9px;
     font-size: 12px;
     line-height: 1.45;

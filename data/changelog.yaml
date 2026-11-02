@@ -7,6 +7,14 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-11-02
+  soort: nieuw
+  titel: Nieuw uiterlijk
+  tekst: >-
+    De site heeft een rustiger uiterlijk gekregen, ook in de donkere modus. Erop vooruit is nu groen en erop
+    achteruit rood, in alle grafieken. De kleuren zijn zo gekozen dat ze ook bij kleurenblindheid van elkaar te
+    onderscheiden zijn, en bedragen houden hun plus- of minteken. De berekeningen zijn niet veranderd.
+
+- datum: 2026-11-02
   soort: correctie
   titel: Meer hoge inkomens in de nagebootste bevolking
   tekst: >-

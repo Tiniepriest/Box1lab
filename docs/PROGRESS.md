@@ -112,6 +112,11 @@ Punten 1, 2, 3, 6, 7 en 9 van 2 november 2026 (4, 5 en 8 niet).
 
 - [x] Topinkomens volgens CBS: Pareto-staart in de bevolking, herweging op personen boven € 100.000 en € 200.000, hun inkomen en de winst van zelfstandigen (D-068)
 
+## Fase 14: nieuw uiterlijk — klaar
+
+- [x] Stijl "Papier": warm papier, vlakken zonder rand, Source Serif 4 en Inter, ook in donkere modus (D-069)
+- [x] Groen voor erop vooruit, rood voor erop achteruit, gecontroleerd op kleurenblindheid (D-069)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

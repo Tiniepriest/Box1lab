@@ -13,7 +13,7 @@
   import Tooltip from "./Tooltip.svelte";
 
   /*
-   * Horizontale staven vanaf een nullijn: rechts (blauw) is erop vooruit, links (oranje) erop achteruit.
+   * Horizontale staven vanaf een nullijn: rechts (groen) is erop vooruit, links (rood) erop achteruit.
    * Waarden dicht bij nul worden grijs. De waarde staat naast de staaf; meer details in de tooltip.
    */
   let {
