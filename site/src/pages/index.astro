@@ -26,36 +26,40 @@ const piek = Math.max(...curve.marginaleDruk);
       Zie wat je betaalt en wat je terugkrijgt, verander zelf de regels, en ontdek wat dat doet voor jou en
       voor Nederland. Gratis, onafhankelijk, en alles blijft in je eigen browser.
     </p>
+    <a class="hoofdknop" href={pad("jouw-situatie")}>
+      Begin met je situatie →
+    </a>
+    <p class="notitie">Wat je invult, gaat mee naar alle tabbladen.</p>
   </section>
 
   <section class="tegels" aria-label="Wat kun je hier doen?">
     <a class="tegel" href={pad("jouw-situatie")}>
+      <span class="stapnr">1</span>
       <h2>Jouw situatie</h2>
       <p>Hoeveel belasting betaal je, welke toeslagen krijg je, en wat houd je over van € 100 extra?</p>
       <span class="actie">Reken het uit →</span>
     </a>
-    <a class="tegel" href={pad("lab")}>
-      <h2>Speel minister van Financiën</h2>
-      <p>Verander tarieven, kortingen en toeslagen. Wie gaat erop vooruit, en wat kost het?</p>
-      <span class="actie">Naar het scenariolab →</span>
-    </a>
-    {actueel ? (
+    {actueel && (
       <a class="tegel" href={pad(`verkiezingen/${actueel.id}`)}>
-        <h2>{actueel.naam}</h2>
+        <span class="stapnr">2</span>
+        <h2>{actueel.menu ?? actueel.naam}</h2>
         <p>
           {actueel.soort === "akkoord"
-            ? "Twee routes naar een meerderheid naast elkaar: wat betekenen ze voor jou en voor Nederland?"
+            ? "Wat doet het plan van het kabinet met jou, en wat veranderen de routes naar een meerderheid daaraan?"
             : "Wat betekenen de plannen van partijen voor jouw portemonnee?"}
         </p>
         <span class="actie">Vergelijk →</span>
       </a>
-    ) : (
-      <div class="tegel binnenkort" aria-disabled="true">
-        <h2>Verkiezingen</h2>
-        <p>Wat betekenen de plannen van partijen voor jouw portemonnee? Deze module volgt.</p>
-        <span class="actie">Binnenkort</span>
-      </div>
     )}
+    <a class="tegel" href={pad("lab")}>
+      <span class="stapnr">{actueel ? 3 : 2}</span>
+      <h2>Scenariolab</h2>
+      <p>
+        Speel minister van Financiën: verander zelf tarieven, kortingen en toeslagen, of kies een
+        kant-en-klaar voorstel. Wie gaat erop vooruit, en wat kost het?
+      </p>
+      <span class="actie">Naar het Scenariolab →</span>
+    </a>
   </section>
 
   <section class="kaart visual">
@@ -93,7 +97,34 @@ const piek = Math.max(...curve.marginaleDruk);
     font-size: 19px;
     color: var(--muted);
     max-width: 60ch;
-    margin: 0 0 28px;
+    margin: 0 0 20px;
+  }
+  .hoofdknop {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--panel);
+    font-weight: 600;
+    font-size: 18px;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+  }
+  .hoofdknop:hover {
+    filter: brightness(1.1);
+  }
+  .held .notitie {
+    margin: 8px 0 28px;
+  }
+  .stapnr {
+    display: inline-grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 14px;
   }
   .tegels {
     display: grid;
@@ -135,8 +166,5 @@ const piek = Math.max(...curve.marginaleDruk);
     font-family: var(--f-body);
     font-size: 16px;
     margin: 0 0 4px;
-  }
-  .binnenkort .actie {
-    color: var(--muted);
   }
 </style>

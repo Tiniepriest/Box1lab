@@ -108,6 +108,10 @@ try {
   );
   const mobiel = await browser.newPage({ viewport: { width: 375, height: 800 } });
   await mobiel.goto(`${BASIS}/`, { waitUntil: "networkidle" });
+  controleer(
+    await mobiel.getByRole("link", { name: "Begin met je situatie" }).isVisible(),
+    "home: hoofdknop 'Begin met je situatie'",
+  );
   await mobiel.locator(".bij-uitklap summary").click();
   controleer(
     await mobiel.locator(".bij-uitklap").getByRole("link", { name: "Methodiek" }).isVisible(),
@@ -170,6 +174,13 @@ try {
       /Twee routes naast elkaar/.test(routeTekst),
     `belastingplan 2027: ${routes} routes, met waarschuwing en vergelijking`,
   );
+  const stap1 = (await pg.locator(".jaar").textContent()) ?? "";
+  controleer(
+    /Stap 1: wat doet het plan van het kabinet/.test(stap1) &&
+      /Voorlopig/.test(stap1) &&
+      /Stap 2/.test(routeTekst),
+    "belastingplan 2027: stap 1 (kabinetsplan, voorlopig) en stap 2 (routes)",
+  );
   const kolom = pg.locator("section.situatie");
   const routeBedragen = () => pg.locator("details.partij summary .num").allTextContents();
   controleer(
@@ -199,10 +210,16 @@ try {
   const zin = (await pg.locator(".kernzin").textContent()) ?? "";
   controleer(/per maand/.test(zin), `calculator: "${zin.trim().slice(0, 60)}…"`);
   controleer(true, "calculator: plek in de inkomensverdeling geladen");
-  const jaarKaart = (await pg.locator(".jaar").textContent()) ?? "";
+  const volgende = ((await pg.locator(".volgende").textContent()) ?? "").replace(/\s+/g, " ");
   controleer(
-    /Wat verandert er in 2027/.test(jaarKaart) && /Voorlopig/.test(jaarKaart),
-    "calculator: wat verandert er in 2027 (voorlopig)",
+    /In 2027 houd je volgens het plan van het kabinet/.test(volgende) &&
+      /voorlopig/.test(volgende) &&
+      /Scenariolab/.test(volgende),
+    "calculator: volgende stap naar Belastingplan 2027 (met de kern) en het Scenariolab",
+  );
+  controleer(
+    (await pg.locator(".jaar").count()) === 0,
+    "calculator: het overzicht van 2027 staat op de 2027-pagina",
   );
   const leesSessie = () => pg.evaluate(() => sessionStorage.getItem("box1lab.invoer.v1"));
   const vink = pg.getByRole("navigation", { name: "Hoofdmenu" }).locator(".vink");

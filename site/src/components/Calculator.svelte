@@ -22,6 +22,7 @@
   import StavenDivergent from "./grafieken/StavenDivergent.svelte";
   import Waterval from "./grafieken/Waterval.svelte";
   import InvoerFormulier from "./Invoer.svelte";
+  import JaarVergelijking from "./JaarVergelijking.svelte";
 
   let {
     params,
@@ -29,6 +30,7 @@
     populatieUrl,
     presets,
     volgend = null,
+    actueel = null,
   }: {
     params: Parameters;
     kalibratie: Kalibratie;
@@ -36,7 +38,12 @@
     presets: Preset[];
     /** Parameters van volgend jaar, met de secties die nog geen bron hebben. */
     volgend?: { params: Parameters; nogNiet: string[] } | null;
+    /** Het tabblad met de nieuwste verkiezing of het Belastingplan, voor "Volgende stap" (D-064). */
+    actueel?: { href: string; naam: string; soort: "verkiezing" | "akkoord"; jaar: number } | null;
   } = $props();
+
+  // Heeft volgend jaar een eigen pagina (zoals het Belastingplan)? Dan staat het overzicht daar en hier alleen de kern.
+  const jaarPagina = $derived(!!volgend && actueel?.jaar === volgend.params.jaar);
 
   // Wat doen de voorstellen met dit huishouden? De parametersets rekenen we één keer uit.
   const voorstelParams = presets
@@ -97,11 +104,11 @@
     return { x, ...inkomenscurve((b) => metInkomen(huishouden, 0, b), params, params, x, 100), nu };
   });
 
-  // Hetzelfde huishouden met de regels van volgend jaar, bij hetzelfde bruto inkomen.
+  // Hetzelfde huishouden met de regels van volgend jaar, bij hetzelfde bruto inkomen: de kern voor "Volgende stap".
   const volgendJaar = $derived.by(() => {
-    if (!volgend || !geldig.success || !r) return null;
+    if (!volgend || !jaarPagina || !geldig.success || !r) return null;
     const r2 = berekenHuishouden(huishoudenUitInvoer(geldig.data, volgend.params), volgend.params);
-    return { r2, d: r2.besteedbaar - r.besteedbaar };
+    return r2.besteedbaar - r.besteedbaar;
   });
 
   const voorstellen = $derived(
@@ -171,6 +178,46 @@
         </div>
       </div>
 
+      <section class="volgende" aria-labelledby="titel-volgende">
+        <h2 id="titel-volgende">Volgende stap</h2>
+        <div class="stappen">
+          {#if actueel}
+            <a class="kaart stap" href={actueel.href}>
+              <strong>{actueel.naam}</strong>
+              <span>
+                {#if volgendJaar !== null}
+                  {#if Math.abs(volgendJaar) < 1}
+                    In {actueel.jaar}
+                    {samen ? "houden jullie" : "houd je"} volgens het plan van het kabinet evenveel over.
+                  {:else}
+                    In {actueel.jaar}
+                    {samen ? "houden jullie" : "houd je"} volgens het plan van het kabinet
+                    <strong class={volgendJaar > 0 ? "vooruit" : "achteruit"}
+                      >{euro(Math.abs(volgendJaar / 12))}</strong
+                    >
+                    per maand {volgendJaar > 0 ? "meer" : "minder"} over{volgend?.params.status ===
+                    "voorlopig"
+                      ? " (voorlopig)"
+                      : ""}.
+                  {/if}
+                {/if}
+                {actueel.soort === "akkoord"
+                  ? "Wat veranderen de routes naar een meerderheid daaraan?"
+                  : "Wat doen de plannen van de partijen met jou?"}
+              </span>
+              <span class="actie">Bekijk {actueel.naam} →</span>
+            </a>
+          {/if}
+          <a class="kaart stap" href={pad("lab")}>
+            <strong>Scenariolab</strong>
+            <span
+              >Verander zelf de regels, of kies een kant-en-klaar voorstel, en zie wat het met jou doet.</span
+            >
+            <span class="actie">Naar het Scenariolab →</span>
+          </a>
+        </div>
+      </section>
+
       <div class="kaart">
         <Figuur
           titel="Van bruto naar netto: waar gaat je geld heen?"
@@ -239,67 +286,8 @@
           </Figuur>
         </div>
       {/if}
-      {#if volgend && volgendJaar}
-        {@const j = volgend.params.jaar}
-        <section class="kaart jaar" aria-labelledby="titel-jaar">
-          <h2 id="titel-jaar">
-            Wat verandert er in {j} voor {samen ? "jullie" : "jou"}?
-            {#if volgend.params.status === "voorlopig"}<span class="voorlopig">voorlopig</span>{/if}
-          </h2>
-          <p class="kern">
-            {#if Math.abs(volgendJaar.d) < 1}
-              Bij hetzelfde bruto inkomen {samen ? "houden jullie" : "houd je"} in {j} evenveel over.
-            {:else}
-              Bij hetzelfde bruto inkomen {samen ? "houden jullie" : "houd je"} in {j}
-              <strong class={volgendJaar.d > 0 ? "vooruit" : "achteruit"}
-                >{euroVerschil(volgendJaar.d / 12)} per maand</strong
-              >
-              {volgendJaar.d > 0 ? "meer" : "minder"} over ({euroVerschil(volgendJaar.d)} per jaar).
-            {/if}
-          </p>
-          <table class="data">
-            <thead><tr><th>Per jaar</th><th>{params.jaar}</th><th>{j}</th></tr></thead>
-            <tbody>
-              <tr>
-                <td>Belasting en premies</td><td class="num">{euro(r.belasting)}</td><td class="num"
-                  >{euro(volgendJaar.r2.belasting)}</td
-                >
-              </tr>
-              <tr>
-                <td>Toeslagen</td><td class="num">{euro(r.toeslagen)}</td><td class="num"
-                  >{euro(volgendJaar.r2.toeslagen)}</td
-                >
-              </tr>
-              {#if r.kinderbijslag > 0}
-                <tr>
-                  <td>Kinderbijslag</td><td class="num">{euro(r.kinderbijslag)}</td><td class="num"
-                    >{euro(volgendJaar.r2.kinderbijslag)}</td
-                  >
-                </tr>
-              {/if}
-              <tr class="totaal">
-                <td>Te besteden</td><td class="num">{euro(r.besteedbaar)}</td><td class="num"
-                  >{euro(volgendJaar.r2.besteedbaar)}</td
-                >
-              </tr>
-            </tbody>
-          </table>
-          <p class="notitie">
-            Meestal stijgen lonen en uitkeringen ook; dat zit hier niet in. Zo zie je alleen wat de nieuwe
-            regels doen.
-          </p>
-          {#if volgend.params.status === "voorlopig"}
-            <p class="notitie">
-              <strong>Voorlopig.</strong>
-              {volgend.params.toelichting}
-              {#if volgend.nogNiet.length}
-                Nog niet (helemaal) bekend, dus gerekend met de bedragen van {params.jaar}: {volgend.nogNiet.join(
-                  ", ",
-                )}.
-              {/if}
-            </p>
-          {/if}
-        </section>
+      {#if volgend && !jaarPagina && geldig.success}
+        <JaarVergelijking {params} {volgend} {invoer} />
       {/if}
       {#if voorstellen.length}
         <div class="kaart">
@@ -361,27 +349,36 @@
 </div>
 
 <style>
-  .jaar h2 {
+  .volgende h2 {
     font-size: 18px;
     margin: 0 0 8px;
   }
-  .voorlopig {
-    font-size: 12px;
-    font-weight: 600;
-    border: 1px solid var(--warn);
-    background: var(--warn-bg);
-    border-radius: 4px;
-    padding: 1px 6px;
-    margin-left: 6px;
-    vertical-align: middle;
+  .stappen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
   }
-  .jaar .kern {
-    margin: 0 0 10px;
+  .stap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 14px;
   }
-  .jaar table {
-    max-width: 480px;
+  .stap:hover {
+    border-color: var(--accent);
   }
-  .jaar .totaal td {
+  .stap > strong {
+    font-size: 16px;
+  }
+  .stap span {
+    flex: 1;
+  }
+  .stap .actie {
+    flex: 0;
+    color: var(--accent);
     font-weight: 600;
   }
   .calculator {
