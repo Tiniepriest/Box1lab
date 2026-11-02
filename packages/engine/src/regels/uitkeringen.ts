@@ -9,8 +9,24 @@ export function aowPerJaar(p: Parameters, partners: boolean): number {
 }
 
 /**
+ * Het bruto bedrag van een uitkering dat na box 1-belasting `netto` oplevert. Gezocht met bisectie; netto stijgt
+ * altijd met bruto, want het hoogste tarief is lager dan 100%.
+ */
+export function brutoVoorNetto(netto: number, k: PersoonKenmerken, p: Parameters): number {
+  if (netto <= 0) return 0;
+  let lo = netto;
+  let hi = netto * 3;
+  for (let i = 0; i < 50; i++) {
+    const m = (lo + hi) / 2;
+    if (m - belastingBox1(m, 0, p, k) < netto) lo = m;
+    else hi = m;
+  }
+  return (lo + hi) / 2;
+}
+
+/**
  * Netto-koppeling: het bruto bedrag dat onder het scenario hetzelfde netto oplevert als `bruto` onder de basis.
- * Gezocht met bisectie. Als de belasting op dit bedrag niet verandert, is het antwoord exact `bruto`.
+ * Als de belasting op dit bedrag niet verandert, is het antwoord exact `bruto`.
  * Of een uitkering gekoppeld is, staat per soort in `uitkeringen.nettoKoppeling`.
  */
 export function gekoppeldBruto(
@@ -21,13 +37,5 @@ export function gekoppeldBruto(
 ): number {
   const belastingBasis = belastingBox1(bruto, 0, basis, k);
   if (belastingBox1(bruto, 0, scenario, k) === belastingBasis) return bruto;
-  const doel = bruto - belastingBasis;
-  let lo = bruto * 0.5;
-  let hi = bruto * 2.5;
-  for (let i = 0; i < 40; i++) {
-    const m = (lo + hi) / 2;
-    if (m - belastingBox1(m, 0, scenario, k) < doel) lo = m;
-    else hi = m;
-  }
-  return (lo + hi) / 2;
+  return brutoVoorNetto(bruto - belastingBasis, k, scenario);
 }

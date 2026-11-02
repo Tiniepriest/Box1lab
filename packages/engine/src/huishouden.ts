@@ -6,8 +6,11 @@ import { kinderbijslag as berekenKinderbijslag } from "./regels/kinderbijslag.ts
 import { huurtoeslag } from "./regels/toeslagen/huurtoeslag.ts";
 import { kindgebondenBudget } from "./regels/toeslagen/kgb.ts";
 import { kinderopvangtoeslag, type Kinderopvang } from "./regels/toeslagen/kot.ts";
+import { belastbareWinst, type Ondernemer } from "./regels/ondernemer.ts";
+import { standaardPensioenpremie } from "./regels/pensioen.ts";
 import { zorgtoeslag } from "./regels/toeslagen/zorgtoeslag.ts";
 import { aowPerJaar, gekoppeldBruto } from "./regels/uitkeringen.ts";
+import { bijstandBruto } from "./regels/bijstand.ts";
 import { zvwBijdrage } from "./regels/zorg.ts";
 
 export type InkomensSoort = "werk" | "uitkering" | "aow" | "geen";
@@ -21,6 +24,13 @@ export interface Lid {
   uitkering: number;
   /** Soort uitkering bij soort "uitkering"; bepaalt of de netto-koppeling geldt. Standaard bijstand. */
   uitkeringSoort?: UitkeringSoort;
+  /** Bij soort "werk": zelfstandig ondernemer. `inkomen` is dan de winst. */
+  ondernemer?: Ondernemer;
+  /**
+   * Werknemersdeel van de pensioenpremie per jaar, ingehouden op het loon en aftrekbaar. "standaard" = de
+   * standaardregeling uit de parameters, over het actuele loon.
+   */
+  pensioenpremie?: number | "standaard";
 }
 
 export interface Huishouden {
@@ -50,6 +60,8 @@ export interface Resultaat {
   /** Fiscaal voordeel van de eigen woning (positief = minder belasting); zit al in `belasting`. */
   eigenWoning: number;
   zvw: number;
+  /** Werknemersdeel van de pensioenpremie (gaat af van het bruto inkomen, vóór belasting). */
+  pensioenpremie: number;
   /** Zorgtoeslag van het huishouden, inclusief die van meerderjarige kinderen. */
   zorgtoeslag: number;
   /** Aantal personen of partnerparen in het huishouden dat zorgtoeslag krijgt (zoals Dienst Toeslagen telt). */
@@ -139,26 +151,33 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
   });
   const ew = h.woz ? eigenWoningSaldo(h.hypotheekrente, h.woz, p).saldo : 0;
 
-  // 3. Belasting per persoon, met en zonder eigen woning.
+  // 3. Belasting per persoon, met en zonder eigen woning. Een werknemer betaalt belasting over het loon min de
+  //    pensioenpremie, een ondernemer over de belastbare winst. De arbeidskorting gaat over het fiscale loon of
+  //    over de winst vóór ondernemersaftrek en mkb-winstvrijstelling (Wet IB 2001, art. 8.11 lid 2).
   let bruto = 0;
   let belasting = 0;
   let belastingZonderWoning = 0;
   let toetsingsinkomen = 0;
   let zvw = 0;
+  let pensioenpremie = 0;
   personen.forEach(({ k, x }, i) => {
-    const arbeid = k.werkt ? x : 0;
-    const zonder = belastingBox1(x, arbeid, p, k);
+    const l = h.leden[i]!;
+    const premie = l.pensioenpremie === "standaard" ? standaardPensioenpremie(x, p) : (l.pensioenpremie ?? 0);
+    const inkomen = l.ondernemer ? belastbareWinst(x, l.ondernemer, p).belastbaar : x - premie;
+    const arbeid = k.werkt ? (l.ondernemer ? x : inkomen) : 0;
+    const zonder = belastingBox1(inkomen, arbeid, p, k);
     let met = zonder;
-    let belastbaar = x;
+    let belastbaar = inkomen;
     if (i === hoofd && ew !== 0) {
-      belastbaar = x + ew;
-      met = belastingBox1(belastbaar, arbeid, p, k, aftrekbeperking(x, ew, p, k.aow));
+      belastbaar = inkomen + ew;
+      met = belastingBox1(belastbaar, arbeid, p, k, aftrekbeperking(inkomen, ew, p, k.aow));
     }
     bruto += x;
+    pensioenpremie += premie;
     belasting += met;
     belastingZonderWoning += zonder;
     toetsingsinkomen += Math.max(0, belastbaar);
-    zvw += zvwBijdrage(x, k.aow, p);
+    zvw += zvwBijdrage(inkomen, k.aow || !!l.ondernemer, p);
   });
 
   // 4. Meerderjarige kinderen: eigen inkomen, belasting, zorgtoeslag en premie. Hun inkomen telt mee in het
@@ -198,6 +217,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     belasting,
     eigenWoning: belastingZonderWoning - belasting,
     zvw,
+    pensioenpremie,
     zorgtoeslag: zt,
     zorgtoeslagOntvangers: (ztOuders > 0 ? 1 : 0) + ztKinderenOntvangers,
     huurtoeslag: ht,
@@ -208,7 +228,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     uitkeringKosten,
     toetsingsinkomen,
     toeslagen,
-    besteedbaar: bruto - belasting - zvw + toeslagen + kb - zorgpremie,
+    besteedbaar: bruto - pensioenpremie - belasting - zvw + toeslagen + kb - zorgpremie,
     volwassenen,
     kinderen: h.kinderen.length,
     equivalentie: equivalentiefactor(volwassenen, h.kinderen, p),
@@ -243,21 +263,30 @@ export interface EenvoudigeInvoer {
   /** Kosten kinderopvang per jaar, totaal. Gerekend als dagopvang tegen de maximale uurprijs. */
   kinderopvangKosten: number;
   vermogen?: number;
+  /** Soort uitkering; bij bijstand (standaard) volgt het bedrag uit de bijstandsnorm en telt `inkomen` niet. */
   uitkeringSoort?: UitkeringSoort;
 }
 
-/** Zet eenvoudige invoer om in een huishouden. Het AOW-deel van een inkomen volgt uit de parameters. */
+/**
+ * Zet eenvoudige invoer om in een huishouden. Het AOW-deel van een inkomen en de bijstand volgen uit de
+ * parameters. Werkenden zijn werknemers met de standaard pensioenpremie.
+ */
 export function maakHuishouden(e: EenvoudigeInvoer, p: Parameters): Huishouden {
   const partners = e.soort2 !== null;
   const aow = aowPerJaar(p, partners);
-  const lid = (inkomen: number, soort: InkomensSoort): Lid => ({
-    inkomen: soort === "geen" ? 0 : inkomen,
-    soort,
-    uitkering: soort === "uitkering" ? inkomen : soort === "aow" ? Math.min(inkomen, aow) : 0,
-    ...(soort === "uitkering" ? { uitkeringSoort: e.uitkeringSoort ?? "bijstand" } : {}),
+  const uitkeringSoort = e.uitkeringSoort ?? "bijstand";
+  const soorten = partners ? [e.soort1, e.soort2!] : [e.soort1];
+  const inkomens = [e.inkomen1, e.inkomen2];
+  const bijstand =
+    uitkeringSoort === "bijstand" ? soorten.map((s) => s === "uitkering") : soorten.map(() => false);
+  const leden = soorten.map((soort, i): Lid => {
+    const inkomen = soort === "geen" ? 0 : inkomens[i]!;
+    if (soort === "werk") return { inkomen, soort, uitkering: 0, pensioenpremie: "standaard" };
+    if (soort === "aow") return { inkomen, soort, uitkering: Math.min(inkomen, aow) };
+    if (soort !== "uitkering") return { inkomen, soort, uitkering: 0 };
+    return { inkomen, soort, uitkering: inkomen, uitkeringSoort };
   });
-  const leden = [lid(e.inkomen1, e.soort1)];
-  if (e.soort2 !== null) leden.push(lid(e.inkomen2, e.soort2));
+  vulBijstandIn(leden, bijstand, partners, p);
   const huur = e.huurPerMaand > 0;
   const uurprijs = p.toeslagen.kinderopvangtoeslag.maxUurprijs.dagopvang;
   const kinderopvang: Kinderopvang[] =
@@ -275,3 +304,40 @@ export function maakHuishouden(e: EenvoudigeInvoer, p: Parameters): Huishouden {
     vermogen: e.vermogen ?? 0,
   };
 }
+
+/**
+ * Zet het bijstandsbedrag van de leden met `bijstand[i]` volgens de norm (zie `bijstandBruto`). Werkt de
+ * partner, dan gaat diens netto inkomen van de gezinsnorm af.
+ */
+export function vulBijstandIn(leden: Lid[], bijstand: boolean[], partners: boolean, p: Parameters): void {
+  const k = (l: Lid): PersoonKenmerken => ({
+    werkt: l.soort === "werk",
+    aow: l.soort === "aow",
+    alleenstaand: !partners,
+    combinatiekorting: false,
+  });
+  leden.forEach((l, i) => {
+    if (!bijstand[i]) return;
+    const j = 1 - i;
+    const partner = partners ? leden[j] : undefined;
+    const ookBijstand = !!partner && !!bijstand[j];
+    let nettoPartner = 0;
+    if (partner && !ookBijstand) {
+      const r = berekenHuishouden({ ...LEEG, leden: [partner], partners: false }, p);
+      nettoPartner = r.bruto - r.pensioenpremie - r.belasting - r.zvw;
+    }
+    const bruto = bijstandBruto(p, k(l), ookBijstand, nettoPartner);
+    Object.assign(l, { inkomen: bruto, uitkering: bruto, soort: "uitkering", uitkeringSoort: "bijstand" });
+  });
+}
+
+const LEEG: Huishouden = {
+  leden: [],
+  partners: false,
+  kinderen: [],
+  huurPerMaand: 0,
+  hypotheekrente: 0,
+  woz: 0,
+  kinderopvang: [],
+  vermogen: 0,
+};

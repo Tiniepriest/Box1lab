@@ -151,7 +151,23 @@ try {
     !(await pg.getByText("Vakantiegeld zit al in dit maandbedrag").isVisible()),
     "formulier: geen vakantiegeld bij zzp",
   );
+  controleer(await pg.getByText("Ik werk minstens").isVisible(), "formulier: urencriterium bij zzp");
+  await pg.locator("#soort-0").selectOption("bijstand");
+  await pg.waitForTimeout(300);
+  controleer(
+    !(await pg.locator("#bedrag-0").isVisible()) &&
+      /netto per maand/.test((await pg.locator("form.invoer").textContent()) ?? ""),
+    "formulier: bijstand volgt uit de norm, geen bedrag invullen",
+  );
+  controleer(
+    /per maand over/.test((await pg.locator(".kernzin").textContent()) ?? ""),
+    "calculator: rekent met de bijstandsnorm",
+  );
   await pg.locator("#soort-0").selectOption("loondienst");
+  controleer(
+    /We schatten € [0-9.]+ per maand/.test((await pg.locator("form.invoer").textContent()) ?? ""),
+    "formulier: schatting pensioenpremie bij loondienst",
+  );
   await pg.locator("#bedrag-0").fill("2700");
   await pg.waitForTimeout(300);
   controleer(/2700/.test((await leesSessie()) ?? ""), "formulier: situatie bewaard voor dit tabblad");

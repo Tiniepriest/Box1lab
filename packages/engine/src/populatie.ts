@@ -14,6 +14,8 @@ const lid = z.strictObject({
   soort: z.enum(["werk", "uitkering", "aow", "geen"]),
   uitkering: bedrag,
   uitkeringSoort: z.enum(["bijstand", "werknemersverzekering"]).optional(),
+  ondernemer: z.strictObject({ urencriterium: z.boolean(), starter: z.boolean() }).optional(),
+  pensioenpremie: z.union([bedrag, z.literal("standaard")]).optional(),
 });
 
 const kinderopvang = z.strictObject({

@@ -7,6 +7,17 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-10-28
+  soort: model
+  modelversie: 0.3.0
+  titel: Bijstand, zzp'ers en pensioenpremie
+  tekst: >-
+    De bijstand volgt nu uit de landelijke norm in plaats van een zelf in te vullen bedrag. Voor zzp'ers rekenen
+    we de zelfstandigenaftrek, de startersaftrek, de mkb-winstvrijstelling en de eigen bijdrage voor de
+    zorgverzekering. Werknemers betalen pensioenpremie; die verlaagt de belasting, maar ook wat je overhoudt. De
+    nagebootste bevolking heeft nu zelfstandigen en pensioenpremie en is opnieuw gewogen; de belastingopbrengst in
+    het model komt daardoor uit op het niveau van de Miljoenennota.
+
+- datum: 2026-10-28
   soort: nieuw
   titel: Eenvoudiger formulier, en je situatie gaat mee
   tekst: >-

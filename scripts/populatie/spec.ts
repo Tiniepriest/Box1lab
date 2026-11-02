@@ -23,6 +23,8 @@ export const specSchema = z.strictObject({
     partnerCorrelatie: z.number().min(-1).max(1),
     uitkeringKans: z.strictObject({ alleenstaand: kans, paar: kans, eenouder: kans }),
     aandeelBijstand: kans,
+    zelfstandigKans: kans,
+    urencriteriumKans: kans,
     uitkering: z.strictObject({ minimum: getal, maximum: getal }),
   }),
   pensioen: z.strictObject({

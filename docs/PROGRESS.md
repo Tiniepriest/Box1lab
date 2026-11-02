@@ -78,7 +78,7 @@
 Punten 1–8 en 10–13 uit de lijst van 27 oktober 2026 (9, netto invullen, valt af).
 
 - [x] 8a: "weet ik niet" weg (2), extra per jaar (3), zzp zonder vakantiegeld (4), "anders" weg (5), situatie onthouden per tabblad met nieuwe privacytekst (7b), sitemap (12), bron overige aftrekposten (13)
-- [ ] 8b: bijstandsnorm (1), zzp-aftrekposten (8), pensioenpremie (6), herweging
+- [x] 8b: bijstandsnorm (1), zzp-aftrekposten (8), pensioenpremie (6), herweging
 - [ ] 8c: jouw situatie in lab, voorstellen en calculator (7, 11)
 - [ ] 8d: cijfers 2027 (10)
 

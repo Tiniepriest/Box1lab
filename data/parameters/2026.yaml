@@ -101,11 +101,10 @@ overigeAftrekposten:
     persoonsgebondenAftrek: 0.804
     lijfrentePremieaftrek: 1.378
     arbeidsongeschiktheidsverzekeringPremieaftrek: 0.626
-    # Ondernemersfaciliteiten: de modelbevolking heeft geen aparte zelfstandigen, dus ze staan hier.
-    zelfstandigenaftrek: 0.306
+    # De zelfstandigenaftrek en de mkb-winstvrijstelling rekent het model per huishouden (sectie ondernemers).
+    # De modelbevolking heeft geen starters en geen meewerkende partners; die aftrek staat daarom hier.
     startersaftrek: 0.117
     meewerkaftrek: 0.007
-    mkbWinstvrijstelling: 2.730
   niveau: 100
 
 toeslagen:
@@ -239,12 +238,31 @@ uitkeringen:
   # vroegere bruto loon.
   nettoKoppeling: { aow: true, bijstand: true, werknemersverzekering: false }
 
+bijstand:
+  bron: "Rijksoverheid, Hoe hoog is mijn bijstandsuitkering? Bijstandsnormen per 1 januari en per 1 juli 2026 (https://www.rijksoverheid.nl/documenten/vraag-en-antwoord/bijstand/hoe-hoog-is-mijn-bijstandsuitkering)"
+  # Netto bijstandsnorm per maand inclusief vakantiegeld, 21 jaar tot de AOW-leeftijd. Per jaar = 6 × eerste
+  # halfjaar + 6 × tweede halfjaar. De norm voor gehuwden geldt voor het paar samen.
+  alleenstaand: { eersteHalfjaar: 1401.50, tweedeHalfjaar: 1419.46 }
+  gehuwden: { eersteHalfjaar: 2002.13, tweedeHalfjaar: 2027.79 }
+  # Onder deze leeftijd gelden lagere jongerennormen; die zitten niet in het model.
+  minimumLeeftijd: 21
+
+ondernemers:
+  bron: "Belastingdienst, Zelfstandigenaftrek 2026 en startersaftrek (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/ondernemersaftrek-2026/zelfstandigenaftrek-2026); Mkb-winstvrijstelling (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/mkb_winstvrijstelling); arbeidskorting over de winst uit onderneming: Wet IB 2001, art. 8.11 lid 2."
+  # Ondernemersaftrek: alleen bij het urencriterium. De startersaftrek komt erbij in de eerste jaren.
+  zelfstandigenaftrek: 1200
+  startersaftrek: 2123
+  # Vrijstelling over de winst na ondernemersaftrek, ook zonder urencriterium.
+  mkbWinstvrijstelling: 12.7
+  urencriterium: 1225
+
 zorg:
   bron: "Nominale premie: Rijksoverheid, Wat kost een zorgverzekering? (https://www.rijksoverheid.nl/vraag-en-antwoord/zorgverzekering/premie-zorgverzekering). Zvw-bijdrage: Belastingdienst, Tarieven loonheffingen 2026, tabel 11 en 12 (https://download.belastingdienst.nl/belastingdienst/docs/bijlage-nieuwsbrief-loonheffingen-2026-lh2091b63fd.pdf)."
   # Gemiddelde nominale premie per volwassene per jaar.
   nominalePremiePerVolwassene: 1884
-  # Inkomensafhankelijke bijdrage Zvw die mensen zelf betalen (zoals AOW'ers over AOW en pensioen).
-  # Voor werknemers en uitkeringen betaalt de werkgever of uitkeringsinstantie; dat valt buiten het model.
+  # Inkomensafhankelijke bijdrage Zvw die mensen zelf betalen: AOW'ers over AOW en pensioen, zelfstandigen over hun
+  # belastbare winst. Voor werknemers en uitkeringen betaalt de werkgever of uitkeringsinstantie; dat valt buiten
+  # het model.
   zvwBijdrage: 4.85
   zvwMaximumInkomen: 79409
   # Vanaf deze leeftijd betaalt iemand zelf de nominale premie en kan diegene zorgtoeslag krijgen (Zvw).
@@ -264,6 +282,14 @@ loon:
   # Wettelijk minimum vakantiegeld als percentage van het loon; gebruikt om een maandloon zonder vakantiegeld
   # om te rekenen naar een jaarinkomen.
   vakantiegeld: 8
+
+pensioenpremie:
+  bron: "ABP, Premiepercentages en franchisebedragen per 1 januari 2026, OP/NP (https://www.abp.nl/content/dam/abp/documenten/formulieren-tabellen/premietabel-2026.pdf). Een op het loon ingehouden werknemersdeel verlaagt het fiscale loon: Belastingdienst, U betaalt vrijwillig pensioenpremie (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/pensioen_en_andere_uitkeringen/u-betaalt-vrijwillig-pensioenpremie/u-betaalt-vrijwillig-pensioenpremie)."
+  # Standaard als iemand in loondienst niet weet wat er op de loonstrook staat: de regeling van ABP, het grootste
+  # pensioenfonds. Fondsen verschillen; op "Jouw situatie" kun je het echte bedrag invullen.
+  werknemer: 8.13
+  franchise: 19200
+  aftoppingsgrens: 137800
 
 gedrag:
   bron: "Modelkeuze. 0 = geen gedragseffect (statische doorrekening)."

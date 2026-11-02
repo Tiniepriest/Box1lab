@@ -4,8 +4,16 @@ import type { Parameters } from "../parameters/schema.ts";
 export interface Curve {
   bruto: number[];
   besteedbaar: number[];
-  /** Marginale druk in procent: welk deel van een extra euro verdwijnt aan belasting en minder toeslag. */
+  /**
+   * Marginale druk in procent: welk deel van een extra euro verdwijnt aan belasting en minder toeslag. De
+   * pensioenpremie telt niet mee: dat is opbouw voor later, geen verlies.
+   */
   marginaleDruk: number[];
+}
+
+/** Besteedbaar inkomen plus de eigen pensioenpremie: de grondslag voor de marginale druk. */
+function voorDruk(r: { besteedbaar: number; pensioenpremie: number }): number {
+  return r.besteedbaar + r.pensioenpremie;
 }
 
 /**
@@ -20,10 +28,10 @@ export function inkomenscurve(
   stap = 1000,
 ): Curve {
   const params = p.gedrag.eti ? { ...p, gedrag: { ...p.gedrag, eti: 0 } } : p;
-  const b = (x: number) => berekenHuishouden(maak(x), params, basis).besteedbaar;
-  const besteedbaar = bruto.map(b);
-  const marginaleDruk = bruto.map((x, i) => (1 - (b(x + stap) - besteedbaar[i]!) / stap) * 100);
-  return { bruto: [...bruto], besteedbaar, marginaleDruk };
+  const r = (x: number) => berekenHuishouden(maak(x), params, basis);
+  const nu = bruto.map(r);
+  const marginaleDruk = bruto.map((x, i) => (1 - (voorDruk(r(x + stap)) - voorDruk(nu[i]!)) / stap) * 100);
+  return { bruto: [...bruto], besteedbaar: nu.map((x) => x.besteedbaar), marginaleDruk };
 }
 
 /** Het huishouden met een ander bruto inkomen voor één persoon (bij een uitkering verandert de uitkering mee). */
@@ -47,7 +55,7 @@ export function marginaleDrukVan(
   stap = 100,
   basis?: Parameters,
 ): number {
-  const nu = berekenHuishouden(h, p, basis).besteedbaar;
-  const meer = berekenHuishouden(metInkomen(h, lid, h.leden[lid]!.inkomen + stap), p, basis).besteedbaar;
+  const nu = voorDruk(berekenHuishouden(h, p, basis));
+  const meer = voorDruk(berekenHuishouden(metInkomen(h, lid, h.leden[lid]!.inkomen + stap), p, basis));
   return (1 - (meer - nu) / stap) * 100;
 }

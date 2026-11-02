@@ -94,6 +94,21 @@ groepen:
         max: 100
         stap: 1
         gevorderd: true
+      - parameter: ondernemers.zelfstandigenaftrek
+        label: "Zelfstandigenaftrek"
+        uitleg: "Aftrek voor zzp'ers die het urencriterium halen."
+        eenheid: euro
+        min: 0
+        max: 8000
+        stap: 100
+      - parameter: ondernemers.mkbWinstvrijstelling
+        label: "Mkb-winstvrijstelling"
+        uitleg: "Deel van de winst van ondernemers waarover geen belasting wordt betaald."
+        eenheid: procent
+        min: 0
+        max: 20
+        stap: 0.1
+        gevorderd: true
       - {
           parameter: overigeAftrekposten.niveau,
           label: "Overige aftrekposten",

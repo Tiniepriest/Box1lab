@@ -1,6 +1,7 @@
 # Voorbeeldhuishoudens, getoond in het scenariolab. Overgenomen uit het prototype.
 # Bedragen per jaar, huur per maand. "soort2: null" betekent geen partner.
-# Soorten inkomen: werk, uitkering, aow, geen.
+# Soorten inkomen: werk, uitkering, aow, geen. Werkenden zijn werknemers met de standaard pensioenpremie.
+# Bij bijstand volgt het bedrag uit de bijstandsnorm; inkomen1/inkomen2 tellen dan niet.
 
 huishoudens:
   - id: p10
@@ -8,7 +9,7 @@ huishoudens:
     omschrijving: "Alleenstaand, bijstand, huur"
     invoer:
       {
-        inkomen1: 20000,
+        inkomen1: 0,
         soort1: uitkering,
         soort2: null,
         inkomen2: 0,
