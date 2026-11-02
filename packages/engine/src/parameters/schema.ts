@@ -278,6 +278,31 @@ export const kalibratieSchema = z.strictObject({
     inkomenZelfstandigOndernemerMln: z.number().nonnegative(),
     huishoudensMetZelfstandigOndernemer: aantal,
   }),
+  /** Pensioenpremie van werknemers per 10%-groep gestandaardiseerd inkomen (laag naar hoog), van CBS. */
+  pensioenpremie: z.strictObject({
+    bron,
+    jaar: z.number().int(),
+    perDeciel: z
+      .array(
+        z.strictObject({
+          huishoudensMetLoon: aantal,
+          loonMln: z.number().positive(),
+          huishoudensMetPremie: aantal,
+          premieMln: z.number().nonnegative(),
+        }),
+      )
+      .length(10),
+    /** Huishoudens met loon en met premie naar leeftijd hoofdkostwinner: jonger dan 25, 25 tot 65, 65 of ouder. */
+    perLeeftijd: z
+      .array(
+        z.strictObject({
+          totLeeftijd: z.number().int().positive().nullable(),
+          huishoudensMetLoon: aantal,
+          huishoudensMetPremie: aantal,
+        }),
+      )
+      .min(1),
+  }),
   indexatie: z.strictObject({ bron, factor: z.number().positive() }),
   toeslagen: z.strictObject({
     bron,

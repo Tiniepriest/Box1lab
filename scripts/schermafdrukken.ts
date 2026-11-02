@@ -170,8 +170,8 @@ try {
   );
   await pg.locator("#soort-0").selectOption("loondienst");
   controleer(
-    /We schatten € [0-9.]+ per maand/.test((await pg.locator("form.invoer").textContent()) ?? ""),
-    "formulier: schatting pensioenpremie bij loondienst",
+    await pg.locator("#premie-0").isVisible(),
+    "formulier: eigen pensioenpremie invullen bij loondienst",
   );
   await pg.locator("#bedrag-0").fill("2700");
   await pg.waitForTimeout(300);

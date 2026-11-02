@@ -22,9 +22,7 @@ export const persoonInvoerSchema = z.strictObject({
   inclusiefVakantiegeld: z.boolean(),
   /** Alleen bij loondienst: bruto extra per jaar, zoals een 13e maand, eindejaarsuitkering of bonus. */
   extraPerJaar: bedrag.default(0),
-  /** Alleen bij loondienst: pensioenpremie volgens de standaardregeling, een eigen bedrag, of geen pensioen. */
-  pensioen: z.enum(["standaard", "bedrag", "geen"]).default("standaard"),
-  /** Bij pensioen "bedrag": het werknemersdeel per maand, zoals op de loonstrook. */
+  /** Alleen bij loondienst: het eigen deel van de pensioenpremie per maand, zoals op de loonstrook (0 = geen). */
   pensioenpremiePerMaand: bedrag.default(0),
   /** Alleen bij zzp: voldoet aan het urencriterium voor de ondernemersaftrek. */
   urencriterium: z.boolean().default(true),
@@ -73,17 +71,16 @@ export function jaarbedrag(persoon: PersoonInvoer, p: Parameters): number {
   return persoon.bedrag * 12 * factor + extra;
 }
 
-/** Werknemersdeel van de pensioenpremie zoals de bezoeker het opgeeft. */
-function pensioenpremie(persoon: PersoonInvoer): Lid["pensioenpremie"] {
-  if (persoon.pensioen === "standaard") return "standaard";
-  return persoon.pensioen === "bedrag" ? persoon.pensioenpremiePerMaand * 12 : 0;
-}
-
 function lid(persoon: PersoonInvoer, partners: boolean, p: Parameters): Lid {
   const bedrag = jaarbedrag(persoon, p);
   switch (persoon.soort) {
     case "loondienst":
-      return { inkomen: bedrag, soort: "werk", uitkering: 0, pensioenpremie: pensioenpremie(persoon) };
+      return {
+        inkomen: bedrag,
+        soort: "werk",
+        uitkering: 0,
+        pensioenpremie: persoon.pensioenpremiePerMaand * 12,
+      };
     case "zzp":
       return {
         inkomen: bedrag,

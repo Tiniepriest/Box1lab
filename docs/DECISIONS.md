@@ -380,3 +380,21 @@ Nog niet gepubliceerd, dus tijdelijk de bedragen van 2026 met `TODO: bron nodig`
 Wat de site ermee doet: op Jouw situatie staat "Wat verandert er in 2027 voor jou?", bij hetzelfde bruto inkomen (lonen en uitkeringen stijgen meestal ook; dat staat erbij). Er is nog geen kalibratie of bevolking voor 2027, dus geen landelijke doorrekening; `npm run valideer` slaat die voor 2027 over.
 
 Bijwerken: zodra de bedragen definitief zijn (Belastingdienst half december, Dienst Toeslagen en SVB eind november en december), de TODO's invullen, de afgeleide waarden vervangen door de officiële en `status: definitief` zetten. Zie docs/JAARLIJKSE-UPDATE.md.
+
+## Fase 8e: pensioenpremie realistischer (vraag van de eigenaar)
+
+### D-062 Pensioenpremie: zelf invullen, en in de bevolking volgens CBS
+
+Vervangt een deel van D-058. De eigenaar vond "iedere werknemer betaalt de ABP-premie" te grof.
+
+**Calculator.** Je vult je eigen pensioenpremie per maand in, van je loonstrook (standaard 0). Er is geen schatting meer: fondsen verschillen te veel, en het echte bedrag staat op de loonstrook.
+
+**Nagebootste bevolking.** Wie pensioenpremie betaalt en hoeveel, volgt uit CBS 84493NED (2024, posten 1.1 en 11.4.1.1):
+
+- _Wie_: per werknemershuishouden een kans op deelname, passend gemaakt op twee CBS-verdelingen tegelijk: het aandeel werknemershuishoudens met premie per 10%-groep gestandaardiseerd inkomen (van 12% in de laagste tot 94% in de op één na hoogste groep) en per leeftijdsgroep van de hoofdkostwinner (41% onder 25, 89% van 25 tot 65, 45% vanaf 65). Daarna getrokken met een vast zaad, zodat de bevolking reproduceerbaar is.
+- _Hoeveel_: een vast deel van het loon, per 10%-groep zo hoog dat premie ÷ al het loon in die groep klopt met CBS (1,0% tot 5,6%). Dat is het gemiddelde over alle fondsen, niet de regeling van één fonds.
+- De 10%-groep hangt af van het besteedbaar inkomen en dus van de premie; de kalibratie wisselt daarom drie keer af tussen toekennen en herwegen.
+
+Uitkomst: totaal € 20,8 mld tegen € 21,0 mld bij CBS (geïndexeerd, −1,1%; was +5,2%); deelname per leeftijdsgroep klopt; per 10%-groep wijkt alleen de laagste groep af (16% tegen 12%). Het rapport `docs/kalibratie-2026.md` laat de tabel per groep zien. De voorbeeldhuishoudens in het lab rekenen nog met de ABP-regeling uit `pensioenpremie` in het parameterbestand, als herkenbaar voorbeeld.
+
+Golden-verschil (alleen cijfers die van de bevolking afhangen; voorbeeldhuishoudens niet): belasting in het model € 144,1 → € 145,3 mld (Miljoenennota € 144,7 mld), omdat minder werknemers premie aftrekken; armoede 10,34% → 10,34%, Gini 0,2250 → 0,2254. Saldo vlaktaks € 41,86 → € 41,40 mld, drie schijven € 29,62 → € 29,17 mld, hogere algemene heffingskorting −€ 4,50 → −€ 4,48 mld; de andere voorstellen veranderen minder dan € 0,01 mld. Oplosser: vrijstelling € 27.762 (was € 27.836).

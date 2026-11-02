@@ -2,9 +2,7 @@
   import {
     bijstandsnormPerJaar,
     heeftAowLeeftijd,
-    jaarbedrag,
     persoonInvoerSchema,
-    standaardPensioenpremie,
     type Invoer,
     type Parameters,
     type PersoonInvoer,
@@ -176,34 +174,22 @@
         {/if}
         {#if persoon.soort === "loondienst"}
           <div class="rij">
-            <label for="pensioen-{i}">Pensioen via je werk</label>
-            <select id="pensioen-{i}" bind:value={persoon.pensioen}>
-              <option value="standaard">Ja, schat de premie</option>
-              <option value="bedrag">Ja, ik weet het bedrag</option>
-              <option value="geen">Nee</option>
-            </select>
+            <label for="premie-{i}"
+              >Eigen pensioenpremie per maand <span class="hint">staat op je loonstrook</span></label
+            >
+            <input
+              id="premie-{i}"
+              type="number"
+              min="0"
+              step="10"
+              bind:value={persoon.pensioenpremiePerMaand}
+            />
           </div>
-          {#if persoon.pensioen === "standaard"}
-            <p class="notitie">
-              We schatten {euro(standaardPensioenpremie(jaarbedrag(persoon, params), params) / 12)} per maand:
-              {procent(params.pensioenpremie.werknemer, 2)} van je loon boven {euro(
-                params.pensioenpremie.franchise,
-              )} per jaar, zoals bij ABP. Andere fondsen rekenen anders; het echte bedrag staat op je loonstrook.
-            </p>
-          {:else if persoon.pensioen === "bedrag"}
-            <div class="rij">
-              <label for="premie-{i}"
-                >Pensioenpremie per maand <span class="hint">staat op je loonstrook</span></label
-              >
-              <input
-                id="premie-{i}"
-                type="number"
-                min="0"
-                step="10"
-                bind:value={persoon.pensioenpremiePerMaand}
-              />
-            </div>
-          {/if}
+          <p class="notitie">
+            Het deel dat jij zelf betaalt, vaak "pensioenpremie" of "pensioen werknemer" op je loonstrook.
+            Bouw je geen pensioen op via je werk? Laat dan 0 staan. De premie gaat van je bruto loon af, vóór
+            de belasting.
+          </p>
         {/if}
         {#if persoon.soort === "zzp"}
           <label class="vinkje">

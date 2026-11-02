@@ -253,6 +253,31 @@ inkomensbestanddelen:
   inkomenZelfstandigOndernemerMln: 59381
   huishoudensMetZelfstandigOndernemer: 1189600
 
+# Pensioenpremie van werknemers: wie betaalt, en hoeveel, per 10%-groep gestandaardiseerd inkomen (evenveel
+# huishoudens per groep, laag naar hoog). Per groep: huishoudens met loon (post 1.1) en hun loon, en huishoudens
+# met pensioenpremie werknemer (post 11.4.1.1) en die premie. De kalibratie geeft binnen elke groep dit aandeel
+# werknemershuishoudens pensioenpremie, zo hoog dat de premie als deel van het loon klopt met CBS.
+pensioenpremie:
+  bron: "CBS StatLine 84493NED, Inkomen van huishoudens; inkomensbestanddelen, huishoudenskenmerken, 2024: posten 1.1 en 11.4.1.1, naar gestandaardiseerd inkomen (10%-groepen) en leeftijd hoofdkostwinner (https://opendata.cbs.nl/statline/#/CBS/nl/dataset/84493NED)"
+  jaar: 2024
+  perDeciel:
+    - { huishoudensMetLoon: 378300, loonMln: 3468, huishoudensMetPremie: 44600, premieMln: 35 }
+    - { huishoudensMetLoon: 280200, loonMln: 5733, huishoudensMetPremie: 143800, premieMln: 152 }
+    - { huishoudensMetLoon: 368800, loonMln: 11103, huishoudensMetPremie: 293100, premieMln: 392 }
+    - { huishoudensMetLoon: 482500, loonMln: 18779, huishoudensMetPremie: 419500, premieMln: 785 }
+    - { huishoudensMetLoon: 546200, loonMln: 26590, huishoudensMetPremie: 487800, premieMln: 1214 }
+    - { huishoudensMetLoon: 595000, loonMln: 35359, huishoudensMetPremie: 541300, premieMln: 1707 }
+    - { huishoudensMetLoon: 630100, loonMln: 44810, huishoudensMetPremie: 582700, premieMln: 2277 }
+    - { huishoudensMetLoon: 675400, loonMln: 57034, huishoudensMetPremie: 632600, premieMln: 3038 }
+    - { huishoudensMetLoon: 704700, loonMln: 72428, huishoudensMetPremie: 665600, premieMln: 4067 }
+    - { huishoudensMetLoon: 688100, loonMln: 104335, huishoudensMetPremie: 636800, premieMln: 5496 }
+  # Naar leeftijd hoofdkostwinner (25 tot 65 is de som van de vier CBS-groepen daartussen). De kalibratie past de
+  # deelname tegelijk aan de 10%-groepen en aan deze leeftijdsgroepen aan.
+  perLeeftijd:
+    - { totLeeftijd: 25, huishoudensMetLoon: 350700, huishoudensMetPremie: 144300 }
+    - { totLeeftijd: 65, huishoudensMetLoon: 4621600, huishoudensMetPremie: 4132800 }
+    - { totLeeftijd: null, huishoudensMetLoon: 377000, huishoudensMetPremie: 170500 }
+
 indexatie:
   bron: "CPB, Kerngegevenstabel MEV 2027 (september 2026): cao-loon marktsector 5,3% in 2025 en 4,3% in 2026 (https://www.cpb.nl/system/files/cpbmedia/CPB-kerngegevens-MEV-2027.pdf)"
   # Groei van de inkomens van 2024 naar 2026: 1,053 × 1,043.
