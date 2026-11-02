@@ -18,6 +18,18 @@ export const verkiezingSchema = z.strictObject({
   basispad: z.strictObject({ jaar: z.number().int(), toelichting: z.string().min(1) }),
   /** Fictieve testpartijen: de site toont dan een duidelijke waarschuwing. */
   fictief: z.boolean(),
+  /**
+   * "verkiezing": partijprogramma's. "akkoord": routes in onderhandelingen (bijvoorbeeld over een belastingplan);
+   * `datum` is dan de stemming. De site past de woorden aan.
+   */
+  soort: z.enum(["verkiezing", "akkoord"]).default("verkiezing"),
+  /** Uitleg bovenaan de pagina. */
+  uitleg: z.string().optional(),
+  /**
+   * Vier-ogen-principe: gepubliceerde partijen moeten door een tweede persoon gecontroleerd zijn. Alleen op besluit
+   * van de eigenaar uit te zetten; de site meldt dan duidelijk dat er niet onafhankelijk is gecontroleerd.
+   */
+  vierOgen: z.boolean().default(true),
 });
 
 const wijzigingSoort = z.union([
@@ -98,7 +110,12 @@ export function partijWijzigingen(p: Partij): Wijziging[] {
  * Valideert een partijbestand: schema, bestaande parameters, bronnen, vier-ogen-principe en een geldige uitkomst.
  * Alle fouten tegelijk, met bestandsnaam, zodat CI meteen laat zien wat er mis is.
  */
-export function valideerPartij(data: unknown, params: Parameters, bestand = "partij"): Partij {
+export function valideerPartij(
+  data: unknown,
+  params: Parameters,
+  bestand = "partij",
+  vierOgen = true,
+): Partij {
   const r = partijSchema.safeParse(data);
   if (!r.success) throw new Error(formatteerFouten(r.error, bestand));
   const p = r.data;
@@ -119,7 +136,7 @@ export function valideerPartij(data: unknown, params: Parameters, bestand = "par
       fouten.push(`${bestand}: maatregel '${m.id}' heeft zekerheid '${m.zekerheid}' maar geen toelichting`);
     }
   }
-  if (p.status === "gepubliceerd" && !p.gecontroleerd_door.trim()) {
+  if (vierOgen && p.status === "gepubliceerd" && !p.gecontroleerd_door.trim()) {
     fouten.push(
       `${bestand}: status 'gepubliceerd' mag alleen na controle door een tweede persoon (gecontroleerd_door)`,
     );

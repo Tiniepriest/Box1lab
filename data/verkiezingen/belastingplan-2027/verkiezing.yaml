@@ -1,0 +1,14 @@
+# Twee routes naar een meerderheid voor het Belastingplan 2027 (stand 2 november 2026). Besluit van de eigenaar:
+# nu online, met aannames van Box1lab waar de partijen geen bedragen noemen, en zonder controle door een tweede
+# persoon (D-063). Werk dit bij als er amendementen, een akkoord of een stemuitslag is.
+id: belastingplan-2027
+naam: "Belastingplan 2027: twee routes"
+soort: akkoord
+# Stemming in de Tweede Kamer.
+datum: 2026-11-12
+basispad:
+  jaar: 2027
+  toelichting: "Het vergelijkingspunt is het Belastingplan 2027 van het kabinet zoals het bij de Kamer ligt (met de tweede nota van wijziging van 20 oktober). Die cijfers zijn voorlopig; toeslagen, AOW en bijstand voor 2027 zijn nog niet bekend en staan op het niveau van 2026."
+fictief: false
+vierOgen: false
+uitleg: "Het kabinet-Jetten (D66, VVD, CDA) heeft geen meerderheid voor het Belastingplan 2027. Het praat met twee groepen in de oppositie: links PRO en Volt, rechts JA21, BBB en SGP. Er is nog geen akkoord en de partijen noemen nog weinig bedragen. Wij vertalen hun belangrijkste wens op belastinggebied naar een maatregel die het model kan doorrekenen, en noemen bij elke route wat er niet in zit, zoals de dekking."
