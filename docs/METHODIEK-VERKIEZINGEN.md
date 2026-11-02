@@ -11,6 +11,8 @@ data/verkiezingen/<verkiezing>/verkiezing.yaml   naam, datum, basispad
 data/verkiezingen/<verkiezing>/<partij>.yaml     één bestand per partij
 ```
 
+De nieuwste echte (niet fictieve) verkiezing krijgt een eigen tabblad in het hoofdmenu. Geef daarvoor in `verkiezing.yaml` een korte naam op met `menu` (hoogstens 24 tekens), anders staat `naam` in het menu.
+
 Het schema staat in `packages/engine/src/verkiezing.ts`. `npm run valideer` (in CI) controleert elk bestand: bestaan alle parameters, heeft elke maatregel een bron met paginanummer, klopt het vier-ogen-principe, en levert het programma een geldige parameterset op.
 
 ## Basispad

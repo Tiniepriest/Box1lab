@@ -1,4 +1,5 @@
 ---
+import LabMenu from "../components/LabMenu.astro";
 import MiniDecielen from "../components/MiniDecielen.astro";
 import Base from "../layouts/Base.astro";
 import { getal, miljard, procent } from "../lib/format.ts";
@@ -10,6 +11,7 @@ import { kerncijfers, kernzin } from "../lib/voorstellen.ts";
   title="Voorstellen — Box1lab"
   description="Bekende ideeën voor belastingen en toeslagen, doorgerekend: wat kost het en wie gaat erop vooruit?"
 >
+  <LabMenu />
   <h1>Voorstellen doorgerekend</h1>
   <p class="intro">
     Bekende ideeën voor belastingen en toeslagen, met één klik door te rekenen. Elk voorstel is een voorbeeld,

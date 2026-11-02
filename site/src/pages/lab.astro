@@ -1,11 +1,13 @@
 ---
 import Lab from "../components/lab/Lab.svelte";
+import LabMenu from "../components/LabMenu.astro";
 import MeldFout from "../components/MeldFout.astro";
 import Base from "../layouts/Base.astro";
 import { kalibratie, labKnoppen, pad, params, presets, voorbeelden } from "../lib/data.ts";
 ---
 
 <Base title="Scenariolab — Box1lab" breed>
+  <LabMenu />
   <h1>Speel minister van Financiën</h1>
   <p class="intro">
     Verander de belasting en de toeslagen en zie wat er gebeurt: voor de schatkist, per inkomensgroep, voor

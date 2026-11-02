@@ -1,0 +1,52 @@
+---
+import { pad } from "../lib/data.ts";
+
+/*
+ * Keuze binnen het tabblad Scenariolab: zelf een scenario bouwen of een kant-en-klaar voorstel bekijken (D-064).
+ */
+const huidig = Astro.url.pathname.replace(/\/$/, "");
+const keuzes = [
+  { href: pad("lab"), label: "Zelf bouwen" },
+  { href: pad("voorstellen"), label: "Kant-en-klare voorstellen" },
+];
+---
+
+<nav class="labmenu" aria-label="Scenariolab">
+  {keuzes.map((k) => (
+    <a
+      href={k.href}
+      aria-current={huidig === k.href ? "page" : huidig.startsWith(`${k.href}/`) ? "true" : undefined}
+    >
+      {k.label}
+    </a>
+  ))}
+</nav>
+
+<style>
+  .labmenu {
+    display: inline-flex;
+    flex-wrap: wrap;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 0 16px;
+    background: var(--panel);
+  }
+  .labmenu a {
+    padding: 7px 14px;
+    font-size: 14px;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .labmenu a + a {
+    border-left: 1px solid var(--line);
+  }
+  .labmenu a:hover {
+    color: var(--accent);
+  }
+  .labmenu a[aria-current] {
+    background: var(--accent);
+    color: var(--panel);
+    font-weight: 600;
+  }
+</style>

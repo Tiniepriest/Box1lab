@@ -419,3 +419,17 @@ Stand op 2 november: geen akkoord, geen amendementen van deze partijen, en vrijw
 - De dekking (box 2 en 3 bij links, bezuinigingen bij rechts) en de eisen buiten belastingen staan onder "niet doorgerekend". Het saldo voor de overheid is dus zonder dekking; dat staat op de pagina.
 
 Bijwerken: na de amendementen (debat 4 november), een eventueel akkoord en de stemming van 12 november. Als er een akkoord is, kan de "winnende" route worden vervangen door wat er echt is afgesproken, en het basispad door het aangenomen Belastingplan.
+
+## Fase 10: indeling van de site
+
+### D-064 Tabbladen en je situatie altijd in beeld
+
+Vraag van de eigenaar (2 november 2026): de site volgen zoals mensen hem gebruiken. Je vult je situatie in, en bekijkt dan je huidige situatie, de plannen voor volgend jaar en het scenariolab. Je situatie moet daarbij in beeld blijven, zodat duidelijk is dat de uitkomsten daarop gebaseerd zijn. De pagina's waar je rekent en vergelijkt moeten te onderscheiden zijn van de uitleg en "over".
+
+Besluiten van de eigenaar:
+
+- **Menu in twee lagen.** Grote tabbladen voor de pagina's waar je met je situatie rekent: Jouw situatie, de nieuwste echte verkiezing of vergelijking van routes (nu "Belastingplan 2027", uit `menu` in `verkiezing.yaml`) en Scenariolab. Uitleg, Methodiek en Over staan klein rechtsboven, op een telefoon onder "Meer". Een vinkje bij Jouw situatie laat zien dat er een eigen situatie bewaard is.
+- **Voorstellen horen bij het Scenariolab**, als tweede keuze ("Zelf bouwen | Kant-en-klare voorstellen"). De adressen blijven gelijk.
+- **Je situatie staat op elk tabblad links** (op een telefoon als balk bovenaan): wat er is ingevuld en wat je nu overhoudt, met een knop om het aan te passen. Zonder eigen situatie staat er dat met een voorbeeldhuishouden wordt gerekend.
+- **Eén pagina voor volgend jaar**: eerst wat het kabinetsplan voor jou betekent ten opzichte van dit jaar, dan wat de routes daar nog aan veranderen. Op Jouw situatie blijft een korte verwijzing.
+- **Een volgende stap** onder de uitkomst op Jouw situatie, en op de home één hoofdknop: "Begin met je situatie".

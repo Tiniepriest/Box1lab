@@ -5,6 +5,7 @@ import "@fontsource/ibm-plex-serif/600.css";
 import "@fontsource/ibm-plex-mono/400.css";
 import "../styles/global.css";
 import { MODEL_VERSIE, actueel, changelog, params, pad } from "../lib/data.ts";
+import { SLEUTEL } from "../lib/opslag.ts";
 import { REPO, meldFoutUrl } from "../lib/project.ts";
 
 interface Props {
@@ -35,12 +36,18 @@ const bijgewerkt = new Date(changelog[0]!.datum).toLocaleDateString("nl-NL", {
 });
 const versie = `parameterjaar ${params.jaar}, model ${MODEL_VERSIE}`;
 const huidig = Astro.url.pathname.replace(/\/$/, "");
-const menu = [
-  { href: pad("jouw-situatie"), label: "Jouw situatie" },
-  { href: pad("lab"), label: "Scenariolab" },
-  { href: pad("voorstellen"), label: "Voorstellen" },
+// Hoofdmenu: de tabbladen waar je rekent, vergelijkt en uitprobeert, allemaal met jouw situatie (D-064).
+// "page" als je op de pagina zelf bent, "true" op een pagina die bij het tabblad hoort (zoals een voorstel).
+const actief = (href: string, ookOnder: string[] = []): "page" | "true" | undefined =>
+  huidig === href ? "page" : ookOnder.some((o) => huidig.startsWith(o)) ? "true" : undefined;
+const tabbladen = [
+  { href: pad("jouw-situatie"), label: "Jouw situatie", situatie: true },
   // De nieuwste echte verkiezing of vergelijking van routes, als die er is.
-  ...(actueel ? [{ href: pad(`verkiezingen/${actueel.id}`), label: "Actueel" }] : []),
+  ...(actueel ? [{ href: pad(`verkiezingen/${actueel.id}`), label: actueel.menu ?? actueel.naam }] : []),
+  { href: pad("lab"), label: "Scenariolab", onder: [pad("voorstellen")] },
+];
+// Bijmenu: lezen over het stelsel en over Box1lab.
+const bijmenu = [
   { href: pad("uitleg"), label: "Uitleg" },
   { href: pad("methodiek"), label: "Methodiek" },
   { href: pad("over"), label: "Over" },
@@ -57,6 +64,15 @@ const menu = [
     <link rel="icon" type="image/svg+xml" href={pad("favicon.svg")} />
     <link rel="sitemap" href={pad("sitemap-index.xml")} />
     <title>{title}</title>
+    <script is:inline define:vars={{ sleutel: SLEUTEL }}>
+      // Vinkje bij "Jouw situatie" als er een bewaarde situatie is; vóór het tekenen, zodat het niet verspringt.
+      try {
+        if (localStorage.getItem(sleutel) || sessionStorage.getItem(sleutel))
+          document.documentElement.dataset.situatie = "ja";
+      } catch {
+        /* geen opslag: geen vinkje */
+      }
+    </script>
     {nietIndexeren && <meta name="robots" content="noindex" />}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
@@ -77,18 +93,49 @@ const menu = [
         <a class="logo" href={pad("")}>
           Box1lab
         </a>
-        <nav aria-label="Hoofdmenu">
-          <ul>
-            {menu.map((m) => (
+        <nav aria-label="Uitleg en over Box1lab" class="bij">
+          <ul class="bij-lijst">
+            {bijmenu.map((m) => (
               <li>
-                <a href={m.href} aria-current={huidig === m.href ? "page" : undefined}>
+                <a href={m.href} aria-current={actief(m.href, [`${m.href}/`])}>
                   {m.label}
                 </a>
               </li>
             ))}
           </ul>
+          <details class="bij-uitklap">
+            <summary>
+              <span aria-hidden="true">☰</span> Meer
+            </summary>
+            <ul>
+              {bijmenu.map((m) => (
+                <li>
+                  <a href={m.href} aria-current={actief(m.href, [`${m.href}/`])}>
+                    {m.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
         </nav>
       </div>
+      <nav aria-label="Hoofdmenu" class="wrap tabbladen">
+        <ul>
+          {tabbladen.map((t) => (
+            <li>
+              <a href={t.href} aria-current={actief(t.href, t.onder)}>
+                {t.label}
+                {t.situatie && (
+                  <span class="vink">
+                    <span aria-hidden="true">✓</span>
+                    <span class="visueel-verborgen">(ingevuld)</span>
+                  </span>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </header>
     <main id="inhoud" class:list={["wrap", { breed }]}>
       <slot />
@@ -140,11 +187,10 @@ const menu = [
   }
   .kop {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 8px 20px;
-    padding-block: 12px;
+    padding-block: 10px 4px;
     max-width: 1320px;
   }
   .logo {
@@ -154,26 +200,124 @@ const menu = [
     color: var(--fg);
     text-decoration: none;
   }
-  nav ul {
+  .bij ul {
     list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 16px;
     margin: 0;
     padding: 0;
   }
-  nav a {
-    color: var(--fg);
+  .bij-lijst {
+    display: flex;
+    gap: 4px 16px;
+  }
+  .bij a {
+    color: var(--muted);
     text-decoration: none;
-    font-size: 15px;
+    font-size: 14px;
     padding: 6px 0;
     display: inline-block;
   }
-  nav a:hover,
-  nav a[aria-current="page"] {
+  .bij a:hover,
+  .bij a[aria-current] {
     color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 4px;
+  }
+  .bij-uitklap {
+    display: none;
+    position: relative;
+  }
+  .bij-uitklap summary {
+    list-style: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 4px 10px;
+  }
+  .bij-uitklap summary::-webkit-details-marker {
+    display: none;
+  }
+  .bij-uitklap ul {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 20;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 4px 14px;
+    min-width: 160px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 12%);
+  }
+  .bij-uitklap li a {
+    display: block;
+    padding: 8px 0;
+    font-size: 15px;
+    color: var(--fg);
+  }
+  .tabbladen {
+    max-width: 1320px;
+  }
+  .tabbladen ul {
+    list-style: none;
+    display: flex;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+  }
+  .tabbladen a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 100%;
+    padding: 10px 16px 8px;
+    border-bottom: 3px solid transparent;
+    color: var(--fg);
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+  }
+  .tabbladen a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--line);
+  }
+  .tabbladen a[aria-current] {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .vink {
+    display: none;
+    font-size: 12px;
+    line-height: 1;
+    color: var(--panel);
+    background: var(--accent);
+    border-radius: 999px;
+    padding: 3px 5px;
+  }
+  :global(html[data-situatie="ja"]) .vink {
+    display: inline-block;
+  }
+  @media (max-width: 640px) {
+    .bij-lijst {
+      display: none;
+    }
+    .bij-uitklap {
+      display: block;
+    }
+    .tabbladen ul {
+      display: grid;
+      grid-auto-columns: minmax(0, 1fr);
+      grid-auto-flow: column;
+      gap: 0;
+    }
+    .tabbladen a {
+      font-size: 14px;
+      line-height: 1.25;
+      text-align: center;
+      padding: 10px 4px 8px;
+    }
   }
   main {
     padding-block: 28px 56px;

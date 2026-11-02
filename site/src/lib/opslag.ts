@@ -7,7 +7,9 @@
  */
 import { invoerSchema, persoonInvoerSchema, type Invoer } from "@box1lab/engine";
 
-const SLEUTEL = "box1lab.invoer.v1";
+export const SLEUTEL = "box1lab.invoer.v1";
+/** Gebeurtenis op `window` als de bewaarde situatie verandert (bewaard of gewist). */
+export const SITUATIE_GEWIJZIGD = "box1lab:situatie";
 
 export type Bewaard = { invoer: Invoer; opApparaat: boolean };
 
@@ -53,11 +55,20 @@ export function leesInvoer(): Invoer | null {
 export function bewaarInvoer(invoer: Invoer, opApparaat: boolean): void {
   zet(sessie, invoer);
   zet(apparaat, opApparaat ? invoer : null);
+  meld(true);
 }
 
 export function wisInvoer(): void {
   zet(sessie, null);
   zet(apparaat, null);
+  meld(false);
+}
+
+/** Het vinkje bij "Jouw situatie" in het menu (zie Base.astro) en andere onderdelen op de pagina bijwerken. */
+function meld(bewaard: boolean): void {
+  if (bewaard) document.documentElement.dataset.situatie = "ja";
+  else delete document.documentElement.dataset.situatie;
+  window.dispatchEvent(new Event(SITUATIE_GEWIJZIGD));
 }
 
 /** Startwaarden van het formulier: een voorbeeld, duidelijk te herkennen als voorbeeld. */
