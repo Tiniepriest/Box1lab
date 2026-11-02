@@ -29,11 +29,16 @@ Het vergelijkingspunt is het **vastgestelde beleid voor het eerste kabinetsjaar*
 
 Zekerheid `middel` of `laag` vereist altijd een `toelichting`; de build faalt anders.
 
+## Routes naar een akkoord
+
+Dezelfde module werkt voor onderhandelingen, zoals over een belastingplan. Zet in `verkiezing.yaml` `soort: akkoord`, de datum van de stemming, een korte `uitleg`, en als basispad het voorstel waarover onderhandeld wordt (dat mag een ander parameterjaar zijn dan de site). Elke route is een bestand zoals een partij. Noemen de partijen geen bedragen, dan geldt regel 2 hierboven, tenzij de eigenaar anders besluit; leg dat dan vast in `docs/DECISIONS.md` en behandel alle routes op dezelfde manier. Voorbeeld: `data/verkiezingen/belastingplan-2027/` (D-063).
+
 ## Vier-ogen-principe
 
 - Iedereen mag een partij toevoegen met `status: concept`.
 - Een tweede persoon controleert elke maatregel tegen de bron en zet `status: gecontroleerd`.
 - Na akkoord van de eigenaar: `status: gepubliceerd` en `gecontroleerd_door: <naam of initialen>`. De build weigert `gepubliceerd` zonder controleur.
+- Alleen de eigenaar kan het vier-ogen-principe voor een verkiezing of akkoord uitzetten (`vierOgen: false`); de pagina meldt dan "Niet onafhankelijk gecontroleerd".
 - De site toont alleen gepubliceerde partijen. Een previewbuild met concepten maak je met `PUBLIC_VERKIEZINGEN_PREVIEW=1 npm run build`.
 
 ## Een partij toevoegen

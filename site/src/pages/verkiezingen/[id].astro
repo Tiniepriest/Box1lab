@@ -1,7 +1,6 @@
 ---
 import Verkiezingen from "../../components/verkiezingen/Verkiezingen.svelte";
 import Base from "../../layouts/Base.astro";
-import { params } from "../../lib/data.ts";
 import { PREVIEW, verkiezingData, verkiezingIds, type VerkiezingData } from "../../lib/verkiezingen.ts";
 
 export function getStaticPaths() {
@@ -9,7 +8,8 @@ export function getStaticPaths() {
 }
 
 const { data } = Astro.props as { data: VerkiezingData };
-const { verkiezing, partijen, macro } = data;
+const { verkiezing, params, partijen, macro } = data;
+const akkoord = verkiezing.soort === "akkoord";
 const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
   day: "numeric",
   month: "long",
@@ -19,14 +19,19 @@ const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
 
 <Base
   title={`${verkiezing.naam} — Box1lab`}
-  description="Wat betekenen de plannen van partijen voor jouw portemonnee?"
+  description={
+    akkoord
+      ? "Twee routes voor het Belastingplan 2027 naast elkaar: wat betekenen ze voor jouw portemonnee en voor Nederland?"
+      : "Wat betekenen de plannen van partijen voor jouw portemonnee?"
+  }
   breed
   nietIndexeren={verkiezing.fictief}
 >
-  <h1>{verkiezing.naam}: wat betekenen de plannen voor jou?</h1>
+  <h1>{akkoord ? verkiezing.naam : `${verkiezing.naam}: wat betekenen de plannen voor jou?`}</h1>
   <p class="intro">
-    Verkiezing van {datum}. Per partij: wat de doorrekenbare plannen doen voor jouw huishouden en voor
-    Nederland.
+    {akkoord
+      ? `Stemming in de Tweede Kamer gepland op ${datum}. Per route: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland.`
+      : `Verkiezing van ${datum}. Per partij: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland.`}
   </p>
   <Verkiezingen client:load {params} {verkiezing} {partijen} {macro} preview={PREVIEW} />
 </Base>

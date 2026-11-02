@@ -102,7 +102,7 @@ export function laadVerkiezing(
   const partijen = readdirSync(join(DATA_MAP, map))
     .filter((f) => f.endsWith(".yaml") && f !== "verkiezing.yaml")
     .map((f) => {
-      const p = valideerPartij(lees(`${map}/${f}`), params, `data/${map}/${f}`);
+      const p = valideerPartij(lees(`${map}/${f}`), params, `data/${map}/${f}`, verkiezing.vierOgen);
       if (`${p.id}.yaml` !== f)
         throw new Error(`data/${map}/${f}: id '${p.id}' moet gelijk zijn aan de bestandsnaam.`);
       return p;

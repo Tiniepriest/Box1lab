@@ -398,3 +398,24 @@ Vervangt een deel van D-058. De eigenaar vond "iedere werknemer betaalt de ABP-p
 Uitkomst: totaal € 20,8 mld tegen € 21,0 mld bij CBS (geïndexeerd, −1,1%; was +5,2%); deelname per leeftijdsgroep klopt; per 10%-groep wijkt alleen de laagste groep af (16% tegen 12%). Het rapport `docs/kalibratie-2026.md` laat de tabel per groep zien. De voorbeeldhuishoudens in het lab rekenen nog met de ABP-regeling uit `pensioenpremie` in het parameterbestand, als herkenbaar voorbeeld.
 
 Golden-verschil (alleen cijfers die van de bevolking afhangen; voorbeeldhuishoudens niet): belasting in het model € 144,1 → € 145,3 mld (Miljoenennota € 144,7 mld), omdat minder werknemers premie aftrekken; armoede 10,34% → 10,34%, Gini 0,2250 → 0,2254. Saldo vlaktaks € 41,86 → € 41,40 mld, drie schijven € 29,62 → € 29,17 mld, hogere algemene heffingskorting −€ 4,50 → −€ 4,48 mld; de andere voorstellen veranderen minder dan € 0,01 mld. Oplosser: vrijstelling € 27.762 (was € 27.836).
+
+## Fase 9: Belastingplan 2027, twee routes
+
+### D-063 Routes naar een akkoord in de verkiezingsmodule
+
+Vraag van de eigenaar: de twee routes naar een meerderheid voor het Belastingplan 2027 (links PRO en Volt, rechts JA21, BBB en SGP) naast elkaar zetten, zoals bij verkiezingen. De verkiezingsmodule kan dat nu:
+
+- `soort: akkoord` (naast `verkiezing`): de site spreekt van routes en bronnen in plaats van partijen en programma's, en van "geen oordeel" in plaats van "geen stemadvies". `datum` is de stemming.
+- `uitleg`: een korte uitleg bovenaan.
+- Een basispad in een ander jaar dan de site: dan rekent de site met de parameters van dat jaar op de huidige nagebootste bevolking, zolang dat jaar geen eigen kalibratie heeft. Hier: het voorlopige Belastingplan 2027 (D-061).
+- `vierOgen: false`: alleen op besluit van de eigenaar. Gepubliceerde routes hoeven dan geen controleur te hebben; de pagina meldt duidelijk "Niet onafhankelijk gecontroleerd".
+
+Besluiten van de eigenaar (2 november 2026): nu online met aannames van Box1lab, en geen controle door een tweede persoon.
+
+Stand op 2 november: geen akkoord, geen amendementen van deze partijen, en vrijwel geen bedragen. Om de routes gelijk te behandelen, krijgt elke route alleen een vertaling die te herleiden is tot een getal uit de memorie van toelichting:
+
+- **PRO en Volt** ("lasten op arbeid verlagen, vermogen zwaarder belasten"): de extra verhoging van de tarieven in de eerste en tweede schijf voor 2027 gaat niet door (0,57 procentpunt, "besluitvorming 2027", tabel 5 en 6). Zekerheid laag. Effect in het model: −€ 3,1 mld voor de overheid.
+- **JA21, BBB en SGP**: de vrijheidsbijdrage van burgers vervalt, dus volledige inflatiecorrectie (factor 1,026 in plaats van 1,01248) op de geïndexeerde bedragen in box 1; en de startersaftrek blijft € 2.123. Zekerheid middel. Effect in het model: −€ 1,2 mld (volgens de memorie van toelichting is de hele vrijheidsbijdrage van burgers € 1,5 mld, inclusief bedragen buiten box 1).
+- De dekking (box 2 en 3 bij links, bezuinigingen bij rechts) en de eisen buiten belastingen staan onder "niet doorgerekend". Het saldo voor de overheid is dus zonder dekking; dat staat op de pagina.
+
+Bijwerken: na de amendementen (debat 4 november), een eventueel akkoord en de stemming van 12 november. Als er een akkoord is, kan de "winnende" route worden vervangen door wat er echt is afgesproken, en het basispad door het aangenomen Belastingplan.

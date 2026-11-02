@@ -40,6 +40,12 @@
     preview: boolean;
   } = $props();
 
+  // Woorden: bij een akkoord gaat het om routes en bronnen, bij een verkiezing om partijen en programma's.
+  const akkoord = verkiezing.soort === "akkoord";
+  const W = akkoord
+    ? { een: "route", meer: "routes", Een: "Route", bron: "bron", Bron: "Bron" }
+    : { een: "partij", meer: "partijen", Een: "Partij", bron: "programma", Bron: "Programma" };
+
   let invoer = $state<Invoer>(voorbeeldInvoer());
   let eigenSituatie = $state(false);
   $effect(() => {
@@ -68,7 +74,7 @@
     uitkeringen: "Uitkeringen",
   };
   const ZEKERHEID: Record<string, string> = {
-    hoog: "Zeker: het programma noemt een bedrag",
+    hoog: "Zeker: de bron noemt een bedrag",
     middel: "Redelijk zeker: uitwerking door ons ingevuld",
     laag: "Onzeker: vertaling is een aanname",
   };
@@ -88,6 +94,16 @@
       "programma's" zijn verzonnen om deze pagina te testen.
     </p>
   {/if}
+  {#if verkiezing.uitleg}
+    <p class="kaart uitleg">{verkiezing.uitleg}</p>
+  {/if}
+  {#if !verkiezing.vierOgen}
+    <p class="waarschuwing" role="note">
+      <strong>Niet onafhankelijk gecontroleerd.</strong> De vertaling van de wensen naar maatregelen is door Box1lab
+      gemaakt en niet door een tweede persoon nagekeken. Bij elke maatregel staat hoe zeker die vertaling is en
+      waarom.
+    </p>
+  {/if}
   {#if preview}
     <p class="waarschuwing" role="note">
       Previewmodus: ook partijen die nog niet gecontroleerd zijn, staan hieronder.
@@ -96,8 +112,8 @@
 
   <section class="kaart situatie">
     <p>
-      {eigenSituatie ? "Je opgeslagen situatie" : "Een voorbeeldhuishouden"}: we rekenen uit hoeveel er per
-      jaar meer of minder te besteden is dan onder het basispad.
+      {eigenSituatie ? "Jouw situatie" : "Een voorbeeldhuishouden"}: we rekenen uit hoeveel er per jaar meer
+      of minder te besteden is dan onder het basispad.
     </p>
     <details>
       <summary>Pas je situatie aan</summary>
@@ -108,12 +124,12 @@
   {#if !geldig.success}
     <p class="waarschuwing">Vul alle velden in met een getal (0 mag ook).</p>
   {:else if effecten.length === 0}
-    <p class="notitie">Er zijn nog geen partijen gepubliceerd.</p>
+    <p class="notitie">Er zijn nog geen {W.meer} gepubliceerd.</p>
   {:else}
     <div class="kaart">
       <Figuur
         titel="Wat betekenen de plannen voor jouw huishouden?"
-        uitleg="Verandering van het besteedbaar inkomen per jaar ten opzichte van het basispad. Alleen maatregelen die het model kan doorrekenen; zie per partij wat niet is meegenomen."
+        uitleg={`Verandering van het besteedbaar inkomen per jaar ten opzichte van het basispad. Alleen maatregelen die het model kan doorrekenen; zie per ${W.een} wat niet is meegenomen.`}
       >
         {#snippet legenda()}
           <span><i class="legenda-blok" style="background: var(--gain)"></i>meer te besteden</span>
@@ -146,12 +162,12 @@
             asLabel={(v) => euroVerschil(v)}
             drempel={25}
             labelBreedte={190}
-            beschrijving="Verandering van het besteedbaar inkomen per partij"
+            beschrijving={`Verandering van het besteedbaar inkomen per ${W.een}`}
           />
         {/snippet}
         {#snippet tabel()}
           <table class="data">
-            <thead><tr><th>Partij</th><th>Per jaar</th><th>Per maand</th></tr></thead>
+            <thead><tr><th>{W.Een}</th><th>Per jaar</th><th>Per maand</th></tr></thead>
             <tbody>
               {#each effecten as e (e.partij.id)}
                 <tr>
@@ -166,7 +182,7 @@
       </Figuur>
     </div>
 
-    <section class="partijen" aria-label="Per partij">
+    <section class="partijen" aria-label="Per {W.een}">
       {#each effecten as e (e.partij.id)}
         {@const m = macro[e.partij.id]!}
         <details class="kaart partij">
@@ -198,9 +214,8 @@
                     <td class="num">{euroVerschil(pm.effect)}</td>
                     <td class="tekst">
                       <a href={bronLink(e.partij, pm.maatregel.bron.document)} rel="noopener"
-                        >{pm.maatregel.bron.document === "programma"
-                          ? "programma"
-                          : pm.maatregel.bron.document}, p. {pm.maatregel.bron.pagina}</a
+                        >{pm.maatregel.bron.document === "programma" ? W.bron : pm.maatregel.bron.document},
+                        p. {pm.maatregel.bron.pagina}</a
                       >
                       {#if pm.maatregel.bron.citaat}<br /><q class="notitie">{pm.maatregel.bron.citaat}</q
                         >{/if}
@@ -249,7 +264,7 @@
           </table>
 
           <p class="notitie">
-            Programma: <a href={e.partij.programma.url} rel="noopener">{e.partij.programma.titel}</a>,
+            {W.Bron}: <a href={e.partij.programma.url} rel="noopener">{e.partij.programma.titel}</a>,
             geraadpleegd op
             {new Date(e.partij.programma.geraadpleegd).toLocaleDateString("nl-NL", {
               day: "numeric",
@@ -264,15 +279,17 @@
 
     {#if partijen.length >= 2}
       <section class="kaart">
-        <h2>Twee partijen naast elkaar</h2>
+        <h2>Twee {W.meer} naast elkaar</h2>
         <div class="vergelijk-keuze">
           <label
-            >Partij 1 <select bind:value={vergelijkA}
+            >{W.Een} 1
+            <select bind:value={vergelijkA}
               >{#each partijen as p (p.id)}<option value={p.id}>{p.naam}</option>{/each}</select
             ></label
           >
           <label
-            >Partij 2 <select bind:value={vergelijkB}
+            >{W.Een} 2
+            <select bind:value={vergelijkB}
               >{#each partijen as p (p.id)}<option value={p.id}>{p.naam}</option>{/each}</select
             ></label
           >
@@ -325,15 +342,19 @@
     <h2>Belangrijk om te weten</h2>
     <ul>
       <li>
-        <strong>Geen stemadvies.</strong> Deze pagina laat alleen zien wat de doorrekenbare plannen doen voor inkomens.
+        <strong>{akkoord ? "Geen oordeel." : "Geen stemadvies."}</strong> Deze pagina laat alleen zien wat de doorrekenbare
+        plannen doen voor inkomens.
       </li>
       <li>
-        <strong>Vereenvoudigd.</strong> Niet alle maatregelen zijn door te rekenen; per partij staat wat er niet
-        in zit. Het CPB (Keuzes in Kaart) is leidend.
+        <strong>Vereenvoudigd.</strong> Niet alle maatregelen zijn door te rekenen; per {W.een} staat wat er niet
+        in zit.
+        {akkoord
+          ? "De dekking (box 2, box 3, bezuinigingen) zit er meestal niet in; het saldo voor de overheid is dus zonder dekking."
+          : "Het CPB (Keuzes in Kaart) is leidend."}
       </li>
       <li><strong>Basispad.</strong> {verkiezing.basispad.toelichting}</li>
       <li>
-        Hoe we programma's vertalen, staat in de <a href="{REPO}/blob/main/docs/METHODIEK-VERKIEZINGEN.md"
+        Hoe we plannen vertalen, staat in de <a href="{REPO}/blob/main/docs/METHODIEK-VERKIEZINGEN.md"
           >methodiek</a
         >. Zie je een fout?
         <a href={meldFoutUrl(`parameterjaar ${params.jaar}, model ${MODEL_VERSIE}`)} data-meldfout>Meld het</a
@@ -349,6 +370,9 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+  }
+  .uitleg {
+    margin: 0 0 12px;
   }
   .fictief {
     font-size: 15px;
@@ -422,6 +446,11 @@
   .decielen {
     overflow-x: auto;
     display: block;
+  }
+  /* Lange namen (zoals "Route JA21, BBB en SGP") mogen in de kop afbreken, zodat de tabel op een telefoon past. */
+  .tabel-wrap th,
+  .tabel-wrap td:first-child {
+    white-space: normal;
   }
   .vergelijk-keuze {
     display: flex;

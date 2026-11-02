@@ -1,5 +1,6 @@
 ---
 import { inkomenscurve, maakHuishouden } from "@box1lab/engine";
+import { laadVerkiezing, laadVerkiezingen } from "@box1lab/engine/node";
 import Lijnen from "../components/grafieken/Lijnen.svelte";
 import Base from "../layouts/Base.astro";
 import { pad, params, voorbeelden } from "../lib/data.ts";
@@ -17,6 +18,12 @@ const curve = inkomenscurve(
   1000,
 );
 const piek = Math.max(...curve.marginaleDruk);
+
+// Actuele vergelijking (verkiezing of routes naar een akkoord): de nieuwste die niet fictief is.
+const actueel = laadVerkiezingen()
+  .map((id) => laadVerkiezing(id).verkiezing)
+  .filter((v) => !v.fictief)
+  .sort((a, b) => b.datum.localeCompare(a.datum))[0];
 ---
 
 <Base title="Box1lab — wat betekent het belastingstelsel voor jou?">
@@ -39,11 +46,23 @@ const piek = Math.max(...curve.marginaleDruk);
       <p>Verander tarieven, kortingen en toeslagen. Wie gaat erop vooruit, en wat kost het?</p>
       <span class="actie">Naar het scenariolab →</span>
     </a>
-    <div class="tegel binnenkort" aria-disabled="true">
-      <h2>Verkiezingen</h2>
-      <p>Wat betekenen de plannen van partijen voor jouw portemonnee? Deze module volgt.</p>
-      <span class="actie">Binnenkort</span>
-    </div>
+    {actueel ? (
+      <a class="tegel" href={pad(`verkiezingen/${actueel.id}`)}>
+        <h2>{actueel.naam}</h2>
+        <p>
+          {actueel.soort === "akkoord"
+            ? "Twee routes naar een meerderheid naast elkaar: wat betekenen ze voor jou en voor Nederland?"
+            : "Wat betekenen de plannen van partijen voor jouw portemonnee?"}
+        </p>
+        <span class="actie">Vergelijk →</span>
+      </a>
+    ) : (
+      <div class="tegel binnenkort" aria-disabled="true">
+        <h2>Verkiezingen</h2>
+        <p>Wat betekenen de plannen van partijen voor jouw portemonnee? Deze module volgt.</p>
+        <span class="actie">Binnenkort</span>
+      </div>
+    )}
   </section>
 
   <section class="kaart visual">

@@ -26,6 +26,7 @@ const PAGINAS = [
   "uitleg/inkomensgroepen",
   "uitleg/marginale-druk",
   "verkiezingen/voorbeeld",
+  "verkiezingen/belastingplan-2027",
   "methodiek",
   "over",
   "wijzigingen",
@@ -136,6 +137,15 @@ try {
   controleer(
     partijen === 2 && !tekst.includes("Partij C"),
     `verkiezingen: ${partijen} gepubliceerde partijen, geen concept zichtbaar`,
+  );
+  await pg.goto(`${BASIS}/verkiezingen/belastingplan-2027`, { waitUntil: "networkidle" });
+  const routes = await pg.locator("details.partij").count();
+  const routeTekst = (await pg.textContent("body")) ?? "";
+  controleer(
+    routes === 2 &&
+      /Niet onafhankelijk gecontroleerd/.test(routeTekst) &&
+      /Twee routes naast elkaar/.test(routeTekst),
+    `belastingplan 2027: ${routes} routes, met waarschuwing en vergelijking`,
   );
   await pg.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
   await pg.waitForFunction(() => /van de mensen heeft minder/.test(document.body.textContent ?? ""), null, {

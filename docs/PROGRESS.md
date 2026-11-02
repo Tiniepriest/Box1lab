@@ -83,6 +83,12 @@ Punten 1–8 en 10–13 uit de lijst van 27 oktober 2026 (9, netto invullen, val
 - [x] 8e: pensioenpremie zelf invullen; in de bevolking volgens CBS per inkomensgroep en leeftijd (D-062)
 - [x] 8d: cijfers 2027 (10), voorlopig. Bijwerken als de definitieve bedragen er zijn (november en december 2026), zie D-061
 
+## Fase 9: Belastingplan 2027, twee routes — klaar
+
+- [x] Verkiezingsmodule geschikt voor routes naar een akkoord (D-063)
+- [x] Pagina `/verkiezingen/belastingplan-2027` met de routes PRO en Volt en JA21, BBB en SGP; link op de home
+- [ ] Bijwerken na het debat (4 november), een akkoord en de stemming (12 november)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
