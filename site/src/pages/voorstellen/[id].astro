@@ -1,6 +1,7 @@
 ---
 import LabMenu from "../../components/LabMenu.astro";
 import JouwEffect from "../../components/JouwEffect.svelte";
+import Situatie from "../../components/Situatie.svelte";
 import MiniDecielen from "../../components/MiniDecielen.astro";
 import MeldFout from "../../components/MeldFout.astro";
 import Base from "../../layouts/Base.astro";
@@ -15,69 +16,82 @@ export function getStaticPaths() {
 const { k } = Astro.props as { k: Kerncijfers };
 ---
 
-<Base title={`${k.preset.naam} — Box1lab`} description={kernzin(k)} afbeelding={pad(`og/${k.preset.id}.png`)}>
+<Base
+  title={`${k.preset.naam} — Box1lab`}
+  description={kernzin(k)}
+  afbeelding={pad(`og/${k.preset.id}.png`)}
+  breed
+>
   <LabMenu />
-  <h1>{k.preset.naam}</h1>
-  <p class="lead">{k.preset.omschrijving}</p>
-  <p class="kern">{kernzin(k)}</p>
-  {k.preset.uitleg && <p>{k.preset.uitleg}</p>}
+  <div class="met-situatie">
+    <Situatie client:load {params} plakken />
+    <div class="inhoud">
+      <h1>{k.preset.naam}</h1>
+      <p class="lead">{k.preset.omschrijving}</p>
+      <p class="kern">{kernzin(k)}</p>
+      {k.preset.uitleg && <p>{k.preset.uitleg}</p>}
 
-  <div class="kerngetallen">
-    <div class="kerngetal">
-      <div class="l">Overheid per saldo</div>
-      <div class="w">{miljard(k.saldoMld)}</div>
-      <div class="t">per jaar</div>
-    </div>
-    <div class="kerngetal">
-      <div class="l">Armoederisico</div>
-      <div class="w">
-        {procent(k.armoedeNu)} → {procent(k.armoede)}
+      <div class="kerngetallen">
+        <div class="kerngetal">
+          <div class="l">Overheid per saldo</div>
+          <div class="w">{miljard(k.saldoMld)}</div>
+          <div class="t">per jaar</div>
+        </div>
+        <div class="kerngetal">
+          <div class="l">Armoederisico</div>
+          <div class="w">
+            {procent(k.armoedeNu)} → {procent(k.armoede)}
+          </div>
+        </div>
+        <div class="kerngetal">
+          <div class="l">Achteruit / vooruit</div>
+          <div class="w">
+            {getal(k.achteruit)}% / {getal(k.vooruit)}%
+          </div>
+          <div class="t">van alle personen, meer dan 1% verschil</div>
+        </div>
       </div>
-    </div>
-    <div class="kerngetal">
-      <div class="l">Achteruit / vooruit</div>
-      <div class="w">
-        {getal(k.achteruit)}% / {getal(k.vooruit)}%
-      </div>
-      <div class="t">van alle personen, meer dan 1% verschil</div>
+
+      <JouwEffect client:visible {params} wijzigingen={k.preset.wijzigingen} />
+
+      <section class="kaart">
+        <h2>Verandering per inkomensgroep</h2>
+        <MiniDecielen waarden={k.decielen} label={`Verandering per inkomensgroep bij ${k.preset.naam}`} />
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Groep</th>
+              <th>Verandering besteedbaar inkomen</th>
+            </tr>
+          </thead>
+          <tbody>
+            {k.decielen.map((d, i) => (
+              <tr>
+                <td>{i + 1}</td>
+                <td class="num">{procentVerschil(d)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <p>
+        <a class="knop" href={`${pad("lab")}#${k.code}`}>
+          Open dit voorstel in het lab →
+        </a>
+      </p>
+      <p class="notitie">
+        Statische doorrekening voor {params.jaar}. <a href={pad("methodiek")}>Hoe rekenen we?</a>
+      </p>
     </div>
   </div>
-
-  <JouwEffect client:visible {params} wijzigingen={k.preset.wijzigingen} />
-
-  <section class="kaart">
-    <h2>Verandering per inkomensgroep</h2>
-    <MiniDecielen waarden={k.decielen} label={`Verandering per inkomensgroep bij ${k.preset.naam}`} />
-    <table class="data">
-      <thead>
-        <tr>
-          <th>Groep</th>
-          <th>Verandering besteedbaar inkomen</th>
-        </tr>
-      </thead>
-      <tbody>
-        {k.decielen.map((d, i) => (
-          <tr>
-            <td>{i + 1}</td>
-            <td class="num">{procentVerschil(d)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </section>
-
-  <p>
-    <a class="knop" href={`${pad("lab")}#${k.code}`}>
-      Open dit voorstel in het lab →
-    </a>
-  </p>
-  <p class="notitie">
-    Statische doorrekening voor {params.jaar}. <a href={pad("methodiek")}>Hoe rekenen we?</a>
-  </p>
   <MeldFout />
 </Base>
 
 <style>
+  .inhoud {
+    max-width: 760px;
+  }
   h1 {
     font-size: clamp(28px, 4.5vw, 38px);
     margin: 0 0 6px;

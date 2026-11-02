@@ -96,7 +96,7 @@
 <form class="invoer" onsubmit={(e) => e.preventDefault()} aria-label="Jouw situatie">
   <p class="privacy">
     <strong>Privacy:</strong> wat je invult blijft in je eigen browser. Er gaat niets naar een server. Zolang dit
-    tabblad openstaat, onthouden we het, zodat je jouw situatie ook in het lab en bij de voorstellen ziet. Sluit
+    tabblad openstaat, onthouden we het, zodat je jouw situatie ook bij het Belastingplan en in het lab ziet. Sluit
     je het tabblad, dan is het weg.
   </p>
 

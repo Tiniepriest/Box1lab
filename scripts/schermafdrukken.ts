@@ -170,6 +170,28 @@ try {
       /Twee routes naast elkaar/.test(routeTekst),
     `belastingplan 2027: ${routes} routes, met waarschuwing en vergelijking`,
   );
+  const kolom = pg.locator("section.situatie");
+  const routeBedragen = () => pg.locator("details.partij summary .num").allTextContents();
+  controleer(
+    /Gerekend met een voorbeeld/.test((await kolom.textContent()) ?? ""),
+    "situatiekolom: zonder eigen situatie staat er dat we met een voorbeeld rekenen",
+  );
+  const voorKolom = (await routeBedragen()).join();
+  await kolom.getByRole("button", { name: "Vul je situatie in" }).click();
+  await kolom.locator("#bedrag-0").fill("6000");
+  await pg.waitForTimeout(300);
+  controleer(
+    /Gerekend met jouw situatie/.test((await kolom.textContent()) ?? "") &&
+      (await routeBedragen()).join() !== voorKolom,
+    "situatiekolom: aanpassen rekent meteen mee met de routes",
+  );
+  await kolom.getByRole("button", { name: "Wis mijn gegevens" }).click();
+  await pg.waitForTimeout(300);
+  controleer(
+    /Gerekend met een voorbeeld/.test((await kolom.textContent()) ?? "") &&
+      (await routeBedragen()).join() === voorKolom,
+    "situatiekolom: wissen zet het voorbeeld terug",
+  );
   await pg.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
   await pg.waitForFunction(() => /van de mensen heeft minder/.test(document.body.textContent ?? ""), null, {
     timeout: 30000,
@@ -219,6 +241,12 @@ try {
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
   await pg.waitForFunction(() => /Jij · €/.test(document.body.textContent ?? ""), null, { timeout: 30000 });
   controleer(true, "lab: jouw situatie gaat mee naar het lab");
+  controleer(
+    /Gerekend met jouw situatie[\s\S]*2\.700 per maand/.test(
+      (await pg.locator("section.situatie").textContent()) ?? "",
+    ),
+    "lab: situatiekolom toont wat je hebt ingevuld",
+  );
   await pg.getByRole("button", { name: "Algemene heffingskorting + € 500" }).click();
   await pg.waitForFunction(
     () => /per maand\s+meer over/.test(document.querySelector(".jouw")?.textContent ?? ""),
@@ -233,6 +261,10 @@ try {
     { timeout: 30000 },
   );
   controleer(true, "voorstel: laat zien wat het voor jou betekent");
+  controleer(
+    /Gerekend met jouw situatie/.test((await pg.locator("section.situatie").textContent()) ?? ""),
+    "voorstel: situatiekolom staat erbij",
+  );
   await pg.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
   controleer(
     (await pg.locator("#bedrag-0").inputValue()) === "2700",

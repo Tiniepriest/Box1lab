@@ -10,12 +10,11 @@
     type Verkiezing,
   } from "@box1lab/engine";
   import { euroVerschil, getal, miljard, procent, procentVerschil } from "../../lib/format.ts";
-  import { leesInvoer, voorbeeldInvoer } from "../../lib/opslag.ts";
+  import { SITUATIE_GEWIJZIGD, leesInvoer, voorbeeldInvoer } from "../../lib/opslag.ts";
   import { pad } from "../../lib/pad.ts";
   import { REPO, meldFoutUrl } from "../../lib/project.ts";
   import Figuur from "../grafieken/Figuur.svelte";
   import StavenDivergent from "../grafieken/StavenDivergent.svelte";
-  import InvoerFormulier from "../Invoer.svelte";
 
   interface Macro {
     saldoMld: number;
@@ -46,14 +45,13 @@
     ? { een: "route", meer: "routes", Een: "Route", bron: "bron", Bron: "Bron" }
     : { een: "partij", meer: "partijen", Een: "Partij", bron: "programma", Bron: "Programma" };
 
+  // De situatie uit de kolom "Gerekend met" (D-064), of een voorbeeld; rekent mee als je hem aanpast.
   let invoer = $state<Invoer>(voorbeeldInvoer());
-  let eigenSituatie = $state(false);
   $effect(() => {
-    const opgeslagen = leesInvoer();
-    if (opgeslagen) {
-      invoer = opgeslagen;
-      eigenSituatie = true;
-    }
+    const lees = () => (invoer = leesInvoer() ?? voorbeeldInvoer());
+    lees();
+    window.addEventListener(SITUATIE_GEWIJZIGD, lees);
+    return () => window.removeEventListener(SITUATIE_GEWIJZIGD, lees);
   });
 
   let sorteren = $state<"alfabet" | "uitkomst">("alfabet");
@@ -109,17 +107,6 @@
       Previewmodus: ook partijen die nog niet gecontroleerd zijn, staan hieronder.
     </p>
   {/if}
-
-  <section class="kaart situatie">
-    <p>
-      {eigenSituatie ? "Jouw situatie" : "Een voorbeeldhuishouden"}: we rekenen uit hoeveel er per jaar meer
-      of minder te besteden is dan onder het basispad.
-    </p>
-    <details>
-      <summary>Pas je situatie aan</summary>
-      <InvoerFormulier bind:invoer {params} />
-    </details>
-  </section>
 
   {#if !geldig.success}
     <p class="waarschuwing">Vul alle velden in met een getal (0 mag ook).</p>
@@ -377,15 +364,8 @@
   .fictief {
     font-size: 15px;
   }
-  .situatie p {
-    margin: 0 0 8px;
-  }
-  .situatie summary,
   .partij summary {
     cursor: pointer;
-  }
-  .situatie details[open] summary {
-    margin-bottom: 12px;
   }
   .sorteren {
     display: inline-flex;
