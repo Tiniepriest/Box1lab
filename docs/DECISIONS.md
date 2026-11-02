@@ -452,3 +452,15 @@ Stand op 2 november 2026:
 Gevolg: bij hetzelfde bruto loon gaan toeslagen en de zorgpremie omhoog. Het voorbeeldhuishouden (€ 3.200 per maand, huur € 850) houdt in 2027 € 33 per maand meer over in plaats van € 8. De notitie bij de vergelijking zegt nu dat loon, pensioen en WW gelijk blijven en dat AOW, bijstand, kinderbijslag en toeslagen meegaan met de gewone verhoging.
 
 Bijwerken: zorgpremies (12 november), standaardpremie (november), huurtoeslag (Staatscourant, eind november), AOW, bijstand, kinderbijslag en kindgebonden budget (december).
+
+### D-066 Wie de site gebruikt: telefoon, weinig tijd, voorbeeld en delen
+
+Besluiten van de eigenaar (2 november 2026) na een kritische blik op wie de site gebruikt. De meeste bezoekers komen via nieuws of sociale media op een telefoon en willen snel weten wat iets voor hen betekent.
+
+- **Uitkomst in beeld op een telefoon.** Op Jouw situatie staat het formulier boven de uitkomst. Zolang de uitkomst onder het scherm ligt, staat onderaan een balk met wat je overhoudt en een knop "Bekijk". Op een smal scherm staat de vraag boven het invulveld.
+- **Het voorbeeld is modaal en heet zo.** Het voorbeeld is een alleenstaande met een modaal inkomen per jaar (`loon.modaal` in het parameterbestand, CPB), die huurt. Zolang je niets hebt aangepast, staat er "Dit is een voorbeeld" en "In dit voorbeeld houd je". "Wis mijn gegevens" zet het voorbeeld terug.
+- **Een eigen deelplaatje en een deelknop** voor de pagina van een echte verkiezing of het Belastingplan, en een deelknop bij elk voorstel. De knop deelt alleen de link; wat je invult staat daar niet in.
+- **Titels zoals mensen zoeken**: "Belastingplan 2027: wat betekent het voor jou?", "Netto inkomen, belasting en toeslagen berekenen", "Scenariolab: speel minister van Financiën".
+- **Jouw situatie laadt de bevolking niet meer.** "Je plek in Nederland" gebruikt een verdeling in duizend stukken die tijdens de build wordt gemaakt (`verdeling` in de engine, `plekGrenzen` in `site/src/lib/basis.ts`), tot op 0,1 procentpunt gelijk aan de berekening op de hele bevolking. Dat scheelt op die pagina ruim 1 MB aan data en de rekenwerker. Het lab laadt de bevolking nog wel.
+
+Niet gedaan, op besluit van de eigenaar: een waarschuwing bij de uitkomst voor 2027 (in plaats daarvan betere bedragen, D-065), een andere manier om fouten te melden, meer tekst op de pagina Over en uitleg bij moeilijke woorden.

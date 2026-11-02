@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    aandeelOnder,
+    aandeelUitVerdeling,
     berekenHuishouden,
     huishoudenUitInvoer,
     inkomenscurve,
@@ -9,14 +9,12 @@
     metInkomen,
     pasToe,
     type Invoer,
-    type Kalibratie,
     type Parameters,
     type Preset,
   } from "@box1lab/engine";
   import { euro, euroVerschil, getal, procent } from "../lib/format.ts";
-  import { startRekenen, type BasisSamenvatting } from "../lib/rekenen.ts";
   import { pad } from "../lib/pad.ts";
-  import { voorbeeldInvoer } from "../lib/opslag.ts";
+  import { SITUATIE_GEWIJZIGD, leesBewaard, voorbeeldInvoer } from "../lib/opslag.ts";
   import Figuur from "./grafieken/Figuur.svelte";
   import Lijnen from "./grafieken/Lijnen.svelte";
   import StavenDivergent from "./grafieken/StavenDivergent.svelte";
@@ -26,15 +24,14 @@
 
   let {
     params,
-    kalibratie,
-    populatieUrl,
+    plekGrenzen,
     presets,
     volgend = null,
     actueel = null,
   }: {
     params: Parameters;
-    kalibratie: Kalibratie;
-    populatieUrl: string;
+    /** Verdeling van het gestandaardiseerd besteedbaar inkomen, gemaakt tijdens de build (zie lib/verdeling.ts). */
+    plekGrenzen: number[];
     presets: Preset[];
     /** Parameters van volgend jaar, met de secties die nog geen bron hebben. */
     volgend?: { params: Parameters; nogNiet: string[]; geraamd: string[] } | null;
@@ -50,15 +47,26 @@
     .filter((pr) => pr.wijzigingen.length > 0)
     .map((pr) => ({ preset: pr, p: pasToe(params, pr.wijzigingen) }));
 
-  let invoer = $state<Invoer>(voorbeeldInvoer());
-  let basis = $state<BasisSamenvatting | null>(null);
-  let laadFout = $state("");
-
+  let invoer = $state<Invoer>(voorbeeldInvoer(params));
+  // Rekenen we met het voorbeeld of met wat de bezoeker zelf heeft ingevuld (en dus bewaard)?
+  let eigen = $state(false);
   $effect(() => {
-    startRekenen(params, kalibratie, populatieUrl).then(
-      (b) => (basis = b),
-      (e: Error) => (laadFout = e.message),
-    );
+    const lees = () => (eigen = leesBewaard() !== null);
+    lees();
+    window.addEventListener(SITUATIE_GEWIJZIGD, lees);
+    return () => window.removeEventListener(SITUATIE_GEWIJZIGD, lees);
+  });
+
+  // Op een telefoon staat de uitkomst onder het lange formulier: een balk onderaan laat hem zien zolang hij
+  // nog onder het scherm ligt.
+  let uitkomsten: HTMLElement;
+  let balk = $state(false);
+  $effect(() => {
+    const waarnemer = new IntersectionObserver(([e]) => {
+      balk = !e!.isIntersecting && e!.boundingClientRect.top > 0;
+    });
+    waarnemer.observe(uitkomsten);
+    return () => waarnemer.disconnect();
   });
 
   const geldig = $derived(invoerSchema.safeParse($state.snapshot(invoer)));
@@ -84,15 +92,7 @@
     return s;
   });
 
-  const positie = $derived.by(() => {
-    if (!basis || !r) return null;
-    const aandeel = aandeelOnder(
-      r.besteedbaar / r.equivalentie,
-      basis.gestandaardiseerd,
-      basis.persoonsgewichten,
-    );
-    return { aandeel, deciel: Math.min(10, Math.floor(aandeel * 10) + 1) };
-  });
+  const positie = $derived(r ? aandeelUitVerdeling(r.besteedbaar / r.equivalentie, plekGrenzen) : null);
 
   // Bij bijstand zegt een curve over het bruto inkomen weinig: bijverdienen gaat van de uitkering af.
   const curve = $derived.by(() => {
@@ -133,17 +133,25 @@
 <div class="calculator">
   <section class="kaart formulier" aria-labelledby="titel-invoer">
     <h2 id="titel-invoer">Vul je situatie in</h2>
+    {#if !eigen}
+      <p class="voorbeeld">
+        <strong>Dit is een voorbeeld:</strong> een alleenstaande met een modaal inkomen ({euro(
+          params.loon.modaal,
+        )}
+        bruto per jaar) die huurt. Pas het aan naar jouw situatie.
+      </p>
+    {/if}
     <InvoerFormulier bind:invoer {params} />
   </section>
 
-  <section class="uitkomsten" aria-live="polite" aria-labelledby="titel-uitkomst">
+  <section class="uitkomsten" aria-live="polite" aria-labelledby="titel-uitkomst" bind:this={uitkomsten}>
     <h2 id="titel-uitkomst" class="visueel-verborgen">Uitkomst</h2>
     {#if !geldig.success || !r}
       <p class="waarschuwing">Vul alle velden in met een getal (0 mag ook).</p>
     {:else}
       <p class="kernzin">
-        {samen ? "Jullie houden" : "Je houdt"} <strong>{euro(r.besteedbaar / 12)}</strong> per maand over om
-        van te leven ({euro(r.besteedbaar)} per jaar).
+        {eigen ? (samen ? "Jullie houden" : "Je houdt") : "In dit voorbeeld houd je"}
+        <strong>{euro(r.besteedbaar / 12)}</strong> per maand over om van te leven ({euro(r.besteedbaar)} per jaar).
       </p>
 
       <div class="kerngetallen">
@@ -167,13 +175,9 @@
         </div>
         <div class="kerngetal">
           <div class="l">Je plek in Nederland</div>
-          {#if positie}
-            <div class="w">{getal(positie.aandeel * 100)}%</div>
+          {#if positie !== null}
+            <div class="w">{getal(positie * 100)}%</div>
             <div class="t">van de mensen heeft minder te besteden dan {samen ? "jullie" : "jij"}</div>
-          {:else if laadFout}
-            <div class="t">Kon de verdeling niet laden.</div>
-          {:else}
-            <div class="t">Laden…</div>
           {/if}
         </div>
       </div>
@@ -348,6 +352,18 @@
   </section>
 </div>
 
+{#if balk && r}
+  <div class="snelbalk">
+    <span
+      >{eigen ? (samen ? "Jullie houden" : "Je houdt") : "Voorbeeld:"}
+      <strong>{euro(r.besteedbaar / 12)}</strong> per maand over</span
+    >
+    <button type="button" onclick={() => uitkomsten.scrollIntoView({ behavior: "smooth", block: "start" })}
+      >Bekijk ↓</button
+    >
+  </div>
+{/if}
+
 <style>
   .volgende h2 {
     font-size: 18px;
@@ -417,6 +433,38 @@
   .kernzin {
     font-size: 19px;
     margin: 0;
+  }
+  .voorbeeld {
+    margin: 0 0 12px;
+    font-size: 14px;
+    border: 1px dashed var(--warn);
+    background: var(--warn-bg);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .snelbalk {
+    display: none;
+  }
+  @media (max-width: 900px) {
+    .snelbalk {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      background: var(--panel);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -4px 12px rgb(0 0 0 / 8%);
+      font-size: 15px;
+    }
+    .snelbalk button {
+      flex: 0 0 auto;
+    }
   }
   .kaart :global(.figuur + .figuur) {
     margin-top: 18px;

@@ -273,7 +273,7 @@
   });
 
   // Jouw situatie (kolom links en "Wat betekent dit voor jou?") en de voorbeeldhuishoudens, met "jij" als je die hebt.
-  let invoer = $state(voorbeeldInvoer());
+  let invoer = $state(voorbeeldInvoer(params));
   let eigen = $state(false);
   const jij = $derived.by(() => {
     if (!eigen) return null;

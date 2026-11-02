@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   aandeelOnder,
+  aandeelUitVerdeling,
   aowPerJaar,
   berekenHuishouden,
   codeerScenario,
@@ -11,6 +12,7 @@ import {
   pasToe,
   valideerInvoer,
   type Invoer,
+  verdeling,
 } from "../src/index.ts";
 import { laadLabKnoppen, laadParameters } from "../src/node/index.ts";
 
@@ -163,6 +165,20 @@ describe("marginale druk en positie", () => {
     ]);
     expect(marginaleDrukVan(h, niets)).toBeCloseTo(0, 6);
     expect(berekenHuishouden(h, niets).belasting).toBe(0);
+  });
+  it("een compacte verdeling geeft hetzelfde aandeel, tot op 1/n", () => {
+    // Vaste pseudo-willekeurige getallen, met veel gelijke waarden (zoals bij de bijstand).
+    let s = 7;
+    const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    const waarden = Array.from({ length: 5000 }, () => (r() < 0.1 ? 15000 : Math.round(5000 + r() * 60000)));
+    const gewichten = waarden.map(() => 0.5 + r() * 3);
+    const grenzen = verdeling(waarden, gewichten, 1000);
+    expect(grenzen).toHaveLength(999);
+    for (const x of [0, 4000, 14999, 15000, 15001, 30000, 64999, 70000]) {
+      expect(
+        Math.abs(aandeelUitVerdeling(x, grenzen) - aandeelOnder(x, waarden, gewichten)),
+      ).toBeLessThanOrEqual(1 / 1000 + 1e-9);
+    }
   });
   it("aandeelOnder telt gewichten", () => {
     expect(aandeelOnder(5, [1, 4, 6, 10], [1, 1, 1, 1])).toBe(0.5);

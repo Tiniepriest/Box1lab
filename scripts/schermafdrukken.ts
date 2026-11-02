@@ -117,6 +117,16 @@ try {
     await mobiel.locator(".bij-uitklap").getByRole("link", { name: "Methodiek" }).isVisible(),
     "menu: op een telefoon staan Uitleg, Methodiek en Over onder 'Meer'",
   );
+  await mobiel.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
+  const snelbalk = mobiel.locator(".snelbalk");
+  controleer(
+    (await snelbalk.isVisible()) &&
+      /Voorbeeld: € [\d.]+ per maand over/.test((await snelbalk.textContent()) ?? ""),
+    "jouw situatie: op een telefoon staat de uitkomst in een balk onderaan",
+  );
+  await snelbalk.getByRole("button", { name: /Bekijk/ }).click();
+  await mobiel.waitForTimeout(1200);
+  controleer((await snelbalk.count()) === 0, "jouw situatie: de balk verdwijnt bij de uitkomst");
   await mobiel.close();
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
   await pg.getByRole("button", { name: /Vlaktaks/ }).click();
@@ -166,6 +176,19 @@ try {
     `verkiezingen: ${partijen} gepubliceerde partijen, geen concept zichtbaar`,
   );
   await pg.goto(`${BASIS}/verkiezingen/belastingplan-2027`, { waitUntil: "networkidle" });
+  controleer(
+    (await pg.locator("h1").textContent()) === "Belastingplan 2027: wat betekent het voor jou?" &&
+      (await pg.getByRole("button", { name: "Deel deze pagina" }).isVisible()),
+    "belastingplan 2027: titel zoals mensen zoeken, met deelknop",
+  );
+  const deelplaatje = (await pg.locator('meta[property="og:image"]').getAttribute("content")) ?? "";
+  const plaatje = await fetch(deelplaatje.replace(/^https:\/\/[^/]+\/Box1lab/, BASIS));
+  controleer(
+    /og\/verkiezing-belastingplan-2027\.png$/.test(deelplaatje) &&
+      plaatje.ok &&
+      plaatje.headers.get("content-type") === "image/png",
+    "belastingplan 2027: eigen deelplaatje",
+  );
   const routes = await pg.locator("details.partij").count();
   const routeTekst = (await pg.textContent("body")) ?? "";
   controleer(
@@ -203,13 +226,22 @@ try {
       (await routeBedragen()).join() === voorKolom,
     "situatiekolom: wissen zet het voorbeeld terug",
   );
+  const bevolking: string[] = [];
+  pg.on("request", (v) => {
+    if (v.url().includes("populatie")) bevolking.push(v.url());
+  });
   await pg.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
   await pg.waitForFunction(() => /van de mensen heeft minder/.test(document.body.textContent ?? ""), null, {
     timeout: 30000,
   });
   const zin = (await pg.locator(".kernzin").textContent()) ?? "";
-  controleer(/per maand/.test(zin), `calculator: "${zin.trim().slice(0, 60)}…"`);
-  controleer(true, "calculator: plek in de inkomensverdeling geladen");
+  controleer(/^\s*In dit voorbeeld houd je/.test(zin), `calculator: "${zin.trim().slice(0, 60)}…"`);
+  controleer(
+    /modaal inkomen/.test((await pg.locator(".voorbeeld").textContent()) ?? "") &&
+      (await pg.locator("#bedrag-0").inputValue()) === "48000",
+    "calculator: het voorbeeld is een modaal inkomen, en dat staat erbij",
+  );
+  controleer(bevolking.length === 0, "calculator: plek in de inkomensverdeling zonder de bevolking te laden");
   const volgende = ((await pg.locator(".volgende").textContent()) ?? "").replace(/\s+/g, " ");
   controleer(
     /In 2027 houd je volgens het plan van het kabinet/.test(volgende) &&
@@ -247,8 +279,14 @@ try {
     await pg.locator("#premie-0").isVisible(),
     "formulier: eigen pensioenpremie invullen bij loondienst",
   );
+  await pg.getByLabel("Per maand of per jaar").first().selectOption("maand");
   await pg.locator("#bedrag-0").fill("2700");
   await pg.waitForTimeout(300);
+  controleer(
+    (await pg.locator(".voorbeeld").count()) === 0 &&
+      /^\s*Je houdt/.test((await pg.locator(".kernzin").textContent()) ?? ""),
+    "calculator: na aanpassen geen voorbeeld meer",
+  );
   controleer(/2700/.test((await leesSessie()) ?? ""), "formulier: situatie bewaard voor dit tabblad");
   controleer(await vink.isVisible(), "menu: vinkje bij Jouw situatie");
   controleer(
@@ -294,6 +332,10 @@ try {
   await pg.getByRole("button", { name: "Wis mijn gegevens" }).click();
   await pg.waitForTimeout(300);
   controleer((await leesSessie()) === null, "formulier: wissen haalt de situatie weg");
+  controleer(
+    (await pg.locator("#bedrag-0").inputValue()) === "48000" && (await pg.locator(".voorbeeld").isVisible()),
+    "formulier: na wissen staat het voorbeeld er weer",
+  );
   await ctx.close();
 } finally {
   await browser.close();

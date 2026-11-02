@@ -278,10 +278,12 @@ kinderbijslag:
     - { totLeeftijd: 18, eersteHalfjaar: 421.53, tweedeHalfjaar: 426.29 }
 
 loon:
-  bron: "Wet minimumloon en minimumvakantiebijslag, artikel 15: vakantiebijslag minimaal 8% (https://wetten.overheid.nl/BWBR0002638)"
+  bron: "Vakantiegeld: Wet minimumloon en minimumvakantiebijslag, artikel 15: vakantiebijslag minimaal 8% (https://wetten.overheid.nl/BWBR0002638). Modaal: CPB, Macro Economische Verkenning 2027, kerngegevens (bruto modaal inkomen 2026: € 48.000; https://www.cpb.nl/raming/raming-september-2026-mev-2027)."
   # Wettelijk minimum vakantiegeld als percentage van het loon; gebruikt om een maandloon zonder vakantiegeld
   # om te rekenen naar een jaarinkomen.
   vakantiegeld: 8
+  # Bruto modaal inkomen per jaar: het voorbeeldhuishouden op de site verdient dit. Telt niet mee in de berekening.
+  modaal: 48000
 
 pensioenpremie:
   bron: "ABP, Premiepercentages en franchisebedragen per 1 januari 2026, OP/NP (https://www.abp.nl/content/dam/abp/documenten/formulieren-tabellen/premietabel-2026.pdf). Een op het loon ingehouden werknemersdeel verlaagt het fiscale loon: Belastingdienst, U betaalt vrijwillig pensioenpremie (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/pensioen_en_andere_uitkeringen/u-betaalt-vrijwillig-pensioenpremie/u-betaalt-vrijwillig-pensioenpremie)."

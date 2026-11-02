@@ -9,7 +9,7 @@
   } from "@box1lab/engine";
   import { untrack } from "svelte";
   import { euro, getal, procent } from "../lib/format.ts";
-  import { bewaarInvoer, leesBewaard, wisInvoer } from "../lib/opslag.ts";
+  import { bewaarInvoer, leesBewaard, voorbeeldInvoer, wisInvoer } from "../lib/opslag.ts";
 
   /*
    * Het gedeelde invoerformulier (HANDOFF §3.3). Alles blijft in de browser (D-052): zolang het tabblad openstaat
@@ -74,6 +74,8 @@
   function wis() {
     wisInvoer();
     bewaren = false;
+    // Terug naar het voorbeeld; dat bewaren we niet, net als bij het begin.
+    invoer = voorbeeldInvoer(params);
     begin = JSON.stringify($state.snapshot(invoer));
     onthouden = false;
     melding = "Je gegevens zijn gewist uit deze browser.";
@@ -367,6 +369,13 @@
     flex-direction: column;
     gap: 4px;
     font-size: 13px;
+  }
+  /* Op een smal scherm staat de vraag boven het veld. */
+  @media (max-width: 480px) {
+    .rij {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+    }
   }
   .rij input,
   .rij select {

@@ -2,8 +2,9 @@
 import Calculator from "../components/Calculator.svelte";
 import MeldFout from "../components/MeldFout.astro";
 import Base from "../layouts/Base.astro";
-import { actueel, kalibratie, pad, params, presets, volgendJaar } from "../lib/data.ts";
+import { actueel, pad, params, presets, volgendJaar } from "../lib/data.ts";
 import { nogNietOfficieel } from "../lib/secties.ts";
+import { plekGrenzen } from "../lib/basis.ts";
 
 const volgend = volgendJaar ? { params: volgendJaar, ...nogNietOfficieel(volgendJaar) } : null;
 const tabblad = actueel
@@ -16,20 +17,16 @@ const tabblad = actueel
   : null;
 ---
 
-<Base title="Jouw situatie — Box1lab" breed>
+<Base
+  title="Netto inkomen, belasting en toeslagen berekenen — Box1lab"
+  description={`Bereken wat je overhoudt na belasting, premies en toeslagen in ${params.jaar}${volgend ? `, en wat er in ${volgend.params.jaar} verandert` : ""}. Gratis en zonder account: wat je invult, blijft in je browser.`}
+  breed
+>
   <h1>Wat betekent het belastingstelsel voor jou?</h1>
   <p class="intro">
     Vul je situatie in en zie hoeveel belasting je betaalt, welke toeslagen je krijgt en wat je overhoudt.
   </p>
-  <Calculator
-    client:load
-    {params}
-    {kalibratie}
-    {presets}
-    {volgend}
-    actueel={tabblad}
-    populatieUrl={pad("data/populatie-2026.json")}
-  />
+  <Calculator client:load {params} {plekGrenzen} {presets} {volgend} actueel={tabblad} />
   <MeldFout />
 </Base>
 

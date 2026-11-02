@@ -1,4 +1,5 @@
 ---
+import Deel from "../../components/Deel.astro";
 import LabMenu from "../../components/LabMenu.astro";
 import JouwEffect from "../../components/JouwEffect.svelte";
 import Situatie from "../../components/Situatie.svelte";
@@ -30,6 +31,7 @@ const { k } = Astro.props as { k: Kerncijfers };
       <p class="lead">{k.preset.omschrijving}</p>
       <p class="kern">{kernzin(k)}</p>
       {k.preset.uitleg && <p>{k.preset.uitleg}</p>}
+      <Deel titel={k.preset.naam} />
 
       <div class="kerngetallen">
         <div class="kerngetal">

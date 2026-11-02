@@ -216,7 +216,12 @@ export const parametersSchema = z.strictObject({
       ),
   }),
 
-  loon: z.strictObject({ bron, vakantiegeld: pct }),
+  loon: z.strictObject({
+    bron,
+    vakantiegeld: pct,
+    /** Bruto modaal inkomen per jaar (CPB). Alleen voor het voorbeeldhuishouden op de site, niet in de berekening. */
+    modaal: nietNegatief,
+  }),
 
   gedrag: z.strictObject({ bron, eti: z.number().min(0).max(2) }),
 
