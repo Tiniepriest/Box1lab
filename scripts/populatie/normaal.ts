@@ -34,3 +34,18 @@ export function inverseNormaal(p: number): number {
     (((((B[0] * r + B[1]) * r + B[2]) * r + B[3]) * r + B[4]) * r + 1)
   );
 }
+
+/**
+ * Standaardnormale verdelingsfunctie Φ(z), via de benadering van erf uit Abramowitz & Stegun 7.1.26 (absolute fout
+ * < 1,5e-7). Ook hier zijn de coëfficiënten wiskundige constanten.
+ */
+export function normaleVerdeling(z: number): number {
+  const x = Math.abs(z) / Math.SQRT2;
+  const t = 1 / (1 + 0.3275911 * x);
+  const erf =
+    1 -
+    ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) *
+      t *
+      Math.exp(-x * x);
+  return z >= 0 ? (1 + erf) / 2 : (1 - erf) / 2;
+}

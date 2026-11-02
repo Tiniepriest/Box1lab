@@ -108,6 +108,10 @@ Punten 1, 2, 3, 6, 7 en 9 van 2 november 2026 (4, 5 en 8 niet).
 
 - [x] Vlaktaks 35% boven € 24.000 in plaats van 40% boven € 18.000, oud adres stuurt door (D-067)
 
+## Fase 13: de top van de inkomensverdeling — klaar
+
+- [x] Topinkomens volgens CBS: Pareto-staart in de bevolking, herweging op personen boven € 100.000 en € 200.000, hun inkomen en de winst van zelfstandigen (D-068)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

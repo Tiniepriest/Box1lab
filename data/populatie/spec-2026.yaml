@@ -43,6 +43,14 @@ inkomen:
   aandeelBijstand: 0.5
   # Bruto WW- of WIA-uitkering per jaar: tussen minimum en maximum.
   uitkering: { minimum: 17000, maximum: 30000 }
+  # Topinkomens (D-068). Met vaste inkomensposities per cel wordt de top afgekapt (het hoogste inkomen was
+  # € 254.000). Daarom: boven "vanaf" (bruto per jaar) volgt het inkomen van een werkende hoofdverdiener een
+  # Pareto-verdeling, met "extraPerCel" extra huishoudens per cel: stukken van de staart die naar boven steeds half
+  # zo groot worden, elk met het gemiddelde inkomen van dat stuk. Bij een Pareto-verdeling is het gemiddelde boven
+  # een grens alfa ÷ (alfa − 1) keer die grens. Bij alfa 2,6 is het gemiddelde inkomen boven € 200.000 (CBS-begrip)
+  # vóór de herweging € 314.500, tegen € 311.100 bij CBS; 2,5 en 2,7 zitten verder af (+4,3% en −1,4%). De herweging
+  # stemt daarna het aantal personen en hun totale inkomen af op CBS (kalibratierapport, sectie Topinkomens).
+  top: { vanaf: 150000, alfa: 2.6, extraPerCel: 8 }
   # Kans dat een werkende zelfstandig ondernemer is (anders werknemer), en de kans dat een ondernemer het
   # urencriterium haalt. De herweging stemt het aantal af op CBS. Wie pensioenpremie betaalt, bepaalt de
   # kalibratie per inkomensgroep (data/kalibratie, sectie pensioenpremie).

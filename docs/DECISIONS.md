@@ -486,3 +486,31 @@ Golden-verschil: alleen de vlaktaks en de oplosser veranderen.
 | Vooruit (1–5% / > 5%)   | 6,1% / 6,1%        | 15,9% / 25,2%      |
 
 De oplosser maakt de vlaktaks budgetneutraal: via de vrijstelling € 23.555 (was € 27.762), of via de tarieven × 1,014 (was × 0,742).
+
+## Fase 13: de top van de inkomensverdeling
+
+### D-068 Topinkomens volgens CBS
+
+Vraag van de eigenaar (2 november 2026): met 80% belasting boven € 100.000 ging de hoogste inkomensgroep er in het model op vooruit. De formules klopten; de vraag was of de top van de bevolking klopt.
+
+**Wat we vonden.** De inkomensposities in een CBS-cel lagen vast ((j + 0,5) / n). In een cel van 50 huishoudens is de hoogste positie het 99e percentiel, dus de top werd afgekapt: het hoogste inkomen was € 254.000. Vergeleken met CBS 83931NED (personen naar persoonlijk bruto inkomen, 2024), met de werkgeverslasten erbij zoals CBS die meetelt:
+
+| Persoonlijk bruto inkomen (CBS-begrip, 2024) | CBS       | Model vóór | Model na    |
+| -------------------------------------------- | --------- | ---------- | ----------- |
+| € 100.000–200.000: personen                  | 1.219.900 | 1.287.400  | 1.219.900   |
+| € 200.000 of meer: personen                  | 149.500   | 122.400    | 149.500     |
+| € 200.000 of meer: gemiddeld                 | € 311.100 | € 226.700  | € 311.100   |
+| Hoogste inkomen in de bevolking (2026)       |           | € 254.000  | € 1.575.000 |
+
+**Wat we doen.**
+
+- Werkenden met een inkomen boven € 150.000 (2026) vervangen we door extra huishoudens per cel waarvan het inkomen van de hoofdverdiener een Pareto-verdeling volgt. De staart is verdeeld in acht stukken die naar boven steeds half zo groot worden; elk huishouden krijgt het gemiddelde inkomen van zijn stuk, zodat het totale inkomen in de staart behouden blijft. De gewone huishoudens blijven verder precies gelijk (eigen toevalsreeks voor de staart).
+- Alfa 2,6: dan is het gemiddelde boven € 200.000 vóór de herweging € 314.500 (CBS € 311.100); 2,5 en 2,7 zitten verder af.
+- De herweging stemt nu ook af op het aantal personen in beide klassen, het totale inkomen boven € 200.000 en de totale winst van zelfstandigen (CBS 84493NED, post 2.1; die stond er al als controle). Zonder dat laatste doel kwam de winst 18% te hoog uit, door de hoge winsten in de staart.
+- Werkgeverslasten om het model met CBS te vergelijken: premies 2024 19,47% tot € 71.624 (CPB MEV 2027, bijlage 17) en pensioenpremie werkgever 1,68 × werknemer (CBS 84494NED). Ter controle: de sociale lasten van werkgevers zonder pensioen zijn volgens CBS 15,8% van het loon; dat past bij 19,47% met een maximum.
+
+**Niet aangepast.** Onder € 50.000 wijkt de verdeling van personen af van CBS (minder mensen onder € 10.000, meer tussen € 20.000 en € 40.000): bijbaantjes van 15- tot 18-jarigen en kleine inkomens van partners zitten niet in het model. De verdeling van huishoudens (de decielgrenzen van het besteedbaar inkomen) klopt wel; voor belasting en toeslagen maakt dit weinig uit.
+
+**Gevolg.** Box 1 levert in het model € 149,9 mld op (was € 145,3 mld). Dat is 93% van de CBS-belasting van huishoudens over alle boxen (€ 160,6 mld; box 2 en 3 zitten niet in het model, dus lager hoort zo) en 104% van de Miljoenennota-opbrengst voor box 1 en 2 samen (kasbasis). De twee controles liggen ongeveer € 10 mld uit elkaar; het model zit ertussen. Gini 0,225 → 0,233, armoede 10,3% → 10,2%.
+
+Golden-verschil: alle cijfers die van de bevolking afhangen, niet de voorbeeldhuishoudens. Saldo vlaktaks −€ 1,66 → −€ 3,14 mld (de hoogste inkomens profiteren meer van 35%); drie schijven € 29,17 → € 28,93 mld; de andere voorstellen veranderen minder dan € 0,1 mld. Oplosser: vrijstelling € 23.555 → € 23.167. Het scenario van de eigenaar (vlaktaks met 30% tot € 100.000 en 80% daarboven): hoogste groep +4,7% → +0,4%, saldo −€ 0,9 → +€ 3,2 mld. De hoogste groep gaat er gemiddeld nog net op vooruit, omdat de meeste mensen daarin tweeverdieners zijn met elk minder dan ongeveer € 155.000; boven dat bedrag gaat iedereen erop achteruit.

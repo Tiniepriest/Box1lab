@@ -309,6 +309,33 @@ export const kalibratieSchema = z.strictObject({
       .min(1),
   }),
   indexatie: z.strictObject({ bron, factor: z.number().positive() }),
+  /**
+   * Personen met een hoog persoonlijk bruto inkomen (CBS), voor de top van de verdeling (D-068). CBS telt bij het
+   * inkomen van werknemers de werkgeverslasten mee; die telt de kalibratie bij het model op om te kunnen vergelijken.
+   */
+  topinkomens: z.strictObject({
+    bron,
+    jaar: z.number().int(),
+    klassen: z
+      .array(
+        z.strictObject({
+          vanaf: z.number().positive(),
+          tot: z.number().positive().nullable(),
+          personen: aantal,
+          /** Gemiddeld persoonlijk bruto inkomen in de klasse. */
+          gemiddeld: z.number().positive(),
+        }),
+      )
+      .min(1),
+    werkgeverslasten: z.strictObject({
+      bron,
+      /** Premies werknemersverzekeringen en Zvw ten laste van de werkgever, in procent van het loon. */
+      socialePremies: z.number().min(0).max(100),
+      maximumPremieInkomen: z.number().positive(),
+      /** Pensioenpremie van de werkgever per euro pensioenpremie van de werknemer. */
+      pensioenWerkgeverPerWerknemer: z.number().nonnegative(),
+    }),
+  }),
   toeslagen: z.strictObject({
     bron,
     zorgtoeslag: toeslagDoel,
