@@ -33,8 +33,14 @@
   let breedte = $state(0);
   // Teken op de echte breedte, zodat tekst op een telefoon even groot blijft als op een groot scherm.
   const B = $derived(Math.max(300, breedte || 640));
-  const LB = $derived(Math.min(labelBreedte, B * 0.42));
-  const RIJ = 34;
+  const LBMax = $derived(Math.min(labelBreedte, B * 0.42));
+  // Past een label niet naast de staaf (bijvoorbeeld op een telefoon), dan staan de labels boven de staven.
+  const boven = $derived(
+    rijen.some((r) => r.label.length * 7.2 > LBMax - 8 || (r.sub ?? "").length * 6.2 > LBMax - 8),
+  );
+  const LB = $derived(boven ? 0 : LBMax);
+  const RIJ = $derived(boven ? 50 : 34);
+  const LABELRUIMTE = $derived(boven ? 17 : 0);
   const RAND = 12;
   const H = $derived(rijen.length * RIJ + 28);
   // Zonder verschillen (huidig beleid) toch een leesbare as van −1 tot +1.
@@ -80,8 +86,8 @@
     {/each}
     <line x1={midden} x2={midden} y1="0" y2={H - 22} class="nul" />
     {#each rijen as r, i (r.label)}
-      {@const y = i * RIJ + 6}
-      {@const h = RIJ - 14}
+      {@const y = i * RIJ + 6 + LABELRUIMTE}
+      {@const h = RIJ - 14 - LABELRUIMTE}
       {@const w = Math.max(1, Math.abs(r.waarde) * schaal)}
       {@const x = r.waarde >= 0 ? midden : midden - w}
       {@const plek = tekstPlek(r, x, w)}
@@ -91,11 +97,17 @@
         onpointermove={(e) => beweeg(e, r)}
         onpointerleave={() => (tip = null)}
       >
-        <rect x="0" y={y - 4} width={B} height={RIJ} fill="transparent" />
-        <text x="0" y={y + (r.sub ? h / 2 - 3 : h / 2)} dominant-baseline="middle" class="label"
-          >{r.label}</text
-        >
-        {#if r.sub}<text x="0" y={y + h / 2 + 11} dominant-baseline="middle" class="sub">{r.sub}</text>{/if}
+        <rect x="0" y={y - 4 - LABELRUIMTE} width={B} height={RIJ} fill="transparent" />
+        {#if boven}
+          <text x="0" y={y - 7} class="label"
+            >{r.label}{#if r.sub}<tspan class="sub"> · {r.sub}</tspan>{/if}</text
+          >
+        {:else}
+          <text x="0" y={y + (r.sub ? h / 2 - 3 : h / 2)} dominant-baseline="middle" class="label"
+            >{r.label}</text
+          >
+          {#if r.sub}<text x="0" y={y + h / 2 + 11} dominant-baseline="middle" class="sub">{r.sub}</text>{/if}
+        {/if}
         <rect {x} {y} width={w} height={h} rx="4" fill={kleur(r.waarde)} />
         <text x={plek.x} y={y + h / 2} dominant-baseline="middle" text-anchor={plek.anker} class="waarde"
           >{r.tekst}</text

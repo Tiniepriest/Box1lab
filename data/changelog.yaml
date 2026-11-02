@@ -7,6 +7,13 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-10-28
+  soort: nieuw
+  titel: Zie wat een scenario of voorstel voor jou betekent
+  tekst: >-
+    In het scenariolab en op de pagina van elk voorstel staat nu "Wat betekent dit voor jou?", naast de cijfers
+    voor heel Nederland. Op Jouw situatie zie je wat alle voorstellen met jouw huishouden doen.
+
+- datum: 2026-10-28
   soort: model
   modelversie: 0.3.0
   titel: Bijstand, zzp'ers en pensioenpremie

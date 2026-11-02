@@ -351,3 +351,13 @@ Golden-verschillen (modelversie 0.3.0):
 
 - Saldo van de voorstellen: vlaktaks € 43,59 → € 41,86 mld; drie schijven € 31,32 → € 29,62 mld; hogere algemene heffingskorting −€ 4,45 → −€ 4,50 mld; de andere voorstellen veranderen minder dan € 0,1 mld. De oplosser geeft een vrijstelling van € 27.836 (was € 28.322).
 - Voorbeeldhuishoudens: werkenden betalen nu pensioenpremie, dus minder belasting en iets meer toeslag, maar minder besteedbaar (P50 € 65.743 → € 64.536). P10 (bijstand) krijgt de norm: netto precies € 16.926, besteedbaar € 21.033 → € 21.993.
+
+## Fase 8c: jouw situatie overal (verbeterlijst punten 7 en 11)
+
+### D-060 "Wat betekent dit voor jou?"
+
+Eén component (`JouwEffect.svelte`) laat het effect van een scenario op het eigen huishouden zien: wat je per maand meer of minder overhoudt, met belasting, toeslagen en kinderbijslag nu en straks. Hij gebruikt de bewaarde situatie (D-052), en wie niets bewaard heeft, kan het formulier in het blok zelf openen. Het blok staat in het scenariolab (onder de landelijke kerncijfers, rekent mee met elke knop) en op elke voorstelpagina. De rij "Jij" in de grafiek met voorbeeldhuishoudens volgt dezelfde situatie. De verkiezingspagina deed dit al per maatregel; echte partijen krijgen het zo vanzelf.
+
+Op Jouw situatie staat een grafiek "Wat doen de voorstellen met jou?" met het verschil per maand per voorstel en een link naar het voorstel.
+
+De staafgrafiek zet labels boven de staven als ze er niet naast passen (vooral op een telefoon).

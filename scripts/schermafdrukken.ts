@@ -178,10 +178,28 @@ try {
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
   await pg.waitForFunction(() => /Jij · €/.test(document.body.textContent ?? ""), null, { timeout: 30000 });
   controleer(true, "lab: jouw situatie gaat mee naar het lab");
+  await pg.getByRole("button", { name: "Algemene heffingskorting + € 500" }).click();
+  await pg.waitForFunction(
+    () => /per maand\s+meer over/.test(document.querySelector(".jouw")?.textContent ?? ""),
+    null,
+    { timeout: 30000 },
+  );
+  controleer(true, "lab: 'Wat betekent dit voor jou?' rekent mee met het scenario");
+  await pg.goto(`${BASIS}/voorstellen/hogere-algemene-heffingskorting`, { waitUntil: "networkidle" });
+  await pg.waitForFunction(
+    () => /per maand\s+meer over/.test(document.querySelector(".jouw")?.textContent ?? ""),
+    null,
+    { timeout: 30000 },
+  );
+  controleer(true, "voorstel: laat zien wat het voor jou betekent");
   await pg.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
   controleer(
     (await pg.locator("#bedrag-0").inputValue()) === "2700",
     "formulier: situatie terug na navigeren",
+  );
+  controleer(
+    /Wat doen de voorstellen met jou/.test((await pg.textContent("body")) ?? ""),
+    "calculator: wat doen de voorstellen met jou",
   );
   await pg.getByRole("button", { name: "Wis mijn gegevens" }).click();
   await pg.waitForTimeout(300);
