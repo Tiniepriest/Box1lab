@@ -35,7 +35,9 @@ const metLinks = (t: string) =>
       <li>
         <strong>De bevolking.</strong> We gebruiken geen gegevens van echte mensen. In plaats daarvan maken we
         ruim 4.000 voorbeeldhuishoudens die samen lijken op Nederland: even veel huishoudens van elk type als
-        bij het CBS, dezelfde inkomensverdeling, en even veel mensen met toeslag als bij Dienst Toeslagen.
+        bij het CBS, dezelfde inkomensverdeling, en even veel mensen met toeslag als bij Dienst Toeslagen. Ook
+        de top klopt met het CBS: hoeveel mensen meer dan € 100.000 en meer dan € 200.000 verdienen, en
+        hoeveel die hoogste groep samen verdient.
       </li>
       <li>
         <strong>Het doorrekenen.</strong> Voor elk huishouden berekenen we belasting, toeslagen en het
@@ -96,7 +98,11 @@ const metLinks = (t: string) =>
         Bijstand: alleen de landelijke normen vanaf 21 jaar. Jongerennormen, de kostendelersnorm, vrijlatingen
         bij bijverdienen en gemeentelijke regelingen zitten er niet in.
       </li>
-      <li>Gedrag: standaard rekenen we statisch. In het lab kun je een eenvoudig gedragseffect aanzetten.</li>
+      <li>
+        Gedrag: standaard rekenen we statisch. In het lab kun je een eenvoudig gedragseffect aanzetten. Bij
+        een heel hoog tarief verschuiven mensen in werkelijkheid inkomen, bijvoorbeeld naar een eigen bv; dat
+        zit er niet vanzelf in.
+      </li>
       <li>
         Vermogen in de nagebootste bevolking. De vermogensgrenzen van de toeslagen werken wel als je zelf
         vermogen invult.

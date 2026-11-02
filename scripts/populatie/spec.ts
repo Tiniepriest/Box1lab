@@ -26,6 +26,12 @@ export const specSchema = z.strictObject({
     zelfstandigKans: kans,
     urencriteriumKans: kans,
     uitkering: z.strictObject({ minimum: getal, maximum: getal }),
+    /** Topinkomens (D-068): boven `vanaf` een Pareto-verdeling met parameter `alfa`, met extra huishoudens per cel. */
+    top: z.strictObject({
+      vanaf: z.number().positive(),
+      alfa: z.number().gt(1),
+      extraPerCel: z.number().int().nonnegative(),
+    }),
   }),
   pensioen: z.strictObject({
     mediaanAlleenstaand: getal,

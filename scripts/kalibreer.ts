@@ -71,6 +71,28 @@ const huurwaardeFactor = huurwaardeDoel / pop.reduce((s, x, i) => s + start[i]! 
 const huurwaarde = pop.map((x) => huurwaardeFactor * x.woz);
 const besteedbaarCbs = (r: Resultaat, i: number) => r.besteedbaar - pop[i]!.hypotheekrente + huurwaarde[i]!;
 
+// Topinkomens (D-068): persoonlijk bruto inkomen zoals CBS het telt, in euro's van het CBS-jaar. Bij werknemers tellen
+// de premies van de werkgever mee (werknemersverzekeringen en Zvw tot het maximum premie-inkomen, en pensioen).
+const top = kal.topinkomens;
+if (top.jaar !== kal.inkomen.jaar) throw new Error("topinkomens en inkomen moeten hetzelfde CBS-jaar hebben");
+const cbsPersoonsinkomens = (x: PopulatieHuishouden): number[] =>
+  x.leden.map((l) => {
+    const loon = l.inkomen / kal.indexatie.factor;
+    if (l.soort !== "werk" || l.ondernemer) return loon;
+    const w = top.werkgeverslasten;
+    const premie = typeof l.pensioenpremie === "number" ? l.pensioenpremie / kal.indexatie.factor : 0;
+    return (
+      loon +
+      (w.socialePremies / 100) * Math.min(loon, w.maximumPremieInkomen) +
+      w.pensioenWerkgeverPerWerknemer * premie
+    );
+  });
+const inKlasse = (v: number, k: (typeof top.klassen)[number]) =>
+  v >= k.vanaf && (k.tot === null || v < k.tot);
+const euroKort = (x: number) => `€ ${Math.round(x).toLocaleString("nl-NL")}`;
+const klasseNaam = (k: (typeof top.klassen)[number]) =>
+  k.tot === null ? `${euroKort(k.vanaf)} of meer` : `${euroKort(k.vanaf)}–${euroKort(k.tot).slice(2)}`;
+
 const maakRestricties = (): Restrictie[] => [
   ...TYPES.map((ty) => ({
     naam: `huishoudens: ${ty}`,
@@ -146,11 +168,34 @@ const maakRestricties = (): Restrictie[] => [
     waarden: indicator((x) => x.leden.some((l) => !!l.ondernemer)),
     doel: ib.huishoudensMetZelfstandigOndernemer,
   },
+  // En hun totale winst (D-068): anders tellen de hoge winsten in de staart van de topinkomens te zwaar.
+  {
+    naam: "winst van zelfstandig ondernemers",
+    waarden: pop.map((x) => x.leden.reduce((s, l) => s + (l.ondernemer ? l.inkomen : 0), 0)),
+    doel: ib.inkomenZelfstandigOndernemerMln * 1e6 * kal.indexatie.factor,
+  },
   ...grenzen.map((g, k) => ({
     naam: `besteedbaar inkomen onder P${(k + 1) * 10} (€ ${Math.round(g).toLocaleString("nl-NL")})`,
     waarden: res.map((r, i) => (besteedbaarCbs(r, i) <= g ? 1 : 0)),
     doel: ((k + 1) / 10) * totaal,
   })),
+  ...top.klassen.map((k) => ({
+    naam: `personen met inkomen ${klasseNaam(k)} (CBS ${top.jaar})`,
+    waarden: pop.map((x) => cbsPersoonsinkomens(x).filter((v) => inKlasse(v, k)).length),
+    doel: k.personen,
+  })),
+  // Het totale inkomen in de hoogste klasse: zo klopt ook hoe hoog de topinkomens zijn, niet alleen hoeveel.
+  ...top.klassen
+    .filter((k) => k.tot === null)
+    .map((k) => ({
+      naam: `inkomen van personen met ${klasseNaam(k)} (CBS ${top.jaar})`,
+      waarden: pop.map((x) =>
+        cbsPersoonsinkomens(x)
+          .filter((v) => inKlasse(v, k))
+          .reduce((a, b) => a + b, 0),
+      ),
+      doel: k.personen * k.gemiddeld,
+    })),
 ];
 
 // 3. Herwegen, in twee rondes. De pensioenpremie hangt per 10%-groep gestandaardiseerd inkomen af van CBS, en die
@@ -250,7 +295,7 @@ const nl = (x: number, d = 0) =>
   x.toLocaleString("nl-NL", { minimumFractionDigits: d, maximumFractionDigits: d });
 const pct = (x: number) => `${x >= 0 ? "+" : "−"}${nl(Math.abs(x * 100), 1)}%`;
 const rij = (a: Afwijking, v: Afwijking) => {
-  const bedrag = /uitgaven|hypotheekrente|huurwaarde/.test(a.naam);
+  const bedrag = /uitgaven|hypotheekrente|huurwaarde|inkomen van personen|winst/.test(a.naam);
   const f = (x: number) => (bedrag ? `€ ${nl(x / 1e9, 2)} mld` : nl(x));
   return `| ${a.naam} | ${f(a.doel)} | ${f(v.uitkomst)} (${pct(v.relatief)}) | ${f(a.uitkomst)} (${pct(a.relatief)}) |`;
 };
@@ -290,6 +335,19 @@ const pensioenLeeftijd = pp.perLeeftijd
   })
   .join("; ");
 const cbsWinst = (ib.inkomenZelfstandigOndernemerMln / 1e3) * kal.indexatie.factor;
+const topRijen = top.klassen.map((k) => {
+  let n = 0;
+  let som = 0;
+  herwogen.forEach((x) => {
+    for (const v of cbsPersoonsinkomens(x))
+      if (inKlasse(v, k)) {
+        n += x.gewicht;
+        som += x.gewicht * v;
+      }
+  });
+  return `| ${klasseNaam(k)} | ${nl(k.personen)} | ${nl(n)} (${pct(n / k.personen - 1)}) | ${euroKort(k.gemiddeld)} | ${euroKort(som / n)} (${pct(som / n / k.gemiddeld - 1)}) |`;
+});
+const hoogste = Math.max(...herwogen.flatMap((x) => x.leden.map((l) => l.inkomen)));
 const rapport = `# Kalibratierapport ${jaar}
 
 Gegenereerd door \`npm run kalibreer\` op ${new Date().toISOString().slice(0, 10)} (model ${MODEL_VERSIE}). Niet met de hand bewerken.
@@ -349,6 +407,16 @@ Het aandeel werknemershuishoudens dat pensioenpremie betaalt, klopt met CBS per 
 |---|---|---|---|---|
 ${pensioenRijen.join("\n")}
 
+## Topinkomens
+
+Personen naar persoonlijk bruto inkomen in ${top.jaar}, zoals CBS het telt: bij werknemers met de premies van de werkgever erbij. De modelinkomens zijn daarvoor terug geïndexeerd naar ${top.jaar}. Boven € ${nl(spec.inkomen.top.vanaf)} (${jaar}) volgt het inkomen van een werkende hoofdverdiener een Pareto-verdeling (alfa ${nl(spec.inkomen.top.alfa, 2)}); zie D-068.
+
+| Klasse | CBS personen | Model | CBS gemiddeld | Model gemiddeld |
+|---|---|---|---|---|
+${topRijen.join("\n")}
+
+Hoogste inkomen in de populatie: € ${nl(hoogste)} (${jaar}).
+
 ## Uitkomsten huidig beleid
 
 - Armoederisico (personen, 60% van de mediaan): ${nl(basis.armoede.personen, 1)}%; kinderen ${nl(basis.armoede.kinderen, 1)}%.
@@ -362,7 +430,7 @@ ${pensioenRijen.join("\n")}
 
 ## Bronnen
 
-${[kal.huishoudens.bron, kal.woningen.bron, kal.inkomen.bron, kal.inkomensbestanddelen.bron, kal.pensioenpremie.bron, kal.indexatie.bron, kal.toeslagen.bron, kal.controle.bron].map((b) => `- ${b}`).join("\n")}
+${[kal.huishoudens.bron, kal.woningen.bron, kal.inkomen.bron, kal.inkomensbestanddelen.bron, kal.pensioenpremie.bron, kal.indexatie.bron, top.bron, top.werkgeverslasten.bron, kal.toeslagen.bron, kal.controle.bron].map((b) => `- ${b}`).join("\n")}
 `;
 const rapportPad = fileURLToPath(new URL(`../docs/kalibratie-${jaar}.md`, import.meta.url));
 writeFileSync(rapportPad, rapport);
