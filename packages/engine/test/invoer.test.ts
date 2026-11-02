@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   aandeelOnder,
+  aandeelUitVerdeling,
   aowPerJaar,
   berekenHuishouden,
   codeerScenario,
@@ -11,6 +12,7 @@ import {
   pasToe,
   valideerInvoer,
   type Invoer,
+  verdeling,
 } from "../src/index.ts";
 import { laadLabKnoppen, laadParameters } from "../src/node/index.ts";
 
@@ -18,6 +20,7 @@ const p = laadParameters(2026);
 
 /** Velden met een standaardwaarde in het schema. */
 const STANDAARD = {
+  dertiendeMaand: false,
   extraPerJaar: 0,
   pensioenpremiePerMaand: 0,
   urencriterium: true,
@@ -64,6 +67,17 @@ describe("invoerformulier", () => {
     expect(jaarbedrag(zzp, p)).toBe(36000);
   });
 
+  it("een 13e maand is één maandbedrag extra, alleen bij loondienst per maand", () => {
+    const loon = { ...basisInvoer.personen[0]!, extraPerJaar: 0 };
+    const zonder = jaarbedrag(loon, p);
+    expect(jaarbedrag({ ...loon, dertiendeMaand: true }, p)).toBeCloseTo(zonder + loon.bedrag, 6);
+    expect(jaarbedrag({ ...loon, dertiendeMaand: true, periode: "jaar" }, p)).toBe(loon.bedrag);
+    expect(jaarbedrag({ ...loon, dertiendeMaand: true, soort: "zzp" }, p)).toBe(loon.bedrag * 12);
+  });
+  it("oude invoer zonder dertiendeMaand blijft geldig", () => {
+    const { dertiendeMaand: _d, ...oud } = valideerInvoer(basisInvoer).personen[0]!;
+    expect(valideerInvoer({ ...basisInvoer, personen: [oud] }).personen[0]!.dertiendeMaand).toBe(false);
+  });
   it("oude invoer zonder extraPerJaar blijft geldig", () => {
     const { extraPerJaar: _e, ...oud } = basisInvoer.personen[0]!;
     expect(valideerInvoer({ ...basisInvoer, personen: [oud] }).personen[0]!.extraPerJaar).toBe(0);
@@ -163,6 +177,20 @@ describe("marginale druk en positie", () => {
     ]);
     expect(marginaleDrukVan(h, niets)).toBeCloseTo(0, 6);
     expect(berekenHuishouden(h, niets).belasting).toBe(0);
+  });
+  it("een compacte verdeling geeft hetzelfde aandeel, tot op 1/n", () => {
+    // Vaste pseudo-willekeurige getallen, met veel gelijke waarden (zoals bij de bijstand).
+    let s = 7;
+    const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    const waarden = Array.from({ length: 5000 }, () => (r() < 0.1 ? 15000 : Math.round(5000 + r() * 60000)));
+    const gewichten = waarden.map(() => 0.5 + r() * 3);
+    const grenzen = verdeling(waarden, gewichten, 1000);
+    expect(grenzen).toHaveLength(999);
+    for (const x of [0, 4000, 14999, 15000, 15001, 30000, 64999, 70000]) {
+      expect(
+        Math.abs(aandeelUitVerdeling(x, grenzen) - aandeelOnder(x, waarden, gewichten)),
+      ).toBeLessThanOrEqual(1 / 1000 + 1e-9);
+    }
   });
   it("aandeelOnder telt gewichten", () => {
     expect(aandeelOnder(5, [1, 4, 6, 10], [1, 1, 1, 1])).toBe(0.5);

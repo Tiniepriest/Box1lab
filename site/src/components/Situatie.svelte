@@ -18,7 +18,7 @@
    */
   let {
     params,
-    invoer = $bindable(voorbeeldInvoer()),
+    invoer = $bindable(voorbeeldInvoer(params)),
     eigen = $bindable(false),
     plakken = false,
     zelfstandig = true,
@@ -49,7 +49,7 @@
       // Gewist: terug naar het voorbeeld. Het formulier sluiten we, zodat het het voorbeeld niet meteen bewaart.
       if (!eigen) {
         open = false;
-        invoer = voorbeeldInvoer();
+        invoer = voorbeeldInvoer(params);
         melding = "Je gegevens zijn gewist. We rekenen weer met een voorbeeld.";
       } else melding = "";
     };
@@ -110,7 +110,7 @@
     {#if !eigen}
       <p class="notitie uitleg">
         {melding ||
-          "Dit is een voorbeeldhuishouden. Vul je eigen situatie in om te zien wat het voor jou betekent."}
+          "Dit is een voorbeeld: een alleenstaande met een modaal inkomen. Vul je eigen situatie in om te zien wat het voor jou betekent."}
       </p>
     {/if}
   {:else}

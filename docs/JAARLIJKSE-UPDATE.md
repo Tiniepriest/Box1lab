@@ -29,7 +29,7 @@ Kopieer het bestand van het vorige jaar:
 data/parameters/2026.yaml  →  data/parameters/2027.yaml
 ```
 
-Pas bovenaan `jaar: 2027` aan. Loop daarna elke sectie langs en vul de nieuwe bedragen in. Werk bij elke sectie ook de `bron` bij (een link naar de Belastingdienst, rijksoverheid.nl, CBS of CPB).
+Pas bovenaan `jaar: 2027` aan. Loop daarna elke sectie langs en vul de nieuwe bedragen in. Werk bij elke sectie ook de `bron` bij (een link naar de Belastingdienst, rijksoverheid.nl, CBS of CPB). Vergeet `loon.modaal` niet: het bruto modaal inkomen uit de kerngegevens van de nieuwste MEV of het CEP van het CPB; het voorbeeldhuishouden op de site verdient dat.
 
 Let op de schrijfwijze, die bovenaan het bestand staat:
 

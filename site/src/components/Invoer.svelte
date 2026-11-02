@@ -9,7 +9,7 @@
   } from "@box1lab/engine";
   import { untrack } from "svelte";
   import { euro, getal, procent } from "../lib/format.ts";
-  import { bewaarInvoer, leesBewaard, wisInvoer } from "../lib/opslag.ts";
+  import { bewaarInvoer, leesBewaard, voorbeeldInvoer, wisInvoer } from "../lib/opslag.ts";
 
   /*
    * Het gedeelde invoerformulier (HANDOFF §3.3). Alles blijft in de browser (D-052): zolang het tabblad openstaat
@@ -74,6 +74,8 @@
   function wis() {
     wisInvoer();
     bewaren = false;
+    // Terug naar het voorbeeld; dat bewaren we niet, net als bij het begin.
+    invoer = voorbeeldInvoer(params);
     begin = JSON.stringify($state.snapshot(invoer));
     onthouden = false;
     melding = "Je gegevens zijn gewist uit deze browser.";
@@ -156,23 +158,28 @@
           </div>
         </div>
         {#if persoon.periode === "maand" && persoon.soort !== "aow" && persoon.soort !== "zzp"}
-          <label class="vinkje">
-            <input type="checkbox" bind:checked={persoon.inclusiefVakantiegeld} />
-            Vakantiegeld zit al in dit maandbedrag
-          </label>
+          <div class="vinkjes">
+            <label class="vinkje">
+              <input
+                type="checkbox"
+                checked={!persoon.inclusiefVakantiegeld}
+                onchange={(e) => (persoon.inclusiefVakantiegeld = !e.currentTarget.checked)}
+              />
+              Vakantiegeld
+            </label>
+            {#if persoon.soort === "loondienst"}
+              <label class="vinkje">
+                <input type="checkbox" bind:checked={persoon.dertiendeMaand} />
+                13e maand
+              </label>
+            {/if}
+          </div>
         {/if}
         {#if persoon.soort === "loondienst"}
           <div class="rij">
-            <label for="extra-{i}">Extra per jaar <span class="hint">13e maand, bonus</span></label>
+            <label for="extra-{i}">Bonus per jaar</label>
             <input id="extra-{i}" type="number" min="0" step="100" bind:value={persoon.extraPerJaar} />
           </div>
-          <p class="notitie">
-            Bruto, zonder vakantiegeld. Bijvoorbeeld een 13e maand, eindejaarsuitkering of bonus. Op je
-            loonstrook gaat daar meer belasting van af; dat wordt in je aangifte verrekend. Wij rekenen meteen
-            met het hele jaar.
-          </p>
-        {/if}
-        {#if persoon.soort === "loondienst"}
           <div class="rij">
             <label for="premie-{i}"
               >Eigen pensioenpremie per maand <span class="hint">staat op je loonstrook</span></label
@@ -185,11 +192,6 @@
               bind:value={persoon.pensioenpremiePerMaand}
             />
           </div>
-          <p class="notitie">
-            Het deel dat jij zelf betaalt, vaak "pensioenpremie" of "pensioen werknemer" op je loonstrook.
-            Bouw je geen pensioen op via je werk? Laat dan 0 staan. De premie gaat van je bruto loon af, vóór
-            de belasting.
-          </p>
         {/if}
         {#if persoon.soort === "zzp"}
           <label class="vinkje">
@@ -368,6 +370,13 @@
     gap: 4px;
     font-size: 13px;
   }
+  /* Op een smal scherm staat de vraag boven het veld. */
+  @media (max-width: 480px) {
+    .rij {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+    }
+  }
   .rij input,
   .rij select {
     width: 100%;
@@ -389,6 +398,11 @@
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
+  }
+  .vinkjes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
   }
   .vinkje {
     display: flex;

@@ -97,12 +97,12 @@ Voorstellen van 2 november 2026, alle goedgekeurd (D-064).
 - [x] 10b: je situatie links op elk tabblad (kolom "Gerekend met jouw situatie", op een telefoon een balk bovenaan)
 - [x] 10c: één pagina voor 2027 (stap 1 kabinetsplan, stap 2 routes), volgende stap op Jouw situatie, hoofdknop op de home
 
-## Fase 11: verbeteringen na een kritische blik — bezig
+## Fase 11: verbeteringen na een kritische blik — klaar
 
 Punten 1, 2, 3, 6, 7 en 9 van 2 november 2026 (4, 5 en 8 niet).
 
 - [x] 11a: bedragen 2027 geraamd met de wettelijke indexatie (3, D-065). Bijwerken als de officiële bedragen er zijn (november en december 2026)
-- [ ] 11b: uitkomst in beeld op een telefoon (1), modaal als voorbeeld (2), deelplaatje en deelknop (6), titels voor zoekmachines (7), lichtere pagina Jouw situatie (9)
+- [x] 11b: uitkomst in beeld op een telefoon (1), modaal als voorbeeld (2), deelplaatje en deelknop (6), titels voor zoekmachines (7), lichtere pagina Jouw situatie (9) (D-066)
 
 ## Open vragen voor de eigenaar
 

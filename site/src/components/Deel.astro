@@ -1,0 +1,54 @@
+---
+/*
+ * "Deel deze pagina": alleen de link. Wat je hebt ingevuld staat niet in de link en gaat dus nooit mee.
+ * Op een telefoon het deelmenu van het toestel, anders de link kopiëren.
+ */
+interface Props {
+  titel: string;
+}
+const { titel } = Astro.props;
+---
+
+<div class="deel">
+  <button type="button" class="deelknop" data-titel={titel}>
+    Deel deze pagina
+  </button>
+  <span class="notitie deelmelding" role="status"></span>
+</div>
+
+<script>
+  for (const knop of document.querySelectorAll<HTMLButtonElement>(".deelknop")) {
+    knop.addEventListener("click", async () => {
+      const melding = knop.nextElementSibling as HTMLElement;
+      const url = location.origin + location.pathname;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: knop.dataset.titel, url });
+          return;
+        }
+        await navigator.clipboard.writeText(url);
+        melding.textContent = "Link gekopieerd. Wat je hebt ingevuld, gaat niet mee.";
+      } catch (e) {
+        // Afgebroken in het deelmenu: niets aan de hand. Anders laten we de link zien om zelf te kopiëren.
+        if ((e as Error).name !== "AbortError") melding.textContent = url;
+      }
+    });
+  }
+</script>
+
+<style>
+  .deel {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    margin: 0 0 16px;
+  }
+  .deelknop {
+    font-size: 14px;
+    padding: 5px 12px;
+  }
+  .deelmelding {
+    margin: 0;
+  }
+</style>

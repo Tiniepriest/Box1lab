@@ -5,7 +5,7 @@
  * - langer op dit apparaat (localStorage), alleen als de bezoeker "Onthoud op dit apparaat" aanzet.
  * "Wis mijn gegevens" haalt beide weg. Opslag kan ontbreken of geblokkeerd zijn; dan werkt alles gewoon zonder.
  */
-import { invoerSchema, persoonInvoerSchema, type Invoer } from "@box1lab/engine";
+import { invoerSchema, persoonInvoerSchema, type Invoer, type Parameters } from "@box1lab/engine";
 
 export const SLEUTEL = "box1lab.invoer.v1";
 /** Gebeurtenis op `window` als de bewaarde situatie verandert (bewaard of gewist). */
@@ -71,14 +71,18 @@ function meld(bewaard: boolean): void {
   window.dispatchEvent(new Event(SITUATIE_GEWIJZIGD));
 }
 
-/** Startwaarden van het formulier: een voorbeeld, duidelijk te herkennen als voorbeeld. */
-export function voorbeeldInvoer(): Invoer {
+/**
+ * Startwaarden van het formulier: een voorbeeld, duidelijk te herkennen als voorbeeld (D-066). Een alleenstaande met
+ * een modaal inkomen. Dat staat per jaar inclusief vakantiegeld in het parameterbestand; het formulier vraagt het
+ * maandloon zonder vakantiegeld, zoals op de loonstrook.
+ */
+export function voorbeeldInvoer(params: Parameters): Invoer {
   return {
     personen: [
       persoonInvoerSchema.parse({
         leeftijd: 35,
         soort: "loondienst",
-        bedrag: 3200,
+        bedrag: Math.round(params.loon.modaal / 12 / (1 + params.loon.vakantiegeld / 100)),
         periode: "maand",
         inclusiefVakantiegeld: false,
       }),

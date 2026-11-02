@@ -53,9 +53,11 @@
     : { een: "partij", meer: "partijen", Een: "Partij", bron: "programma", Bron: "Programma" };
 
   // De situatie uit de kolom "Gerekend met" (D-064), of een voorbeeld; rekent mee als je hem aanpast.
-  let invoer = $state<Invoer>(voorbeeldInvoer());
+  // Het voorbeeld verdient modaal van dit jaar, net als in de kolom ernaast.
+  const voorbeeld = () => voorbeeldInvoer(vooraf?.huidig ?? params);
+  let invoer = $state<Invoer>(voorbeeld());
   $effect(() => {
-    const lees = () => (invoer = leesInvoer() ?? voorbeeldInvoer());
+    const lees = () => (invoer = leesInvoer() ?? voorbeeld());
     lees();
     window.addEventListener(SITUATIE_GEWIJZIGD, lees);
     return () => window.removeEventListener(SITUATIE_GEWIJZIGD, lees);

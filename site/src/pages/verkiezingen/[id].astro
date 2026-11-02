@@ -1,8 +1,9 @@
 ---
+import Deel from "../../components/Deel.astro";
 import Situatie from "../../components/Situatie.svelte";
 import Verkiezingen from "../../components/verkiezingen/Verkiezingen.svelte";
 import Base from "../../layouts/Base.astro";
-import { JAAR, params as nu } from "../../lib/data.ts";
+import { JAAR, pad, params as nu } from "../../lib/data.ts";
 import { nogNietOfficieel } from "../../lib/secties.ts";
 import { PREVIEW, verkiezingData, verkiezingIds, type VerkiezingData } from "../../lib/verkiezingen.ts";
 
@@ -15,6 +16,13 @@ const { verkiezing, params, partijen, macro } = data;
 const akkoord = verkiezing.soort === "akkoord";
 // Basispad in volgend jaar: eerst wat dat met jou doet ten opzichte van nu (D-064).
 const vooraf = verkiezing.basispad.jaar > JAAR ? { huidig: nu, ...nogNietOfficieel(params) } : null;
+// Titel en omschrijving zoals mensen zoeken: "wat betekent het voor mij?" (punt 7 van 2 november 2026).
+const titel = akkoord
+  ? `${verkiezing.menu ?? verkiezing.naam}: wat betekent het voor jou?`
+  : `${verkiezing.naam}: wat betekenen de plannen voor jou?`;
+const omschrijving = akkoord
+  ? `Wat betekent ${verkiezing.menu ?? verkiezing.naam} voor jouw netto inkomen? Reken het uit voor je eigen situatie, en zie wat de routes naar een meerderheid daaraan veranderen (${partijen.map((p) => p.naam.replace(/^Route /, "")).join("; ")}).`
+  : `Wat betekenen de plannen van de partijen voor jouw netto inkomen? Reken het uit voor je eigen situatie.`;
 const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
   day: "numeric",
   month: "long",
@@ -23,21 +31,19 @@ const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
 ---
 
 <Base
-  title={`${verkiezing.naam} — Box1lab`}
-  description={
-    akkoord
-      ? "Twee routes voor het Belastingplan 2027 naast elkaar: wat betekenen ze voor jouw portemonnee en voor Nederland?"
-      : "Wat betekenen de plannen van partijen voor jouw portemonnee?"
-  }
+  title={`${titel} — Box1lab`}
+  description={omschrijving}
+  afbeelding={verkiezing.fictief ? undefined : pad(`og/verkiezing-${verkiezing.id}.png`)}
   breed
   nietIndexeren={verkiezing.fictief}
 >
-  <h1>{akkoord ? verkiezing.naam : `${verkiezing.naam}: wat betekenen de plannen voor jou?`}</h1>
+  <h1>{titel}</h1>
   <p class="intro">
     {akkoord
       ? `Stemming in de Tweede Kamer gepland op ${datum}. ${vooraf ? "Eerst: wat het plan van het kabinet voor jou betekent. Dan: wat de routes daaraan veranderen, voor jouw huishouden en voor Nederland." : "Per route: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland."}`
       : `Verkiezing van ${datum}. Per partij: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland.`}
   </p>
+  {!verkiezing.fictief && <Deel titel={titel} />}
   <div class="met-situatie">
     <Situatie client:load params={nu} plakken />
     <Verkiezingen client:load {params} {verkiezing} {partijen} {macro} {vooraf} preview={PREVIEW} />
