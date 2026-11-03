@@ -7,6 +7,14 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-11-03
+  soort: nieuw
+  titel: "Jouw situatie: wat als…?"
+  tekst: >-
+    Op Jouw situatie zie je nu wat je per maand meer of minder overhoudt als er iets verandert: € 100 opslag, een
+    dag minder werken (ook voor je partner), samenwonen met iemand met een modaal inkomen of een kind erbij. Daarbij
+    staat hoeveel daarvan door belasting en hoeveel door toeslagen komt.
+
+- datum: 2026-11-03
   soort: model
   modelversie: 0.4.0
   titel: "Scenariolab: basisinkomen en negatieve belasting"

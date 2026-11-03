@@ -133,6 +133,10 @@ Voorstellen 1, 2 en 14 van 2 november 2026 (D-071).
 - [x] Basisinkomen per volwassene als knop, zo simpel mogelijk
 - [x] Lab zonder blokken vol nullen zolang er niets veranderd is
 
+## Fase 17: wat als — klaar
+
+- [x] "Wat als…?" op Jouw situatie: opslag, een dag minder werken, samenwonen, een kind erbij (voorstel 13, D-072)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
