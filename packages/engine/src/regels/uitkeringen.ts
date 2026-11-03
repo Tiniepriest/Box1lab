@@ -10,11 +10,12 @@ export function aowPerJaar(p: Parameters, partners: boolean): number {
 
 /**
  * Het bruto bedrag van een uitkering dat na box 1-belasting `netto` oplevert. Gezocht met bisectie; netto stijgt
- * altijd met bruto, want het hoogste tarief is lager dan 100%.
+ * altijd met bruto, want het hoogste tarief is lager dan 100%. Met negatieve belasting kan netto hoger zijn dan
+ * bruto; levert bruto 0 al genoeg op, dan is het antwoord 0.
  */
 export function brutoVoorNetto(netto: number, k: PersoonKenmerken, p: Parameters): number {
-  if (netto <= 0) return 0;
-  let lo = netto;
+  if (netto <= 0 || -belastingBox1(0, 0, p, k) >= netto) return 0;
+  let lo = 0;
   let hi = netto * 3;
   for (let i = 0; i < 50; i++) {
     const m = (lo + hi) / 2;

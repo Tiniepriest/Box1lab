@@ -35,7 +35,8 @@
     "kot": 0,
     "kinderbijslag": 0,
     "zvw": 0,
-    "uitkeringen": 0
+    "uitkeringen": 0,
+    "basisinkomen": 0
    },
    "armoede": 10.2058,
    "armoedeKinderen": 9.9756,
@@ -73,7 +74,8 @@
     "kot": 5.7,
     "kinderbijslag": 0,
     "zvw": 0,
-    "uitkeringen": 1.151
+    "uitkeringen": 1.151,
+    "basisinkomen": 0
    },
    "armoede": 15.2992,
    "armoedeKinderen": 15.6356,
@@ -111,7 +113,8 @@
     "kot": 5.7,
     "kinderbijslag": 0,
     "zvw": 0.0837,
-    "uitkeringen": -0.6949
+    "uitkeringen": -0.6949,
+    "basisinkomen": 0
    },
    "armoede": 18.7101,
    "armoedeKinderen": 18.6073,
@@ -149,7 +152,8 @@
     "kot": 0,
     "kinderbijslag": 0,
     "zvw": 0,
-    "uitkeringen": 0
+    "uitkeringen": 0,
+    "basisinkomen": 0
    },
    "armoede": 11.9795,
    "armoedeKinderen": 10.5691,
@@ -187,7 +191,8 @@
     "kot": 0.1153,
     "kinderbijslag": 0,
     "zvw": 0,
-    "uitkeringen": 0
+    "uitkeringen": 0,
+    "basisinkomen": 0
    },
    "armoede": 10.6075,
    "armoedeKinderen": 10.5576,
@@ -225,7 +230,8 @@
     "kot": 0,
     "kinderbijslag": 0,
     "zvw": 0,
-    "uitkeringen": 0
+    "uitkeringen": 0,
+    "basisinkomen": 0
    },
    "armoede": 10.2297,
    "armoedeKinderen": 9.9756,
@@ -263,7 +269,8 @@
     "kot": 0.1085,
     "kinderbijslag": 0,
     "zvw": 0,
-    "uitkeringen": 0
+    "uitkeringen": 0,
+    "basisinkomen": 0
    },
    "armoede": 10.5832,
    "armoedeKinderen": 10.5576,
@@ -301,7 +308,8 @@
     "kot": 5.7,
     "kinderbijslag": 0,
     "zvw": 0,
-    "uitkeringen": 0
+    "uitkeringen": 0,
+    "basisinkomen": 0
    },
    "armoede": 15.7498,
    "armoedeKinderen": 15.5644,
@@ -339,7 +347,8 @@
     "kot": 0,
     "kinderbijslag": 0,
     "zvw": 0,
-    "uitkeringen": 0.2152
+    "uitkeringen": 0.2152,
+    "basisinkomen": 0
    },
    "armoede": 9.7989,
    "armoedeKinderen": 9.4983,

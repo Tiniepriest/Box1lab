@@ -554,3 +554,19 @@ Voorstellen 8, 9 en 10 van 2 november 2026; de eigenaar vroeg ze bij te werken m
 Samen: saldo −€ 0,41 mld; de laagste inkomensgroep −0,03% (minder arbeidskorting), de andere groepen +0,04% tot +0,22%. De twee andere routes blijven, met een bijgewerkte uitleg. Box 3 (uitstel naar 2029, geen lagere vrijstelling), box 2, de aftrek voor specifieke zorgkosten en de btw op sierteelt staan bij "niet meegenomen".
 
 Het basispad blijft het plan zoals ingediend met de tweede nota van wijziging: de aanpassingen van 3 november zijn nog geen wettekst. Na de stemming van 12 november wordt het basispad wat is aangenomen.
+
+## Fase 16: scenariolab
+
+### D-071 Basisinkomen, negatieve belasting en een rustiger begin
+
+Voorstellen 1, 2 en 14 van 2 november 2026. De eigenaar vroeg het basisinkomen zo simpel mogelijk te houden; geen voorbeelden in de galerij en geen uitlegartikel (3 viel af).
+
+**Negatieve belasting** (`box1.negatieveBelasting`, standaard uit). Aan: de belasting kan negatief worden. Onder de vrijstelling is de heffing negatief tegen het tarief van de eerste schijf boven de vrijstelling, en heffingskortingen die hoger zijn dan de heffing worden uitbetaald. Met de vlaktaks (35% boven € 24.000) is dat precies de negatieve inkomstenbelasting van Friedman: wie niets verdient krijgt € 8.400 per jaar, aflopend tot nul bij € 24.000. Met de huidige regels is het een uitbetaalbare heffingskorting. Het geldt per persoon, zoals de inkomstenbelasting, dus ook voor een partner zonder inkomen en voor meerderjarige kinderen. Bijstand en AOW zijn netto gekoppeld (knoppen), dus wat zij uitbetaald krijgen gaat van hun uitkering af. `brutoVoorNetto` ging ervan uit dat belasting nooit negatief is; nu zoekt het vanaf 0 en geeft 0 als bruto 0 al genoeg netto oplevert.
+
+**Basisinkomen** (`basisinkomen.perVolwassenePerMaand`, standaard 0). Eén knop. Het bedrag is onbelast, gaat naar elke volwassene in het huishouden (ook meerderjarige kinderen) en komt in plaats van (een deel van) de bijstand en de AOW: die gaan zoveel omlaag dat het netto inkomen van de ontvanger na belasting en Zvw-bijdrage met het basisinkomen daalt, maar niet verder dan de hele uitkering. Voor de toeslagen telt dan het oorspronkelijke inkomen, zodat iemand in de bijstand of met alleen AOW er niet op vooruit of achteruit gaat zolang het basisinkomen lager is dan de uitkering. WW en WIA blijven, net als toeslagen, kinderbijslag en heffingskortingen; die kun je met de bestaande knoppen lager zetten. Het overheidssaldo heeft een eigen post "Basisinkomen"; wat de uitkeringen minder kosten staat bij "Uitkeringen en AOW".
+
+Ter controle: € 1.000 per maand met één tarief van 50% en zonder algemene en arbeidskorting kost per saldo € 0,1 mld (basisinkomen −€ 175,2 mld, uitkeringen +€ 50,8 mld, box 1 +€ 108,9 mld, eigen woning +€ 15,7 mld). Het model rekent statisch: of mensen stoppen of beginnen met werken zit er niet in, en bij een basisinkomen is dat juist de kern van de discussie. De knop voor het gedragseffect gaat alleen over werkenden die meer of minder uren maken.
+
+**Rustiger begin.** Zolang er niets veranderd is, toont het lab alleen de kernzin, een blok "Begin bij een voorstel" met de voorstellen en de grafieken van netto inkomen en marginale druk. De blokken met effecten (allemaal nul) verschijnen zodra je iets verandert.
+
+Golden: alleen de nieuwe post `basisinkomen` (0) in elk scenario; verder geen verschil. Modelversie 0.4.0.

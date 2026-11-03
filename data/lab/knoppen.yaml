@@ -221,3 +221,18 @@ groepen:
         max: 0.6
         stap: 0.05
         gevorderd: true
+  - id: basisinkomen
+    titel: "Basisinkomen en negatieve belasting"
+    uitleg: "Geen van beide bestaat nu. Combineer ze met een vlaktaks om te zien wat het kost."
+    knoppen:
+      - parameter: basisinkomen.perVolwassenePerMaand
+        label: "Basisinkomen per volwassene"
+        uitleg: "Onbelast, voor elke volwassene. Komt in plaats van (een deel van) de bijstand en de AOW."
+        eenheid: euroPerMaand
+        min: 0
+        max: 1500
+        stap: 25
+      - parameter: box1.negatieveBelasting
+        label: "Negatieve belasting (Friedman)"
+        uitleg: "Wie minder verdient dan de belastingvrije voet, of meer korting heeft dan belasting, krijgt het verschil uitbetaald."
+        eenheid: aanUit
