@@ -170,6 +170,16 @@ export const parametersSchema = z.strictObject({
     }),
   }),
 
+  /** Box 3: sparen en beleggen, forfaitair stelsel. Bedragen per persoon (partners het dubbele). */
+  box3: z.strictObject({
+    bron,
+    heffingsvrijVermogen: nietNegatief,
+    schuldendrempel: nietNegatief,
+    /** Forfaitair rendement in procent per soort vermogen. */
+    rendement: z.strictObject({ banktegoeden: pct, overig: pct, schulden: pct }),
+    tarief: pct,
+  }),
+
   /** Basisinkomen (alleen voor scenario's): een onbelast bedrag voor elke volwassene. */
   basisinkomen: z.strictObject({
     bron,
@@ -256,6 +266,23 @@ const aantal = z.number().int().nonnegative();
 const toeslagDoel = z.strictObject({ ontvangers: aantal, bedragMld: z.number().positive() });
 
 /** Kalibratiedoelen (data/kalibratie/<jaar>.yaml). */
+/** Een vermogensbestanddeel bij CBS: [huishoudens die het hebben (x 1.000), totaal (mld), gemiddeld, mediaan (x 1.000)]. */
+const bestanddeel = z.tuple([
+  z.number().nonnegative(),
+  z.number().nonnegative(),
+  z.number().nonnegative(),
+  z.number().nonnegative(),
+]);
+const vermogenRij = z.strictObject({
+  huishoudens: z.number().positive(),
+  bank: bestanddeel,
+  effecten: bestanddeel,
+  onroerendGoed: bestanddeel,
+  overig: bestanddeel,
+  studieschuld: bestanddeel,
+  schulden: bestanddeel,
+});
+
 export const kalibratieSchema = z.strictObject({
   jaar: z.number().int(),
   huishoudens: z.strictObject({
@@ -320,6 +347,14 @@ export const kalibratieSchema = z.strictObject({
       .min(1),
   }),
   indexatie: z.strictObject({ bron, factor: z.number().positive() }),
+  /** Vermogen van huishoudens in box 3 per 10%-groep gestandaardiseerd inkomen en leeftijd hoofdkostwinner (D-073). */
+  vermogen: z.strictObject({
+    bron,
+    jaar: z.number().int(),
+    totaal: vermogenRij,
+    perDeciel: z.array(vermogenRij).length(10),
+    perLeeftijd: z.array(vermogenRij.extend({ totLeeftijd: z.number().int().positive().nullable() })).min(1),
+  }),
   /**
    * Personen met een hoog persoonlijk bruto inkomen (CBS), voor de top van de verdeling (D-068). CBS telt bij het
    * inkomen van werknemers de werkgeverslasten mee; die telt de kalibratie bij het model op om te kunnen vergelijken.

@@ -65,6 +65,11 @@
             >{euro(r2.belasting)}</td
           >
         </tr>
+        {#if r.box3 > 0 || r2.box3 > 0}
+          <tr>
+            <td>Belasting box 3</td><td class="num">{euro(r.box3)}</td><td class="num">{euro(r2.box3)}</td>
+          </tr>
+        {/if}
         <tr>
           <td>Toeslagen</td><td class="num">{euro(r.toeslagen)}</td><td class="num">{euro(r2.toeslagen)}</td>
         </tr>

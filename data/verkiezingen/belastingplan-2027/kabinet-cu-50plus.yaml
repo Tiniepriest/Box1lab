@@ -87,7 +87,7 @@ maatregelen:
     toelichting: "Het kabinet trekt € 347 miljoen extra uit voor koopkracht, zodat de vrijheidsbijdrage in 2027 'effectief teniet wordt gedaan', en vult dat in met de tabelcorrectiefactor (de inflatiecorrectie). Hoe precies, beslist de Kamer nog. Wij nemen aan dat alle geïndexeerde bedragen in box 1 (schijfgrens en heffingskortingen) een klein stukje extra inflatiecorrectie krijgen: × 1,00396, wat in het model € 347 miljoen kost. Een andere invulling, bijvoorbeeld gericht op eenverdieners of ouderen, geeft een ander beeld."
 niet_gemodelleerd:
   - "Aftrek voor specifieke zorgkosten blijft bestaan en wordt gerichter: nog niet uitgewerkt, en deze aftrek zit niet per huishouden in het model."
-  - "Box 3: het nieuwe stelsel komt uiterlijk in 2029 (niet 2028) en de eerder voorgestelde verlaging van het heffingsvrij vermogen gaat niet door. Box 3 zit (nog) niet in deze vergelijking."
+  - "Box 3: het nieuwe stelsel komt uiterlijk in 2029 (niet 2028) en de eerder voorgestelde verlaging van het heffingsvrij vermogen gaat niet door. Dat zit al in het basispad (heffingsvrij vermogen € 60.098), dus deze route verandert niets aan box 3."
   - "Box 2: lagere tarieven voor aanmerkelijk belang (24,5% naar 23,5% en 31% naar 29%) en een lagere grens voor lenen bij de eigen bv: box 2 zit niet in het model."
   - "Btw op bloemen en planten blijft 9% (besluit uitgesteld) en geld voor veiligheid, AI en VAMIL: geen effect op inkomens in het model."
   - "Dekking met een 'stelpost fiscale regelingen' (€ 290 miljoen per jaar vanaf 2028): het kabinet komt in het voorjaar met een voorstel."

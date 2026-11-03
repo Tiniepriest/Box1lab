@@ -93,5 +93,7 @@ export function voorbeeldInvoer(params: Parameters): Invoer {
     woz: 0,
     hypotheekrente: 0,
     vermogen: 0,
+    beleggingen: 0,
+    schulden: 0,
   };
 }

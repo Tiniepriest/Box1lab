@@ -15,6 +15,7 @@ export const ONDERDELEN: readonly { label: string; paden: readonly string[] }[] 
   { label: "Ouderenkorting", paden: ["heffingskortingen.ouderen", "heffingskortingen.alleenstaandeOuderen"] },
   { label: "Combinatiekorting", paden: ["heffingskortingen.combinatie"] },
   { label: "Eigen woning", paden: ["eigenWoning"] },
+  { label: "Box 3", paden: ["box3"] },
   { label: "Zelfstandigenaftrek en startersaftrek", paden: ["ondernemers"] },
   { label: "Pensioenpremie", paden: ["pensioenpremie"] },
   { label: "Zorgpremie", paden: ["zorg"] },

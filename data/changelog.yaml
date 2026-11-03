@@ -7,6 +7,18 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-11-03
+  soort: model
+  modelversie: 0.5.0
+  titel: "Box 3: belasting op sparen en beleggen"
+  tekst: >-
+    Box 3 zit nu in de berekening. Op Jouw situatie vul je spaargeld, beleggingen en schulden apart in, en zie je
+    hoeveel box 3-belasting je betaalt, in 2026 en volgens het Belastingplan in 2027. De nagebootste bevolking heeft
+    nu ook vermogen, volgens het CBS. Daardoor werkt de vermogensgrens van de toeslagen ook voor heel Nederland, en
+    kun je in het Scenariolab het heffingsvrij vermogen en het tarief van box 3 veranderen. Omdat de bevolking
+    opnieuw is herwogen, veranderen de uitkomsten van de voorstellen een beetje: een vlaktaks van 35% kost nu
+    ongeveer € 2,5 miljard per jaar, in plaats van € 2,8 miljard.
+
+- datum: 2026-11-03
   soort: nieuw
   titel: "Jouw situatie: wat als…?"
   tekst: >-

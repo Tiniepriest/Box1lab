@@ -241,6 +241,15 @@ uitkeringen:
   # vroegere bruto loon.
   nettoKoppeling: { aow: true, bijstand: true, werknemersverzekering: false }
 
+box3:
+  bron: "Belastingdienst, Hoe is het box 3-inkomen op mijn voorlopige aanslag 2026 berekend? (https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2026). De percentages voor banktegoeden en schulden zijn voorlopig; ze worden begin 2027 vastgesteld."
+  # Heffingsvrij vermogen en schuldendrempel per persoon; fiscale partners hebben samen het dubbele.
+  heffingsvrijVermogen: 59357
+  schuldendrempel: 3800
+  # Forfaitair rendement in procent: banktegoeden, overige bezittingen (beleggingen, tweede woning) en schulden.
+  rendement: { banktegoeden: 1.28, overig: 6.0, schulden: 2.7 }
+  tarief: 36
+
 basisinkomen:
   bron: "Bestaat niet in de huidige wet (0); alleen voor scenario's. Het basisinkomen is onbelast, voor elke volwassene in het huishouden, en komt in plaats van (een deel van) de bijstand en de AOW."
   perVolwassenePerMaand: 0

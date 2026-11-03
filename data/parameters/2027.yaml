@@ -249,6 +249,15 @@ uitkeringen:
   # vroegere bruto loon.
   nettoKoppeling: { aow: true, bijstand: true, werknemersverzekering: false }
 
+box3:
+  bron: "Raming: banktegoeden, schulden en schuldendrempel zoals in 2026; die percentages worden pas begin 2028 vastgesteld. Heffingsvrij vermogen € 60.098: € 59.357 × 1,01248, de beperkte inflatiecorrectie uit het Belastingplan 2027 (memorie van toelichting, paragraaf 4; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). De voorgestelde verlaging naar € 30.846 (Kamerbrief van 29 september 2026) gaat niet door (Kamerbrief Aanpassingen Belastingplan en box 3, 3 november 2026; https://www.tweedekamer.nl/kamerstukken/brieven_regering/detail?id=2026Z23851&did=2026D55029). Overige bezittingen 6,37%: Rendement, Forfait box 3 voor beleggingen in 2027 weer hoger (26 januari 2026; https://www.rendement.nl/inkomen-uit-sparen-en-beleggen/nieuws/forfait-box-3-voor-beleggingen-in-2027-weer-hoger.html). Tarief 36%."
+  # Heffingsvrij vermogen en schuldendrempel per persoon; fiscale partners hebben samen het dubbele.
+  heffingsvrijVermogen: 60098
+  schuldendrempel: 3800
+  # Forfaitair rendement in procent: banktegoeden, overige bezittingen (beleggingen, tweede woning) en schulden.
+  rendement: { banktegoeden: 1.28, overig: 6.37, schulden: 2.7 }
+  tarief: 36
+
 basisinkomen:
   bron: "Bestaat niet in de huidige wet (0); alleen voor scenario's. Het basisinkomen is onbelast, voor elke volwassene in het huishouden, en komt in plaats van (een deel van) de bijstand en de AOW."
   perVolwassenePerMaand: 0

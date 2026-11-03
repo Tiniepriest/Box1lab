@@ -82,6 +82,7 @@
     ];
     if (r.pensioenpremie > 0) s.push({ label: "Pensioenpremie", bedrag: r.pensioenpremie, soort: "min" });
     s.push({ label: "Belasting en premies", bedrag: r.belasting, soort: "min" });
+    if (r.box3 > 0) s.push({ label: "Belasting box 3", bedrag: r.box3, soort: "min" });
     if (r.zvw > 0) s.push({ label: "Bijdrage zorgverzekering", bedrag: r.zvw, soort: "min" });
     if (r.zorgtoeslag > 0) s.push({ label: "Zorgtoeslag", bedrag: r.zorgtoeslag, soort: "plus" });
     if (r.huurtoeslag > 0) s.push({ label: "Huurtoeslag", bedrag: r.huurtoeslag, soort: "plus" });
@@ -126,7 +127,7 @@
 
   const effectief = $derived(
     r && r.bruto > 0
-      ? ((r.belasting + r.zvw + r.zorgpremie - r.toeslagen - r.kinderbijslag) / r.bruto) * 100
+      ? ((r.belasting + r.box3 + r.zvw + r.zorgpremie - r.toeslagen - r.kinderbijslag) / r.bruto) * 100
       : 0,
   );
 </script>
@@ -349,8 +350,9 @@
         </div>
       {/if}
       <p class="notitie">
-        Dit is een vereenvoudigde berekening voor {params.jaar}. Niet meegenomen: box 2 en 3, jongerennormen
-        en de kostendelersnorm in de bijstand, gemeentelijke regelingen en afronding door de Belastingdienst.
+        Dit is een vereenvoudigde berekening voor {params.jaar}. Niet meegenomen: box 2, de
+        tegenbewijsregeling in box 3, jongerennormen en de kostendelersnorm in de bijstand, gemeentelijke
+        regelingen en afronding door de Belastingdienst.
         <a href={pad("methodiek")}>Hoe rekenen we?</a>
       </p>
     {/if}

@@ -41,6 +41,8 @@ const populatieHuishouden = z.strictObject({
   woz: bedrag,
   kinderopvang: z.array(kinderopvang),
   vermogen: bedrag,
+  /** Vermogen in box 3 per soort (bank, overige bezittingen, schulden), op 1 januari. */
+  box3: z.strictObject({ bank: bedrag, overig: bedrag, schulden: bedrag }).optional(),
 });
 
 export const populatieSchema = z.strictObject({

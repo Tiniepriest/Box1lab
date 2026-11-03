@@ -356,7 +356,7 @@
         <strong>Vereenvoudigd.</strong> Niet alle maatregelen zijn door te rekenen; per {W.een} staat wat er niet
         in zit.
         {akkoord
-          ? "De dekking (box 2, box 3, bezuinigingen) zit er meestal niet in; het saldo voor de overheid is dus zonder dekking."
+          ? "De dekking (box 2, bezuinigingen) zit er meestal niet in; het saldo voor de overheid is dus zonder dekking."
           : "Het CPB (Keuzes in Kaart) is leidend."}
       </li>
       <li><strong>Basispad.</strong> {verkiezing.basispad.toelichting}</li>

@@ -3,6 +3,7 @@ import { vulBijstandIn, type Huishouden, type Lid } from "./huishouden.ts";
 import { formatteerFouten, type Parameters } from "./parameters/schema.ts";
 import type { Kinderopvang } from "./regels/toeslagen/kot.ts";
 import { aowPerJaar } from "./regels/uitkeringen.ts";
+import { box3 } from "./regels/box3.ts";
 
 /*
  * Het gedeelde invoerformulier (HANDOFF §3.3): wat een bezoeker invult over het eigen huishouden. Gebruikt door de
@@ -49,7 +50,12 @@ export const invoerSchema = z.strictObject({
   huurPerMaand: bedrag,
   woz: bedrag,
   hypotheekrente: bedrag,
+  /** Spaargeld en betaalrekeningen op 1 januari (box 3: banktegoeden). */
   vermogen: bedrag,
+  /** Beleggingen en andere bezittingen, zoals een tweede woning (box 3: overige bezittingen). */
+  beleggingen: bedrag.default(0),
+  /** Schulden, niet de hypotheek van de eigen woning. */
+  schulden: bedrag.default(0),
 });
 
 export type PersoonInvoer = z.infer<typeof persoonInvoerSchema>;
@@ -123,6 +129,7 @@ export function huishoudenUitInvoer(invoer: Invoer, p: Parameters): Huishouden {
     partners,
     p,
   );
+  const vermogen = { bank: invoer.vermogen, overig: invoer.beleggingen, schulden: invoer.schulden };
   return {
     leden,
     partners,
@@ -132,7 +139,9 @@ export function huishoudenUitInvoer(invoer: Invoer, p: Parameters): Huishouden {
     hypotheekrente: invoer.wonen === "koop" ? invoer.hypotheekrente : 0,
     woz: invoer.wonen === "koop" ? invoer.woz : 0,
     kinderopvang,
-    vermogen: invoer.vermogen,
+    // De vermogensgrens van de toeslagen gaat over de rendementsgrondslag: bezittingen min schulden boven de drempel.
+    vermogen: Math.max(0, box3(vermogen, partners, p).rendementsgrondslag),
+    box3: vermogen,
   };
 }
 

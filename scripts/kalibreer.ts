@@ -24,6 +24,7 @@ import { TYPES, genereerPopulatie } from "./populatie/genereer.ts";
 import { herweeg, type Afwijking, type Restrictie } from "./populatie/herweeg.ts";
 import { kenPensioenpremieToe, leeftijdsgroep, pensioenCijfers, tienGroepen } from "./populatie/pensioen.ts";
 import { valideerSpec } from "./populatie/spec.ts";
+import { kenVermogenToe } from "./populatie/vermogen.ts";
 
 const argumenten = process.argv.slice(2);
 const controleModus = argumenten.includes("--controle");
@@ -174,6 +175,25 @@ const maakRestricties = (): Restrictie[] => [
     waarden: pop.map((x) => x.leden.reduce((s, l) => s + (l.ondernemer ? l.inkomen : 0), 0)),
     doel: ib.inkomenZelfstandigOndernemerMln * 1e6 * kal.indexatie.factor,
   },
+  // Het vermogen in box 3 (D-073): na het toekennen schuiven de gewichten nog, en de grote vermogens tellen zwaar.
+  ...(pop.some((x) => x.box3)
+    ? [
+        {
+          naam: "vermogen: banktegoeden",
+          waarden: pop.map((x) => x.box3?.bank ?? 0),
+          doel: kal.vermogen.totaal.bank[1] * 1e9,
+        },
+        {
+          naam: "vermogen: overige bezittingen",
+          waarden: pop.map((x) => x.box3?.overig ?? 0),
+          doel:
+            (kal.vermogen.totaal.effecten[1] +
+              kal.vermogen.totaal.onroerendGoed[1] +
+              kal.vermogen.totaal.overig[1]) *
+            1e9,
+        },
+      ]
+    : []),
   ...grenzen.map((g, k) => ({
     naam: `besteedbaar inkomen onder P${(k + 1) * 10} (€ ${Math.round(g).toLocaleString("nl-NL")})`,
     waarden: res.map((r, i) => (besteedbaarCbs(r, i) <= g ? 1 : 0)),
@@ -198,16 +218,28 @@ const maakRestricties = (): Restrictie[] => [
     })),
 ];
 
-// 3. Herwegen, in twee rondes. De pensioenpremie hangt per 10%-groep gestandaardiseerd inkomen af van CBS, en die
-//    groep hangt af van de gewichten. Dus: eerst herwegen zonder premie, dan de premie toekennen, dan opnieuw.
+// 3. Herwegen, in twee rondes. De pensioenpremie en het vermogen hangen per 10%-groep gestandaardiseerd inkomen af
+//    van CBS, en die groep hangt af van de gewichten. Dus: eerst herwegen zonder premie en vermogen, dan die
+//    toekennen, dan opnieuw.
 const gestandaardiseerd = () => res.map((r, i) => besteedbaarCbs(r, i) / r.equivalentie);
 const herwegingOpties = { ...spec.herweging, tolerantie: 1e-4 };
 let gewichtenNu = herweeg(start, maakRestricties(), herwegingOpties).gewichten;
 for (let ronde = 0; ronde < 3; ronde++) {
   kenPensioenpremieToe(pop, gestandaardiseerd(), gewichtenNu, kal, spec.zaad + 1);
+  kenVermogenToe(pop, gestandaardiseerd(), gewichtenNu, kal, params, spec.zaad + 2);
   res = pop.map((x) => berekenHuishouden(x, params));
   if (ronde < 2) gewichtenNu = herweeg(start, maakRestricties(), herwegingOpties).gewichten;
 }
+// Het vermogen nog één keer toekennen met de gewichten na herwegen, zodat de totalen met CBS kloppen.
+kenVermogenToe(
+  pop,
+  gestandaardiseerd(),
+  herweeg(start, maakRestricties(), herwegingOpties).gewichten,
+  kal,
+  params,
+  spec.zaad + 2,
+);
+res = pop.map((x) => berekenHuishouden(x, params));
 const restricties = maakRestricties();
 const voor: Afwijking[] = restricties.map((r) => {
   const uitkomst = start.reduce((s, w, i) => s + w * r.waarden[i]!, 0);
@@ -255,6 +287,16 @@ const uitvoer = {
     hypotheekrente: rond(x.hypotheekrente),
     woz: Math.round(x.woz),
     kinderopvang: x.kinderopvang.map((o) => ({ ...o, uurprijs: rond(o.uurprijs) })),
+    vermogen: Math.round(x.vermogen),
+    ...(x.box3
+      ? {
+          box3: {
+            bank: Math.round(x.box3.bank),
+            overig: Math.round(x.box3.overig),
+            schulden: Math.round(x.box3.schulden),
+          },
+        }
+      : {}),
     ...(x.kindInkomens ? { kindInkomens: x.kindInkomens.map(rond) } : {}),
   })),
 };
@@ -295,7 +337,7 @@ const nl = (x: number, d = 0) =>
   x.toLocaleString("nl-NL", { minimumFractionDigits: d, maximumFractionDigits: d });
 const pct = (x: number) => `${x >= 0 ? "+" : "−"}${nl(Math.abs(x * 100), 1)}%`;
 const rij = (a: Afwijking, v: Afwijking) => {
-  const bedrag = /uitgaven|hypotheekrente|huurwaarde|inkomen van personen|winst/.test(a.naam);
+  const bedrag = /uitgaven|hypotheekrente|huurwaarde|inkomen van personen|winst|vermogen:/.test(a.naam);
   const f = (x: number) => (bedrag ? `€ ${nl(x / 1e9, 2)} mld` : nl(x));
   return `| ${a.naam} | ${f(a.doel)} | ${f(v.uitkomst)} (${pct(v.relatief)}) | ${f(a.uitkomst)} (${pct(a.relatief)}) |`;
 };
@@ -348,6 +390,26 @@ const topRijen = top.klassen.map((k) => {
   return `| ${klasseNaam(k)} | ${nl(k.personen)} | ${nl(n)} (${pct(n / k.personen - 1)}) | ${euroKort(k.gemiddeld)} | ${euroKort(som / n)} (${pct(som / n / k.gemiddeld - 1)}) |`;
 });
 const hoogste = Math.max(...herwogen.flatMap((x) => x.leden.map((l) => l.inkomen)));
+const vk = kal.vermogen;
+const vermogenSom = (f: (b: NonNullable<PopulatieHuishouden["box3"]>) => number) =>
+  gewogenSom((x) => (x.box3 ? f(x.box3) : 0));
+const cbsVermogen = (
+  ...delen: ("bank" | "effecten" | "onroerendGoed" | "overig" | "studieschuld" | "schulden")[]
+) => delen.reduce((s, d) => s + vk.totaal[d][1], 0);
+const vermogenRijen = [
+  { naam: "Banktegoeden", model: vermogenSom((b) => b.bank), cbs: cbsVermogen("bank") },
+  {
+    naam: "Overige bezittingen (effecten, onroerend goed, overig)",
+    model: vermogenSom((b) => b.overig),
+    cbs: cbsVermogen("effecten", "onroerendGoed", "overig"),
+  },
+  {
+    naam: "Schulden (studieschuld en overig)",
+    model: vermogenSom((b) => b.schulden),
+    cbs: cbsVermogen("studieschuld", "schulden"),
+  },
+].map((r) => `| ${r.naam} | € ${nl(r.cbs, 1)} mld | € ${nl(r.model, 1)} mld (${pct(r.model / r.cbs - 1)}) |`);
+const box3Betalers = herwogen.reduce((s, x, i) => s + (basis.resultaten[i]!.box3 > 0 ? x.gewicht : 0), 0);
 const rapport = `# Kalibratierapport ${jaar}
 
 Gegenereerd door \`npm run kalibreer\` op ${new Date().toISOString().slice(0, 10)} (model ${MODEL_VERSIE}). Niet met de hand bewerken.
@@ -391,7 +453,7 @@ Het model rekent € ${nl(bt.belasting, 1)} mld box 1-belasting (inclusief premi
 - Volgens CBS betaalden huishoudens in ${ib.jaar} € ${nl((ib.belastingOpInkomenMln + ib.premiesVolksverzekeringenMln) / 1e3, 1)} mld belasting op inkomen en premies volksverzekeringen (alle boxen, inclusief ondernemers); geïndexeerd naar ${jaar} is dat € ${nl(cbsBelasting, 1)} mld. Het model komt uit op ${nl((bt.belasting / cbsBelasting) * 100, 0)}% daarvan.
 - De loon- en inkomensheffing in de Miljoenennota ${jaar} is € ${nl(kal.controle.loonEnInkomensheffingMld, 1)} mld, waarvan € ${nl(kal.controle.box3Mld, 1)} mld box 3; de rest (€ ${nl(controle, 1)} mld) is box 1 en box 2. Het model komt uit op ${nl((bt.belasting / controle) * 100, 0)}% daarvan.
 
-Het model bevat alleen box 1. Box 2 en box 3 zitten er niet in, en ook niet de aftrekposten die het model niet per huishouden berekent (zie "overige aftrekposten" in het parameterbestand). De modelopbrengst hoort daarom iets lager uit te komen dan de CBS-opbrengst.
+Deze vergelijking gaat over box 1; box 3 staat hieronder apart. Box 2 zit niet in het model, en ook niet de aftrekposten die het model niet per huishouden berekent (zie "overige aftrekposten" in het parameterbestand). De modelopbrengst hoort daarom iets lager uit te komen dan de CBS-opbrengst.
 
 ## Controle: pensioenpremie en winst
 
@@ -417,6 +479,16 @@ ${topRijen.join("\n")}
 
 Hoogste inkomen in de populatie: € ${nl(hoogste)} (${jaar}).
 
+## Vermogen en box 3
+
+Vermogen in box 3 op 1 januari ${vk.jaar} volgens CBS, toegekend naar 10%-groep gestandaardiseerd inkomen en leeftijd van de hoofdkostwinner en per 10%-groep geschaald op het CBS-totaal (D-073). De herweging stemt de totalen van banktegoeden en overige bezittingen af op CBS. Niet geïndexeerd.
+
+| Bestanddeel | CBS | Model |
+|---|---|---|
+${vermogenRijen.join("\n")}
+
+- Belasting box 3 in het model: € ${nl(bt.box3, 1)} mld, betaald door ${nl(box3Betalers)} huishoudens. Ter vergelijking: de raming voor ${jaar} is € ${nl(kal.controle.box3Mld, 1)} mld (zie de bron bij de controle). Het model kent de tegenbewijsregeling niet en heeft geen box 3-vermogen van mensen buiten particuliere huishoudens.
+
 ## Uitkomsten huidig beleid
 
 - Armoederisico (personen, 60% van de mediaan): ${nl(basis.armoede.personen, 1)}%; kinderen ${nl(basis.armoede.kinderen, 1)}%.
@@ -430,7 +502,7 @@ Hoogste inkomen in de populatie: € ${nl(hoogste)} (${jaar}).
 
 ## Bronnen
 
-${[kal.huishoudens.bron, kal.woningen.bron, kal.inkomen.bron, kal.inkomensbestanddelen.bron, kal.pensioenpremie.bron, kal.indexatie.bron, top.bron, top.werkgeverslasten.bron, kal.toeslagen.bron, kal.controle.bron].map((b) => `- ${b}`).join("\n")}
+${[kal.huishoudens.bron, kal.woningen.bron, kal.inkomen.bron, kal.inkomensbestanddelen.bron, kal.pensioenpremie.bron, kal.indexatie.bron, top.bron, top.werkgeverslasten.bron, vk.bron, kal.toeslagen.bron, kal.controle.bron].map((b) => `- ${b}`).join("\n")}
 `;
 const rapportPad = fileURLToPath(new URL(`../docs/kalibratie-${jaar}.md`, import.meta.url));
 writeFileSync(rapportPad, rapport);

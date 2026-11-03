@@ -306,7 +306,7 @@
   <fieldset>
     <legend>5. Vermogen</legend>
     <div class="rij">
-      <label for="vermogen">Spaargeld en beleggingen (€)</label>
+      <label for="vermogen">Spaargeld (€)</label>
       <input
         id="vermogen"
         type="number"
@@ -316,7 +316,32 @@
         oninput={(e) => (invoer.vermogen = leesGetal(e))}
       />
     </div>
-    <p class="notitie">Nodig voor de vermogensgrens van toeslagen. Box 3 zit nog niet in het model.</p>
+    <div class="rij">
+      <label for="beleggingen">Beleggingen en tweede woning (€)</label>
+      <input
+        id="beleggingen"
+        type="number"
+        min="0"
+        step="1000"
+        value={invoer.beleggingen}
+        oninput={(e) => (invoer.beleggingen = leesGetal(e))}
+      />
+    </div>
+    <div class="rij">
+      <label for="schulden">Schulden, zonder hypotheek (€)</label>
+      <input
+        id="schulden"
+        type="number"
+        min="0"
+        step="1000"
+        value={invoer.schulden}
+        oninput={(e) => (invoer.schulden = leesGetal(e))}
+      />
+    </div>
+    <p class="notitie">
+      {partner ? "Van jullie samen" : "Van jou"}, op 1 januari. Voor box 3 en de vermogensgrens van toeslagen.
+      Een studieschuld telt mee als schuld.
+    </p>
   </fieldset>
 
   <div class="opslaan">

@@ -299,6 +299,199 @@ topinkomens:
     maximumPremieInkomen: 71624
     pensioenWerkgeverPerWerknemer: 1.6807
 
+# Vermogen van huishoudens in box 3 (D-073), stand 1 januari 2025 (voorlopig, nieuwste jaar). Per groep: het aantal
+# huishoudens (x 1.000) en per bestanddeel [huishoudens die het hebben (x 1.000), totaal (mld euro), gemiddeld en
+# mediaan onder wie het heeft (x 1.000 euro)]. Box 3: bank- en spaartegoeden (banktegoeden), effecten, onroerend
+# goed behalve de eigen woning en overige bezittingen (overige bezittingen), studieschulden en overige schulden
+# (schulden). De kalibratie geeft de huishoudens vermogen naar 10%-groep gestandaardiseerd inkomen en leeftijd van de
+# hoofdkostwinner, en schaalt de bedragen per 10%-groep op de CBS-totalen.
+vermogen:
+  bron: "CBS StatLine 83834NED, Vermogen van huishoudens; huishoudenskenmerken, vermogensbestanddelen, 1 januari 2025, voorlopig (https://opendata.cbs.nl/statline/#/CBS/nl/dataset/83834NED)"
+  jaar: 2025
+  totaal:
+    {
+      huishoudens: 8318.6,
+      bank: [8198.5, 478.2, 58.3, 22.9],
+      effecten: [1705.8, 188.5, 110.5, 16.0],
+      onroerendGoed: [574.0, 243.8, 424.7, 216.6],
+      overig: [505.7, 75.4, 149.1, 42.6],
+      studieschuld: [1359.6, 28.8, 21.2, 11.7],
+      schulden: [4133.8, 166.1, 40.2, 0.9],
+    }
+  perDeciel:
+    - {
+        huishoudens: 831.9,
+        bank: [782.5, 21.6, 27.6, 3.1],
+        effecten: [76.0, 28.7, 378.0, 12.2],
+        onroerendGoed: [22.3, 10.5, 469.7, 222.3],
+        overig: [24.3, 14.1, 579.2, 111.8],
+        studieschuld: [195.1, 4.1, 21.0, 12.6],
+        schulden: [290.3, 9.5, 32.7, 1.2],
+      }
+    - {
+        huishoudens: 831.9,
+        bank: [810.1, 19.0, 23.4, 5.1],
+        effecten: [48.4, 4.9, 102.4, 11.2],
+        onroerendGoed: [16.2, 4.5, 279.5, 150.4],
+        overig: [17.0, 2.9, 168.0, 76.4],
+        studieschuld: [100.2, 1.9, 18.8, 9.1],
+        schulden: [278.2, 3.3, 11.9, 1.0],
+      }
+    - {
+        huishoudens: 831.9,
+        bank: [816.2, 26.5, 32.4, 12.9],
+        effecten: [65.9, 5.3, 80.9, 12.1],
+        onroerendGoed: [23.1, 5.8, 250.7, 139.0],
+        overig: [21.6, 2.8, 130.6, 53.7],
+        studieschuld: [94.7, 2.0, 20.7, 10.7],
+        schulden: [277.9, 3.8, 13.6, 0.9],
+      }
+    - {
+        huishoudens: 831.9,
+        bank: [819.7, 31.8, 38.8, 16.1],
+        effecten: [93.3, 6.6, 71.0, 11.4],
+        onroerendGoed: [31.0, 7.7, 249.3, 140.0],
+        overig: [26.4, 3.0, 115.1, 49.0],
+        studieschuld: [116.2, 2.4, 21.0, 11.5],
+        schulden: [339.0, 5.2, 15.2, 0.9],
+      }
+    - {
+        huishoudens: 831.9,
+        bank: [823.2, 37.4, 45.4, 20.7],
+        effecten: [122.8, 8.1, 65.7, 11.3],
+        onroerendGoed: [37.5, 9.5, 253.2, 140.0],
+        overig: [32.9, 3.4, 104.0, 41.0],
+        studieschuld: [120.5, 2.6, 21.2, 11.8],
+        schulden: [377.8, 6.5, 17.1, 0.8],
+      }
+    - {
+        huishoudens: 831.9,
+        bank: [826.8, 42.7, 51.7, 25.7],
+        effecten: [153.7, 9.6, 62.1, 11.4],
+        onroerendGoed: [44.0, 11.4, 258.2, 145.0],
+        overig: [40.2, 3.8, 95.2, 37.5],
+        studieschuld: [124.1, 2.6, 20.7, 11.2],
+        schulden: [417.1, 7.9, 18.9, 0.7],
+      }
+    - {
+        huishoudens: 831.9,
+        bank: [828.8, 49.5, 59.7, 31.8],
+        effecten: [191.7, 11.6, 60.6, 11.9],
+        onroerendGoed: [53.1, 14.2, 268.2, 157.0],
+        overig: [49.3, 4.5, 90.8, 33.1],
+        studieschuld: [134.6, 2.8, 20.9, 11.3],
+        schulden: [456.2, 9.9, 21.7, 0.6],
+      }
+    - {
+        huishoudens: 831.9,
+        bank: [829.9, 57.5, 69.3, 38.4],
+        effecten: [237.6, 15.0, 63.1, 12.8],
+        onroerendGoed: [65.5, 18.8, 287.6, 177.9],
+        overig: [61.0, 5.3, 86.5, 31.3],
+        studieschuld: [155.0, 3.4, 21.7, 11.9],
+        schulden: [501.7, 12.7, 25.2, 0.6],
+      }
+    - {
+        huishoudens: 831.9,
+        bank: [830.7, 71.0, 85.5, 49.1],
+        effecten: [301.3, 21.5, 71.4, 15.5],
+        onroerendGoed: [88.6, 29.2, 329.8, 206.2],
+        overig: [81.2, 7.3, 89.7, 30.9],
+        studieschuld: [171.8, 3.9, 22.5, 12.5],
+        schulden: [553.4, 19.0, 34.4, 0.7],
+      }
+    - {
+        huishoudens: 831.9,
+        bank: [830.7, 121.2, 145.9, 74.7],
+        effecten: [415.0, 77.1, 185.7, 31.3],
+        onroerendGoed: [192.8, 132.1, 685.3, 326.0],
+        overig: [151.7, 28.3, 186.5, 49.1],
+        studieschuld: [147.5, 3.3, 22.0, 12.6],
+        schulden: [642.2, 88.4, 137.7, 1.7],
+      }
+  # Naar leeftijd van de hoofdkostwinner, tot de genoemde leeftijd (null: en ouder).
+  perLeeftijd:
+    - {
+        totLeeftijd: 25,
+        huishoudens: 391.0,
+        bank: [366.3, 4.1, 11.1, 3.5],
+        effecten: [47.4, 1.2, 25.4, 3.8],
+        onroerendGoed: [2.8, 1.0, 362.5, 144.8],
+        overig: [4.2, 0.6, 146.8, 29.0],
+        studieschuld: [174.8, 3.0, 16.9, 10.3],
+        schulden: [102.2, 1.0, 9.8, 0.4],
+      }
+    - {
+        totLeeftijd: 35,
+        huishoudens: 1273.5,
+        bank: [1242.9, 31.0, 24.9, 10.4],
+        effecten: [289.1, 8.2, 28.5, 5.8],
+        onroerendGoed: [29.5, 9.5, 323.5, 186.1],
+        overig: [42.3, 4.2, 99.1, 19.6],
+        studieschuld: [524.2, 15.2, 29.0, 20.1],
+        schulden: [686.8, 10.1, 14.7, 0.6],
+      }
+    - {
+        totLeeftijd: 45,
+        huishoudens: 1320.2,
+        bank: [1298.1, 49.0, 37.7, 16.1],
+        effecten: [274.9, 15.4, 56.1, 9.8],
+        onroerendGoed: [72.9, 28.6, 391.6, 230.4],
+        overig: [73.1, 9.1, 124.0, 27.1],
+        studieschuld: [254.5, 4.8, 18.8, 10.5],
+        schulden: [810.7, 26.3, 32.5, 1.0],
+      }
+    - {
+        totLeeftijd: 55,
+        huishoudens: 1364.1,
+        bank: [1347.8, 78.5, 58.2, 24.5],
+        effecten: [291.9, 28.0, 96.0, 14.8],
+        onroerendGoed: [115.4, 52.2, 452.5, 235.0],
+        overig: [95.5, 13.7, 143.2, 35.2],
+        studieschuld: [174.2, 1.8, 10.1, 2.9],
+        schulden: [851.8, 38.5, 45.2, 1.1],
+      }
+    - {
+        totLeeftijd: 65,
+        huishoudens: 1538.8,
+        bank: [1525.8, 121.3, 79.5, 33.7],
+        effecten: [361.7, 47.6, 131.5, 22.1],
+        onroerendGoed: [159.6, 74.3, 465.2, 231.0],
+        overig: [117.2, 18.7, 159.6, 46.9],
+        studieschuld: [190.5, 3.2, 16.8, 7.4],
+        schulden: [865.2, 45.9, 53.1, 1.1],
+      }
+    - {
+        totLeeftijd: 75,
+        huishoudens: 1242.5,
+        bank: [1234.5, 101.7, 82.4, 38.1],
+        effecten: [244.6, 42.0, 171.9, 32.9],
+        onroerendGoed: [113.9, 46.7, 410.2, 201.0],
+        overig: [92.0, 15.3, 165.9, 56.4],
+        studieschuld: [36.7, 0.8, 21.6, 12.4],
+        schulden: [515.7, 26.0, 50.5, 0.7],
+      }
+    - {
+        totLeeftijd: 85,
+        huishoudens: 895.2,
+        bank: [891.0, 71.0, 79.7, 37.3],
+        effecten: [153.2, 34.0, 222.2, 47.2],
+        onroerendGoed: [65.7, 26.5, 403.4, 183.0],
+        overig: [64.0, 11.2, 175.3, 66.6],
+        studieschuld: [4.3, 0.1, 20.0, 11.4],
+        schulden: [252.0, 14.7, 58.4, 0.6],
+      }
+    - {
+        totLeeftijd: null,
+        huishoudens: 293.3,
+        bank: [292.0, 21.7, 74.2, 35.3],
+        effecten: [43.0, 11.9, 277.0, 55.0],
+        onroerendGoed: [14.1, 5.0, 350.3, 150.0],
+        overig: [17.5, 2.7, 153.6, 60.3],
+        studieschuld: [0.4, 0.0, 16.9, 9.9],
+        schulden: [49.3, 3.4, 69.4, 0.8],
+      }
+
 # Toeslagen in 2026: aantal ontvangende huishoudens en uitgaven (raming Dienst Toeslagen).
 toeslagen:
   bron: "Dienst Toeslagen, Aantallen en bedragen, schatting 2026 (https://www.overtoeslagen.nl/over-ons-werk/aantallen-en-bedragen), maart 2026"

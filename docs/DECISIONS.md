@@ -583,3 +583,32 @@ Voorstel 13 van 2 november 2026. Onder "Van bruto naar netto" staat een blok met
 - **Een kind erbij**: een baby zonder kinderopvang. De kosten van het kind zelf zitten er niet in.
 
 Verschillen onder € 1 per maand tonen we als € 0.
+
+## Fase 18: box 3
+
+### D-073 Box 3 in de berekening en vermogen in de bevolking
+
+Voorstellen 11 en 12 van 2 november 2026; de eigenaar gaf toestemming voor uitbreiding naar box 3 (HANDOFF §10).
+
+**Regels** (`regels/box3.ts`). Het forfaitaire stelsel: een vast rendement per soort vermogen (banktegoeden, overige bezittingen, schulden boven de drempel), over het deel van de rendementsgrondslag boven het heffingsvrij vermogen, tegen 36%. Heffingsvrij vermogen en schuldendrempel per persoon, dubbel voor partners; voor partners maakt de verdeling niet uit, want het tarief is vlak. Getest met het rekenvoorbeeld van de Belastingdienst (alleenstaand, € 150.000 spaargeld: grondslag € 90.643, belasting € 417). Niet in het model: de tegenbewijsregeling (wie een lager werkelijk rendement had, betaalt minder) en box 3-vermogen van meerderjarige kinderen.
+
+- 2026: Belastingdienst, rekenhulp voorlopige aanslag 2026 (heffingsvrij € 59.357, drempel € 3.800, 1,28% / 6,00% / 2,70%; de percentages voor bank en schulden zijn voorlopig).
+- 2027: heffingsvrij € 60.098 (€ 59.357 × 1,01248, de beperkte inflatiecorrectie; de voorgestelde verlaging naar € 30.846 gaat volgens de Kamerbrief van 3 november niet door), overige bezittingen 6,37% (Rendement, januari 2026; geen officiële bron gevonden, wel overal hetzelfde getal). Bank, schulden en drempel geraamd op 2026.
+
+**In de berekening.** De box 3-belasting staat apart in het resultaat (`box3`) en gaat af van het besteedbaar inkomen. Het voordeel uit sparen en beleggen telt mee in het toetsingsinkomen van de toeslagen, want dat is het verzamelinkomen. De vermogensgrens van de toeslagen gaat over de rendementsgrondslag. Niet: de afbouw van de ouderenkorting over het verzamelinkomen (die rekent het model alleen over box 1). In het overheidssaldo een eigen post "Box 3: sparen en beleggen". Bij "Wat verandert er in 2027" een eigen onderdeel "Box 3".
+
+**Invoer.** Het veld "Spaargeld en beleggingen" is gesplitst in spaargeld, beleggingen en tweede woning, en schulden zonder hypotheek (met een studieschuld). Bewaarde situaties blijven werken: de nieuwe velden zijn standaard 0.
+
+**Vermogen in de bevolking** (`scripts/populatie/vermogen.ts`). Uit CBS 83834NED (stand 1 januari 2025, voorlopig): per 10%-groep gestandaardiseerd inkomen en per leeftijdsgroep van de hoofdkostwinner hoeveel huishoudens elk bestanddeel hebben, het totaal, en het gemiddelde en de mediaan onder wie het heeft. Per huishouden en bestanddeel:
+
+- de kans dat het er is: kans in de 10%-groep × kans in de leeftijdsgroep ÷ kans voor iedereen;
+- het bedrag: lognormaal, met mediaan 10%-groep × leeftijdsgroep ÷ iedereen, en de spreiding die bij gemiddelde en mediaan van de 10%-groep past;
+- daarna per 10%-groep geschaald op het CBS-totaal.
+
+Banktegoeden zijn bank- en spaartegoeden; overige bezittingen zijn effecten, onroerend goed behalve de eigen woning en overige bezittingen; schulden zijn studieschulden en overige schulden. Ondernemingsvermogen (box 1) en aanmerkelijk belang (box 2) tellen niet mee. Niet geïndexeerd naar 2026.
+
+Het toekennen gebeurt in dezelfde rondes als de pensioenpremie (de 10%-groep hangt af van de gewichten), en nog één keer met de gewichten na herwegen. Omdat de grote vermogens zwaar tellen, schoof het totaal van de overige bezittingen bij het herwegen toch nog 10% weg. Daarom zijn twee marges toegevoegd: het totaal van de banktegoeden en van de overige bezittingen (CBS). Na herweging kloppen beide; de schulden zitten 0,3% hoger.
+
+**Gevolg.** Box 3 levert in het model € 9,5 mld op, betaald door 2,2 miljoen huishoudens; de raming voor 2026 is € 10,5 mld. Lager hoort zo: geen tegenbewijsregeling, vermogen van een jaar eerder en geen vermogen buiten particuliere huishoudens. Box 1 € 149,9 → € 149,5 mld. Armoede 10,2% → 10,3%, Gini 0,233 → 0,232 (box 3 gaat nu af van het besteedbaar inkomen; de mediaan daalt van € 37.516 naar € 37.221). Vóór de herweging zitten de toeslagen nu dichter bij Dienst Toeslagen, omdat de vermogensgrens werkt (uitgaven huurtoeslag vóór herweging +36% → +17%).
+
+Golden-verschil: alle cijfers die van de bevolking afhangen, plus een nieuwe post `box3` (0 in de bestaande voorstellen). Saldo vlaktaks −€ 2,84 → −€ 2,50 mld, drie schijven € 29,19 → € 29,84 mld, zonder hypotheekrenteaftrek € 7,90 → € 7,99 mld, algemene heffingskorting + € 500 −€ 4,49 → −€ 4,57 mld; de andere voorstellen veranderen minder dan € 0,15 mld. Het verschil komt van het opnieuw herwegen met de vermogensgrens van de toeslagen en de twee nieuwe marges. Modelversie 0.5.0.

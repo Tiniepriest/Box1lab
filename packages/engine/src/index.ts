@@ -10,6 +10,7 @@ export * from "./parameters/schema.ts";
 export * from "./parameters/wijzig.ts";
 export * from "./parameters/yaml.ts";
 export * from "./regels/box1.ts";
+export * from "./regels/box3.ts";
 export * from "./regels/heffingskortingen.ts";
 export * from "./regels/eigenwoning.ts";
 export * from "./regels/toeslagen/zorgtoeslag.ts";

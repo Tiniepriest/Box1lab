@@ -31,6 +31,8 @@ const invoer: Invoer = {
   woz: 0,
   hypotheekrente: 0,
   vermogen: 0,
+  beleggingen: 0,
+  schulden: 0,
 };
 
 describe("jaarovergang per onderdeel", () => {
