@@ -129,7 +129,10 @@ try {
   controleer((await snelbalk.count()) === 0, "jouw situatie: de balk verdwijnt bij de uitkomst");
   await mobiel.close();
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
-  await pg.getByRole("button", { name: /Vlaktaks/ }).click();
+  await pg
+    .getByRole("button", { name: /Vlaktaks/ })
+    .first()
+    .click();
   await pg.waitForFunction(() => document.querySelector(".kernzin")?.textContent?.includes("achteruit"));
   const kern = (await pg.locator(".kernzin").textContent()) ?? "";
   controleer(
@@ -300,15 +303,23 @@ try {
     "formulier: niet op het apparaat zonder toestemming",
   );
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
-  await pg.waitForFunction(() => /Jij · €/.test(document.body.textContent ?? ""), null, { timeout: 30000 });
-  controleer(true, "lab: jouw situatie gaat mee naar het lab");
+  // Zolang er niets veranderd is, toont het lab geen effecten (D-071); de situatiekolom staat er wel.
+  await pg.waitForFunction(
+    () => /2\.700/.test(document.querySelector("section.situatie")?.textContent ?? ""),
+    null,
+    {
+      timeout: 30000,
+    },
+  );
   controleer(
     /Gerekend met jouw situatie[\s\S]*2\.700 per maand/.test(
       (await pg.locator("section.situatie").textContent()) ?? "",
     ),
     "lab: situatiekolom toont wat je hebt ingevuld",
   );
-  await pg.getByRole("button", { name: "Algemene heffingskorting + € 500" }).click();
+  await pg.getByRole("button", { name: "Algemene heffingskorting + € 500" }).first().click();
+  await pg.waitForFunction(() => /Jij · €/.test(document.body.textContent ?? ""), null, { timeout: 30000 });
+  controleer(true, "lab: jouw situatie gaat mee naar het lab");
   await pg.waitForFunction(
     () => /per maand\s+meer over/.test(document.querySelector(".jouw")?.textContent ?? ""),
     null,
