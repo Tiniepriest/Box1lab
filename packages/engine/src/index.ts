@@ -39,4 +39,5 @@ export * from "./lab.ts";
 export * from "./metrics/positie.ts";
 export * from "./scenario/code.ts";
 export * from "./verkiezing.ts";
+export * from "./jaarovergang.ts";
 export * from "./changelog.ts";
