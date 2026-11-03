@@ -195,7 +195,7 @@ try {
   const routes = await pg.locator("details.partij").count();
   const routeTekst = (await pg.textContent("body")) ?? "";
   controleer(
-    routes === 2 &&
+    routes === 3 &&
       /Niet onafhankelijk gecontroleerd/.test(routeTekst) &&
       /Twee routes naast elkaar/.test(routeTekst),
     `belastingplan 2027: ${routes} routes, met waarschuwing en vergelijking`,
