@@ -11,6 +11,7 @@ import type { PopulatieHuishouden } from "./populatie.ts";
 export const POSTEN = [
   { id: "box1", label: "Belasting box 1: tarieven, vrijstelling en kortingen" },
   { id: "eigenWoning", label: "Eigen woning: hypotheekrenteaftrek en forfait" },
+  { id: "box3", label: "Box 3: sparen en beleggen" },
   { id: "overigeAftrek", label: "Overige aftrekposten" },
   { id: "zorgtoeslag", label: "Zorgtoeslag" },
   { id: "huurtoeslag", label: "Huurtoeslag" },
@@ -30,6 +31,7 @@ export interface Totalen {
   belasting: number;
   /** Belastingvoordeel van de eigen woning (zit al in belasting). */
   eigenWoning: number;
+  box3: number;
   zvw: number;
   kinderbijslag: number;
   zorgtoeslag: number;
@@ -58,6 +60,7 @@ export function totalen(
   const t: Totalen = {
     belasting: 0,
     eigenWoning: 0,
+    box3: 0,
     zvw: 0,
     kinderbijslag: 0,
     zorgtoeslag: 0,
@@ -75,6 +78,7 @@ export function totalen(
     const w = h.gewicht;
     t.belasting += r.belasting * w;
     t.eigenWoning += r.eigenWoning * w;
+    t.box3 += r.box3 * w;
     t.zvw += r.zvw * w;
     t.kinderbijslag += r.kinderbijslag * w;
     t.zorgtoeslag += r.zorgtoeslag * w;
@@ -90,6 +94,7 @@ export function totalen(
   for (const k of [
     "belasting",
     "eigenWoning",
+    "box3",
     "zvw",
     "kinderbijslag",
     "zorgtoeslag",
@@ -199,6 +204,7 @@ export function simuleer(basis: Basis, scenario: Parameters): Uitkomst {
   const posten: Record<PostId, number> = {
     box1: (t.belasting + t.eigenWoning - (bt.belasting + bt.eigenWoning)) * schaal.ib,
     eigenWoning: (bt.eigenWoning - t.eigenWoning) * schaal.ib,
+    box3: t.box3 - bt.box3,
     overigeAftrek: totaalOverig(overig.posten) * (1 - overig.niveau / 100),
     zorgtoeslag: (bt.zorgtoeslag - t.zorgtoeslag) * schaal.zorgtoeslag,
     huurtoeslag: (bt.huurtoeslag - t.huurtoeslag) * schaal.huurtoeslag,

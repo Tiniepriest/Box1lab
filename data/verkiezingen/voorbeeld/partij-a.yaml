@@ -35,4 +35,4 @@ maatregelen:
     toelichting: "Het programma spreekt van een 'flinke verhoging' zonder bedrag. Volgens de vertaalregels zou dit niet gemodelleerd worden; hier toch opgenomen om de module te testen."
 niet_gemodelleerd:
   - "Verlaging eigen risico zorgverzekering (zorg zit nog niet in het model)"
-  - "Hogere vermogensbelasting in box 3 (box 3 zit niet in het model)"
+  - "Hogere vermogensbelasting in box 3 (geen bedrag genoemd)"

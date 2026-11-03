@@ -137,6 +137,14 @@ Voorstellen 1, 2 en 14 van 2 november 2026 (D-071).
 
 - [x] "Wat als…?" op Jouw situatie: opslag, een dag minder werken, samenwonen, een kind erbij (voorstel 13, D-072)
 
+## Fase 18: box 3 — klaar
+
+Voorstellen 11 en 12 van 2 november 2026 (D-073).
+
+- [x] Box 3 (forfaitair) in de berekening, 2026 en 2027; spaargeld, beleggingen en schulden apart in het formulier
+- [x] Vermogen in de nagebootste bevolking volgens CBS; box 3-knoppen in het lab
+- [ ] Bijwerken als het nieuwe box 3-stelsel (uiterlijk 2029) vastligt, en de percentages 2027 officieel zijn
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

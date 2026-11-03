@@ -118,6 +118,36 @@ groepen:
           stap: 5,
           gevorderd: true,
         }
+  - id: box3
+    titel: "Box 3: sparen en beleggen"
+    uitleg: "Belasting over spaargeld en beleggingen boven het heffingsvrij vermogen."
+    knoppen:
+      - parameter: box3.heffingsvrijVermogen
+        label: "Heffingsvrij vermogen per persoon"
+        eenheid: euro
+        min: 0
+        max: 200000
+        stap: 1000
+      - parameter: box3.tarief
+        label: "Tarief box 3"
+        eenheid: procent
+        min: 0
+        max: 60
+        stap: 1
+      - parameter: box3.rendement.overig
+        label: "Box 3: verondersteld rendement op beleggingen"
+        eenheid: procent
+        min: 0
+        max: 12
+        stap: 0.05
+        gevorderd: true
+      - parameter: box3.rendement.banktegoeden
+        label: "Box 3: verondersteld rendement op spaargeld"
+        eenheid: procent
+        min: 0
+        max: 6
+        stap: 0.01
+        gevorderd: true
   - id: toeslagen
     titel: "Toeslagen en kinderbijslag"
     uitleg: "100% is zoals nu, 0% is afgeschaft."

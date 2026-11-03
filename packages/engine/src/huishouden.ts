@@ -12,6 +12,7 @@ import { zorgtoeslag } from "./regels/toeslagen/zorgtoeslag.ts";
 import { aowPerJaar, gekoppeldBruto } from "./regels/uitkeringen.ts";
 import { bijstandBruto } from "./regels/bijstand.ts";
 import { zvwBijdrage } from "./regels/zorg.ts";
+import { box3, type Box3Vermogen } from "./regels/box3.ts";
 
 export type InkomensSoort = "werk" | "uitkering" | "aow" | "geen";
 export type UitkeringSoort = "bijstand" | "werknemersverzekering";
@@ -49,8 +50,10 @@ export interface Huishouden {
   woz: number;
   /** Kinderopvang per kind. */
   kinderopvang: Kinderopvang[];
-  /** Vermogen (spaargeld en beleggingen) op 1 januari, voor de vermogenstoets van toeslagen. */
+  /** Vermogen (spaargeld en beleggingen min schulden) op 1 januari, voor de vermogenstoets van toeslagen. */
   vermogen: number;
+  /** Vermogen in box 3 per soort. Ontbreekt het, dan telt `vermogen` als spaargeld. */
+  box3?: Box3Vermogen;
 }
 
 export interface Resultaat {
@@ -59,6 +62,8 @@ export interface Resultaat {
   belasting: number;
   /** Fiscaal voordeel van de eigen woning (positief = minder belasting); zit al in `belasting`. */
   eigenWoning: number;
+  /** Belasting in box 3 (sparen en beleggen), apart van `belasting`. */
+  box3: number;
   zvw: number;
   /** Werknemersdeel van de pensioenpremie (gaat af van het bruto inkomen, vóór belasting). */
   pensioenpremie: number;
@@ -223,6 +228,10 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     zvw += zvwBijdrage(inkomen, k.aow || !!l.ondernemer, p);
   });
 
+  // Box 3: het voordeel uit sparen en beleggen telt mee in het toetsingsinkomen (het verzamelinkomen).
+  const b3 = box3(h.box3 ?? { bank: h.vermogen, overig: 0, schulden: 0 }, h.partners, p);
+  toetsingsinkomen += b3.voordeel;
+
   // 4. Meerderjarige kinderen: eigen inkomen, belasting, zorgtoeslag en premie. Hun inkomen telt mee in het
   //    rekeninkomen voor de huurtoeslag (onder 23 jaar alleen boven de vrijstelling), niet in de andere toeslagen.
   const volwassenVanaf = p.zorg.volwassenVanaf;
@@ -260,6 +269,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     bruto,
     belasting,
     eigenWoning: belastingZonderWoning - belasting,
+    box3: b3.belasting,
     zvw,
     pensioenpremie,
     zorgtoeslag: zt,
@@ -273,7 +283,8 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     basisinkomen,
     toetsingsinkomen,
     toeslagen,
-    besteedbaar: bruto - pensioenpremie - belasting - zvw + toeslagen + kb - zorgpremie + basisinkomen,
+    besteedbaar:
+      bruto - pensioenpremie - belasting - b3.belasting - zvw + toeslagen + kb - zorgpremie + basisinkomen,
     volwassenen,
     kinderen: h.kinderen.length,
     equivalentie: equivalentiefactor(volwassenen, h.kinderen, p),
