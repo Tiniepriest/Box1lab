@@ -117,6 +117,14 @@ Punten 1, 2, 3, 6, 7 en 9 van 2 november 2026 (4, 5 en 8 niet).
 - [x] Stijl "Papier": warm papier, vlakken zonder rand, Source Serif 4 en Inter, ook in donkere modus (D-069)
 - [x] Groen voor erop vooruit, rood voor erop achteruit, gecontroleerd op kleurenblindheid (D-069)
 
+## Fase 15: Belastingplan 2027 bijgewerkt — klaar
+
+Voorstellen 8, 9 en 10 van 2 november 2026, bijgewerkt met de Kamerbrief van 3 november (D-070).
+
+- [x] Stap 1 per onderdeel: waar komt het verschil tussen 2026 en 2027 vandaan
+- [x] Derde route: het kabinet met ChristenUnie en 50PLUS (amendement Grinwis en Van Brenk, € 347 miljoen koopkracht)
+- [ ] Bijwerken na het debat (4 november) en de stemming (12 november): basispad wordt wat is aangenomen
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

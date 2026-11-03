@@ -3,6 +3,7 @@
     berekenHuishouden,
     huishoudenUitInvoer,
     invoerSchema,
+    jaarovergangPerOnderdeel,
     type Invoer,
     type Parameters,
   } from "@box1lab/engine";
@@ -33,7 +34,8 @@
     if (!geldig.success) return null;
     const r = berekenHuishouden(huishoudenUitInvoer(geldig.data, params), params);
     const r2 = berekenHuishouden(huishoudenUitInvoer(geldig.data, volgend.params), volgend.params);
-    return { r, r2, d: r2.besteedbaar - r.besteedbaar };
+    const { perOnderdeel } = jaarovergangPerOnderdeel(geldig.data, params, volgend.params);
+    return { r, r2, d: r2.besteedbaar - r.besteedbaar, perOnderdeel };
   });
 </script>
 
@@ -45,7 +47,7 @@
   {#if !uitkomst}
     <p class="waarschuwing">Vul alle velden in met een getal (0 mag ook).</p>
   {:else}
-    {@const { r, r2, d } = uitkomst}
+    {@const { r, r2, d, perOnderdeel } = uitkomst}
     <p class="kern">
       {#if Math.abs(d) < 1}
         Bij hetzelfde bruto inkomen {samen ? "houden jullie" : "houd je"} in {j} evenveel over als in {params.jaar}.
@@ -80,6 +82,21 @@
         </tr>
       </tbody>
     </table>
+    {#if perOnderdeel.length > 1}
+      <h3>Waar komt het verschil vandaan?</h3>
+      <table class="data">
+        <thead><tr><th>Onderdeel</th><th>Per jaar</th><th>Per maand</th></tr></thead>
+        <tbody>
+          {#each perOnderdeel as o (o.label)}
+            <tr>
+              <td>{o.label}</td>
+              <td class="num">{euroVerschil(o.effect)}</td>
+              <td class="num">{euroVerschil(o.effect / 12)}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {/if}
     <p class="notitie">
       Je bruto loon, pensioen en WW houden we gelijk, zodat je ziet wat de nieuwe regels doen. AOW, bijstand,
       kinderbijslag en toeslagen gaan wel mee met de gewone jaarlijkse verhoging.
@@ -118,6 +135,10 @@
   }
   .kern {
     margin: 0 0 10px;
+  }
+  h3 {
+    font-size: 15px;
+    margin: 18px 0 6px;
   }
   table {
     max-width: 480px;

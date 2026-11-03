@@ -537,3 +537,20 @@ De eigenaar vond het uiterlijk te veel een dashboard en wilde iets in de richtin
 - Lijnen die niet goed of slecht zijn (zoals de marginale druk) zijn inktblauw, nooit rood of groen.
 
 Ook aangepast: de deelafbeeldingen (kleuren en lettertypen), het favicon en de kleur van de browserbalk (licht en donker). In het `[data-theme="dark"]`-blok ontbraken `--gain-tekst` en `--loss-tekst`; die staan er nu wel.
+
+## Fase 15: Belastingplan 2027 na de aanpassingen van 3 november
+
+### D-070 Stap 1 per onderdeel en een derde route
+
+Voorstellen 8, 9 en 10 van 2 november 2026; de eigenaar vroeg ze bij te werken met het nieuws van 3 november.
+
+**Stap 1 per onderdeel.** Stap 1 liet alleen het totaal zien, waardoor niet te zien was wat er in het plan van het kabinet zit. Nu staat eronder "Waar komt het verschil vandaan?": per onderdeel van de regels (tarieven en schijven, algemene heffingskorting, arbeidskorting, ouderenkorting, combinatiekorting, eigen woning, zelfstandigenaftrek, pensioenpremie, zorgpremie, toeslagen, kinderbijslag, AOW en bijstand, overig) wat het voor dit huishouden doet. De onderdelen van het nieuwe jaar worden in vaste volgorde één voor één overgenomen (`jaarovergangPerOnderdeel` in de engine); zo tellen ze precies op tot het totaal. De volgorde bepaalt de verdeling een beetje (een hogere schijfgrens is meer waard bij een hoger tarief), net als bij de maatregelen van een route. Het gaat om onderdelen van de regels, niet om politieke maatregelen: de vrijheidsbijdrage zit bijvoorbeeld verspreid over de schijven en de kortingen.
+
+**Derde route: het kabinet met ChristenUnie en 50PLUS.** Op 3 november stuurde het kabinet de Kamerbrief "Aanpassingen Belastingplan en box 3" (2026D55029). Met ChristenUnie, 50PLUS en de Groep Markuszower lijkt een meerderheid in de Tweede Kamer mogelijk. De route heeft twee maatregelen:
+
+- Het gewijzigde amendement Grinwis en Van Brenk (37 022, nr. 27), waar het kabinet oordeel Kamer aan geeft: tarief eerste en tweede schijf −0,14 procentpunt, de verlaging van de ouderenkorting met € 100 vervalt, en de drie bedragen van de arbeidskorting worden € 116 lager (verhoging € 17 in plaats van € 133). Het eerste percentage van de arbeidskorting volgt uit het lagere bedrag bij de eerste knik (1.026 / 12.114 = 8,47%); de andere percentages blijven gelijk. Zekerheid hoog. In het model kost het amendement € 0,06 mld; de indieners ramen € 5 miljoen opbrengst. Het maximale aftrektarief van de eigen woning laten we op 38,16%; het amendement noemt het niet.
+- € 347 miljoen extra koopkracht waarmee de vrijheidsbijdrage in 2027 "effectief teniet" wordt gedaan, ingevuld met de tabelcorrectiefactor. De Kamer kiest de precieze invulling nog. Aanname: alle geïndexeerde bedragen in box 1 × 1,00396, de factor waarbij het model precies € 347 miljoen kost (ongeveer 30% van de volledige correctie × 1,013353 uit de route van JA21, BBB en SGP). Zekerheid laag.
+
+Samen: saldo −€ 0,41 mld; de laagste inkomensgroep −0,03% (minder arbeidskorting), de andere groepen +0,04% tot +0,22%. De twee andere routes blijven, met een bijgewerkte uitleg. Box 3 (uitstel naar 2029, geen lagere vrijstelling), box 2, de aftrek voor specifieke zorgkosten en de btw op sierteelt staan bij "niet meegenomen".
+
+Het basispad blijft het plan zoals ingediend met de tweede nota van wijziging: de aanpassingen van 3 november zijn nog geen wettekst. Na de stemming van 12 november wordt het basispad wat is aangenomen.
