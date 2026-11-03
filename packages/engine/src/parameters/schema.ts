@@ -68,6 +68,11 @@ export const parametersSchema = z.strictObject({
         "De schijfgrenzen lopen op van laag naar hoog.",
       ),
     aowVerlagingEersteSchijf: pct,
+    /**
+     * Negatieve belasting (alleen voor scenario's): wie minder verdient dan de vrijstelling, of meer korting heeft dan
+     * belasting, krijgt het verschil uitbetaald.
+     */
+    negatieveBelasting: z.boolean().default(false),
   }),
 
   heffingskortingen: z.strictObject({
@@ -163,6 +168,12 @@ export const parametersSchema = z.strictObject({
       bijstand: z.boolean(),
       werknemersverzekering: z.boolean(),
     }),
+  }),
+
+  /** Basisinkomen (alleen voor scenario's): een onbelast bedrag voor elke volwassene. */
+  basisinkomen: z.strictObject({
+    bron,
+    perVolwassenePerMaand: nietNegatief,
   }),
 
   bijstand: z.strictObject({

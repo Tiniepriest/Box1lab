@@ -29,6 +29,11 @@ export function tariefStukken(p: Parameters, aow: boolean): TariefStuk[] {
 
 /** Inkomstenbelasting + premies volksverzekeringen over het belastbaar inkomen, vóór heffingskortingen. */
 export function heffingVoorKortingen(inkomen: number, p: Parameters, aow: boolean): number {
+  if (p.box1.negatieveBelasting && inkomen < p.box1.vrijstelling) {
+    // Onder de vrijstelling: negatief, tegen het tarief van het eerste stuk boven de vrijstelling.
+    const eerste = tariefStukken(p, aow)[0];
+    return eerste ? (-(p.box1.vrijstelling - Math.max(0, inkomen)) * eerste.tarief) / 100 : 0;
+  }
   if (inkomen <= 0) return 0;
   let heffing = 0;
   for (const s of tariefStukken(p, aow)) {
@@ -40,7 +45,8 @@ export function heffingVoorKortingen(inkomen: number, p: Parameters, aow: boolea
 
 /**
  * Te betalen box 1-belasting van één persoon: heffing (plus eventuele extra heffing, zoals de
- * aftrekbeperking eigen woning) min kortingen, nooit negatief.
+ * aftrekbeperking eigen woning) min kortingen. Nooit negatief, behalve met `negatieveBelasting`: dan krijgt
+ * iemand het verschil uitbetaald.
  *
  * @param inkomen belastbaar inkomen uit werk en woning (ook het verzamelinkomen voor de kortingen)
  * @param arbeidsinkomen inkomen uit werk, voor de arbeidskorting en combinatiekorting
@@ -54,8 +60,10 @@ export function belastingBox1(
   extraHeffing = 0,
 ): number {
   const heffing = heffingVoorKortingen(inkomen, p, k.aow) + extraHeffing;
+  const kortingen = () => heffingskortingen(Math.max(0, inkomen), arbeidsinkomen, p, k).totaal;
+  if (p.box1.negatieveBelasting) return heffing - kortingen();
   if (heffing <= 0) return 0;
-  return Math.max(0, heffing - heffingskortingen(Math.max(0, inkomen), arbeidsinkomen, p, k).totaal);
+  return Math.max(0, heffing - kortingen());
 }
 
 /**

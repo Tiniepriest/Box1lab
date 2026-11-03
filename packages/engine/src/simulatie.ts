@@ -19,6 +19,7 @@ export const POSTEN = [
   { id: "kinderbijslag", label: "Kinderbijslag" },
   { id: "zvw", label: "Inkomensafhankelijke bijdrage Zvw (AOW'ers)" },
   { id: "uitkeringen", label: "Uitkeringen en AOW (netto-koppeling)" },
+  { id: "basisinkomen", label: "Basisinkomen" },
 ] as const;
 
 export type PostId = (typeof POSTEN)[number]["id"];
@@ -36,6 +37,7 @@ export interface Totalen {
   kgb: number;
   kot: number;
   uitkeringKosten: number;
+  basisinkomen: number;
   hypotheekrente: number;
   huishoudens: number;
   personen: number;
@@ -63,6 +65,7 @@ export function totalen(
     kgb: 0,
     kot: 0,
     uitkeringKosten: 0,
+    basisinkomen: 0,
     hypotheekrente: 0,
     huishoudens: 0,
     personen: 0,
@@ -79,6 +82,7 @@ export function totalen(
     t.kgb += r.kgb * w;
     t.kot += r.kot * w;
     t.uitkeringKosten += r.uitkeringKosten * w;
+    t.basisinkomen += r.basisinkomen * w;
     t.hypotheekrente += h.hypotheekrente * w;
     t.huishoudens += w;
     t.personen += (r.volwassenen + r.kinderen) * w;
@@ -93,6 +97,7 @@ export function totalen(
     "kgb",
     "kot",
     "uitkeringKosten",
+    "basisinkomen",
     "hypotheekrente",
   ] as const) {
     t[k] /= 1e9;
@@ -202,6 +207,7 @@ export function simuleer(basis: Basis, scenario: Parameters): Uitkomst {
     kinderbijslag: bt.kinderbijslag - t.kinderbijslag,
     zvw: t.zvw - bt.zvw,
     uitkeringen: -t.uitkeringKosten * schaal.ib,
+    basisinkomen: bt.basisinkomen - t.basisinkomen,
   };
 
   const grenzen = basis.params.methodiek.winnaarsGrenzen;

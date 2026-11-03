@@ -7,6 +7,17 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-11-03
+  soort: model
+  modelversie: 0.4.0
+  titel: "Scenariolab: basisinkomen en negatieve belasting"
+  tekst: >-
+    In het Scenariolab kun je nu een basisinkomen per volwassene instellen en negatieve belasting aanzetten: wie
+    minder verdient dan de belastingvrije voet, of meer korting heeft dan belasting, krijgt het verschil
+    uitbetaald. Samen met een vlaktaks is dat de negatieve inkomstenbelasting van Milton Friedman. Het lab begint
+    nu rustiger: zolang je niets verandert, zie je geen blokken vol nullen. De uitkomsten van de bestaande
+    voorstellen veranderen niet.
+
+- datum: 2026-11-03
   soort: nieuw
   titel: "Belastingplan 2027: derde route en uitleg per onderdeel"
   tekst: >-

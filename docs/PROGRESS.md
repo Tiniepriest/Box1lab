@@ -125,6 +125,14 @@ Voorstellen 8, 9 en 10 van 2 november 2026, bijgewerkt met de Kamerbrief van 3 n
 - [x] Derde route: het kabinet met ChristenUnie en 50PLUS (amendement Grinwis en Van Brenk, € 347 miljoen koopkracht)
 - [ ] Bijwerken na het debat (4 november) en de stemming (12 november): basispad wordt wat is aangenomen
 
+## Fase 16: scenariolab — klaar
+
+Voorstellen 1, 2 en 14 van 2 november 2026 (D-071).
+
+- [x] Negatieve belasting (Friedman) als knop
+- [x] Basisinkomen per volwassene als knop, zo simpel mogelijk
+- [x] Lab zonder blokken vol nullen zolang er niets veranderd is
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

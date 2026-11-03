@@ -71,8 +71,13 @@ export interface Resultaat {
   kot: number;
   kinderbijslag: number;
   zorgpremie: number;
-  /** Extra bruto uitkering die de overheid betaalt door de netto-koppeling. */
+  /**
+   * Extra bruto uitkering die de overheid betaalt door de netto-koppeling; negatief als het basisinkomen een deel
+   * van de uitkering vervangt.
+   */
   uitkeringKosten: number;
+  /** Basisinkomen van het huishouden per jaar (onbelast). */
+  basisinkomen: number;
   /** Gezamenlijk toetsingsinkomen voor de toeslagen. */
   toetsingsinkomen: number;
   toeslagen: number;
@@ -81,6 +86,30 @@ export interface Resultaat {
   kinderen: number;
   /** Equivalentiefactor om inkomens van verschillende huishoudens te vergelijken. */
   equivalentie: number;
+}
+
+/**
+ * Hoeveel bruto uitkering het basisinkomen vervangt: zoveel dat het netto inkomen van deze persoon (na belasting
+ * en Zvw-bijdrage) `basisinkomen` lager wordt, maar nooit meer dan de hele uitkering.
+ */
+function brutoVervangen(
+  inkomen: number,
+  uitkering: number,
+  basisinkomen: number,
+  k: PersoonKenmerken,
+  p: Parameters,
+): number {
+  const netto = (y: number) => y - belastingBox1(y, 0, p, k) - zvwBijdrage(y, k.aow, p);
+  const doel = netto(inkomen) - basisinkomen;
+  if (netto(inkomen - uitkering) >= doel) return uitkering;
+  let lo = 0;
+  let hi = uitkering;
+  for (let i = 0; i < 50; i++) {
+    const m = (lo + hi) / 2;
+    if (netto(inkomen - m) > doel) lo = m;
+    else hi = m;
+  }
+  return (lo + hi) / 2;
 }
 
 /** Wie krijgt de combinatiekorting? De minstverdienende werkende ouder, en alleen als alle ouders werken. */
@@ -121,6 +150,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
   const scenario = basis !== undefined && basis !== p;
   const combiIdx = combinatiekortingVoor(h);
   let uitkeringKosten = 0;
+  const basisPerPersoon = 12 * p.basisinkomen.perVolwassenePerMaand;
 
   // 1. Bruto inkomen per persoon, na netto-koppeling en gedragseffect.
   const personen = h.leden.map((l, i) => {
@@ -131,17 +161,30 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
       combinatiekorting: i === combiIdx,
     };
     let x = l.inkomen;
-    if (scenario && l.uitkering > 0 && isGekoppeld(l, p)) {
-      const extra = gekoppeldBruto(l.uitkering, k, basis, p) - l.uitkering;
+    let uitkering = l.uitkering;
+    if (scenario && uitkering > 0 && isGekoppeld(l, p)) {
+      const extra = gekoppeldBruto(uitkering, k, basis, p) - uitkering;
       uitkeringKosten += extra;
       x += extra;
+      uitkering += extra;
+    }
+    // Het basisinkomen komt in plaats van (een deel van) de bijstand en de AOW: die gaan netto zoveel omlaag.
+    const vervangbaar =
+      l.soort === "aow" || (l.soort === "uitkering" && (l.uitkeringSoort ?? "bijstand") === "bijstand");
+    let vervangen = 0;
+    if (basisPerPersoon > 0 && uitkering > 0 && vervangbaar) {
+      vervangen = brutoVervangen(x, uitkering, basisPerPersoon, k, p);
+      uitkeringKosten -= vervangen;
+      x -= vervangen;
     }
     if (scenario && p.gedrag.eti && k.werkt && x > 0) {
       const mBasis = schijfTarief(x, basis) / 100;
       const mScenario = schijfTarief(x, p) / 100;
       x *= Math.pow((1 - mScenario) / (1 - mBasis), p.gedrag.eti);
     }
-    return { k, x };
+    // Vervangt het basisinkomen een deel van de uitkering, dan rekenen de toeslagen met het oorspronkelijke inkomen.
+    const toeslagCorrectie = vervangen > 0 ? l.inkomen - x : 0;
+    return { k, x, toeslagCorrectie };
   });
 
   // 2. Eigen woning bij de hoogste verdiener.
@@ -160,7 +203,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
   let toetsingsinkomen = 0;
   let zvw = 0;
   let pensioenpremie = 0;
-  personen.forEach(({ k, x }, i) => {
+  personen.forEach(({ k, x, toeslagCorrectie }, i) => {
     const l = h.leden[i]!;
     const premie = l.pensioenpremie === "standaard" ? standaardPensioenpremie(x, p) : (l.pensioenpremie ?? 0);
     const inkomen = l.ondernemer ? belastbareWinst(x, l.ondernemer, p).belastbaar : x - premie;
@@ -176,7 +219,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     pensioenpremie += premie;
     belasting += met;
     belastingZonderWoning += zonder;
-    toetsingsinkomen += Math.max(0, belastbaar);
+    toetsingsinkomen += Math.max(0, belastbaar + toeslagCorrectie);
     zvw += zvwBijdrage(inkomen, k.aow || !!l.ondernemer, p);
   });
 
@@ -210,6 +253,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
   const ko = kinderopvangtoeslag(toetsingsinkomen, h.kinderopvang, p);
   const kb = berekenKinderbijslag(h.kinderen, p);
   const zorgpremie = (volwassenen + meerderjarig) * p.zorg.nominalePremiePerVolwassene;
+  const basisinkomen = (h.leden.length + meerderjarig) * basisPerPersoon;
   const toeslagen = zt + ht + kg + ko;
 
   return {
@@ -226,9 +270,10 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     kinderbijslag: kb,
     zorgpremie,
     uitkeringKosten,
+    basisinkomen,
     toetsingsinkomen,
     toeslagen,
-    besteedbaar: bruto - pensioenpremie - belasting - zvw + toeslagen + kb - zorgpremie,
+    besteedbaar: bruto - pensioenpremie - belasting - zvw + toeslagen + kb - zorgpremie + basisinkomen,
     volwassenen,
     kinderen: h.kinderen.length,
     equivalentie: equivalentiefactor(volwassenen, h.kinderen, p),

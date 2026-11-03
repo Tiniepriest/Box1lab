@@ -26,6 +26,9 @@ box1:
     - { tot: null, tarief: 49.5 }
   # AOW'ers betalen geen AOW-premie: hun tarief in de eerste schijf is zoveel procentpunt lager
   # (36,23% − 18,33% voor AOW'ers geboren in of na 1946 = 17,90).
+  # Negatieve belasting bestaat nu niet (false); voor scenario's als een negatieve inkomstenbelasting. Aan: wie
+  # minder verdient dan de vrijstelling, of meer korting heeft dan belasting, krijgt het verschil uitbetaald.
+  negatieveBelasting: false
   aowVerlagingEersteSchijf: 17.9
 
 # Een heffingskorting is een "staffel": een reeks stukken die elk beginnen bij een inkomen ("vanaf").
@@ -245,6 +248,10 @@ uitkeringen:
   # bruto bij. AOW en bijstand zijn gekoppeld aan het netto minimumloon; WW en WIA zijn een percentage van het
   # vroegere bruto loon.
   nettoKoppeling: { aow: true, bijstand: true, werknemersverzekering: false }
+
+basisinkomen:
+  bron: "Bestaat niet in de huidige wet (0); alleen voor scenario's. Het basisinkomen is onbelast, voor elke volwassene in het huishouden, en komt in plaats van (een deel van) de bijstand en de AOW."
+  perVolwassenePerMaand: 0
 
 bijstand:
   bron: "Raming: de normen per 1 juli 2026 + 2,05%, de stijging van het referentiemaandloon per 1 januari 2027 (Regeling indexatie wettelijk minimumloon per 1 januari 2027, 29 oktober 2026; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072). De bijstand volgt het netto minimumloon; SZW publiceert de normen half december. De verhoging per 1 juli 2027 is nog niet bekend en zit er niet in."
