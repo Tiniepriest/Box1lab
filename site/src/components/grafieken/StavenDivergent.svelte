@@ -39,6 +39,8 @@
     rijen.some((r) => r.label.length * 7.2 > LBMax - 8 || (r.sub ?? "").length * 6.2 > LBMax - 8),
   );
   const LB = $derived(boven ? 0 : LBMax);
+  /** Past label plus toelichting op één regel boven de staaf? Anders laten we de toelichting weg. */
+  const past = (r: Rij) => r.label.length * 7.2 + ((r.sub ?? "").length + 3) * 6.2 <= B;
   const RIJ = $derived(boven ? 50 : 34);
   const LABELRUIMTE = $derived(boven ? 17 : 0);
   const RAND = 12;
@@ -100,7 +102,7 @@
         <rect x="0" y={y - 4 - LABELRUIMTE} width={B} height={RIJ} fill="transparent" />
         {#if boven}
           <text x="0" y={y - 7} class="label"
-            >{r.label}{#if r.sub}<tspan class="sub"> · {r.sub}</tspan>{/if}</text
+            >{r.label}{#if r.sub && past(r)}<tspan class="sub"> · {r.sub}</tspan>{/if}</text
           >
         {:else}
           <text x="0" y={y + (r.sub ? h / 2 - 3 : h / 2)} dominant-baseline="middle" class="label"
