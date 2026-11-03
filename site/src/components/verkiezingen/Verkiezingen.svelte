@@ -462,6 +462,12 @@
     gap: 8px 20px;
     margin-bottom: 10px;
   }
+  .vergelijk-keuze label {
+    max-width: 100%;
+  }
+  .vergelijk-keuze select {
+    max-width: 100%;
+  }
   .disclaimer ul {
     margin: 0;
     padding-left: 18px;
