@@ -40,4 +40,5 @@ export * from "./metrics/positie.ts";
 export * from "./scenario/code.ts";
 export * from "./verkiezing.ts";
 export * from "./jaarovergang.ts";
+export * from "./watals.ts";
 export * from "./changelog.ts";

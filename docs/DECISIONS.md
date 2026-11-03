@@ -570,3 +570,16 @@ Ter controle: € 1.000 per maand met één tarief van 50% en zonder algemene en
 **Rustiger begin.** Zolang er niets veranderd is, toont het lab alleen de kernzin, een blok "Begin bij een voorstel" met de voorstellen en de grafieken van netto inkomen en marginale druk. De blokken met effecten (allemaal nul) verschijnen zodra je iets verandert.
 
 Golden: alleen de nieuwe post `basisinkomen` (0) in elk scenario; verder geen verschil. Modelversie 0.4.0.
+
+## Fase 17: wat als
+
+### D-072 "Wat als…?" op Jouw situatie
+
+Voorstel 13 van 2 november 2026. Onder "Van bruto naar netto" staat een blok met veranderingen in je eigen situatie en wat je dan per maand meer of minder overhoudt, met hoeveel daarvan door belasting en premies en hoeveel door toeslagen en kinderbijslag komt. Alleen andere invoer, dezelfde rekenregels (`watAls` in de engine):
+
+- **€ 100 per maand meer bruto loon** (bij een jaarbedrag € 1.200; bij een zzp'er € 1.200 meer winst). Met vakantiegeld als dat zo is ingevuld.
+- **Een dag minder werken**: inkomen, bonus en eigen pensioenpremie 20% lager (4 in plaats van 5 dagen). Alleen bij loondienst en zzp. Met een werkende partner ook "je partner werkt een dag minder".
+- **Samenwonen met iemand met een modaal inkomen** (alleen zonder partner): het huishouden met partner, vergeleken met jouw huishouden plus de partner alleen zonder eigen woonlasten. Zo zie je vooral wat er met de toeslagen gebeurt; zonder toeslagen is het vaak € 0. De partner is jonger dan de AOW-leeftijd.
+- **Een kind erbij**: een baby zonder kinderopvang. De kosten van het kind zelf zitten er niet in.
+
+Verschillen onder € 1 per maand tonen we als € 0.

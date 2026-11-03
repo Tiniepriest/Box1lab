@@ -21,6 +21,7 @@
   import Waterval from "./grafieken/Waterval.svelte";
   import InvoerFormulier from "./Invoer.svelte";
   import JaarVergelijking from "./JaarVergelijking.svelte";
+  import WatAls from "./WatAls.svelte";
 
   let {
     params,
@@ -254,6 +255,10 @@
           </p>
         {/if}
       </div>
+
+      {#if geldig.success}
+        <WatAls {params} invoer={geldig.data} {samen} />
+      {/if}
 
       {#if curve}
         <div class="kaart">
