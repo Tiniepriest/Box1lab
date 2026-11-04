@@ -308,14 +308,16 @@ try {
     "formulier: niet op het apparaat zonder toestemming",
   );
   await pg.getByRole("button", { name: "Koop", exact: true }).click();
-  await pg.getByText("Weet je alleen wat je in totaal aan de bank betaalt?").click();
+  await pg.getByRole("button", { name: "Rente uitrekenen" }).click();
   await pg.locator("#schuld").fill("300000");
   await pg.locator("#rentepercentage").fill("4");
+  await pg.getByRole("button", { name: /Gebruik € 1\.000 per maand/ }).click();
   await pg.waitForTimeout(300);
   controleer(
-    (await pg.locator("#rente").inputValue()) === "1000" &&
+    (await pg.locator("#rekenhulp").count()) === 0 &&
+      (await pg.locator("#rente").inputValue()) === "1000" &&
       /"hypotheekrente":12000/.test((await leesSessie()) ?? ""),
-    "formulier: hypotheekrente per maand, uitgerekend uit schuld en rente",
+    "formulier: hypotheekrente per maand, rekenhulp neemt de rente over en sluit",
   );
   await pg.getByRole("button", { name: "Huur", exact: true }).click();
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
