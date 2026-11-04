@@ -90,13 +90,31 @@
     if (r.kgb > 0) s.push({ label: "Kindgebonden budget", bedrag: r.kgb, soort: "plus" });
     if (r.kot > 0) s.push({ label: "Kinderopvangtoeslag", bedrag: r.kot, soort: "plus" });
     if (r.kinderbijslag > 0) s.push({ label: "Kinderbijslag", bedrag: r.kinderbijslag, soort: "plus" });
-    s.push({ label: "Premie zorgverzekering", bedrag: r.zorgpremie, soort: "min" });
     s.push({ label: "Te besteden", bedrag: overVanInkomen(r), soort: "totaal" });
     return s;
   });
 
   // Bovenaan: wat je overhoudt van je inkomen, zonder box 3 (D-076).
   const over = $derived(r ? overVanInkomen(r) : 0);
+
+  // Boven de zin bovenaan: van bruto naar wat je overhoudt, in één regel die optelt (D-078).
+  const opbouw = $derived.by(() => {
+    if (!r) return "";
+    // "a, b en c"
+    const lijst = (x: string[]) => (x.length > 1 ? `${x.slice(0, -1).join(", ")} en ${x.at(-1)}` : x[0]!);
+    const betaald = [`${euro(r.belasting + r.zvw)} belasting`];
+    if (r.pensioenpremie > 0) betaald.push(`${euro(r.pensioenpremie)} pensioenpremie`);
+    const gekregen: string[] = [];
+    if (r.toeslagen + r.kinderbijslag > 0)
+      gekregen.push(`${euro(r.toeslagen + r.kinderbijslag)} aan toeslagen en kinderbijslag`);
+    if (r.basisinkomen > 0) gekregen.push(`${euro(r.basisinkomen)} basisinkomen`);
+    const zinnen = [
+      `${samen ? "Jullie bruto inkomen is" : "Je bruto inkomen is"} ${euro(r.bruto)} per jaar.`,
+      `${samen ? "Jullie betalen" : "Je betaalt"} ${lijst(betaald)} per jaar.`,
+    ];
+    if (gekregen.length) zinnen.push(`${samen ? "Jullie krijgen" : "Je krijgt"} ${lijst(gekregen)}.`);
+    return zinnen.join(" ");
+  });
 
   const positie = $derived(r ? aandeelUitVerdeling(r.besteedbaar / r.equivalentie, plekGrenzen) : null);
 
@@ -130,9 +148,7 @@
   const samen = $derived(invoer.personen.length > 1 || invoer.kinderen.length > 0);
 
   const effectief = $derived(
-    r && r.bruto > 0
-      ? ((r.belasting + r.zvw + r.zorgpremie - r.toeslagen - r.kinderbijslag) / r.bruto) * 100
-      : 0,
+    r && r.bruto > 0 ? ((r.belasting + r.zvw - r.toeslagen - r.kinderbijslag) / r.bruto) * 100 : 0,
   );
 </script>
 
@@ -155,6 +171,7 @@
     {#if !geldig.success || !r}
       <p class="waarschuwing">Vul alle velden in met een getal (0 mag ook).</p>
     {:else}
+      <p class="opbouw">{opbouw}</p>
       <p class="kernzin">
         {eigen ? (samen ? "Jullie houden" : "Je houdt") : "In dit voorbeeld houd je"}
         <strong>{euro(over / 12)}</strong> per maand over om van te leven ({euro(over)} per jaar).
@@ -234,7 +251,7 @@
       <div class="kaart">
         <Figuur
           titel="Van bruto naar netto: waar gaat je geld heen?"
-          uitleg="Belasting en premies gaan eraf, toeslagen en kinderbijslag komen erbij. Huur, hypotheek en kosten van kinderopvang moet je nog van het bedrag onderaan betalen."
+          uitleg="Belasting en premies gaan eraf, toeslagen en kinderbijslag komen erbij. Huur, hypotheek, de premie van je zorgverzekering en kosten van kinderopvang moet je nog van het bedrag onderaan betalen."
         >
           {#snippet grafiek()}
             <Waterval {stappen} beschrijving="Waterval van bruto inkomen naar besteedbaar inkomen" />
@@ -446,6 +463,11 @@
     flex-direction: column;
     gap: 16px;
     min-width: 0;
+  }
+  .opbouw {
+    margin: 0 0 -8px;
+    color: var(--muted);
+    font-size: 15px;
   }
   .kernzin {
     font-family: var(--f-display);

@@ -96,6 +96,8 @@ describe("box 3", () => {
     // Zonder toeslagen: met of zonder spaargeld hou je evenveel over van je inkomen.
     const r = metVermogen(150000);
     expect(r.box3).toBeGreaterThan(0);
-    expect(overVanInkomen(r)).toBeCloseTo(metVermogen(0).besteedbaar, 6);
+    expect(overVanInkomen(r)).toBeCloseTo(overVanInkomen(metVermogen(0)), 6);
+    // De zorgpremie gaat er ook niet af (D-079).
+    expect(overVanInkomen(r)).toBeCloseTo(r.besteedbaar + r.box3 + r.zorgpremie, 6);
   });
 });

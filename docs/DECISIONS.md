@@ -664,3 +664,19 @@ Besluit van de eigenaar (4 november 2026): wat bezoekers invullen, moet er de vo
 - "Onthoud op dit apparaat, ook als ik het tabblad sluit" staat nu standaard aan. De situatie gaat dan in `localStorage` (en, zoals eerst, in `sessionStorage`). Wie het uitzet, bewaart alleen voor het tabblad; die keuze geldt zolang het tabblad openstaat.
 - Ongewijzigd: het voorbeeld waarmee het formulier start, bewaren we pas als je iets verandert. "Wis mijn gegevens" haalt alles weg; daarna staat het vinkje weer aan, maar er wordt pas weer iets bewaard als je iets invult.
 - Privacy: er gaat nog steeds niets naar een server, en de gegevens zijn alleen voor de bezoeker zelf, om een dienst te leveren waar die om vraagt (het formulier invullen). Dat is functionele opslag, dus geen toestemmingsbanner nodig. De privacytekst bij het formulier en op de pagina Over noemt het onthouden, en wat je doet op een gedeelde computer.
+
+## Fase 25: van bruto naar wat je overhoudt
+
+### D-078 Eén regel boven de zin bovenaan
+
+Wens van de eigenaar (4 november 2026): bovenaan ook het bruto inkomen per jaar en de belasting, in de volgorde bruto, belasting, netto.
+
+Boven "Je houdt € … per maand over" staan kleiner twee of drie korte zinnen: "Je bruto inkomen is € … per jaar. Je betaalt € … belasting en € … voor de zorgverzekering per jaar." Pensioenpremie komt in de tweede zin als die er is; toeslagen en kinderbijslag (en in een scenario het basisinkomen) in een derde zin, "Je krijgt € … aan toeslagen en kinderbijslag." Samen tellen ze op tot het jaarbedrag in de zin eronder (op afronding na). De zorgpremie stond er eerst ook in; die is eruit gehaald (D-079). Op verzoek van de eigenaar heet het "belasting": de inkomstenbelasting met de premies volksverzekeringen (op de loonstrook samen de loonheffing), plus de inkomensafhankelijke bijdrage Zvw voor wie die zelf betaalt. De box 3-belasting staat er niet in; die heeft een eigen vakje (D-076).
+
+### D-079 Zorgpremie niet van het bedrag bovenaan
+
+Besluit van de eigenaar (4 november 2026): de nominale premie van de zorgverzekering is geen belasting en hoort niet in het bedrag bovenaan.
+
+- `overVanInkomen` telt de zorgpremie er weer bij: het bedrag bovenaan is nu wat er op je rekening komt (netto inkomen, toeslagen en kinderbijslag). De premie betaal je daar nog van, net als huur en kinderopvang; dat staat bij de waterval en op Methodiek. De waterval heeft geen stap "Premie zorgverzekering" meer, en de effectieve druk telt de premie niet mee.
+- De zorgtoeslag blijft erin: die komt echt op je rekening. Daardoor is het bedrag bovenaan voor iedereen ongeveer € 157 per maand per volwassene hoger dan het besteedbaar inkomen.
+- Ongewijzigd: `besteedbaar` in de engine trekt de premie wel af, zoals het CBS. Daarmee rekenen de verschillen tussen voorstellen (de premie is in elk scenario gelijk, dus daar verandert niets), de bevolkingscijfers, de armoedegrens en "je plek in Nederland".
