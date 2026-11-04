@@ -157,11 +157,28 @@ try {
   await vinkBox1.check();
   await pg.getByRole("checkbox", { name: "Verschil met nu" }).check();
   controleer(
-    (await pg.getByText("Hoeveel meer of minder belasting betaalt elke inkomensgroep?").isVisible()) &&
+    (await pg.getByText("Hoeveel meer betaalt of minder krijgt elke inkomensgroep?").isVisible()) &&
       (await pg.locator("svg line.nu").count()) === 0,
-    "lab: verschil met nu, de huidige situatie is de nullijn (D-081)",
+    "lab: verschil met nu, de huidige situatie is de nullijn, met uitkeringen en toeslagen (D-081, D-082)",
+  );
+  const vinkOntvangen = pg.getByRole("checkbox", { name: "Uitkeringen en toeslagen" });
+  await vinkOntvangen.uncheck();
+  controleer(
+    await pg.getByText("Hoeveel meer of minder belasting betaalt elke inkomensgroep?").isVisible(),
+    "lab: zonder uitkeringen en toeslagen alleen het verschil in belasting",
+  );
+  await vinkOntvangen.check();
+  await vinkBox1.uncheck();
+  await vinkBox3.uncheck();
+  controleer(
+    await vinkOntvangen.isDisabled(),
+    "lab: alleen uitkeringen en toeslagen; dat vinkje kan niet uit",
   );
   await pg.getByRole("checkbox", { name: "Verschil met nu" }).uncheck();
+  controleer(
+    (await vinkBox1.isChecked()) && (await vinkBox3.isChecked()),
+    "lab: zonder verschil staan box 1 en box 3 weer aan",
+  );
   const meld = pg.locator("main a[data-meldfout]");
   await meld.dispatchEvent("pointerdown");
   const meldPagina = new URL((await meld.getAttribute("href")) ?? "").searchParams.get("pagina") ?? "";

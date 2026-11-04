@@ -707,3 +707,15 @@ Wens van de eigenaar (4 november 2026): in de grafiek van D-080 is het verschil 
 - Eén getal bij de staaf met het grootste verschil. Verandert er niets in de gekozen boxen, dan staat dat er in een zin onder.
 - Onder de grafiek: "Alleen belasting. Wat er met toeslagen gebeurt, zie je bij 'Wie gaat erop vooruit of achteruit?'". Bij een vlaktaks betaalt elke groep minder belasting (samen € 28,7 mld), omdat de toeslagen verdwijnen; zonder die zin lijkt het of iedereen erop vooruitgaat.
 - Kleuren blijven box 1 en box 3; rood en groen zijn voor wat huishoudens netto overhouden, en dit is alleen de belasting.
+
+## Fase 30: uitkeringen en toeslagen in het verschil
+
+### D-082 Uitkeringen en toeslagen als derde laag
+
+Wens van de eigenaar (4 november 2026): bij voorstellen als "toeslagen afschaffen" en "zonder huurtoeslag" stond het verschil met nu (D-081) overal op 0, omdat de grafiek alleen belasting telde. De eigenaar wil één term voor alles wat huishoudens van de overheid ontvangen; gekozen is "Uitkeringen en toeslagen".
+
+- Derde vinkje "Uitkeringen en toeslagen", alleen bij "Verschil met nu" en standaard aan. Minder ontvangen telt omhoog, net als meer belasting: voor de portemonnee is dat hetzelfde. Titel dan "Hoeveel meer betaalt of minder krijgt elke inkomensgroep?". Zonder verschil blijft de grafiek het aandeel in de belasting; uitkeringen passen niet in "welk deel van de belasting".
+- Wat erin zit: AOW (alleen het AOW-deel, niet het aanvullend pensioen), bijstand, WW en WIA, de vier toeslagen, kinderbijslag en basisinkomen. Uitkeringen tellen bruto, want de belasting erover staat al bij box 1; zo telt niets dubbel. Bij een netto gekoppelde uitkering vallen het bruto verschil en het verschil in belasting tegen elkaar weg.
+- De engine geeft per huishouden een nieuw veld `uitkering` (bruto uitkeringen na netto-koppeling en na wat het basisinkomen vervangt; zit al in `bruto`). `belastingPerDeciel` telt per groep `ontvangen` op. Geen andere rekenregels, dus geen nieuwe modelversie; de golden tests blijven gelijk.
+- Het totaal per groep komt dicht bij "Wie gaat erop vooruit of achteruit?", maar niet precies: daar tellen ook de Zvw-bijdrage en het gedragseffect mee, en de groepen zijn daar ingedeeld met de box 3-belasting erin (zie de open vraag bij fase 27).
+- Kleur: paars (`--ontvangen`, licht #9c6bc9, donker #9a52b8), naast box 1 en box 3 gecontroleerd op alle paren (kleurenblindheid, normaal zicht, contrast) in licht en donker.

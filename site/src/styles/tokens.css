@@ -26,6 +26,7 @@
   /* Box 1 en box 3 in "Wie betaalt de belasting?" (D-080), gecontroleerd met de dataviz-validator. */
   --box1: #3d5a99;
   --box3: #b8741a;
+  --ontvangen: #9c6bc9;
   --warn-bg: #fdf5e4;
   --warn: #8a5a00;
   --schaduw: 0 1px 2px rgb(60 45 20 / 6%), 0 4px 16px rgb(60 45 20 / 5%);
@@ -56,6 +57,7 @@
     --neutral: #2c2a26;
     --box1: #6f8fd6;
     --box3: #b47a22;
+    --ontvangen: #9a52b8;
     --warn-bg: #2b2716;
     --warn: #e8c06a;
     --schaduw: 0 1px 2px rgb(0 0 0 / 30%);
@@ -82,6 +84,7 @@
   --neutral: #2c2a26;
   --box1: #6f8fd6;
   --box3: #b47a22;
+  --ontvangen: #9a52b8;
   --warn-bg: #2b2716;
   --warn: #e8c06a;
   --schaduw: 0 1px 2px rgb(0 0 0 / 30%);

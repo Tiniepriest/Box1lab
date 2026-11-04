@@ -7,6 +7,11 @@ export interface BelastingPerDeciel {
   box1: number[];
   /** Box 3 per inkomensgroep, € mld. */
   box3: number[];
+  /**
+   * Uitkeringen en toeslagen per inkomensgroep, € mld (D-082): bruto uitkeringen (AOW, bijstand,
+   * werknemersverzekeringen), toeslagen, kinderbijslag en basisinkomen.
+   */
+  ontvangen: number[];
   /** Aantal huishoudens per inkomensgroep. */
   huishoudens: number[];
 }
@@ -16,6 +21,9 @@ export interface BelastingPerDeciel {
  * bevolking naar gestandaardiseerd besteedbaar inkomen zonder de box 3-belasting. Met de box 3-belasting erin zou
  * wie veel vermogen en weinig inkomen heeft juist door die belasting in de laagste groep vallen: het rendement telt
  * niet als inkomen, de belasting erover wel (D-076). Opgeteld is het gelijk aan de totalen.
+ *
+ * Daarnaast wat elke groep van de overheid ontvangt aan uitkeringen en toeslagen (D-082), om in een scenario het
+ * verschil met nu te tonen naast dat in de belasting.
  *
  * Met `resultaten` van een scenario: dezelfde groepen als nu (zoals bij de andere effecten per groep), met de
  * belasting in het scenario.
@@ -27,6 +35,7 @@ export function belastingPerDeciel(
   const uit: BelastingPerDeciel = {
     box1: new Array<number>(10).fill(0),
     box3: new Array<number>(10).fill(0),
+    ontvangen: new Array<number>(10).fill(0),
     huishoudens: new Array<number>(10).fill(0),
   };
   const decielen = deelInDecielen(
@@ -38,6 +47,7 @@ export function belastingPerDeciel(
     const w = basis.populatie[i]!.gewicht;
     uit.box1[d]! += (r.belasting * w) / 1e9;
     uit.box3[d]! += (r.box3 * w) / 1e9;
+    uit.ontvangen[d]! += ((r.uitkering + r.toeslagen + r.kinderbijslag + r.basisinkomen) * w) / 1e9;
     uit.huishoudens[d]! += w;
   });
   return uit;
