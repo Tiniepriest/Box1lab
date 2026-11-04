@@ -8,6 +8,14 @@
 
 - datum: 2026-11-04
   soort: nieuw
+  titel: "Scenariolab: verschil in belasting per inkomensgroep"
+  tekst: >-
+    Bij "Welk deel van de belasting betaalt elke inkomensgroep?" kun je in een scenario nu "Verschil met nu"
+    aanzetten. De huidige situatie is dan de nullijn, en je ziet per groep hoeveel meer of minder belasting een
+    huishouden per jaar betaalt, in box 1 en box 3.
+
+- datum: 2026-11-04
+  soort: nieuw
   titel: "Scenariolab: wie betaalt de belasting?"
   tekst: >-
     In het Scenariolab laat een staafgrafiek zien welk deel van de belasting in box 1 en box 3 elke inkomensgroep

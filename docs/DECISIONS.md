@@ -696,3 +696,14 @@ Wens van de eigenaar (4 november 2026): een staafgrafiek met horizontaal de inko
 - **Kleuren:** `--box1` (inktblauw) en `--box3` (oker), per modus gecontroleerd met de dataviz-validator (licht #3d5a99 / #b8741a, donker #6f8fd6 / #b47a22): binnen de helderheidsband, ook bij kleurenblindheid te onderscheiden, contrast ≥ 3:1. Rood en groen blijven voor winst en verlies.
 
 Uitkomst 2026: de hoogste 10% betaalt 40% van alle belasting in box 1 en box 3, de laagste helft 15%; de hoogste groep betaalt 40% van de box 3-belasting.
+
+## Fase 29: verschil met nu
+
+### D-081 Verschil in belasting per inkomensgroep
+
+Wens van de eigenaar (4 november 2026): in de grafiek van D-080 is het verschil met nu niet goed te zien. Een knop maakt de huidige situatie nul, zodat de staven het verschil laten zien. Eerst als voorbeeld voorgelegd (vlaktaks 35%) en goedgekeurd.
+
+- Vinkje "Verschil met nu" in de legenda, alleen in een scenario. De staven zijn dan het verschil in belasting per huishouden per jaar (box 1 en box 3, met dezelfde vinkjes), omhoog meer en omlaag minder; per box gestapeld vanaf de nullijn. De eenheid is euro per huishouden per jaar, omdat dat het makkelijkst te begrijpen is; het bedrag voor de hele groep (€ mld) staat bij aanwijzen en in de tabel.
+- Eén getal bij de staaf met het grootste verschil. Verandert er niets in de gekozen boxen, dan staat dat er in een zin onder.
+- Onder de grafiek: "Alleen belasting. Wat er met toeslagen gebeurt, zie je bij 'Wie gaat erop vooruit of achteruit?'". Bij een vlaktaks betaalt elke groep minder belasting (samen € 28,7 mld), omdat de toeslagen verdwijnen; zonder die zin lijkt het of iedereen erop vooruitgaat.
+- Kleuren blijven box 1 en box 3; rood en groen zijn voor wat huishoudens netto overhouden, en dit is alleen de belasting.
