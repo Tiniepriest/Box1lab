@@ -612,3 +612,18 @@ Het toekennen gebeurt in dezelfde rondes als de pensioenpremie (de 10%-groep han
 **Gevolg.** Box 3 levert in het model € 9,5 mld op, betaald door 2,2 miljoen huishoudens; de raming voor 2026 is € 10,5 mld. Lager hoort zo: geen tegenbewijsregeling, vermogen van een jaar eerder en geen vermogen buiten particuliere huishoudens. Box 1 € 149,9 → € 149,5 mld. Armoede 10,2% → 10,3%, Gini 0,233 → 0,232 (box 3 gaat nu af van het besteedbaar inkomen; de mediaan daalt van € 37.516 naar € 37.221). Vóór de herweging zitten de toeslagen nu dichter bij Dienst Toeslagen, omdat de vermogensgrens werkt (uitgaven huurtoeslag vóór herweging +36% → +17%).
 
 Golden-verschil: alle cijfers die van de bevolking afhangen, plus een nieuwe post `box3` (0 in de bestaande voorstellen). Saldo vlaktaks −€ 2,84 → −€ 2,50 mld, drie schijven € 29,19 → € 29,84 mld, zonder hypotheekrenteaftrek € 7,90 → € 7,99 mld, algemene heffingskorting + € 500 −€ 4,49 → −€ 4,57 mld; de andere voorstellen veranderen minder dan € 0,15 mld. Het verschil komt van het opnieuw herwegen met de vermogensgrens van de toeslagen en de twee nieuwe marges. Modelversie 0.5.0.
+
+## Fase 19: loonstrook
+
+### D-074 Netto maandloon, vakantiegeld en 13e maand apart
+
+Wens van de eigenaar (4 november 2026): vakantiegeld en 13e maand uit het netto bedrag halen en apart laten zien, zodat bezoekers de uitkomst kunnen vergelijken met hun loonstrook.
+
+Een kaart "Klopt het met je loonstrook?" op Jouw situatie, per werknemer of uitkeringsgerechtigde (werknemersverzekering) die een bedrag per maand invulde (`loonstrook.ts`). Per maand: bruto, loonheffing, pensioenpremie en netto. Per jaar apart: vakantiegeld, 13e maand en bonus, bruto en netto.
+
+- **Rekenwijze.** De loonheffing gaat over het hele jaar, zoals de aangifte en de rest van het model. Het netto maandloon is een twaalfde van het netto jaarloon zonder extra's. Elke extra levert op wat het netto jaarinkomen erdoor stijgt, in de volgorde vakantiegeld, 13e maand, bonus. Samen is dat precies het netto inkomen uit werk van het model. De werkgever houdt over extra's het tarief voor bijzondere beloningen in, dat op hetzelfde neerkomt (de belasting over het laatste stuk jaarloon, met de afbouw van de kortingen). Daarom kan een echte loonstrook een paar tientjes afwijken; dat staat erbij.
+- **Wat er niet op staat.** De combinatiekorting en de hypotheekrenteaftrek (die komen via de aangifte of een voorlopige aanslag), toeslagen en de nominale zorgpremie. De inkomensafhankelijke bijdrage Zvw betaalt de werkgever, die staat ook in het model niet bij werknemers.
+- **Bedrag per jaar.** Wie het loon per jaar invult, krijgt geen loonstrook: dan weten we niet wat erin zit. De kaart vraagt dan om het bedrag per maand.
+- **Bovenaan** blijft het gemiddelde besteedbaar inkomen per maand staan, omdat alle vergelijkingen op de site daarover gaan. De kaart legt uit dat dat een gemiddelde is.
+
+Geen verandering in de rekenregels, dus geen nieuwe modelversie en geen golden-verschil.

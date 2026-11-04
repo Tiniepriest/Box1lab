@@ -21,6 +21,7 @@
   import Waterval from "./grafieken/Waterval.svelte";
   import InvoerFormulier from "./Invoer.svelte";
   import JaarVergelijking from "./JaarVergelijking.svelte";
+  import Loonstrook from "./Loonstrook.svelte";
   import WatAls from "./WatAls.svelte";
 
   let {
@@ -183,6 +184,10 @@
           {/if}
         </div>
       </div>
+
+      {#if geldig.success}
+        <Loonstrook {params} invoer={geldig.data} />
+      {/if}
 
       <section class="volgende" aria-labelledby="titel-volgende">
         <h2 id="titel-volgende">Volgende stap</h2>

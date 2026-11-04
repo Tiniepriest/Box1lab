@@ -6,6 +6,14 @@
 #
 # soort: nieuw | cijfers | model | correctie
 
+- datum: 2026-11-04
+  soort: nieuw
+  titel: "Jouw situatie: klopt het met je loonstrook?"
+  tekst: >-
+    Op Jouw situatie zie je nu wat er ongeveer op je loonstrook staat: je netto loon per maand, en apart wat je
+    vakantiegeld, 13e maand en bonus netto opleveren. Zo kun je de berekening naast je eigen loonstrook leggen. Het
+    bedrag bovenaan blijft een gemiddelde over het hele jaar, met toeslagen en zorgpremie.
+
 - datum: 2026-11-03
   soort: model
   modelversie: 0.5.0

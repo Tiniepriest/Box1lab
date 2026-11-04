@@ -244,6 +244,11 @@ try {
       (await pg.locator("#bedrag-0").inputValue()) === "3704",
     "calculator: het voorbeeld is een modaal inkomen, en dat staat erbij",
   );
+  const strook = ((await pg.locator(".loonstrook").textContent()) ?? "").replace(/\s+/g, " ");
+  controleer(
+    /Per maand ?€ 3\.704 ?€ [\d.]+/.test(strook) && /Vakantiegeld ?meestal in mei/.test(strook),
+    "calculator: loonstrook met netto maandloon en vakantiegeld apart",
+  );
   controleer(bevolking.length === 0, "calculator: plek in de inkomensverdeling zonder de bevolking te laden");
   const volgende = ((await pg.locator(".volgende").textContent()) ?? "").replace(/\s+/g, " ");
   controleer(
