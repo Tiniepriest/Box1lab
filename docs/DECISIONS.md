@@ -640,3 +640,16 @@ Wens van de eigenaar (4 november 2026): mensen weten hun maandbedrag beter dan d
 - De notitie over de hypotheekrenteaftrek noemt nu eerst het bedrag per maand.
 
 Geen andere rekenregels, geen nieuwe modelversie, geen golden-verschil.
+
+## Fase 21: box 3 apart van wat je overhoudt
+
+### D-076 Het bedrag bovenaan zonder box 3
+
+Wens van de eigenaar (4 november 2026): mensen zien het forfaitaire rendement in box 3 niet als geld dat ze op hun rekening krijgen en kunnen uitgeven. Het bedrag dat ze bovenaan Jouw situatie zien, moet daar dus niet van afhangen.
+
+- Het rendement telde al nergens als inkomen (D-073); alleen de box 3-belasting ging af van het besteedbaar inkomen. Wie spaargeld invulde, zag het bedrag bovenaan dalen, zonder dat er iets tegenover stond.
+- Nieuw: `overVanInkomen(r)` = besteedbaar inkomen zonder de box 3-belasting. Dat staat bovenaan Jouw situatie, in de balk onderaan op een telefoon, in de kolom "Gerekend met jouw situatie" en als eind van de waterval. Daaronder staat de box 3-belasting als eigen regel. De effectieve druk (belasting min toeslagen als deel van het bruto inkomen) telt box 3 ook niet meer mee.
+- Ongewijzigd: `besteedbaar` in de engine. Verschillen tussen voorstellen, jaren en de wat-als-vragen, de bevolking (armoede, Gini, inkomensgroepen) en "je plek in Nederland" rekenen met de box 3-belasting erbij, anders zou een voorstel voor box 3 voor niemand iets veranderen.
+- Ook ongewijzigd: het voordeel uit box 3 telt mee in het toetsingsinkomen van de toeslagen. Zo rekent Dienst Toeslagen echt, en de toeslag die je krijgt, staat wel op je rekening.
+
+Geen andere rekenregels, geen nieuwe modelversie, geen golden-verschil.

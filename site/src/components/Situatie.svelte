@@ -3,6 +3,7 @@
     berekenHuishouden,
     huishoudenUitInvoer,
     invoerSchema,
+    overVanInkomen,
     type Invoer,
     type Parameters,
   } from "@box1lab/engine";
@@ -69,7 +70,7 @@
   const nu = $derived.by(() => {
     const geldig = invoerSchema.safeParse($state.snapshot(invoer));
     return geldig.success
-      ? berekenHuishouden(huishoudenUitInvoer(geldig.data, params), params).besteedbaar
+      ? overVanInkomen(berekenHuishouden(huishoudenUitInvoer(geldig.data, params), params))
       : null;
   });
   const samen = $derived(invoer.personen.length > 1 || invoer.kinderen.length > 0);

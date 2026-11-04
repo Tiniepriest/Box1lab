@@ -7,6 +7,7 @@
     invoerSchema,
     marginaleDrukVan,
     metInkomen,
+    overVanInkomen,
     pasToe,
     type Invoer,
     type Parameters,
@@ -83,7 +84,6 @@
     ];
     if (r.pensioenpremie > 0) s.push({ label: "Pensioenpremie", bedrag: r.pensioenpremie, soort: "min" });
     s.push({ label: "Belasting en premies", bedrag: r.belasting, soort: "min" });
-    if (r.box3 > 0) s.push({ label: "Belasting box 3", bedrag: r.box3, soort: "min" });
     if (r.zvw > 0) s.push({ label: "Bijdrage zorgverzekering", bedrag: r.zvw, soort: "min" });
     if (r.zorgtoeslag > 0) s.push({ label: "Zorgtoeslag", bedrag: r.zorgtoeslag, soort: "plus" });
     if (r.huurtoeslag > 0) s.push({ label: "Huurtoeslag", bedrag: r.huurtoeslag, soort: "plus" });
@@ -91,9 +91,12 @@
     if (r.kot > 0) s.push({ label: "Kinderopvangtoeslag", bedrag: r.kot, soort: "plus" });
     if (r.kinderbijslag > 0) s.push({ label: "Kinderbijslag", bedrag: r.kinderbijslag, soort: "plus" });
     s.push({ label: "Premie zorgverzekering", bedrag: r.zorgpremie, soort: "min" });
-    s.push({ label: "Te besteden", bedrag: r.besteedbaar, soort: "totaal" });
+    s.push({ label: "Te besteden", bedrag: overVanInkomen(r), soort: "totaal" });
     return s;
   });
+
+  // Bovenaan: wat je overhoudt van je inkomen, zonder box 3 (D-076).
+  const over = $derived(r ? overVanInkomen(r) : 0);
 
   const positie = $derived(r ? aandeelUitVerdeling(r.besteedbaar / r.equivalentie, plekGrenzen) : null);
 
@@ -128,7 +131,7 @@
 
   const effectief = $derived(
     r && r.bruto > 0
-      ? ((r.belasting + r.box3 + r.zvw + r.zorgpremie - r.toeslagen - r.kinderbijslag) / r.bruto) * 100
+      ? ((r.belasting + r.zvw + r.zorgpremie - r.toeslagen - r.kinderbijslag) / r.bruto) * 100
       : 0,
   );
 </script>
@@ -154,8 +157,15 @@
     {:else}
       <p class="kernzin">
         {eigen ? (samen ? "Jullie houden" : "Je houdt") : "In dit voorbeeld houd je"}
-        <strong>{euro(r.besteedbaar / 12)}</strong> per maand over om van te leven ({euro(r.besteedbaar)} per jaar).
+        <strong>{euro(over / 12)}</strong> per maand over om van te leven ({euro(over)} per jaar).
       </p>
+      {#if r.box3 > 0}
+        <p class="box3">
+          Over {samen ? "jullie" : "je"} spaargeld en beleggingen {samen ? "betalen jullie" : "betaal je"} daarnaast
+          <strong>{euro(r.box3)}</strong> box 3-belasting per jaar. Die staat los van het bedrag hierboven, net
+          als de rente en het rendement zelf.
+        </p>
+      {/if}
 
       <div class="kerngetallen">
         {#if invoer.personen[0]!.soort === "bijstand"}
@@ -369,7 +379,7 @@
   <div class="snelbalk">
     <span
       >{eigen ? (samen ? "Jullie houden" : "Je houdt") : "Voorbeeld:"}
-      <strong>{euro(r.besteedbaar / 12)}</strong> per maand over</span
+      <strong>{euro(over / 12)}</strong> per maand over</span
     >
     <button type="button" onclick={() => uitkomsten.scrollIntoView({ behavior: "smooth", block: "start" })}
       >Bekijk ↓</button
@@ -450,6 +460,10 @@
     font-size: 23px;
     line-height: 1.35;
     margin: 0;
+  }
+  .box3 {
+    margin: 0;
+    color: var(--muted);
   }
   .voorbeeld {
     margin: 0 0 12px;

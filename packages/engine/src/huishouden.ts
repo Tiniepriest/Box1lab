@@ -292,6 +292,15 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
 }
 
 /**
+ * Wat een huishouden per jaar overhoudt van het inkomen, zoals de calculator het bovenaan toont (D-076): het
+ * besteedbaar inkomen zonder de box 3-belasting. Het rendement op sparen en beleggen telt niet als inkomen, dus
+ * de belasting daarover ook niet. De verschillen tussen scenario's rekenen we wel met `besteedbaar`.
+ */
+export function overVanInkomen(r: Resultaat): number {
+  return r.besteedbaar + r.box3;
+}
+
+/**
  * Equivalentiefactor van een huishouden: de eerste volwassene telt 1, iedere volgende persoon vanaf
  * `kindVanafLeeftijd` telt als extra volwassene, jongere kinderen als kind (parameters in methodiek.equivalentie).
  */

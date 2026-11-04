@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { berekenHuishouden, box3, huishoudenUitInvoer, type Invoer } from "../src/index.ts";
+import { berekenHuishouden, box3, huishoudenUitInvoer, overVanInkomen, type Invoer } from "../src/index.ts";
 import { laadParameters } from "../src/node/index.ts";
 
 const p = laadParameters(2026);
@@ -59,5 +59,43 @@ describe("box 3", () => {
     expect(met.box3).toBeGreaterThan(0);
     expect(met.toetsingsinkomen).toBeGreaterThan(zonder.toetsingsinkomen);
     expect(met.besteedbaar).toBeLessThan(zonder.besteedbaar - met.box3 + 1);
+  });
+
+  it("wat je overhoudt van je inkomen telt de box 3-belasting niet mee (D-076)", () => {
+    const metVermogen = (vermogen: number) =>
+      berekenHuishouden(
+        huishoudenUitInvoer(
+          {
+            personen: [
+              {
+                leeftijd: 45,
+                soort: "loondienst",
+                bedrag: 6000,
+                periode: "maand",
+                inclusiefVakantiegeld: false,
+                dertiendeMaand: false,
+                extraPerJaar: 0,
+                pensioenpremiePerMaand: 0,
+                urencriterium: true,
+                starter: false,
+              },
+            ],
+            kinderen: [],
+            wonen: "huur",
+            huurPerMaand: 0,
+            woz: 0,
+            hypotheekrente: 0,
+            vermogen,
+            beleggingen: 0,
+            schulden: 0,
+          },
+          p,
+        ),
+        p,
+      );
+    // Zonder toeslagen: met of zonder spaargeld hou je evenveel over van je inkomen.
+    const r = metVermogen(150000);
+    expect(r.box3).toBeGreaterThan(0);
+    expect(overVanInkomen(r)).toBeCloseTo(metVermogen(0).besteedbaar, 6);
   });
 });

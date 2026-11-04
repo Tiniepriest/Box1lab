@@ -153,6 +153,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Hypotheekrente per maand invullen, met een rekenhulp uit schuld en rentepercentage (D-075)
 
+## Fase 21: box 3 apart van wat je overhoudt — klaar
+
+- [x] Het bedrag bovenaan Jouw situatie zonder box 3-belasting; box 3 als eigen regel eronder (D-076)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
