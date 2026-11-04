@@ -170,6 +170,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] Staafgrafiek box 1 en box 3 per inkomensgroep in het Scenariolab, met vinkjes voor box 1 en box 3 en een streepje voor nu (D-080)
 - [ ] Vraag aan de eigenaar: de decielen overal zonder de box 3-belasting indelen? (zie D-080)
 
+## Fase 29: verschil met nu — klaar
+
+- [x] "Verschil met nu" in de grafiek over wie de belasting betaalt: per huishouden per jaar (D-081)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
