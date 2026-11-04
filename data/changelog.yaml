@@ -8,6 +8,14 @@
 
 - datum: 2026-11-04
   soort: nieuw
+  titel: "Je situatie blijft onthouden"
+  tekst: >-
+    Wat je op Jouw situatie invult, staat er de volgende keer nog, ook als je het tabblad sluit. Het blijft in je
+    eigen browser; er gaat niets naar een server. Op een computer die je deelt, zet je onderaan het formulier
+    "Onthoud op dit apparaat" uit, of je wist je gegevens.
+
+- datum: 2026-11-04
+  soort: nieuw
   titel: "Box 3 apart van wat je overhoudt"
   tekst: >-
     Het bedrag bovenaan Jouw situatie, wat je per maand overhoudt, gaat nu alleen over je inkomen. De box 3-belasting

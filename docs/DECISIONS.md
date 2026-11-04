@@ -653,3 +653,13 @@ Wens van de eigenaar (4 november 2026): mensen zien het forfaitaire rendement in
 - Ook ongewijzigd: het voordeel uit box 3 telt mee in het toetsingsinkomen van de toeslagen. Zo rekent Dienst Toeslagen echt, en de toeslag die je krijgt, staat wel op je rekening.
 
 Geen andere rekenregels, geen nieuwe modelversie, geen golden-verschil.
+
+## Fase 22: situatie onthouden
+
+### D-077 Standaard onthouden op dit apparaat
+
+Besluit van de eigenaar (4 november 2026): wat bezoekers invullen, moet er de volgende keer nog staan, ook na het sluiten van het tabblad. Dit vervangt het deel van D-052 waarin langer bewaren alleen op verzoek was.
+
+- "Onthoud op dit apparaat, ook als ik het tabblad sluit" staat nu standaard aan. De situatie gaat dan in `localStorage` (en, zoals eerst, in `sessionStorage`). Wie het uitzet, bewaart alleen voor het tabblad; die keuze geldt zolang het tabblad openstaat.
+- Ongewijzigd: het voorbeeld waarmee het formulier start, bewaren we pas als je iets verandert. "Wis mijn gegevens" haalt alles weg; daarna staat het vinkje weer aan, maar er wordt pas weer iets bewaard als je iets invult.
+- Privacy: er gaat nog steeds niets naar een server, en de gegevens zijn alleen voor de bezoeker zelf, om een dienst te leveren waar die om vraagt (het formulier invullen). Dat is functionele opslag, dus geen toestemmingsbanner nodig. De privacytekst bij het formulier en op de pagina Over noemt het onthouden, en wat je doet op een gedeelde computer.

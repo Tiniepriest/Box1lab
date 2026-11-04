@@ -14,11 +14,12 @@
 
   /*
    * Het gedeelde invoerformulier (HANDOFF §3.3). Alles blijft in de browser (D-052): zolang het tabblad openstaat
-   * onthouden we het, zodat het meegaat naar andere pagina's; op dit apparaat alleen als de bezoeker dat aanzet.
+   * onthouden we het op dit apparaat, zodat het meegaat naar andere pagina's en er de volgende keer nog staat
+   * (D-077). Wie dat niet wil, zet het uit; dan alleen zolang het tabblad openstaat.
    */
   let { invoer = $bindable(), params }: { invoer: Invoer; params: Parameters } = $props();
 
-  let onthouden = $state(false);
+  let onthouden = $state(true);
   let melding = $state("");
   // Het voorbeeld bewaren we pas als de bezoeker iets verandert; anders lijkt het voorbeeld "jouw situatie".
   let begin: string | null = null;
@@ -78,7 +79,7 @@
     // Terug naar het voorbeeld; dat bewaren we niet, net als bij het begin.
     invoer = voorbeeldInvoer(params);
     begin = JSON.stringify($state.snapshot(invoer));
-    onthouden = false;
+    onthouden = true;
     melding = "Je gegevens zijn gewist uit deze browser.";
   }
   // Rekenhulp voor de hypotheekrente, als klein venster bij het veld. Schuld en percentage worden niet bewaard,
@@ -127,9 +128,10 @@
 
 <form class="invoer" onsubmit={(e) => e.preventDefault()} aria-label="Jouw situatie">
   <p class="privacy">
-    <strong>Privacy:</strong> wat je invult blijft in je eigen browser. Er gaat niets naar een server. Zolang dit
-    tabblad openstaat, onthouden we het, zodat je jouw situatie ook bij het Belastingplan en in het lab ziet. Sluit
-    je het tabblad, dan is het weg.
+    <strong>Privacy:</strong> wat je invult blijft in je eigen browser. Er gaat niets naar een server. We onthouden
+    het op dit apparaat, zodat je jouw situatie ook bij het Belastingplan en in het lab ziet, en de volgende keer
+    verder kunt waar je was. Op een computer die je met anderen deelt? Zet onderaan "Onthoud" uit, of wis je gegevens
+    als je klaar bent.
   </p>
 
   <fieldset>
@@ -469,7 +471,7 @@
 
   <div class="opslaan">
     <label class="vinkje"
-      ><input type="checkbox" bind:checked={onthouden} /> Onthoud ook als ik het tabblad sluit (op dit apparaat)</label
+      ><input type="checkbox" bind:checked={onthouden} /> Onthoud op dit apparaat, ook als ik het tabblad sluit</label
     >
     <button type="button" class="stil" onclick={wis}>Wis mijn gegevens</button>
     {#if melding}<p class="notitie" role="status">{melding}</p>{/if}
