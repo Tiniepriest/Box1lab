@@ -3,6 +3,7 @@
     bijstandsnormPerJaar,
     heeftAowLeeftijd,
     persoonInvoerSchema,
+    renteUitHypotheek,
     type Invoer,
     type Parameters,
     type PersoonInvoer,
@@ -80,6 +81,35 @@
     onthouden = false;
     melding = "Je gegevens zijn gewist uit deze browser.";
   }
+  // Rekenhulp voor de hypotheekrente, als klein venster bij het veld. Schuld en percentage worden niet bewaard,
+  // alleen de rente die de bezoeker overneemt.
+  let hulpOpen = $state(false);
+  let schuld = $state(0);
+  let rentePercentage = $state(0);
+  let rekenknop = $state<HTMLButtonElement>();
+  let rentevak = $state<HTMLElement>();
+  const uitgerekend = $derived(
+    schuld > 0 && rentePercentage > 0 ? renteUitHypotheek(schuld, rentePercentage) : null,
+  );
+  function sluitHulp() {
+    hulpOpen = false;
+    rekenknop?.focus();
+  }
+  function neemOver() {
+    if (uitgerekend !== null) invoer.hypotheekrente = uitgerekend;
+    sluitHulp();
+  }
+  $effect(() => {
+    if (!hulpOpen) return;
+    document.getElementById("schuld")?.focus();
+    // Klikken buiten het venster sluit het.
+    const buiten = (e: PointerEvent) => {
+      if (rentevak && !rentevak.contains(e.target as Node)) hulpOpen = false;
+    };
+    window.addEventListener("pointerdown", buiten);
+    return () => window.removeEventListener("pointerdown", buiten);
+  });
+
   function leesGetal(e: Event): number {
     const v = Number((e.currentTarget as HTMLInputElement).value);
     return Number.isFinite(v) && v >= 0 ? v : 0;
@@ -295,11 +325,104 @@
         Staat op de aanslag van de gemeentelijke belastingen, of zoek je huis op in het
         <a href="https://www.wozwaardeloket.nl/">WOZ-waardeloket</a>.
       </p>
-      <div class="rij">
-        <label for="rente">Betaalde hypotheekrente per jaar (€)</label>
-        <input id="rente" type="number" min="0" step="100" bind:value={invoer.hypotheekrente} />
+      <div class="rentevak" bind:this={rentevak}>
+        <div class="rij">
+          <label for="rente"
+            >Hypotheekrente per maand (€)
+            <span class="hint">alleen de rente; weet je die niet, klik op de rekenmachine</span></label
+          >
+          <div class="metknop">
+            <!-- Het formulier vraagt per maand, de berekening rekent per jaar. -->
+            <input
+              id="rente"
+              type="number"
+              min="0"
+              step="10"
+              value={Math.round((invoer.hypotheekrente / 12) * 100) / 100}
+              oninput={(e) => (invoer.hypotheekrente = leesGetal(e) * 12)}
+            />
+            <button
+              type="button"
+              class="rekenknop"
+              bind:this={rekenknop}
+              aria-label="Rente uitrekenen"
+              title="Rente uitrekenen"
+              aria-expanded={hulpOpen}
+              aria-controls="rekenhulp"
+              onclick={() => (hulpOpen = !hulpOpen)}
+            >
+              <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+                <rect
+                  x="4"
+                  y="2"
+                  width="12"
+                  height="16"
+                  rx="2"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <rect x="6.5" y="4.5" width="7" height="3" rx="0.5" fill="currentColor" />
+                <circle cx="7.5" cy="10.5" r="1" fill="currentColor" />
+                <circle cx="10" cy="10.5" r="1" fill="currentColor" />
+                <circle cx="12.5" cy="10.5" r="1" fill="currentColor" />
+                <circle cx="7.5" cy="14" r="1" fill="currentColor" />
+                <circle cx="10" cy="14" r="1" fill="currentColor" />
+                <circle cx="12.5" cy="14" r="1" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        {#if hulpOpen}
+          <div
+            id="rekenhulp"
+            class="rekenhulp"
+            role="dialog"
+            aria-labelledby="titel-rekenhulp"
+            tabindex="-1"
+            onkeydown={(e) => e.key === "Escape" && sluitHulp()}
+          >
+            <div class="hulpkop">
+              <strong id="titel-rekenhulp">Rente uitrekenen</strong>
+              <button type="button" class="sluit" aria-label="Sluiten" onclick={sluitHulp}>×</button>
+            </div>
+            <p class="notitie">
+              Wat je elke maand aan de bank betaalt, is rente plus aflossing. In de app van je bank staat vaak
+              hoeveel daarvan rente is. Weet je dat niet, vul dan in hoeveel hypotheek je nog hebt en wat je
+              rente is.
+            </p>
+            <label class="veld"
+              >Hypotheek die je nog hebt (€)
+              <input
+                id="schuld"
+                type="number"
+                min="0"
+                step="5000"
+                value={schuld}
+                oninput={(e) => (schuld = leesGetal(e))}
+              />
+            </label>
+            <label class="veld"
+              >Rente (%)
+              <input
+                id="rentepercentage"
+                type="number"
+                min="0"
+                step="0.01"
+                value={rentePercentage}
+                oninput={(e) => (rentePercentage = leesGetal(e))}
+              />
+            </label>
+            <button type="button" class="primair" disabled={uitgerekend === null} onclick={neemOver}>
+              {uitgerekend === null ? "Vul beide in" : `Gebruik ${euro(uitgerekend / 12)} per maand`}
+            </button>
+            <p class="notitie">
+              Meer leningdelen met een andere rente? Reken per deel uit en tel op. Of neem de betaalde rente
+              over vorig jaar van de jaaropgave van je bank, gedeeld door 12.
+            </p>
+          </div>
+        {/if}
       </div>
-      <p class="notitie">Staat op de jaaropgave van je hypotheek.</p>
     {/if}
   </fieldset>
 
@@ -399,6 +522,57 @@
       grid-template-columns: minmax(0, 1fr);
       gap: 4px;
     }
+  }
+  .rentevak {
+    position: relative;
+  }
+  .metknop {
+    display: flex;
+    gap: 6px;
+  }
+  .metknop input {
+    flex: 1 1 80px;
+    min-width: 0;
+  }
+  .rekenknop {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    padding: 0 8px;
+    color: var(--accent);
+  }
+  .rekenhulp {
+    position: absolute;
+    z-index: 5;
+    top: calc(100% + 6px);
+    right: 0;
+    width: min(340px, 100%);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--schaduw);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .hulpkop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sluit {
+    border: 0;
+    background: none;
+    font-size: 20px;
+    line-height: 1;
+    padding: 2px 6px;
+  }
+  .veld {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
   }
   .rij input,
   .rij select {

@@ -10,6 +10,7 @@ import {
   jaarbedrag,
   marginaleDrukVan,
   pasToe,
+  renteUitHypotheek,
   valideerInvoer,
   type Invoer,
   verdeling,
@@ -133,6 +134,12 @@ describe("invoerformulier", () => {
   it("valideert en weigert onzin", () => {
     expect(valideerInvoer(basisInvoer)).toEqual(basisInvoer);
     expect(() => valideerInvoer({ ...basisInvoer, wonen: "kasteel" })).toThrow(/wonen/);
+  });
+
+  it("rekent de hypotheekrente uit met de schuld en het rentepercentage", () => {
+    // € 300.000 tegen 4% is € 12.000 per jaar, € 1.000 per maand.
+    expect(renteUitHypotheek(300000, 4)).toBe(12000);
+    expect(renteUitHypotheek(0, 4)).toBe(0);
   });
 });
 

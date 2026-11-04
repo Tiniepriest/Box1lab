@@ -145,6 +145,14 @@ export function huishoudenUitInvoer(invoer: Invoer, p: Parameters): Huishouden {
   };
 }
 
+/**
+ * Hypotheekrente per jaar uit de schuld die nog openstaat en het rentepercentage (D-075). Dat is de rente van deze
+ * maand maal twaalf; omdat je aflost, betaal je over een heel jaar iets minder.
+ */
+export function renteUitHypotheek(schuld: number, rentePercentage: number): number {
+  return (schuld * rentePercentage) / 100;
+}
+
 /** Een persoon heeft de AOW-leeftijd volgens de parameters. */
 export function heeftAowLeeftijd(leeftijd: number, p: Parameters): boolean {
   return leeftijd >= p.uitkeringen.aowLeeftijd;

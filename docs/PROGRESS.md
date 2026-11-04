@@ -149,6 +149,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Netto maandloon, en vakantiegeld, 13e maand en bonus apart, om met de loonstrook te vergelijken (D-074)
 
+## Fase 20: hypotheekrente per maand — klaar
+
+- [x] Hypotheekrente per maand invullen, met een rekenhulp uit schuld en rentepercentage (D-075)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

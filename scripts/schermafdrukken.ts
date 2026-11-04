@@ -307,6 +307,19 @@ try {
     (await pg.evaluate(() => localStorage.getItem("box1lab.invoer.v1"))) === null,
     "formulier: niet op het apparaat zonder toestemming",
   );
+  await pg.getByRole("button", { name: "Koop", exact: true }).click();
+  await pg.getByRole("button", { name: "Rente uitrekenen" }).click();
+  await pg.locator("#schuld").fill("300000");
+  await pg.locator("#rentepercentage").fill("4");
+  await pg.getByRole("button", { name: /Gebruik € 1\.000 per maand/ }).click();
+  await pg.waitForTimeout(300);
+  controleer(
+    (await pg.locator("#rekenhulp").count()) === 0 &&
+      (await pg.locator("#rente").inputValue()) === "1000" &&
+      /"hypotheekrente":12000/.test((await leesSessie()) ?? ""),
+    "formulier: hypotheekrente per maand, rekenhulp neemt de rente over en sluit",
+  );
+  await pg.getByRole("button", { name: "Huur", exact: true }).click();
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
   // Zolang er niets veranderd is, toont het lab geen effecten (D-071); de situatiekolom staat er wel.
   await pg.waitForFunction(
