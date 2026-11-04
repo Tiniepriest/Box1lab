@@ -320,6 +320,15 @@ try {
     "formulier: hypotheekrente per maand, rekenhulp neemt de rente over en sluit",
   );
   await pg.getByRole("button", { name: "Huur", exact: true }).click();
+  // Box 3 staat apart: een eigen regel onder het bedrag bovenaan, niet in de waterval (D-076).
+  await pg.locator("#vermogen").fill("200000");
+  await pg.waitForTimeout(300);
+  controleer(
+    /box 3-belasting per jaar/.test((await pg.locator(".box3").textContent()) ?? "") &&
+      !/Belasting box 3/.test((await pg.locator(".calculator").textContent()) ?? ""),
+    "calculator: box 3 apart van wat je overhoudt",
+  );
+  await pg.locator("#vermogen").fill("0");
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
   // Zolang er niets veranderd is, toont het lab geen effecten (D-071); de situatiekolom staat er wel.
   await pg.waitForFunction(

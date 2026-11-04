@@ -3,6 +3,7 @@
     berekenHuishouden,
     huishoudenUitInvoer,
     invoerSchema,
+    overVanInkomen,
     pasToe,
     type Invoer,
     type Parameters,
@@ -66,7 +67,7 @@
   {:else}
     <p class="kern">
       {#if Math.abs(uitkomst.d) < 1}
-        {samen ? "Jullie houden" : "Je houdt"} evenveel over: {euro(uitkomst.a.besteedbaar / 12)} per maand.
+        {samen ? "Jullie houden" : "Je houdt"} evenveel over: {euro(overVanInkomen(uitkomst.a) / 12)} per maand.
       {:else}
         {samen ? "Jullie houden" : "Je houdt"}
         <strong class={uitkomst.d > 0 ? "vooruit" : "achteruit"}
