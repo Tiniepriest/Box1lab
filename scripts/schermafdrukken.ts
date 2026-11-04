@@ -142,9 +142,19 @@ try {
   controleer(pg.url().includes("#"), "lab: scenario staat in de link");
   controleer(
     (await pg.getByText("Welk deel van de belasting betaalt elke inkomensgroep?").isVisible()) &&
-      (await pg.locator("svg line.nu").count()) === 20,
+      (await pg.locator("svg line.nu").count()) === 10,
     "lab: wie betaalt de belasting, met een streepje voor nu (D-080)",
   );
+  const vinkBox1 = pg.getByRole("checkbox", { name: "Box 1" });
+  const vinkBox3 = pg.getByRole("checkbox", { name: "Box 3" });
+  await vinkBox1.uncheck();
+  controleer(
+    (await pg
+      .getByRole("img", { name: "Aandeel van de belasting in box 3 per inkomensgroep" })
+      .isVisible()) && (await vinkBox3.isDisabled()),
+    "lab: vinkjes box 1 en box 3; het laatste vinkje kan niet uit",
+  );
+  await vinkBox1.check();
   const meld = pg.locator("main a[data-meldfout]");
   await meld.dispatchEvent("pointerdown");
   const meldPagina = new URL((await meld.getAttribute("href")) ?? "").searchParams.get("pagina") ?? "";
