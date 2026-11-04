@@ -342,7 +342,7 @@ try {
   await pg.locator("#vermogen").fill("200000");
   await pg.waitForTimeout(300);
   controleer(
-    /box 3-belasting per jaar/.test((await pg.locator(".box3").textContent()) ?? "") &&
+    /Box 3-belasting ?per jaar ?€ [\d.]+/.test((await pg.locator(".box3").textContent()) ?? "") &&
       !/Belasting box 3/.test((await pg.locator(".calculator").textContent()) ?? ""),
     "calculator: box 3 apart van wat je overhoudt",
   );
