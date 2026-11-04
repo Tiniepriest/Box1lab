@@ -5,6 +5,7 @@
 import {
   kopie,
   type Armoede,
+  type BelastingPerDeciel,
   type DecielEffect,
   type Kalibratie,
   type Oplossing,
@@ -19,6 +20,8 @@ export interface UitkomstSamenvatting {
   gini: number;
   decielen: DecielEffect[];
   winnaars: number[];
+  /** Box 1 en box 3 per inkomensgroep in het scenario (D-080). */
+  belasting: BelastingPerDeciel;
 }
 
 export interface BasisSamenvatting {
@@ -28,6 +31,8 @@ export interface BasisSamenvatting {
   /** Gestandaardiseerd besteedbaar inkomen per huishouden, voor "je plek in Nederland". */
   gestandaardiseerd: number[];
   persoonsgewichten: number[];
+  /** Box 1 en box 3 per inkomensgroep nu (D-080). */
+  belasting: BelastingPerDeciel;
 }
 
 export type Bericht =

@@ -140,6 +140,11 @@ try {
     `lab: preset geeft een uitkomst ("${kern.slice(0, 70)}…")`,
   );
   controleer(pg.url().includes("#"), "lab: scenario staat in de link");
+  controleer(
+    (await pg.getByText("Welk deel van de belasting betaalt elke inkomensgroep?").isVisible()) &&
+      (await pg.locator("svg line.nu").count()) === 20,
+    "lab: wie betaalt de belasting, met een streepje voor nu (D-080)",
+  );
   const meld = pg.locator("main a[data-meldfout]");
   await meld.dispatchEvent("pointerdown");
   const meldPagina = new URL((await meld.getAttribute("href")) ?? "").searchParams.get("pagina") ?? "";

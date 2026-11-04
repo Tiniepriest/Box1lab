@@ -38,6 +38,7 @@ export * from "./voorbeelden.ts";
 export * from "./invoer.ts";
 export * from "./lab.ts";
 export * from "./metrics/positie.ts";
+export * from "./metrics/belastingverdeling.ts";
 export * from "./scenario/code.ts";
 export * from "./verkiezing.ts";
 export * from "./jaarovergang.ts";

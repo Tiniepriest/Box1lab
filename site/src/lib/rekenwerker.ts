@@ -4,6 +4,7 @@
  * Alleen de samenvattingen gaan terug naar de pagina, niet de resultaten per huishouden.
  */
 import {
+  belastingPerDeciel,
   budgetneutraalViaTarieven,
   budgetneutraalViaVrijstelling,
   maakBasis,
@@ -17,7 +18,7 @@ import type { BasisSamenvatting, Bericht, UitkomstSamenvatting } from "./rekenen
 
 let basis: Basis | null = null;
 
-function samenvatUitkomst(u: ReturnType<typeof simuleer>): UitkomstSamenvatting {
+function samenvatUitkomst(b: Basis, u: ReturnType<typeof simuleer>): UitkomstSamenvatting {
   return {
     posten: u.posten,
     saldoMld: u.saldoMld,
@@ -25,6 +26,7 @@ function samenvatUitkomst(u: ReturnType<typeof simuleer>): UitkomstSamenvatting 
     gini: u.gini,
     decielen: u.decielen,
     winnaars: u.winnaars,
+    belasting: belastingPerDeciel(b, u.resultaten),
   };
 }
 
@@ -35,6 +37,7 @@ function samenvatBasis(b: Basis): BasisSamenvatting {
     gini: b.gini,
     gestandaardiseerd: b.resultaten.map((r) => r.besteedbaar / r.equivalentie),
     persoonsgewichten: b.persoonsgewichten,
+    belasting: belastingPerDeciel(b),
   };
 }
 
@@ -60,7 +63,7 @@ self.onmessage = async (e: MessageEvent) => {
     }
     if (!basis) throw new Error("Het model is nog niet geladen");
     if (m.soort === "simuleer") {
-      stuur({ soort: "uitkomst", id: m.id, uitkomst: samenvatUitkomst(simuleer(basis, m.params)) });
+      stuur({ soort: "uitkomst", id: m.id, uitkomst: samenvatUitkomst(basis, simuleer(basis, m.params)) });
     } else {
       const o =
         m.via === "vrijstelling"
