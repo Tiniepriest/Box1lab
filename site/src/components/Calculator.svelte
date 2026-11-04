@@ -90,7 +90,6 @@
     if (r.kgb > 0) s.push({ label: "Kindgebonden budget", bedrag: r.kgb, soort: "plus" });
     if (r.kot > 0) s.push({ label: "Kinderopvangtoeslag", bedrag: r.kot, soort: "plus" });
     if (r.kinderbijslag > 0) s.push({ label: "Kinderbijslag", bedrag: r.kinderbijslag, soort: "plus" });
-    s.push({ label: "Premie zorgverzekering", bedrag: r.zorgpremie, soort: "min" });
     s.push({ label: "Te besteden", bedrag: overVanInkomen(r), soort: "totaal" });
     return s;
   });
@@ -105,7 +104,6 @@
     const lijst = (x: string[]) => (x.length > 1 ? `${x.slice(0, -1).join(", ")} en ${x.at(-1)}` : x[0]!);
     const betaald = [`${euro(r.belasting + r.zvw)} belasting`];
     if (r.pensioenpremie > 0) betaald.push(`${euro(r.pensioenpremie)} pensioenpremie`);
-    betaald.push(`${euro(r.zorgpremie)} voor de zorgverzekering`);
     const gekregen: string[] = [];
     if (r.toeslagen + r.kinderbijslag > 0)
       gekregen.push(`${euro(r.toeslagen + r.kinderbijslag)} aan toeslagen en kinderbijslag`);
@@ -150,9 +148,7 @@
   const samen = $derived(invoer.personen.length > 1 || invoer.kinderen.length > 0);
 
   const effectief = $derived(
-    r && r.bruto > 0
-      ? ((r.belasting + r.zvw + r.zorgpremie - r.toeslagen - r.kinderbijslag) / r.bruto) * 100
-      : 0,
+    r && r.bruto > 0 ? ((r.belasting + r.zvw - r.toeslagen - r.kinderbijslag) / r.bruto) * 100 : 0,
   );
 </script>
 
@@ -255,7 +251,7 @@
       <div class="kaart">
         <Figuur
           titel="Van bruto naar netto: waar gaat je geld heen?"
-          uitleg="Belasting en premies gaan eraf, toeslagen en kinderbijslag komen erbij. Huur, hypotheek en kosten van kinderopvang moet je nog van het bedrag onderaan betalen."
+          uitleg="Belasting en premies gaan eraf, toeslagen en kinderbijslag komen erbij. Huur, hypotheek, de premie van je zorgverzekering en kosten van kinderopvang moet je nog van het bedrag onderaan betalen."
         >
           {#snippet grafiek()}
             <Waterval {stappen} beschrijving="Waterval van bruto inkomen naar besteedbaar inkomen" />

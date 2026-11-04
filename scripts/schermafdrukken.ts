@@ -240,7 +240,7 @@ try {
   const zin = (await pg.locator(".kernzin").textContent()) ?? "";
   controleer(/^\s*In dit voorbeeld houd je/.test(zin), `calculator: "${zin.trim().slice(0, 60)}…"`);
   controleer(
-    /^Je bruto inkomen is €\s[\d.]+ per jaar\. Je betaalt €\s[\d.]+ belasting en €\s[\d.]+ voor de zorgverzekering per jaar\.$/.test(
+    /^Je bruto inkomen is €\s[\d.]+ per jaar\. Je betaalt €\s[\d.]+ belasting per jaar\.$/.test(
       ((await pg.locator(".opbouw").textContent()) ?? "").trim(),
     ),
     "calculator: van bruto naar wat je overhoudt boven de zin",

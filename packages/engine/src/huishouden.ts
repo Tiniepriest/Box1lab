@@ -292,12 +292,16 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
 }
 
 /**
- * Wat een huishouden per jaar overhoudt van het inkomen, zoals de calculator het bovenaan toont (D-076): het
- * besteedbaar inkomen zonder de box 3-belasting. Het rendement op sparen en beleggen telt niet als inkomen, dus
- * de belasting daarover ook niet. De verschillen tussen scenario's rekenen we wel met `besteedbaar`.
+ * Wat een huishouden per jaar overhoudt van het inkomen, zoals de calculator het bovenaan toont: wat er op de
+ * rekening komt (netto inkomen, toeslagen en kinderbijslag). Twee dingen gaan er niet af, anders dan bij
+ * `besteedbaar`:
+ * - de box 3-belasting (D-076): het rendement op sparen en beleggen telt niet als inkomen, dus de belasting
+ *   daarover ook niet;
+ * - de nominale premie van de zorgverzekering (D-079): geen belasting, maar een vaste uitgave zoals de huur.
+ * De verschillen tussen scenario's, de bevolkingscijfers en "je plek in Nederland" rekenen met `besteedbaar`.
  */
 export function overVanInkomen(r: Resultaat): number {
-  return r.besteedbaar + r.box3;
+  return r.besteedbaar + r.box3 + r.zorgpremie;
 }
 
 /**
