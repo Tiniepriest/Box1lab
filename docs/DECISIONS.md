@@ -664,3 +664,11 @@ Besluit van de eigenaar (4 november 2026): wat bezoekers invullen, moet er de vo
 - "Onthoud op dit apparaat, ook als ik het tabblad sluit" staat nu standaard aan. De situatie gaat dan in `localStorage` (en, zoals eerst, in `sessionStorage`). Wie het uitzet, bewaart alleen voor het tabblad; die keuze geldt zolang het tabblad openstaat.
 - Ongewijzigd: het voorbeeld waarmee het formulier start, bewaren we pas als je iets verandert. "Wis mijn gegevens" haalt alles weg; daarna staat het vinkje weer aan, maar er wordt pas weer iets bewaard als je iets invult.
 - Privacy: er gaat nog steeds niets naar een server, en de gegevens zijn alleen voor de bezoeker zelf, om een dienst te leveren waar die om vraagt (het formulier invullen). Dat is functionele opslag, dus geen toestemmingsbanner nodig. De privacytekst bij het formulier en op de pagina Over noemt het onthouden, en wat je doet op een gedeelde computer.
+
+## Fase 25: van bruto naar wat je overhoudt
+
+### D-078 Eén regel boven de zin bovenaan
+
+Wens van de eigenaar (4 november 2026): bovenaan ook het bruto inkomen per jaar en de belasting, in de volgorde bruto, belasting, netto.
+
+Boven "Je houdt € … per maand over" staat een kleinere regel: "Bruto € … per jaar, min € … belasting en premies, min € … zorgverzekering." Pensioenpremie, toeslagen en kinderbijslag (en in een scenario het basisinkomen) komen erbij als ze er zijn, zodat de regel altijd optelt tot het jaarbedrag in de zin eronder (op afronding na). "Belasting en premies" is de inkomstenbelasting met de premies volksverzekeringen, plus de inkomensafhankelijke bijdrage Zvw voor wie die zelf betaalt. De box 3-belasting staat er niet in; die heeft een eigen vakje (D-076).

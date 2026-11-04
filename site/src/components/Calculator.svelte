@@ -98,6 +98,21 @@
   // Bovenaan: wat je overhoudt van je inkomen, zonder box 3 (D-076).
   const over = $derived(r ? overVanInkomen(r) : 0);
 
+  // Boven de zin bovenaan: van bruto naar wat je overhoudt, in één regel die optelt (D-078).
+  const opbouw = $derived.by(() => {
+    if (!r) return "";
+    const delen = [
+      `Bruto ${euro(r.bruto)} per jaar`,
+      `min ${euro(r.belasting + r.zvw)} belasting en premies`,
+    ];
+    if (r.pensioenpremie > 0) delen.push(`min ${euro(r.pensioenpremie)} pensioenpremie`);
+    delen.push(`min ${euro(r.zorgpremie)} zorgverzekering`);
+    if (r.toeslagen + r.kinderbijslag > 0)
+      delen.push(`plus ${euro(r.toeslagen + r.kinderbijslag)} toeslagen en kinderbijslag`);
+    if (r.basisinkomen > 0) delen.push(`plus ${euro(r.basisinkomen)} basisinkomen`);
+    return `${delen.join(", ")}.`;
+  });
+
   const positie = $derived(r ? aandeelUitVerdeling(r.besteedbaar / r.equivalentie, plekGrenzen) : null);
 
   // Bij bijstand zegt een curve over het bruto inkomen weinig: bijverdienen gaat van de uitkering af.
@@ -155,6 +170,7 @@
     {#if !geldig.success || !r}
       <p class="waarschuwing">Vul alle velden in met een getal (0 mag ook).</p>
     {:else}
+      <p class="opbouw">{opbouw}</p>
       <p class="kernzin">
         {eigen ? (samen ? "Jullie houden" : "Je houdt") : "In dit voorbeeld houd je"}
         <strong>{euro(over / 12)}</strong> per maand over om van te leven ({euro(over)} per jaar).
@@ -446,6 +462,11 @@
     flex-direction: column;
     gap: 16px;
     min-width: 0;
+  }
+  .opbouw {
+    margin: 0 0 -8px;
+    color: var(--muted);
+    font-size: 15px;
   }
   .kernzin {
     font-family: var(--f-display);

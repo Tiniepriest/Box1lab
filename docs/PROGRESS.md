@@ -161,6 +161,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Standaard onthouden op dit apparaat; uitzetten kan (D-077)
 
+## Fase 25: van bruto naar wat je overhoudt — klaar
+
+- [x] Regel "Bruto … min belasting … min zorgverzekering" boven de zin bovenaan (D-078)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

@@ -240,6 +240,12 @@ try {
   const zin = (await pg.locator(".kernzin").textContent()) ?? "";
   controleer(/^\s*In dit voorbeeld houd je/.test(zin), `calculator: "${zin.trim().slice(0, 60)}…"`);
   controleer(
+    /^Bruto €\s[\d.]+ per jaar, min €\s[\d.]+ belasting en premies, min €\s[\d.]+ zorgverzekering\.$/.test(
+      ((await pg.locator(".opbouw").textContent()) ?? "").trim(),
+    ),
+    "calculator: van bruto naar wat je overhoudt boven de zin",
+  );
+  controleer(
     /modaal inkomen/.test((await pg.locator(".voorbeeld").textContent()) ?? "") &&
       (await pg.locator("#bedrag-0").inputValue()) === "3704",
     "calculator: het voorbeeld is een modaal inkomen, en dat staat erbij",

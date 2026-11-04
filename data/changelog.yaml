@@ -8,6 +8,13 @@
 
 - datum: 2026-11-04
   soort: nieuw
+  titel: "Van bruto naar wat je overhoudt"
+  tekst: >-
+    Boven het bedrag dat je per maand overhoudt, staat nu in één regel hoe je daar komt: je bruto inkomen per jaar,
+    min belasting en premies, min de zorgverzekering, plus toeslagen als je die krijgt.
+
+- datum: 2026-11-04
+  soort: nieuw
   titel: "Je situatie blijft onthouden"
   tekst: >-
     Wat je op Jouw situatie invult, staat er de volgende keer nog, ook als je het tabblad sluit. Het blijft in je
