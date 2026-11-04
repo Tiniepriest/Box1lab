@@ -680,3 +680,19 @@ Besluit van de eigenaar (4 november 2026): de nominale premie van de zorgverzeke
 - `overVanInkomen` telt de zorgpremie er weer bij: het bedrag bovenaan is nu wat er op je rekening komt (netto inkomen, toeslagen en kinderbijslag). De premie betaal je daar nog van, net als huur en kinderopvang; dat staat bij de waterval en op Methodiek. De waterval heeft geen stap "Premie zorgverzekering" meer, en de effectieve druk telt de premie niet mee.
 - De zorgtoeslag blijft erin: die komt echt op je rekening. Daardoor is het bedrag bovenaan voor iedereen ongeveer € 157 per maand per volwassene hoger dan het besteedbaar inkomen.
 - Ongewijzigd: `besteedbaar` in de engine trekt de premie wel af, zoals het CBS. Daarmee rekenen de verschillen tussen voorstellen (de premie is in elk scenario gelijk, dus daar verandert niets), de bevolkingscijfers, de armoedegrens en "je plek in Nederland".
+
+## Fase 27: wie betaalt de belasting?
+
+### D-080 Grafiek box 1 en box 3 per inkomensgroep
+
+Wens van de eigenaar (4 november 2026): een staafgrafiek met horizontaal de inkomensgroepen en per staaf box 1 en box 3 in twee kleuren.
+
+- **Plek:** een nieuwe uitlegpagina, "Wie betaalt de belasting?", berekend tijdens de build met de basis (huidig beleid). Drie zinnen met de kern (aandeel van de hoogste 10%, van de laagste helft, en van box 3 bij de hoogste groep) volgen uit dezelfde cijfers.
+- **Groepen:** tien even grote groepen (decielen), zoals overal op de site; percentielen geven honderd onleesbare staven.
+- **Hoogte:** het deel van alle belasting in box 1 en box 3 samen, zodat alle staven samen 100% zijn. Bedragen (€ mld en gemiddeld per huishouden) staan bij aanwijzen en in de tabel.
+- **Box 3 apart:** box 3 is ongeveer 6% van het totaal en is in de gestapelde staven bijna onzichtbaar. Daarom staat eronder een kleine grafiek met het deel van alle box 3-belasting per groep.
+- **Box 1** is de inkomstenbelasting met de premies volksverzekeringen, na heffingskortingen (`Resultaat.belasting`), ook van meerderjarige kinderen. Niet: Zvw-bijdrage, toeslagen, btw, box 2.
+- **Indeling zonder box 3-belasting.** Met de gewone decielen (`Basis.decielen`) betaalt groep 1 € 2,4 mld box 3, een kwart van alle box 3-belasting: wie veel vermogen en weinig inkomen heeft, valt juist door de box 3-belasting in de laagste groep, omdat het rendement niet als inkomen telt en de belasting wel (D-073, D-076). Deze grafiek deelt daarom in op het gestandaardiseerd besteedbaar inkomen zonder de box 3-belasting (`belastingPerDeciel`). Dan betaalt groep 1 € 0,4 mld en groep 10 € 3,8 mld. Box 1 verandert weinig (groep 10 € 59,3 → € 60,1 mld).
+- **Kleuren:** `--box1` (inktblauw) en `--box3` (oker), per modus gecontroleerd met de dataviz-validator (licht #3d5a99 / #b8741a, donker #6f8fd6 / #b47a22): binnen de helderheidsband, ook bij kleurenblindheid te onderscheiden, contrast ≥ 3:1. Rood en groen blijven voor winst en verlies.
+
+Uitkomst 2026: de hoogste 10% betaalt 40% van alle belasting in box 1 en box 3, de laagste helft 15%; de hoogste groep betaalt 40% van de box 3-belasting.

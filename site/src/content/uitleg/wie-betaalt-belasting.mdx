@@ -1,0 +1,46 @@
+---
+titel: "Wie betaalt de belasting?"
+samenvatting: "Welk deel van de belasting in box 1 en box 3 elke inkomensgroep betaalt."
+volgorde: 6
+---
+
+import { belastingPerDeciel } from "@box1lab/engine";
+import WieBetaalt from "../../components/uitleg/WieBetaalt.svelte";
+import { basis } from "../../lib/basis.ts";
+import { params } from "../../lib/data.ts";
+import { pad } from "../../lib/pad.ts";
+
+export const v = belastingPerDeciel(basis);
+export const som = (x) => x.reduce((a, b) => a + b, 0);
+export const totaal = som(v.box1) + som(v.box3);
+export const pct = (x) => Math.round((x / totaal) * 100);
+export const top = pct(v.box1[9] + v.box3[9]);
+export const onderHelft = pct(som(v.box1.slice(0, 5)) + som(v.box3.slice(0, 5)));
+export const box3Top = Math.round((v.box3[9] / som(v.box3)) * 100);
+export const mld = (x) => x.toLocaleString("nl-NL", { maximumFractionDigits: 0 });
+
+In {params.jaar} betalen huishoudens in Nederland samen ongeveer € {mld(som(v.box1))} miljard belasting in box 1
+(inkomen uit werk, uitkering en pensioen) en € {mld(som(v.box3))} miljard in box 3 (sparen en beleggen). Hoe is dat
+verdeeld over arm en rijk?
+
+<WieBetaalt client:visible box1={v.box1} box3={v.box3} huishoudens={v.huishoudens} />
+
+## Wat zie je?
+
+- De 10% met het hoogste inkomen betaalt **{top}%** van alle belasting in box 1 en box 3.
+- De helft met het laagste inkomen betaalt samen **{onderHelft}%**.
+- Box 3 zit vooral bij de hoogste groep: die betaalt {box3Top}% van alle box 3-belasting.
+
+Dat komt doordat box 1 een oplopend tarief heeft en heffingskortingen die bij een laag inkomen het meeste schelen,
+en doordat vermogen vooral bij hogere inkomens zit.
+
+## Hoe hebben we dit berekend?
+
+Met de nagebootste bevolking van Box1lab en de regels van {params.jaar}. Box 1 is de inkomstenbelasting met de premies
+voor de volksverzekeringen (zoals de AOW), na de heffingskortingen. Toeslagen tellen hier niet mee, de bijdrage voor
+de zorgverzekering en btw ook niet. Box 2 zit niet in het model.
+
+De inkomensgroepen zijn tien even grote delen van de bevolking, van laag naar hoog besteedbaar inkomen, gecorrigeerd
+voor de grootte van het huishouden (zie <a href={pad("uitleg/inkomensgroepen")}>Wat is een deciel?</a>). De
+box 3-belasting tellen we bij het indelen niet mee. Anders zou iemand met weinig inkomen en veel vermogen juist door
+die belasting in de laagste groep vallen.

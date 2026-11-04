@@ -23,6 +23,7 @@ const PAGINAS = [
   "uitleg/armoedeval",
   "uitleg/toeslagen",
   "uitleg/hypotheekrenteaftrek",
+  "uitleg/wie-betaalt-belasting",
   "uitleg/inkomensgroepen",
   "uitleg/marginale-druk",
   "verkiezingen/voorbeeld",

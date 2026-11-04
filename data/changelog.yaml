@@ -8,6 +8,13 @@
 
 - datum: 2026-11-04
   soort: nieuw
+  titel: "Uitleg: wie betaalt de belasting?"
+  tekst: >-
+    Een nieuwe uitlegpagina laat met een staafgrafiek zien welk deel van de belasting in box 1 en box 3 elke
+    inkomensgroep betaalt, met daaronder de verdeling van box 3 apart.
+
+- datum: 2026-11-04
+  soort: nieuw
   titel: "Van bruto naar wat je overhoudt"
   tekst: >-
     Boven het bedrag dat je per maand overhoudt, staat nu kort hoe je daar komt: je bruto inkomen per jaar, hoeveel
