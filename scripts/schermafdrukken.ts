@@ -303,10 +303,27 @@ try {
   );
   controleer(/2700/.test((await leesSessie()) ?? ""), "formulier: situatie bewaard voor dit tabblad");
   controleer(await vink.isVisible(), "menu: vinkje bij Jouw situatie");
+  const leesApparaat = () => pg.evaluate(() => localStorage.getItem("box1lab.invoer.v1"));
   controleer(
-    (await pg.evaluate(() => localStorage.getItem("box1lab.invoer.v1"))) === null,
-    "formulier: niet op het apparaat zonder toestemming",
+    /2700/.test((await leesApparaat()) ?? ""),
+    "formulier: standaard onthouden op dit apparaat (D-077)",
   );
+  // Een nieuw tabblad heeft een lege sessie, maar het apparaat onthoudt het.
+  const nieuwTabblad = await ctx.newPage();
+  await nieuwTabblad.goto(`${BASIS}/jouw-situatie`, { waitUntil: "networkidle" });
+  await nieuwTabblad.waitForTimeout(500);
+  controleer(
+    (await nieuwTabblad.locator("#bedrag-0").inputValue()) === "2700",
+    "formulier: situatie terug in een nieuw tabblad",
+  );
+  await nieuwTabblad.close();
+  await pg.getByLabel("Onthoud op dit apparaat").setChecked(false);
+  await pg.waitForTimeout(300);
+  controleer(
+    (await leesApparaat()) === null && /2700/.test((await leesSessie()) ?? ""),
+    "formulier: onthouden uitzetten bewaart alleen voor dit tabblad",
+  );
+  await pg.getByLabel("Onthoud op dit apparaat").setChecked(true);
   await pg.getByRole("button", { name: "Koop", exact: true }).click();
   await pg.getByRole("button", { name: "Rente uitrekenen" }).click();
   await pg.locator("#schuld").fill("300000");
@@ -375,7 +392,10 @@ try {
   );
   await pg.getByRole("button", { name: "Wis mijn gegevens" }).click();
   await pg.waitForTimeout(300);
-  controleer((await leesSessie()) === null, "formulier: wissen haalt de situatie weg");
+  controleer(
+    (await leesSessie()) === null && (await leesApparaat()) === null,
+    "formulier: wissen haalt de situatie weg, ook van het apparaat",
+  );
   controleer(
     (await pg.locator("#bedrag-0").inputValue()) === "3704" && (await pg.locator(".voorbeeld").isVisible()),
     "formulier: na wissen staat het voorbeeld er weer",

@@ -1,8 +1,8 @@
 /*
- * Onthouden van het invoerformulier, alleen in deze browser (D-052):
- * - zolang het tabblad openstaat (sessionStorage), zodat je situatie meegaat naar het lab, de voorstellen en de
- *   verkiezingen. Sluit je het tabblad, dan is het weg.
- * - langer op dit apparaat (localStorage), alleen als de bezoeker "Onthoud op dit apparaat" aanzet.
+ * Onthouden van het invoerformulier, alleen in deze browser (D-052, D-077):
+ * - voor dit tabblad (sessionStorage), zodat je situatie meegaat naar het lab, de voorstellen en de verkiezingen;
+ * - en op dit apparaat (localStorage), zodat het er de volgende keer nog staat. Dat staat standaard aan; wie
+ *   "Onthoud op dit apparaat" uitzet, bewaart alleen voor het tabblad.
  * "Wis mijn gegevens" haalt beide weg. Opslag kan ontbreken of geblokkeerd zijn; dan werkt alles gewoon zonder.
  */
 import { invoerSchema, persoonInvoerSchema, type Invoer, type Parameters } from "@box1lab/engine";

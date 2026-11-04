@@ -157,6 +157,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Het bedrag bovenaan Jouw situatie zonder box 3-belasting; box 3 als eigen regel eronder (D-076)
 
+## Fase 22: situatie onthouden — klaar
+
+- [x] Standaard onthouden op dit apparaat; uitzetten kan (D-077)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
