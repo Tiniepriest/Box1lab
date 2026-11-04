@@ -625,7 +625,7 @@ Een kaart "Klopt het met je loonstrook?" op Jouw situatie, per werknemer of uitk
 - **Wat er niet op staat.** De combinatiekorting en de hypotheekrenteaftrek (die komen via de aangifte of een voorlopige aanslag), toeslagen en de nominale zorgpremie. De inkomensafhankelijke bijdrage Zvw betaalt de werkgever, die staat ook in het model niet bij werknemers.
 - **Bedrag per jaar.** Wie het loon per jaar invult, krijgt geen loonstrook: dan weten we niet wat erin zit. De kaart vraagt dan om het bedrag per maand.
 - **Bovenaan** blijft het gemiddelde besteedbaar inkomen per maand staan, omdat alle vergelijkingen op de site daarover gaan. De kaart legt uit dat dat een gemiddelde is.
-- **Beknopt (later op 4 november, wens van de eigenaar).** De aparte kaart is vervangen door een rij kleine vakjes direct onder de zin bovenaan: per maand, vakantiegeld, 13e maand en bonus, elk met bruto boven en netto (groot) onder, en één regel uitleg. De loonheffing per maand en de uitleg over bijzondere beloningen staan er niet meer bij.
+- **Beknopt (later op 4 november, wens van de eigenaar).** De aparte kaart is vervangen door een rij kleine vakjes direct onder de zin bovenaan: per maand, vakantiegeld, 13e maand en bonus, elk met bruto boven en netto (groot) onder. Ook de regel uitleg is weg (wens van de eigenaar); de vakjes verdelen de hele breedte, net als de kerngetallen eronder. De loonheffing per maand en de uitleg over bijzondere beloningen staan er niet meer bij.
 
 Geen verandering in de rekenregels, dus geen nieuwe modelversie en geen golden-verschil.
 
@@ -649,7 +649,7 @@ Geen andere rekenregels, geen nieuwe modelversie, geen golden-verschil.
 Wens van de eigenaar (4 november 2026): mensen zien het forfaitaire rendement in box 3 niet als geld dat ze op hun rekening krijgen en kunnen uitgeven. Het bedrag dat ze bovenaan Jouw situatie zien, moet daar dus niet van afhangen.
 
 - Het rendement telde al nergens als inkomen (D-073); alleen de box 3-belasting ging af van het besteedbaar inkomen. Wie spaargeld invulde, zag het bedrag bovenaan dalen, zonder dat er iets tegenover stond.
-- Nieuw: `overVanInkomen(r)` = besteedbaar inkomen zonder de box 3-belasting. Dat staat bovenaan Jouw situatie, in de balk onderaan op een telefoon, in de kolom "Gerekend met jouw situatie" en als eind van de waterval. Daaronder staat de box 3-belasting als eigen regel. De effectieve druk (belasting min toeslagen als deel van het bruto inkomen) telt box 3 ook niet meer mee.
+- Nieuw: `overVanInkomen(r)` = besteedbaar inkomen zonder de box 3-belasting. Dat staat bovenaan Jouw situatie, in de balk onderaan op een telefoon, in de kolom "Gerekend met jouw situatie" en als eind van de waterval. Daaronder staat de box 3-belasting per jaar, sinds fase 24 als eigen vakje naast de loonstrookvakjes (zonder uitlegregel). De effectieve druk (belasting min toeslagen als deel van het bruto inkomen) telt box 3 ook niet meer mee.
 - Ongewijzigd: `besteedbaar` in de engine. Verschillen tussen voorstellen, jaren en de wat-als-vragen, de bevolking (armoede, Gini, inkomensgroepen) en "je plek in Nederland" rekenen met de box 3-belasting erbij, anders zou een voorstel voor box 3 voor niemand iets veranderen.
 - Ook ongewijzigd: het voordeel uit box 3 telt mee in het toetsingsinkomen van de toeslagen. Zo rekent Dienst Toeslagen echt, en de toeslag die je krijgt, staat wel op je rekening.
 

@@ -160,14 +160,7 @@
         <strong>{euro(over / 12)}</strong> per maand over om van te leven ({euro(over)} per jaar).
       </p>
       {#if geldig.success}
-        <Loonstrook {params} invoer={geldig.data} />
-      {/if}
-      {#if r.box3 > 0}
-        <p class="box3">
-          Over {samen ? "jullie" : "je"} spaargeld en beleggingen {samen ? "betalen jullie" : "betaal je"} daarnaast
-          <strong>{euro(r.box3)}</strong> box 3-belasting per jaar. Die staat los van het bedrag hierboven, net
-          als de rente en het rendement zelf.
-        </p>
+        <Loonstrook {params} invoer={geldig.data} box3={r.box3} />
       {/if}
 
       <div class="kerngetallen">
@@ -459,10 +452,6 @@
     font-size: 23px;
     line-height: 1.35;
     margin: 0;
-  }
-  .box3 {
-    margin: 0;
-    color: var(--muted);
   }
   .voorbeeld {
     margin: 0 0 12px;
