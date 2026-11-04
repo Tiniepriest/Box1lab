@@ -246,7 +246,8 @@ try {
   );
   const strook = ((await pg.locator(".loonstrook").textContent()) ?? "").replace(/\s+/g, " ");
   controleer(
-    /Netto loon per maand ?€ [\d.]+ ?bruto € 3\.704/.test(strook) && /Vakantiegeld ?€/.test(strook),
+    /Loon per maand ?bruto € 3\.704 ?netto € [\d.]+/.test(strook) &&
+      /Vakantiegeld ?bruto € [\d.]+ ?netto/.test(strook),
     "calculator: loonstrook met netto maandloon en vakantiegeld apart",
   );
   controleer(bevolking.length === 0, "calculator: plek in de inkomensverdeling zonder de bevolking te laden");

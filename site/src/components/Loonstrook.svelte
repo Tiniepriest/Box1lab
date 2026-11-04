@@ -10,7 +10,7 @@
       const wie = invoer.personen.length > 1 ? (s.persoon === 0 ? " (jij)" : " (partner)") : "";
       const v = [
         {
-          label: `${s.uitkering ? "Netto uitkering" : "Netto loon"} per maand${wie}`,
+          label: `${s.uitkering ? "Uitkering" : "Loon"} per maand${wie}`,
           netto: s.nettoPerMaand,
           sub: `bruto ${euro(s.brutoPerMaand)}${s.vakantiegeldInMaand ? ", met vakantiegeld" : ""}`,
         },
@@ -40,8 +40,8 @@
       {#each vakjes as v (v.label)}
         <li>
           <span class="l">{v.label}</span>
-          <span class="w">{euro(v.netto)}</span>
           <span class="t">{v.sub}</span>
+          <span class="w"><span class="t">netto</span> {euro(v.netto)}</span>
         </li>
       {/each}
     </ul>
@@ -72,7 +72,11 @@
   .l,
   .t {
     font-size: 12px;
+    font-weight: 400;
     color: var(--muted);
+  }
+  .l {
+    margin-bottom: 2px;
   }
   .w {
     font-size: 18px;
