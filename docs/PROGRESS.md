@@ -145,6 +145,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] Vermogen in de nagebootste bevolking volgens CBS; box 3-knoppen in het lab
 - [ ] Bijwerken als het nieuwe box 3-stelsel (uiterlijk 2029) vastligt, en de percentages 2027 officieel zijn
 
+## Fase 19: loonstrook — klaar
+
+- [x] Netto maandloon, en vakantiegeld, 13e maand en bonus apart, om met de loonstrook te vergelijken (D-074)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
