@@ -83,7 +83,8 @@
       { label: "Bruto inkomen", bedrag: r.bruto, soort: "totaal" },
     ];
     if (r.pensioenpremie > 0) s.push({ label: "Pensioenpremie", bedrag: r.pensioenpremie, soort: "min" });
-    s.push({ label: "Belasting en premies", bedrag: r.belasting, soort: "min" });
+    if (Math.round(r.belasting) > 0)
+      s.push({ label: "Belasting en premies", bedrag: r.belasting, soort: "min" });
     if (r.zvw > 0) s.push({ label: "Bijdrage zorgverzekering", bedrag: r.zvw, soort: "min" });
     if (r.zorgtoeslag > 0) s.push({ label: "Zorgtoeslag", bedrag: r.zorgtoeslag, soort: "plus" });
     if (r.huurtoeslag > 0) s.push({ label: "Huurtoeslag", bedrag: r.huurtoeslag, soort: "plus" });
@@ -102,15 +103,29 @@
     if (!r) return "";
     // "a, b en c"
     const lijst = (x: string[]) => (x.length > 1 ? `${x.slice(0, -1).join(", ")} en ${x.at(-1)}` : x[0]!);
-    const betaald = [`${euro(r.belasting + r.zvw)} belasting`];
-    if (r.pensioenpremie > 0) betaald.push(`${euro(r.pensioenpremie)} pensioenpremie`);
+    const belasting = r.belasting + r.zvw;
+    const betalen = samen ? "Jullie betalen" : "Je betaalt";
+    // Onder de belastingvrije voet: "Je betaalt geen belasting."
+    const betaaldZin =
+      Math.round(belasting) > 0
+        ? `${betalen} ${lijst([`${euro(belasting)} belasting`, ...(r.pensioenpremie > 0 ? [`${euro(r.pensioenpremie)} pensioenpremie`] : [])])} per jaar.`
+        : r.pensioenpremie > 0
+          ? `${betalen} geen belasting en ${euro(r.pensioenpremie)} pensioenpremie per jaar.`
+          : `${betalen} geen belasting.`;
     const gekregen: string[] = [];
-    if (r.toeslagen + r.kinderbijslag > 0)
-      gekregen.push(`${euro(r.toeslagen + r.kinderbijslag)} aan toeslagen en kinderbijslag`);
+    if (r.toeslagen + r.kinderbijslag > 0) {
+      const wat =
+        r.kinderbijslag > 0
+          ? r.toeslagen > 0
+            ? "toeslagen en kinderbijslag"
+            : "kinderbijslag"
+          : "toeslagen";
+      gekregen.push(`${euro(r.toeslagen + r.kinderbijslag)} aan ${wat}`);
+    }
     if (r.basisinkomen > 0) gekregen.push(`${euro(r.basisinkomen)} basisinkomen`);
     const zinnen = [
       `${samen ? "Jullie bruto inkomen is" : "Je bruto inkomen is"} ${euro(r.bruto)} per jaar.`,
-      `${samen ? "Jullie betalen" : "Je betaalt"} ${lijst(betaald)} per jaar.`,
+      betaaldZin,
     ];
     if (gekregen.length) zinnen.push(`${samen ? "Jullie krijgen" : "Je krijgt"} ${lijst(gekregen)}.`);
     return zinnen.join(" ");
@@ -197,7 +212,11 @@
         <div class="kerngetal">
           <div class="l">Belasting min toeslagen</div>
           <div class="w">{procent(effectief, 0)}</div>
-          <div class="t">van je bruto inkomen (effectieve druk)</div>
+          <div class="t">
+            {effectief < 0
+              ? `${samen ? "jullie krijgen" : "je krijgt"} meer aan toeslagen dan ${samen ? "jullie" : "je"} aan belasting ${samen ? "betalen" : "betaalt"}`
+              : "van je bruto inkomen (effectieve druk)"}
+          </div>
         </div>
         <div class="kerngetal">
           <div class="l">Je plek in Nederland</div>
