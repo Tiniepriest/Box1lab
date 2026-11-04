@@ -167,7 +167,7 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 ## Fase 27: wie betaalt de belasting? — klaar
 
-- [x] Uitlegpagina met staafgrafiek box 1 en box 3 per inkomensgroep, en box 3 apart (D-080)
+- [x] Staafgrafiek box 1 en box 3 per inkomensgroep in het Scenariolab, met box 3 apart en een streepje voor nu (D-080)
 - [ ] Vraag aan de eigenaar: de decielen overal zonder de box 3-belasting indelen? (zie D-080)
 
 ## Open vragen voor de eigenaar

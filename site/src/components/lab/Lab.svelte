@@ -37,6 +37,7 @@
   import Gestapeld, { KLASSEN } from "../grafieken/Gestapeld.svelte";
   import Lijnen from "../grafieken/Lijnen.svelte";
   import StavenDivergent from "../grafieken/StavenDivergent.svelte";
+  import WieBetaalt from "./WieBetaalt.svelte";
 
   let {
     params,
@@ -689,6 +690,13 @@
           </Figuur>
         </div>
       </div>
+
+      <WieBetaalt
+        box1={uitkomst.belasting.box1}
+        box3={uitkomst.belasting.box3}
+        huishoudens={uitkomst.belasting.huishoudens}
+        nu={leeg ? null : basis!.belasting}
+      />
 
       {#if !leeg}
         <div class="kaart">

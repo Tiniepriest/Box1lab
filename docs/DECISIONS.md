@@ -687,7 +687,7 @@ Besluit van de eigenaar (4 november 2026): de nominale premie van de zorgverzeke
 
 Wens van de eigenaar (4 november 2026): een staafgrafiek met horizontaal de inkomensgroepen en per staaf box 1 en box 3 in twee kleuren.
 
-- **Plek:** een nieuwe uitlegpagina, "Wie betaalt de belasting?", berekend tijdens de build met de basis (huidig beleid). Drie zinnen met de kern (aandeel van de hoogste 10%, van de laagste helft, en van box 3 bij de hoogste groep) volgen uit dezelfde cijfers.
+- **Plek:** in het Scenariolab, onder "Netto inkomen en marginale druk" (eerst als aparte uitlegpagina gebouwd; de eigenaar wil het bij de andere grafieken in het lab). Zonder wijzigingen toont de grafiek de huidige verdeling; in een scenario de verdeling in het scenario, met per groep een streepje voor hoe het nu is. De rekenwerker stuurt `belastingPerDeciel` mee voor de basis en voor elk scenario; in een scenario blijven de groepen die van nu, net als bij de andere effecten per groep.
 - **Groepen:** tien even grote groepen (decielen), zoals overal op de site; percentielen geven honderd onleesbare staven.
 - **Hoogte:** het deel van alle belasting in box 1 en box 3 samen, zodat alle staven samen 100% zijn. Bedragen (€ mld en gemiddeld per huishouden) staan bij aanwijzen en in de tabel.
 - **Box 3 apart:** box 3 is ongeveer 6% van het totaal en is in de gestapelde staven bijna onzichtbaar. Daarom staat eronder een kleine grafiek met het deel van alle box 3-belasting per groep.

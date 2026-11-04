@@ -6,8 +6,19 @@
   /*
    * Wie betaalt de belasting (D-080)? Per inkomensgroep het deel van alle belasting in box 1 en box 3, gestapeld.
    * Box 3 is maar een klein deel van het totaal; daarom staat de verdeling van box 3 zelf er klein onder.
+   * In een scenario tonen de staven het scenario en een streepje hoe het nu is (`nu`).
    */
-  let { box1, box3, huishoudens }: { box1: number[]; box3: number[]; huishoudens: number[] } = $props();
+  let {
+    box1,
+    box3,
+    huishoudens,
+    nu = null,
+  }: {
+    box1: number[];
+    box3: number[];
+    huishoudens: number[];
+    nu?: { box1: number[]; box3: number[] } | null;
+  } = $props();
 
   type Laag = { naam: string; kleur: string; bedrag: number[]; aandeel: number[] };
 
@@ -20,6 +31,11 @@
   const apart: Laag[] = $derived([
     { naam: "Box 3", kleur: "var(--box3)", bedrag: box3, aandeel: box3.map((v) => (v / som(box3)) * 100) },
   ]);
+  // Hoe het nu is, als deel van het totaal: voor het streepje boven elke staaf.
+  const nuSamen = $derived(
+    nu ? nu.box1.map((b, i) => ((b + nu.box3[i]!) / (som(nu.box1) + som(nu.box3))) * 100) : null,
+  );
+  const nuApart = $derived(nu ? nu.box3.map((b) => (b / som(nu.box3)) * 100) : null);
 
   const mld = (v: number) => `€ ${getal(v, 1)} mld`;
   const naam = (i: number) =>
@@ -41,9 +57,12 @@
     return `M${x},${boven + h} V${boven + r} Q${x},${boven} ${x + r},${boven} H${x + w - r} Q${x + w},${boven} ${x + w},${boven + r} V${boven + h} Z`;
   }
 
-  function schaal(lagen: Laag[], H: number) {
+  function schaal(lagen: Laag[], H: number, nuAandeel: number[] | null) {
     const hoogte = H - ONDER - BOVEN;
-    const hoogste = Math.max(...lagen[0]!.aandeel.map((_, i) => som(lagen.map((l) => l.aandeel[i]!))));
+    const hoogste = Math.max(
+      ...lagen[0]!.aandeel.map((_, i) => som(lagen.map((l) => l.aandeel[i]!))),
+      ...(nuAandeel ?? []),
+    );
     const stap = mooieStap(hoogste, 5);
     const max = Math.ceil(hoogste / stap) * stap;
     const y = (v: number) => BOVEN + hoogte - (v / max) * hoogte;
@@ -53,9 +72,9 @@
 
   // Elke grafiek een eigen tekstvak: `bij` is de beschrijving van de grafiek.
   let tip = $state<{ x: number; y: number; regels: string[]; bij: string } | null>(null);
-  function beweeg(e: PointerEvent, lagen: Laag[], i: number, bij: string) {
+  function beweeg(e: PointerEvent, lagen: Laag[], i: number, bij: string, nuAandeel: number[] | null) {
     const box = (e.currentTarget as SVGElement).ownerSVGElement!.parentElement!.getBoundingClientRect();
-    const regels =
+    const regels: string[] =
       lagen.length > 1
         ? [
             naam(i),
@@ -65,12 +84,13 @@
             `gemiddeld ${euro(perHuishouden(i))} per huishouden per jaar`,
           ]
         : [naam(i), `Box 3: ${mld(box3[i]!)}`, `${procent(lagen[0]!.aandeel[i]!)} van alle box 3-belasting`];
+    if (nuAandeel) regels.push(`nu: ${procent(nuAandeel[i]!)}`);
     tip = { x: e.clientX - box.left, y: e.clientY - box.top, regels, bij };
   }
 </script>
 
-{#snippet staven(lagen: Laag[], H: number, beschrijving: string)}
-  {@const s = schaal(lagen, H)}
+{#snippet staven(lagen: Laag[], H: number, beschrijving: string, nuAandeel: number[] | null)}
+  {@const s = schaal(lagen, H, nuAandeel)}
   <div class="houder" bind:clientWidth={breedte}>
     <svg viewBox="0 0 {B} {H}" role="img" aria-label={beschrijving}>
       {#each s.ticks as t (t)}
@@ -87,7 +107,7 @@
         {@const top = hoogten.reduce((a, h, k) => a + (zichtbaar[k] ? h : 0), 0)}
         <g
           role="presentation"
-          onpointermove={(e) => beweeg(e, lagen, i, beschrijving)}
+          onpointermove={(e) => beweeg(e, lagen, i, beschrijving, nuAandeel)}
           onpointerleave={() => (tip = null)}
         >
           <rect x={LINKS + i * vak} y={BOVEN} width={vak} height={s.hoogte} fill="transparent" />
@@ -107,9 +127,15 @@
               />
             {/if}
           {/each}
+          {#if nuAandeel}
+            <line x1={x - 4} x2={x + breed + 4} y1={s.y(nuAandeel[i]!)} y2={s.y(nuAandeel[i]!)} class="nu" />
+          {/if}
           {#if i === 9}
-            <text x={x + breed / 2} y={s.y(0) - top - 6} text-anchor="middle" class="waarde"
-              >{procent(som(lagen.map((l) => l.aandeel[i]!)), 0)}</text
+            <text
+              x={x + breed / 2}
+              y={Math.min(s.y(0) - top, nuAandeel ? s.y(nuAandeel[i]!) : Infinity) - 6}
+              text-anchor="middle"
+              class="waarde">{procent(som(lagen.map((l) => l.aandeel[i]!)), 0)}</text
             >
           {/if}
           <text x={LINKS + (i + 0.5) * vak} y={H - ONDER + 16} text-anchor="middle" class="as">{i + 1}</text>
@@ -126,14 +152,15 @@
 <div class="kaart">
   <Figuur
     titel="Welk deel van de belasting betaalt elke inkomensgroep?"
-    uitleg="Box 1 (inkomen uit werk, uitkering en pensioen) en box 3 (sparen en beleggen), als deel van alle belasting in die twee boxen samen. De groepen zijn tien even grote delen van de bevolking, van laag naar hoog inkomen."
+    uitleg={`Box 1 (inkomen uit werk, uitkering en pensioen) en box 3 (sparen en beleggen), als deel van alle belasting in die twee boxen samen${nu ? ", in dit scenario" : ""}. De groepen zijn tien even grote delen van de bevolking, van laag naar hoog inkomen.`}
   >
     {#snippet legenda()}
       <span><i class="legenda-blok" style="background: var(--box1)"></i>Box 1</span>
       <span><i class="legenda-blok" style="background: var(--box3)"></i>Box 3</span>
+      {#if nu}<span><i class="legenda-nu"></i>nu</span>{/if}
     {/snippet}
     {#snippet grafiek()}
-      {@render staven(samen, 260, "Aandeel van de belasting in box 1 en box 3 per inkomensgroep")}
+      {@render staven(samen, 260, "Aandeel van de belasting in box 1 en box 3 per inkomensgroep", nuSamen)}
     {/snippet}
     {#snippet tabel()}
       <table class="data">
@@ -164,7 +191,7 @@
       uitleg="Box 3 is maar een klein deel van het totaal. Hier zie je hoe de box 3-belasting zelf over de groepen verdeeld is."
     >
       {#snippet grafiek()}
-        {@render staven(apart, 200, "Aandeel van de box 3-belasting per inkomensgroep")}
+        {@render staven(apart, 200, "Aandeel van de box 3-belasting per inkomensgroep", nuApart)}
       {/snippet}
       {#snippet tabel()}
         <table class="data">
@@ -214,5 +241,17 @@
   .nul {
     stroke: var(--zero);
     stroke-width: 1.5;
+  }
+  .nu {
+    stroke: var(--fg);
+    stroke-width: 2;
+  }
+  .legenda-nu {
+    display: inline-block;
+    width: 14px;
+    height: 2px;
+    background: var(--fg);
+    vertical-align: middle;
+    margin-right: 5px;
   }
 </style>
