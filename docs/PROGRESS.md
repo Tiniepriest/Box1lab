@@ -163,7 +163,7 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 ## Fase 25: van bruto naar wat je overhoudt — klaar
 
-- [x] Regel "Bruto … min belasting … min zorgverzekering" boven de zin bovenaan (D-078)
+- [x] Bruto inkomen, betaalde belasting en zorgverzekering (en toeslagen) boven de zin bovenaan (D-078)
 
 ## Open vragen voor de eigenaar
 

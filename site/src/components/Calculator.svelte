@@ -101,16 +101,21 @@
   // Boven de zin bovenaan: van bruto naar wat je overhoudt, in één regel die optelt (D-078).
   const opbouw = $derived.by(() => {
     if (!r) return "";
-    const delen = [
-      `Bruto ${euro(r.bruto)} per jaar`,
-      `min ${euro(r.belasting + r.zvw)} belasting en premies`,
-    ];
-    if (r.pensioenpremie > 0) delen.push(`min ${euro(r.pensioenpremie)} pensioenpremie`);
-    delen.push(`min ${euro(r.zorgpremie)} zorgverzekering`);
+    // "a, b en c"
+    const lijst = (x: string[]) => (x.length > 1 ? `${x.slice(0, -1).join(", ")} en ${x.at(-1)}` : x[0]!);
+    const betaald = [`${euro(r.belasting + r.zvw)} belasting`];
+    if (r.pensioenpremie > 0) betaald.push(`${euro(r.pensioenpremie)} pensioenpremie`);
+    betaald.push(`${euro(r.zorgpremie)} voor de zorgverzekering`);
+    const gekregen: string[] = [];
     if (r.toeslagen + r.kinderbijslag > 0)
-      delen.push(`plus ${euro(r.toeslagen + r.kinderbijslag)} toeslagen en kinderbijslag`);
-    if (r.basisinkomen > 0) delen.push(`plus ${euro(r.basisinkomen)} basisinkomen`);
-    return `${delen.join(", ")}.`;
+      gekregen.push(`${euro(r.toeslagen + r.kinderbijslag)} aan toeslagen en kinderbijslag`);
+    if (r.basisinkomen > 0) gekregen.push(`${euro(r.basisinkomen)} basisinkomen`);
+    const zinnen = [
+      `${samen ? "Jullie bruto inkomen is" : "Je bruto inkomen is"} ${euro(r.bruto)} per jaar.`,
+      `${samen ? "Jullie betalen" : "Je betaalt"} ${lijst(betaald)} per jaar.`,
+    ];
+    if (gekregen.length) zinnen.push(`${samen ? "Jullie krijgen" : "Je krijgt"} ${lijst(gekregen)}.`);
+    return zinnen.join(" ");
   });
 
   const positie = $derived(r ? aandeelUitVerdeling(r.besteedbaar / r.equivalentie, plekGrenzen) : null);
