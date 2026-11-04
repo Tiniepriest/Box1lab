@@ -174,6 +174,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] "Verschil met nu" in de grafiek over wie de belasting betaalt: per huishouden per jaar (D-081)
 
+## Fase 30: uitkeringen en toeslagen in het verschil — klaar
+
+- [x] Derde laag "Uitkeringen en toeslagen" bij "Verschil met nu" (D-082)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

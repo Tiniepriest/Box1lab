@@ -83,6 +83,11 @@ export interface Resultaat {
   uitkeringKosten: number;
   /** Basisinkomen van het huishouden per jaar (onbelast). */
   basisinkomen: number;
+  /**
+   * Bruto uitkeringen van het huishouden per jaar: AOW (zonder aanvullend pensioen), bijstand en
+   * werknemersverzekeringen, na netto-koppeling en na wat het basisinkomen vervangt. Zit al in `bruto`.
+   */
+  uitkering: number;
   /** Gezamenlijk toetsingsinkomen voor de toeslagen. */
   toetsingsinkomen: number;
   toeslagen: number;
@@ -189,7 +194,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     }
     // Vervangt het basisinkomen een deel van de uitkering, dan rekenen de toeslagen met het oorspronkelijke inkomen.
     const toeslagCorrectie = vervangen > 0 ? l.inkomen - x : 0;
-    return { k, x, toeslagCorrectie };
+    return { k, x, toeslagCorrectie, uitkering: Math.max(0, uitkering - vervangen) };
   });
 
   // 2. Eigen woning bij de hoogste verdiener.
@@ -281,6 +286,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     zorgpremie,
     uitkeringKosten,
     basisinkomen,
+    uitkering: personen.reduce((a, ps) => a + ps.uitkering, 0),
     toetsingsinkomen,
     toeslagen,
     besteedbaar:

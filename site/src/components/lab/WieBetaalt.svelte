@@ -8,40 +8,66 @@
    * Met de vinkjes zet je een box aan of uit; de staven zijn dan het deel van de belasting in de boxen die aan
    * staan. In een scenario tonen de staven het scenario en een streepje hoe het nu is (`nu`). Met "Verschil met nu"
    * is nu de nullijn en tonen de staven hoeveel meer of minder belasting een huishouden in die groep betaalt (D-081).
+   * Dan kan er een derde laag bij: wat het huishouden minder of meer krijgt aan uitkeringen en toeslagen (D-082).
+   * Minder krijgen telt omhoog, net als meer belasting: voor de portemonnee is dat hetzelfde.
    */
   let {
     box1,
     box3,
+    ontvangen,
     huishoudens,
     nu = null,
   }: {
     box1: number[];
     box3: number[];
+    ontvangen: number[];
     huishoudens: number[];
-    nu?: { box1: number[]; box3: number[] } | null;
+    nu?: { box1: number[]; box3: number[]; ontvangen: number[] } | null;
   } = $props();
 
   let met1 = $state(true);
   let met3 = $state(true);
+  let metO = $state(true);
   let verschil = $state(false);
   const toonVerschil = $derived(verschil && !!nu);
+  const metOntvangen = $derived(toonVerschil && metO);
+  // Het laatste vinkje kan niet uit. Zonder verschil telt alleen box 1 en box 3: staan die allebei uit, dan weer aan.
+  const aantalAan = $derived(Number(met1) + Number(met3) + Number(metOntvangen));
+  $effect(() => {
+    if (!toonVerschil && !met1 && !met3) {
+      met1 = true;
+      met3 = true;
+    }
+  });
 
   const som = (x: number[]) => x.reduce((a, b) => a + b, 0);
   // De lagen die aan staan. `aandeel`: deel van het totaal van die lagen (%). `delta`: verschil met nu per
   // huishouden per jaar (euro).
   const lagen = $derived.by(() => {
     const aan = [
-      ...(met1 ? [{ naam: "Box 1", kleur: "var(--box1)", bedrag: box1, nu: nu?.box1 }] : []),
-      ...(met3 ? [{ naam: "Box 3", kleur: "var(--box3)", bedrag: box3, nu: nu?.box3 }] : []),
+      ...(met1 ? [{ naam: "Box 1", kleur: "var(--box1)", bedrag: box1, nu: nu?.box1, teken: 1 }] : []),
+      ...(met3 ? [{ naam: "Box 3", kleur: "var(--box3)", bedrag: box3, nu: nu?.box3, teken: 1 }] : []),
+      ...(metOntvangen
+        ? [
+            {
+              naam: "Uitkeringen en toeslagen",
+              kleur: "var(--ontvangen)",
+              bedrag: ontvangen,
+              nu: nu?.ontvangen,
+              teken: -1,
+            },
+          ]
+        : []),
     ];
     const totaal = som(aan.map((l) => som(l.bedrag)));
     return aan.map((l) => ({
       naam: l.naam,
       kleur: l.kleur,
+      ontvangen: l.teken < 0,
       bedrag: l.bedrag,
       aandeel: l.bedrag.map((v) => (v / totaal) * 100),
-      deltaMld: l.bedrag.map((v, i) => v - (l.nu?.[i] ?? v)),
-      delta: l.bedrag.map((v, i) => ((v - (l.nu?.[i] ?? v)) * 1e9) / huishoudens[i]!),
+      deltaMld: l.bedrag.map((v, i) => l.teken * (v - (l.nu?.[i] ?? v))),
+      delta: l.bedrag.map((v, i) => (l.teken * (v - (l.nu?.[i] ?? v)) * 1e9) / huishoudens[i]!),
     }));
   });
   const waarden = $derived(lagen.map((l) => (toonVerschil ? l.delta : l.aandeel)));
@@ -55,6 +81,16 @@
     return per.map((v) => (v / som(per)) * 100);
   });
   const welke = $derived(met1 && met3 ? "box 1 en box 3 samen" : met1 ? "box 1" : "box 3");
+  const opsomming = (x: string[]) =>
+    x.length < 2 ? (x[0] ?? "") : `${x.slice(0, -1).join(", ")} en ${x.at(-1)}`;
+  const welkeLagen = $derived(
+    opsomming(lagen.map((l) => (l.ontvangen ? "uitkeringen en toeslagen" : l.naam.toLowerCase()))),
+  );
+  // Eén regel per laag in de tooltip, in woorden: "€ 1.775 minder belasting", "€ 634 minder".
+  const inWoorden = (v: number, ontvangen: boolean) =>
+    Math.abs(v) < 0.5
+      ? "geen verschil"
+      : `${euro(Math.abs(v))} ${v > 0 === ontvangen ? "minder" : "meer"}${ontvangen ? "" : " belasting"}`;
 
   const mld = (v: number) => `€ ${getal(v, 1)} mld`;
   const naam = (i: number) =>
@@ -142,7 +178,7 @@
     const regels = toonVerschil
       ? [
           naam(i),
-          ...lagen.map((l) => `${l.naam}: ${euroVerschil(l.delta[i]!)} per huishouden`),
+          ...lagen.map((l) => `${l.naam}: ${inWoorden(l.delta[i]!, l.ontvangen)}`),
           `Samen: ${euroVerschil(groepTotaal(i))} per huishouden per jaar`,
           `Hele groep: ${miljard(groepDeltaMld(i))}`,
         ]
@@ -159,27 +195,39 @@
 
 <div class="kaart">
   <Figuur
-    titel={toonVerschil
-      ? "Hoeveel meer of minder belasting betaalt elke inkomensgroep?"
-      : "Welk deel van de belasting betaalt elke inkomensgroep?"}
-    uitleg={toonVerschil
-      ? `Verschil met nu in de belasting in ${welke}, per huishouden per jaar. Omhoog is meer belasting, omlaag minder. De groepen zijn tien even grote delen van de bevolking, van laag naar hoog inkomen.`
-      : `Als deel van alle belasting in ${welke}${nu ? ", in dit scenario" : ""}. Box 1 is inkomen uit werk, uitkering en pensioen; box 3 is sparen en beleggen. De groepen zijn tien even grote delen van de bevolking, van laag naar hoog inkomen.`}
+    titel={metOntvangen
+      ? "Hoeveel meer betaalt of minder krijgt elke inkomensgroep?"
+      : toonVerschil
+        ? "Hoeveel meer of minder belasting betaalt elke inkomensgroep?"
+        : "Welk deel van de belasting betaalt elke inkomensgroep?"}
+    uitleg={metOntvangen
+      ? `Verschil met nu in ${welkeLagen}, per huishouden per jaar. Omhoog is meer belasting betalen of minder ontvangen, omlaag minder betalen of meer ontvangen. De groepen zijn tien even grote delen van de bevolking, van laag naar hoog inkomen.`
+      : toonVerschil
+        ? `Verschil met nu in de belasting in ${welke}, per huishouden per jaar. Omhoog is meer belasting, omlaag minder. De groepen zijn tien even grote delen van de bevolking, van laag naar hoog inkomen.`
+        : `Als deel van alle belasting in ${welke}${nu ? ", in dit scenario" : ""}. Box 1 is inkomen uit werk, uitkering en pensioen; box 3 is sparen en beleggen. De groepen zijn tien even grote delen van de bevolking, van laag naar hoog inkomen.`}
   >
     {#snippet legenda()}
       <!-- Het laatste vinkje kan niet uit: dan valt er niets te zien. -->
       <label class="vinkje"
-        ><input type="checkbox" bind:checked={met1} disabled={met1 && !met3} /><i
+        ><input type="checkbox" bind:checked={met1} disabled={met1 && aantalAan === 1} /><i
           class="legenda-blok"
           style="background: var(--box1)"
         ></i>Box 1</label
       >
       <label class="vinkje"
-        ><input type="checkbox" bind:checked={met3} disabled={met3 && !met1} /><i
+        ><input type="checkbox" bind:checked={met3} disabled={met3 && aantalAan === 1} /><i
           class="legenda-blok"
           style="background: var(--box3)"
         ></i>Box 3</label
       >
+      {#if toonVerschil}
+        <label class="vinkje"
+          ><input type="checkbox" bind:checked={metO} disabled={metO && aantalAan === 1} /><i
+            class="legenda-blok"
+            style="background: var(--ontvangen)"
+          ></i>Uitkeringen en toeslagen</label
+        >
+      {/if}
       {#if nuAandeel}<span><i class="legenda-nu"></i>nu</span>{/if}
       {#if nu}
         <label class="vinkje verschil"><input type="checkbox" bind:checked={verschil} />Verschil met nu</label
@@ -192,7 +240,7 @@
           viewBox="0 0 {B} {H}"
           role="img"
           aria-label={toonVerschil
-            ? `Verschil met nu in de belasting in ${welke} per huishouden, per inkomensgroep`
+            ? `Verschil met nu in ${welkeLagen} per huishouden, per inkomensgroep`
             : `Aandeel van de belasting in ${welke} per inkomensgroep`}
         >
           {#each schaal.ticks as t (t)}
@@ -245,8 +293,14 @@
       </div>
       {#if toonVerschil}
         <p class="notitie">
-          {#if geenVerschil}<strong>In dit scenario verandert de belasting in {welke} niet.</strong>{/if}
-          Alleen belasting. Wat er met toeslagen gebeurt, zie je bij "Wie gaat erop vooruit of achteruit?".
+          {#if geenVerschil}<strong>In dit scenario verandert er niets in {welkeLagen}.</strong>{/if}
+          {#if metOntvangen}
+            Uitkeringen en toeslagen: AOW, bijstand, WW en WIA (bruto; de belasting erover staat bij box 1),
+            toeslagen, kinderbijslag en basisinkomen.
+          {:else}
+            Alleen belasting. Zet "Uitkeringen en toeslagen" aan om ook te zien wat huishoudens meer of minder
+            krijgen.
+          {/if}
         </p>
       {/if}
     {/snippet}
@@ -256,7 +310,9 @@
           <thead>
             <tr>
               <th>Groep</th>
-              {#each lagen as l (l.naam)}<th>{l.naam} per huishouden</th>{/each}
+              {#each lagen as l (l.naam)}<th>
+                  {l.ontvangen ? "Minder uitkeringen en toeslagen" : `${l.naam}: meer belasting`} per huishouden
+                </th>{/each}
               <th>Samen per huishouden</th>
               <th>Hele groep</th>
             </tr>

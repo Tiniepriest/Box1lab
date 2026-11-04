@@ -694,6 +694,7 @@
       <WieBetaalt
         box1={uitkomst.belasting.box1}
         box3={uitkomst.belasting.box3}
+        ontvangen={uitkomst.belasting.ontvangen}
         huishoudens={uitkomst.belasting.huishoudens}
         nu={leeg ? null : basis!.belasting}
       />

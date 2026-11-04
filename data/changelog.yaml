@@ -8,6 +8,14 @@
 
 - datum: 2026-11-04
   soort: nieuw
+  titel: "Scenariolab: uitkeringen en toeslagen in het verschil per inkomensgroep"
+  tekst: >-
+    Bij "Verschil met nu" zie je naast box 1 en box 3 nu ook wat elke inkomensgroep meer of minder krijgt aan
+    uitkeringen en toeslagen: AOW, bijstand, WW en WIA, toeslagen, kinderbijslag en basisinkomen. Minder krijgen telt
+    omhoog, net als meer belasting. Zo laat ook een voorstel als "toeslagen afschaffen" een verschil zien.
+
+- datum: 2026-11-04
+  soort: nieuw
   titel: "Scenariolab: verschil in belasting per inkomensgroep"
   tekst: >-
     Bij "Welk deel van de belasting betaalt elke inkomensgroep?" kun je in een scenario nu "Verschil met nu"
