@@ -627,3 +627,16 @@ Een kaart "Klopt het met je loonstrook?" op Jouw situatie, per werknemer of uitk
 - **Bovenaan** blijft het gemiddelde besteedbaar inkomen per maand staan, omdat alle vergelijkingen op de site daarover gaan. De kaart legt uit dat dat een gemiddelde is.
 
 Geen verandering in de rekenregels, dus geen nieuwe modelversie en geen golden-verschil.
+
+## Fase 20: hypotheekrente per maand
+
+### D-075 Hypotheekrente per maand, met een rekenhulp
+
+Wens van de eigenaar (4 november 2026): mensen weten hun maandbedrag beter dan de rente per jaar, en zien vaak alleen het totaal dat ze aan de bank betalen, rente plus aflossing.
+
+- **Per maand.** Het veld vraagt de hypotheekrente per maand. De invoer bewaart nog steeds de rente per jaar (`hypotheekrente`), zodat bewaarde situaties, links en de rekenkern niet veranderen; het formulier rekent om.
+- **Rekenhulp.** Onder het veld een uitklapblok voor wie alleen het totale maandbedrag kent. Uit dat totaal alleen is de rente niet te halen: het deel rente hangt af van de schuld, de rente en de looptijd. Daarom vraagt de hulp wat mensen wel weten of makkelijk vinden: de hypotheek die nog openstaat (in de app van de bank) en het rentepercentage (in het contract of de app). Rente per maand = schuld × rente ÷ 12 (`renteUitHypotheek`). Dat is de rente van deze maand; door aflossen is het jaargemiddelde iets lager, aan het begin van een annuïteit van 30 jaar tegen 4% ongeveer 1%, tegen het eind meer. De hulp wijst ook op de bank-app (die het maandbedrag vaak al splitst) en de jaaropgave (betaalde rente vorig jaar ÷ 12). Meer leningdelen: per deel uitrekenen en optellen.
+- Schuld en percentage worden niet bewaard; alleen de uitkomst gaat in het formulier.
+- De notitie over de hypotheekrenteaftrek noemt nu eerst het bedrag per maand.
+
+Geen andere rekenregels, geen nieuwe modelversie, geen golden-verschil.

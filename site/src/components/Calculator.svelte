@@ -256,8 +256,9 @@
         </Figuur>
         {#if r.eigenWoning > 0}
           <p class="notitie">
-            De hypotheekrenteaftrek scheelt je {euro(r.eigenWoning)} belasting per jaar; dat zit al in de belasting
-            hierboven.
+            De hypotheekrenteaftrek scheelt je {euro(r.eigenWoning / 12)} belasting per maand ({euro(
+              r.eigenWoning,
+            )} per jaar); dat zit al in de belasting hierboven.
           </p>
         {/if}
       </div>

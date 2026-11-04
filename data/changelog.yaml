@@ -8,6 +8,14 @@
 
 - datum: 2026-11-04
   soort: nieuw
+  titel: "Hypotheekrente per maand"
+  tekst: >-
+    Op Jouw situatie vul je de hypotheekrente nu per maand in, in plaats van per jaar. Weet je alleen wat je in
+    totaal aan de bank betaalt (rente plus aflossing)? Vul dan in hoeveel hypotheek je nog hebt en wat je rente is,
+    dan rekenen we de rente per maand voor je uit.
+
+- datum: 2026-11-04
+  soort: nieuw
   titel: "Jouw situatie: klopt het met je loonstrook?"
   tekst: >-
     Op Jouw situatie zie je nu wat er ongeveer op je loonstrook staat: je netto loon per maand, en apart wat je

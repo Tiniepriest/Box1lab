@@ -3,6 +3,7 @@
     bijstandsnormPerJaar,
     heeftAowLeeftijd,
     persoonInvoerSchema,
+    renteUitHypotheek,
     type Invoer,
     type Parameters,
     type PersoonInvoer,
@@ -80,6 +81,13 @@
     onthouden = false;
     melding = "Je gegevens zijn gewist uit deze browser.";
   }
+  // Rekenhulp voor de hypotheekrente: wordt niet bewaard, alleen de rente zelf.
+  let schuld = $state(0);
+  let rentePercentage = $state(0);
+  function rekenRenteUit() {
+    if (schuld > 0 && rentePercentage > 0) invoer.hypotheekrente = renteUitHypotheek(schuld, rentePercentage);
+  }
+
   function leesGetal(e: Event): number {
     const v = Number((e.currentTarget as HTMLInputElement).value);
     return Number.isFinite(v) && v >= 0 ? v : 0;
@@ -296,10 +304,67 @@
         <a href="https://www.wozwaardeloket.nl/">WOZ-waardeloket</a>.
       </p>
       <div class="rij">
-        <label for="rente">Betaalde hypotheekrente per jaar (€)</label>
-        <input id="rente" type="number" min="0" step="100" bind:value={invoer.hypotheekrente} />
+        <label for="rente"
+          >Hypotheekrente per maand (€) <span class="hint">alleen de rente, zonder aflossing</span></label
+        >
+        <!-- Het formulier vraagt per maand, de berekening rekent per jaar. -->
+        <input
+          id="rente"
+          type="number"
+          min="0"
+          step="10"
+          value={Math.round((invoer.hypotheekrente / 12) * 100) / 100}
+          oninput={(e) => (invoer.hypotheekrente = leesGetal(e) * 12)}
+        />
       </div>
-      <p class="notitie">Staat op de jaaropgave van je hypotheek.</p>
+      <details class="rekenhulp">
+        <summary>Weet je alleen wat je in totaal aan de bank betaalt?</summary>
+        <div class="hulp">
+          <p class="notitie">
+            Wat je elke maand aan de bank betaalt, is rente plus aflossing. In de app of op de website van je
+            bank staat vaak hoeveel daarvan rente is. Weet je dat niet, vul dan hieronder in hoeveel hypotheek
+            je nog hebt en wat je rente is.
+          </p>
+          <div class="rij">
+            <label for="schuld">Hypotheek die je nog hebt (€)</label>
+            <input
+              id="schuld"
+              type="number"
+              min="0"
+              step="5000"
+              value={schuld}
+              oninput={(e) => {
+                schuld = leesGetal(e);
+                rekenRenteUit();
+              }}
+            />
+          </div>
+          <div class="rij">
+            <label for="rentepercentage">Rente (%)</label>
+            <input
+              id="rentepercentage"
+              type="number"
+              min="0"
+              step="0.01"
+              value={rentePercentage}
+              oninput={(e) => {
+                rentePercentage = leesGetal(e);
+                rekenRenteUit();
+              }}
+            />
+          </div>
+          {#if schuld > 0 && rentePercentage > 0}
+            <p class="notitie uitkomst">
+              Dat is ongeveer <strong>{euro(renteUitHypotheek(schuld, rentePercentage) / 12)}</strong> rente per
+              maand. Dat bedrag staat nu hierboven.
+            </p>
+          {/if}
+          <p class="notitie">
+            Meer leningdelen met een andere rente? Reken per deel uit en tel de rente per maand op. Je kunt
+            ook de betaalde rente over vorig jaar van de jaaropgave van je bank nemen en door 12 delen.
+          </p>
+        </div>
+      </details>
     {/if}
   </fieldset>
 
@@ -399,6 +464,23 @@
       grid-template-columns: minmax(0, 1fr);
       gap: 4px;
     }
+  }
+  .rekenhulp {
+    border-left: 3px solid var(--line);
+    padding-left: 12px;
+  }
+  .hulp {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rekenhulp summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 14px;
+  }
+  .rekenhulp[open] summary {
+    margin-bottom: 8px;
   }
   .rij input,
   .rij select {
