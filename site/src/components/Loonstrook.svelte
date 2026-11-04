@@ -2,112 +2,85 @@
   import { loonstrook, type Invoer, type Parameters } from "@box1lab/engine";
   import { euro } from "../lib/format.ts";
 
-  /* "Klopt het met je loonstrook?": het netto maandloon, en vakantiegeld, 13e maand en bonus apart (D-074). */
+  /* Netto per maand, en vakantiegeld, 13e maand en bonus apart: beknopt, om met de loonstrook te vergelijken (D-074). */
   let { params, invoer }: { params: Parameters; invoer: Invoer } = $props();
 
-  const stroken = $derived(loonstrook(invoer, params));
-  // Wie loon of een uitkering per jaar invulde, krijgt geen loonstrook maar wel een tip.
-  const perJaar = $derived(
-    invoer.personen.some(
-      (x) =>
-        (x.soort === "loondienst" || x.soort === "werknemersverzekering") &&
-        x.periode === "jaar" &&
-        x.bedrag > 0,
-    ),
+  const vakjes = $derived(
+    loonstrook(invoer, params).flatMap((s) => {
+      const wie = invoer.personen.length > 1 ? (s.persoon === 0 ? " (jij)" : " (partner)") : "";
+      const v = [
+        {
+          label: `${s.uitkering ? "Netto uitkering" : "Netto loon"} per maand${wie}`,
+          netto: s.nettoPerMaand,
+          sub: `bruto ${euro(s.brutoPerMaand)}${s.vakantiegeldInMaand ? ", met vakantiegeld" : ""}`,
+        },
+      ];
+      if (s.vakantiegeld)
+        v.push({
+          label: `Vakantiegeld${wie}`,
+          netto: s.vakantiegeld.netto,
+          sub: `bruto ${euro(s.vakantiegeld.bruto)}`,
+        });
+      if (s.dertiendeMaand)
+        v.push({
+          label: `13e maand${wie}`,
+          netto: s.dertiendeMaand.netto,
+          sub: `bruto ${euro(s.dertiendeMaand.bruto)}`,
+        });
+      if (s.bonus)
+        v.push({ label: `Bonus${wie}`, netto: s.bonus.netto, sub: `bruto ${euro(s.bonus.bruto)}` });
+      return v;
+    }),
   );
-  const extras = $derived(stroken.some((s) => s.vakantiegeld || s.dertiendeMaand || s.bonus));
 </script>
 
-{#if stroken.length || perJaar}
-  <section class="kaart loonstrook" aria-labelledby="titel-loonstrook">
-    <h2 id="titel-loonstrook">Klopt het met je loonstrook?</h2>
-    {#if stroken.length}
-      <p class="notitie">
-        Zo ziet {stroken.every((s) => s.uitkering) ? "je uitkering" : "je loonstrook"} er ongeveer uit.
-        {#if extras}Het bedrag hierboven is een gemiddelde over het jaar: daarin zitten ook de bedragen die je
-          één keer per jaar krijgt, en de toeslagen en de zorgpremie.{/if}
-      </p>
-    {/if}
-    {#each stroken as s (s.persoon)}
-      {#if invoer.personen.length > 1}<h3>{s.persoon === 0 ? "Jij" : "Je partner"}</h3>{/if}
-      <table class="data">
-        <thead><tr><th></th><th>Bruto</th><th>Netto</th></tr></thead>
-        <tbody>
-          <tr class="maand">
-            <td>Per maand</td>
-            <td class="num">{euro(s.brutoPerMaand)}</td>
-            <td class="num">{euro(s.nettoPerMaand)}</td>
-          </tr>
-          {#if s.vakantiegeld}
-            <tr>
-              <td>Vakantiegeld <span class="hint">meestal in mei</span></td>
-              <td class="num">{euro(s.vakantiegeld.bruto)}</td>
-              <td class="num">{euro(s.vakantiegeld.netto)}</td>
-            </tr>
-          {/if}
-          {#if s.dertiendeMaand}
-            <tr>
-              <td>13e maand <span class="hint">meestal in december</span></td>
-              <td class="num">{euro(s.dertiendeMaand.bruto)}</td>
-              <td class="num">{euro(s.dertiendeMaand.netto)}</td>
-            </tr>
-          {/if}
-          {#if s.bonus}
-            <tr>
-              <td>Bonus</td>
-              <td class="num">{euro(s.bonus.bruto)}</td>
-              <td class="num">{euro(s.bonus.netto)}</td>
-            </tr>
-          {/if}
-        </tbody>
-      </table>
-      <p class="notitie">
-        Per maand gaat er {euro(s.loonheffingPerMaand)} loonheffing af{s.pensioenpremiePerMaand > 0
-          ? ` en ${euro(s.pensioenpremiePerMaand)} pensioenpremie`
-          : ""}.
-        {#if s.vakantiegeldInMaand}Je vakantiegeld zit al in je maandbedrag.{/if}
-      </p>
-    {/each}
-    {#if extras}
-      <p class="notitie">
-        Van een bedrag dat je één keer per jaar krijgt, gaat meer belasting af dan van je gewone loon: het
-        komt bovenop je jaarloon. Je loonstrook kan een paar tientjes afwijken, want je werkgever rekent met
-        tabellen.
-      </p>
-    {/if}
-    {#if stroken.some((s) => !s.uitkering)}
-      <p class="notitie">
-        Niet op je loonstrook: toeslagen, de premie van je zorgverzekering, en de combinatiekorting en
-        hypotheekrenteaftrek (die krijg je via je aangifte).
-      </p>
-    {/if}
-    {#if perJaar}
-      <p class="notitie">Vul je bruto loon per maand in, dan zie je hier wat er op je loonstrook staat.</p>
-    {/if}
-  </section>
+{#if vakjes.length}
+  <div class="loonstrook" aria-label="Zoals op je loonstrook">
+    <ul>
+      {#each vakjes as v (v.label)}
+        <li>
+          <span class="l">{v.label}</span>
+          <span class="w">{euro(v.netto)}</span>
+          <span class="t">{v.sub}</span>
+        </li>
+      {/each}
+    </ul>
+    <p class="notitie">
+      Ongeveer zoals op je loonstrook. Het bedrag hierboven is het gemiddelde, met toeslagen en zorgpremie.
+    </p>
+  </div>
 {/if}
 
 <style>
-  h2 {
-    font-size: 18px;
-    margin: 0 0 4px;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
-  h3 {
-    font-size: 16px;
-    margin: 16px 0 0;
+  li {
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: var(--schaduw);
+    padding: 8px 12px;
+    min-width: 130px;
   }
-  table {
-    margin-top: 8px;
-  }
-  .maand td {
-    font-weight: 600;
-  }
-  .hint {
+  .l,
+  .t {
+    font-size: 12px;
     color: var(--muted);
-    font-size: 13px;
-    font-weight: 400;
+  }
+  .w {
+    font-size: 18px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
   }
   .notitie {
     margin: 6px 0 0;
+    font-size: 12px;
   }
 </style>

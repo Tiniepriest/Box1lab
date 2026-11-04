@@ -159,6 +159,9 @@
         {eigen ? (samen ? "Jullie houden" : "Je houdt") : "In dit voorbeeld houd je"}
         <strong>{euro(over / 12)}</strong> per maand over om van te leven ({euro(over)} per jaar).
       </p>
+      {#if geldig.success}
+        <Loonstrook {params} invoer={geldig.data} />
+      {/if}
       {#if r.box3 > 0}
         <p class="box3">
           Over {samen ? "jullie" : "je"} spaargeld en beleggingen {samen ? "betalen jullie" : "betaal je"} daarnaast
@@ -194,10 +197,6 @@
           {/if}
         </div>
       </div>
-
-      {#if geldig.success}
-        <Loonstrook {params} invoer={geldig.data} />
-      {/if}
 
       <section class="volgende" aria-labelledby="titel-volgende">
         <h2 id="titel-volgende">Volgende stap</h2>

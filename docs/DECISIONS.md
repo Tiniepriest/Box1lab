@@ -625,6 +625,7 @@ Een kaart "Klopt het met je loonstrook?" op Jouw situatie, per werknemer of uitk
 - **Wat er niet op staat.** De combinatiekorting en de hypotheekrenteaftrek (die komen via de aangifte of een voorlopige aanslag), toeslagen en de nominale zorgpremie. De inkomensafhankelijke bijdrage Zvw betaalt de werkgever, die staat ook in het model niet bij werknemers.
 - **Bedrag per jaar.** Wie het loon per jaar invult, krijgt geen loonstrook: dan weten we niet wat erin zit. De kaart vraagt dan om het bedrag per maand.
 - **Bovenaan** blijft het gemiddelde besteedbaar inkomen per maand staan, omdat alle vergelijkingen op de site daarover gaan. De kaart legt uit dat dat een gemiddelde is.
+- **Beknopt (later op 4 november, wens van de eigenaar).** De aparte kaart is vervangen door een rij kleine vakjes direct onder de zin bovenaan: netto per maand, vakantiegeld, 13e maand en bonus, elk met het brutobedrag eronder, en één regel uitleg. De loonheffing per maand en de uitleg over bijzondere beloningen staan er niet meer bij.
 
 Geen verandering in de rekenregels, dus geen nieuwe modelversie en geen golden-verschil.
 
