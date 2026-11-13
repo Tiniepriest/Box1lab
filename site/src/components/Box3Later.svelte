@@ -92,6 +92,27 @@
         box 3-belasting dan in {nu}.
       {/if}
     </p>
+    <!-- Koerswinst telt pas in het jaar van verkoop: wachten is later betalen, niet minder (fase 36, D-087). -->
+    {#if situatie.overig > 0 && u.later.koerswinst > 0.5}
+      <p class="later-betalen">
+        Hierin zit <span class="bedrag">{euro(u.later.koerswinst)}</span> koerswinst, omdat
+        {samen ? "jullie" : "je"} in {later}
+        {samen ? "verkopen" : "verkoopt"}. In jaren dat
+        {samen ? "jullie" : "je"} niets {samen ? "verkopen, betalen jullie" : "verkoopt, betaal je"} alleen over
+        rente en dividend. Koerswinst wordt belast in het jaar dat je verkoopt, en dan over alle winst sinds 1 januari
+        {later}, of sinds je de beleggingen kocht als dat later was. Wachten met verkopen betekent dus later
+        betalen, niet minder.
+      </p>
+    {:else if situatie.overig > 0 && u.later.verkocht === 0}
+      <p class="later-betalen">
+        {samen ? "Jullie verkopen niets, dus jullie betalen" : "Je verkoopt niets, dus je betaalt"} alleen over
+        rente en dividend. {samen ? "Verkopen jullie" : "Verkoop je"} later, dan {samen
+          ? "betalen jullie"
+          : "betaal je"}
+        in dat jaar over alle winst sinds 1 januari {later}: wachten met verkopen betekent later betalen, niet
+        minder.
+      </p>
+    {/if}
 
     <div class="velden">
       {#if situatie.bank > 0}
@@ -215,6 +236,11 @@
   }
   .kern {
     margin: 0 0 14px;
+  }
+  .later-betalen {
+    margin: -6px 0 14px;
+    font-size: 14px;
+    color: var(--muted);
   }
   .velden {
     display: flex;

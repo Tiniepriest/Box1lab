@@ -791,3 +791,13 @@ Wens van de eigenaar (13 november 2026): in het rekenvoorbeeld van D-085 een vel
 - Niet in het voorbeeld: verkopen na meer jaren groei, bijkopen tegen een andere prijs (gemiddelde verkrijgingsprijs) en kosten. Het blok blijft één jaar.
 
 Voorbeeld: € 200.000 beleggingen, 2% dividend, 5% koersstijging, € 10.000 verkocht: € 476 winst, belasting 2029 € 950 (zonder verkoop € 781).
+
+## Fase 36: later verkopen is later betalen
+
+### D-087 Uitleg onder de uitkomst van box 3 in 2029
+
+Wens van de eigenaar (13 november 2026): duidelijk maken dat je in jaren zonder verkoop alleen over rente en dividend betaalt, en in het jaar van verkoop over de opgebouwde winst. Niet in het blauwe vlak (dat gaat over 2027 en blijft kort), maar direct onder de uitkomst van het rekenvoorbeeld (D-085).
+
+- Met een verkoop en koerswinst: "Hierin zit € … koerswinst, omdat je in 2029 verkoopt. In jaren dat je niets verkoopt, betaal je alleen over rente en dividend. Koerswinst wordt belast in het jaar dat je verkoopt, en dan over alle winst sinds 1 januari 2029, of sinds je de beleggingen kocht als dat later was. Wachten met verkopen betekent dus later betalen, niet minder."
+- Zonder verkoop: "Je verkoopt niets, dus je betaalt alleen over rente en dividend. Verkoop je later, dan betaal je in dat jaar over alle winst sinds 1 januari 2029: wachten met verkopen betekent later betalen, niet minder."
+- Bewust geen "dus heb je voordeel": of je over meerdere jaren samen meer of minder betaalt dan in het oude stelsel, hangt af van je rendement. Een berekening over meerdere jaren is voorgesteld maar nog niet gebouwd.
