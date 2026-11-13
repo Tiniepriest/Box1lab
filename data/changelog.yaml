@@ -8,6 +8,13 @@
 
 - datum: 2026-11-13
   soort: nieuw
+  titel: "Box 3 in 2029: vul in hoeveel je verkoopt"
+  tekst: >-
+    In het rekenvoorbeeld voor box 3 in 2029 vul je nu het bedrag in dat je verkoopt, in plaats van alles of
+    niets. Alleen de winst op dat deel telt mee: de verkoopprijs min de waarde op 1 januari 2029.
+
+- datum: 2026-11-13
+  soort: nieuw
   titel: "Belastingplan 2027: reken box 3 in 2029 uit"
   tekst: >-
     Naast "Wat doet het plan met jou?" staat een rekenvoorbeeld voor box 3 in 2029. Dan betaal je belasting

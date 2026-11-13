@@ -28,7 +28,7 @@
   let spaarrente = $state(v.spaarrente);
   let dividend = $state(v.dividend);
   let koersstijging = $state(v.koersstijging);
-  let verkopen = $state(false);
+  let verkocht = $state(0);
 
   const getalOf0 = (x: unknown) => (typeof x === "number" && Number.isFinite(x) ? x : 0);
 
@@ -52,7 +52,7 @@
         spaarrente: getalOf0(spaarrente),
         dividend: getalOf0(dividend),
         koersstijging: getalOf0(koersstijging),
-        verkopen,
+        verkocht: getalOf0(verkocht),
       },
       params,
       regels,
@@ -83,7 +83,7 @@
       {:else if Math.abs(u.verschil) < 0.5}
         Met deze percentages {samen ? "betalen jullie" : "betaal je"} in {later} evenveel box 3-belasting als in
         {nu}:
-        {euro(u.later.belasting)} per jaar.
+        <span class="bedrag">{euro(u.later.belasting)}</span> per jaar.
       {:else}
         Met deze percentages {samen ? "betalen jullie" : "betaal je"} in {later}
         <strong class={u.verschil > 0 ? "achteruit" : "vooruit"}
@@ -130,9 +130,18 @@
             /> % per jaar</span
           >
         </label>
-        <label class="vinkje">
-          <input type="checkbox" bind:checked={verkopen} />
-          {samen ? "We verkopen onze" : "Ik verkoop mijn"} beleggingen in {later}
+        <label>
+          <span>Bedrag dat {samen ? "jullie" : "je"} in {later} {samen ? "verkopen" : "verkoopt"}</span>
+          <span class="invoer"
+            >€ <input
+              type="number"
+              min="0"
+              step="1000"
+              class="euro"
+              bind:value={verkocht}
+              aria-label="Bedrag dat je verkoopt in euro"
+            /></span
+          >
         </label>
       {/if}
     </div>
@@ -156,18 +165,34 @@
     <ul class="notitie">
       <li>
         <strong>{nu}:</strong> belasting over een vast rendement ({pct(b.rendement.banktegoeden)} op spaargeld,
-        {pct(b.rendement.overig)} op beleggingen) boven {euro(b.heffingsvrijVermogen)} per persoon, tegen
+        {pct(b.rendement.overig)} op beleggingen) boven
+        <span class="bedrag">{euro(b.heffingsvrijVermogen)}</span>
+        per persoon, tegen
         {pct(b.tarief)}. Is je echte rendement lager, dan betaal je daarover{u.nu.tegenbewijs
           ? "; met deze percentages is dat zo"
           : ""}.
       </li>
       <li>
         <strong>{later}:</strong> rente en dividend tellen elk jaar, koerswinst alleen als je verkoopt, en dan
-        alleen de winst vanaf 1 januari {later}. {euro(regels.regels.heffingsvrijResultaat)} rendement per persoon
-        is vrij. Tarief {pct(schijf[0]!.tarief)}{#if schijf.length > 1}, boven {euro(schijf[0]!.tot ?? 0)} per persoon
+        alleen de winst: verkoopprijs min de waarde op 1 januari {later} (of je aankoopprijs als je later koopt).
+        <span class="bedrag">{euro(regels.regels.heffingsvrijResultaat)}</span> rendement per persoon is vrij.
+        Tarief {pct(schijf[0]!.tarief)}{#if schijf.length > 1}, boven <span class="bedrag"
+            >{euro(schijf[0]!.tot ?? 0)}</span
+          >
+          per persoon
           {pct(schijf[1]!.tarief)}{/if}.
+        {#if u.later.verkocht > 0}
+          Van de <span class="bedrag">{euro(u.later.verkocht)}</span> die {samen
+            ? "jullie verkopen"
+            : "je verkoopt"}, is
+          <span class="bedrag">{euro(Math.abs(u.later.koerswinst))}</span>
+          {u.later.koerswinst >= 0 ? "winst" : "verlies"}{u.later.verkocht < getalOf0(verkocht)
+            ? ` (meer verkopen kan niet: je beleggingen zijn dan ${euro(u.later.verkocht)} waard)`
+            : ""}.
+        {/if}
         {#if u.later.verlies > 0}
-          Bij verlies betaal je niets; {euro(u.later.verlies)} neem je mee naar volgende jaren.
+          Bij verlies betaal je niets; <span class="bedrag">{euro(u.later.verlies)}</span> neem je mee naar volgende
+          jaren.
         {/if}
       </li>
       {#if situatie.overig > 0 || situatie.schulden > 0}
@@ -211,9 +236,11 @@
     width: 5.5em;
     text-align: right;
   }
-  .velden .vinkje {
-    display: flex;
-    gap: 8px;
+  .invoer input.euro {
+    width: 8em;
+  }
+  .bedrag {
+    white-space: nowrap;
   }
   table {
     margin: 0 0 12px;
