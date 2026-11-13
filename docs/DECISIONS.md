@@ -755,6 +755,7 @@ Vraag van de eigenaar (13 november 2026): op sociale media ging rond dat iederee
 - Nieuw, optioneel veld `noot` (titel en tekst) in `verkiezing.yaml`, getoond als opvallende kaart onder de uitleg.
 - Inhoud: in 2027 blijft het forfaitaire stelsel met 36% en de tegenbewijsregeling; het heffingsvrij vermogen gaat naar ongeveer € 60.000 (€ 60.280, raming, D-083). Het tarief van 38,5% boven € 60.000 rendement per jaar (amendement 80) gaat met de rest van het nieuwe stelsel in op 1 januari 2029 (Belastingplan 2027, artikel III); volgens de toelichting van het amendement raakt het vrijwel alleen mensen met meer dan een miljoen euro vermogen.
 - De zin over box 3 aan het eind van de uitleg is weg, zodat het niet dubbel staat.
+- Aangepast op verzoek van de eigenaar (13 november 2026): de bijzin dat het hogere tarief "vrijwel alleen mensen met meer dan een miljoen euro vermogen" raakt, is weg uit de noot en de changelog; te politiek. De noot zegt alleen dat het tarief van 38,5% pas in 2029 komt.
 
 ## Fase 33: box 3 in 2029
 
