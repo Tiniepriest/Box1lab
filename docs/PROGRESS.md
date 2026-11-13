@@ -198,6 +198,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Bedrag dat je verkoopt in plaats van het vinkje; alleen de winst op dat deel telt (D-086)
 
+## Fase 36: later verkopen is later betalen — klaar
+
+- [x] Zin onder de uitkomst van box 3 in 2029 over koerswinst bij verkoop (D-087)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

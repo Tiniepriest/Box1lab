@@ -133,7 +133,7 @@ try {
     .getByRole("button", { name: /Vlaktaks/ })
     .first()
     .click();
-  await pg.waitForFunction(() => document.querySelector(".kernzin")?.textContent?.includes("achteruit"));
+  await pg.waitForFunction(() => document.querySelector(".kernzin")?.textContent?.includes("mld"));
   const kern = (await pg.locator(".kernzin").textContent()) ?? "";
   controleer(
     /achteruit/.test(kern) && /mld/.test(kern),
@@ -250,6 +250,24 @@ try {
     ) && /geen spaargeld of beleggingen ingevuld/.test((await pg.locator(".box3later").textContent()) ?? ""),
     "belastingplan 2027: rekenvoorbeeld box 3 in 2029, zonder vermogen een uitnodiging (D-085)",
   );
+  await pg.locator("section.situatie").getByRole("button", { name: "Vul je situatie in" }).click();
+  await pg.locator("section.situatie").locator("#beleggingen").fill("200000");
+  await pg.waitForTimeout(300);
+  const zonderVerkoop = (await pg.locator(".box3later .later-betalen").textContent()) ?? "";
+  await pg.getByLabel("Bedrag dat je verkoopt in euro").fill("10000");
+  await pg.waitForTimeout(300);
+  const metVerkoop = ((await pg.locator(".box3later .later-betalen").textContent()) ?? "").replace(
+    /\s+/g,
+    " ",
+  );
+  controleer(
+    /Je verkoopt niets/.test(zonderVerkoop) &&
+      /Hierin zit € 476 koerswinst/.test(metVerkoop) &&
+      /later betalen, niet minder/.test(metVerkoop),
+    "belastingplan 2027: box 3 in 2029 legt uit dat wachten met verkopen later betalen is (D-087)",
+  );
+  await pg.locator("section.situatie").getByRole("button", { name: "Wis mijn gegevens" }).click();
+  await pg.waitForTimeout(300);
   const plan = (await pg.locator(".jaar").textContent()) ?? "";
   controleer(
     /Wat doet het plan met jou\?/.test(plan) &&
