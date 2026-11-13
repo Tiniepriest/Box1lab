@@ -28,6 +28,7 @@ const invoer: Invoer = {
   kinderen: [{ leeftijd: 6, inkomen: 0, opvang: "geen", urenPerMaand: 0, uurprijs: 0 }],
   wonen: "huur",
   huurPerMaand: 900,
+  zelfstandigeWoning: true,
   woz: 0,
   hypotheekrente: 0,
   vermogen: 0,

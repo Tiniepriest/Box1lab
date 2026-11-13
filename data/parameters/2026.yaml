@@ -12,7 +12,7 @@
 jaar: 2026
 
 box1:
-  bron: "Belastingdienst, Voorlopige aanslag 2026: gebruikte tarieven en heffingskortingen (https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-tarieven-en-heffingskortingen)"
+  bron: "Belastingdienst, Voorlopige aanslag 2026: gebruikte tarieven en heffingskortingen (https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-tarieven-en-heffingskortingen) Premies volksverzekeringen in de eerste schijf (AOW 17,90%, Anw 0,10%, Wlz 9,65%): Belastingdienst, Fiscale Informatie 2026, hoofdstuk Premie volksverzekeringen (https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/premie_volksverzekeringen). Een heffingskorting bestaat uit een belastingdeel (8,10%) en premiedelen (27,65%): Fiscale Informatie 2026, hoofdstuk Heffingskortingen (https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/heffingskortingen)."
   # Belastingvrij deel per persoon. Bestaat nu niet (0); handig voor scenario's als een vlaktaks.
   vrijstelling: 0
   # Inkomstenbelasting plus premies volksverzekeringen. De laatste schijf heeft "tot: null" (geen bovengrens).
@@ -26,6 +26,10 @@ box1:
   # minder verdient dan de vrijstelling, of meer korting heeft dan belasting, krijgt het verschil uitbetaald.
   negatieveBelasting: false
   aowVerlagingEersteSchijf: 17.9
+  # Premies volksverzekeringen in het tarief van de eerste schijf (AOW 17,90% + Anw 0,10% + Wlz 9,65%); de rest
+  # is inkomstenbelasting. Een heffingskorting is in dezelfde verhouding belastingdeel en premiedeel; alleen het
+  # belastingdeel kan ook van de belasting in box 3 af.
+  premieVolksverzekeringen: 27.65
 
 # Een heffingskorting is een "staffel": een reeks stukken die elk beginnen bij een inkomen ("vanaf").
 # Op elk stuk is de korting: bedrag + tarief% × (inkomen − vanaf). Een negatief tarief is afbouw.
@@ -123,7 +127,7 @@ toeslagen:
     maxToetsingsinkomen: { alleenstaand: 40857, partners: 51142 }
     maxVermogen: { alleenstaand: 146011, partners: 184633 }
   huurtoeslag:
-    bron: "Dienst Toeslagen, Berekening huurtoeslag 2026 (https://download.belastingdienst.nl/toeslagen/docs/berekening_huurtoeslag_tg0831z62fd.pdf); Handboek Toeslagen §1.12.1 (https://handboek.toeslagen.nl/htsn/20-huurtoeslag-huurtoeslag/)"
+    bron: "Dienst Toeslagen, Berekening huurtoeslag 2026 (https://download.belastingdienst.nl/toeslagen/docs/berekening_huurtoeslag_tg0831z62fd.pdf); Handboek Toeslagen §1.12.1 (https://handboek.toeslagen.nl/htsn/20-huurtoeslag-huurtoeslag/) Alleen voor een zelfstandige woning of onvrije etage (Wet op de huurtoeslag, artikel 11 lid 1); huurgrens jongeren € 498,20 (artikel 13 lid 1 onder b; https://wetten.overheid.nl/BWBR0008659/2026-01-01)."
     niveau: 100
     # Bedragen in deze sectie zijn per maand, behalve inkomens en vermogen.
     huurgrens: 932.93
@@ -138,6 +142,9 @@ toeslagen:
     # Van inwonende kinderen jonger dan 23 telt alleen het inkomen boven dit bedrag mee in het rekeninkomen.
     inkomensvrijstellingKind: 6218
     maxVermogen: { alleenstaand: 38479, partners: 76958 }
+    # Is iedereen in het huishouden jonger dan 21 en zijn er geen kinderen, dan telt de huur tot deze grens
+    # (Wet op de huurtoeslag, artikel 13 lid 1 onder b). Een handicap is een uitzondering; die zit niet in het model.
+    jongeren: { totLeeftijd: 21, huurgrens: 498.2 }
   kindgebondenBudget:
     bron: "Dienst Toeslagen, Berekening kindgebonden budget 2026 (https://download.belastingdienst.nl/toeslagen/docs/berekening_kindgebonden_budget_tg0811z61fd.pdf)"
     niveau: 100
@@ -227,15 +234,25 @@ toeslagen:
       - { vanaf: 235698, eersteKind: 36.5, volgendKind: 68.2 }
 
 uitkeringen:
-  bron: "AOW-leeftijd: Rijksoverheid, AOW-leeftijd 2025–2031 (https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd). SVB, AOW-bedragen (https://www.svb.nl/nl/aow/bedragen-aow/aow-bedragen): bedragen vanaf 1 juli 2026 en vakantiegeld. Bedragen 1 januari 2026: ANBO-PCOB (https://anbo-pcob.nl/nieuws/nieuwsberichten/aow-uitkering-stijgt-opnieuw-per-1-januari-2026/)."
+  bron: "AOW-leeftijd: Rijksoverheid, AOW-leeftijd 2025–2031 (https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd). SVB, AOW-bedragen (https://www.svb.nl/nl/aow/bedragen-aow/aow-bedragen): bedragen vanaf 1 juli 2026 en vakantiegeld. Bedragen 1 januari 2026: ANBO-PCOB (https://anbo-pcob.nl/nieuws/nieuwsberichten/aow-uitkering-stijgt-opnieuw-per-1-januari-2026/); vakantiegeld 1 januari 2026 (€ 106,55 alleenstaand, € 76,10 partners): MAX Vandaag, Dit zijn de nieuwe AOW-bedragen die u vanaf 1 januari 2026 ontvangt (https://www.maxvandaag.nl/sessies/themas/geld-werk-recht/dit-zijn-de-nieuwe-aow-bedragen-die-u-vanaf-1-januari-2026-ontvangt/); vakantiegeld 1 juli 2026: Knab, AOW 2026 (https://bieb.knab.nl/pensioen/aow-dit-zijn-de-regels-en-de-bedragen). De SVB-pagina was niet bereikbaar om deze twee na te kijken."
   aowLeeftijd: 67
   # Bruto AOW per persoon, zoals de SVB ze publiceert. Per jaar = 6 × eerste halfjaar + 6 × tweede halfjaar
-  # + 12 × vakantiegeld.
+  # + 6 × vakantiegeld eerste halfjaar + 6 × vakantiegeld tweede halfjaar.
   aow:
     alleenstaand:
-      { perMaandEersteHalfjaar: 1637.57, perMaandTweedeHalfjaar: 1662.16, vakantiegeldPerMaand: 104.78 }
+      {
+        perMaandEersteHalfjaar: 1637.57,
+        perMaandTweedeHalfjaar: 1662.16,
+        vakantiegeldEersteHalfjaar: 106.55,
+        vakantiegeldTweedeHalfjaar: 104.78,
+      }
     partners:
-      { perMaandEersteHalfjaar: 1122.12, perMaandTweedeHalfjaar: 1139.39, vakantiegeldPerMaand: 74.85 }
+      {
+        perMaandEersteHalfjaar: 1122.12,
+        perMaandTweedeHalfjaar: 1139.39,
+        vakantiegeldEersteHalfjaar: 76.1,
+        vakantiegeldTweedeHalfjaar: 74.85,
+      }
   # Netto-koppeling: in een scenario houdt deze uitkering haar netto bedrag; de overheid betaalt het verschil
   # bruto bij. AOW en bijstand zijn gekoppeld aan het netto minimumloon; WW en WIA zijn een percentage van het
   # vroegere bruto loon.
@@ -255,22 +272,27 @@ basisinkomen:
   perVolwassenePerMaand: 0
 
 bijstand:
-  bron: "Rijksoverheid, Hoe hoog is mijn bijstandsuitkering? Bijstandsnormen per 1 januari en per 1 juli 2026 (https://www.rijksoverheid.nl/documenten/vraag-en-antwoord/bijstand/hoe-hoog-is-mijn-bijstandsuitkering)"
+  bron: "Rijksoverheid, Hoe hoog is mijn bijstandsuitkering? Bijstandsnormen per 1 januari en per 1 juli 2026 (https://www.rijksoverheid.nl/documenten/vraag-en-antwoord/bijstand/hoe-hoog-is-mijn-bijstandsuitkering) Vermogensgrens € 8.000 (alleenstaand) en € 16.000 (gehuwden, samenwonenden, alleenstaande ouders), Participatiewet artikel 34: Gemeente Den Haag, Hoogte vermogen bij aanvragen bijstandsuitkering (https://www.denhaag.nl/nl/werk-bijstand-en-uitkering/hoogte-vermogen-bij-aanvragen-bijstandsuitkering/); Noardeast-Fryslân, Bijstandsnormen januari 2026 (https://www.noardeast-fryslan.nl/sites/default/files/2025-12/bijstandsnormen-jan26-web.pdf)."
   # Netto bijstandsnorm per maand inclusief vakantiegeld, 21 jaar tot de AOW-leeftijd. Per jaar = 6 × eerste
   # halfjaar + 6 × tweede halfjaar. De norm voor gehuwden geldt voor het paar samen.
   alleenstaand: { eersteHalfjaar: 1401.50, tweedeHalfjaar: 1419.46 }
   gehuwden: { eersteHalfjaar: 2002.13, tweedeHalfjaar: 2027.79 }
   # Onder deze leeftijd gelden lagere jongerennormen; die zitten niet in het model.
   minimumLeeftijd: 21
+  # Vermogensgrens: bezittingen min schulden. Gezin = gehuwden, samenwonenden en alleenstaande ouders.
+  vermogensgrens: { alleenstaand: 8000, gezin: 16000 }
 
 ondernemers:
-  bron: "Belastingdienst, Zelfstandigenaftrek 2026 en startersaftrek (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/ondernemersaftrek-2026/zelfstandigenaftrek-2026); Mkb-winstvrijstelling (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/mkb_winstvrijstelling); arbeidskorting over de winst uit onderneming: Wet IB 2001, art. 8.11 lid 2."
+  bron: "Belastingdienst, Zelfstandigenaftrek 2026 en startersaftrek (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/ondernemersaftrek-2026/zelfstandigenaftrek-2026); Mkb-winstvrijstelling (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/mkb_winstvrijstelling); arbeidskorting over de winst uit onderneming: Wet IB 2001, art. 8.11 lid 2. Tariefsaanpassing: Wet IB 2001, artikel 2.10 lid 2 en 3 (https://wetten.overheid.nl/BWBR0011353/2026-01-01): 11,94% (49,50% − 37,56%) over de ondernemersaftrek, de mkb-winstvrijstelling en de aftrekbare kosten van de eigen woning, voor zover ze in de hoogste schijf vallen."
   # Ondernemersaftrek: alleen bij het urencriterium. De startersaftrek komt erbij in de eerste jaren.
   zelfstandigenaftrek: 1200
   startersaftrek: 2123
   # Vrijstelling over de winst na ondernemersaftrek, ook zonder urencriterium.
   mkbWinstvrijstelling: 12.7
   urencriterium: 1225
+  # Tariefsaanpassing: ondernemersaftrek en mkb-winstvrijstelling werken hoogstens tegen dit tarief (Wet IB 2001,
+  # artikel 2.10 lid 2 en 3), net als de aftrek eigen woning.
+  aftrekMaxTarief: 37.56
 
 zorg:
   bron: "Nominale premie: Rijksoverheid, Wat kost een zorgverzekering? (https://www.rijksoverheid.nl/vraag-en-antwoord/zorgverzekering/premie-zorgverzekering). Zvw-bijdrage: Belastingdienst, Tarieven loonheffingen 2026, tabel 11 en 12 (https://download.belastingdienst.nl/belastingdienst/docs/bijlage-nieuwsbrief-loonheffingen-2026-lh2091b63fd.pdf)."

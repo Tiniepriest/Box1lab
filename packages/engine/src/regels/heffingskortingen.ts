@@ -14,6 +14,24 @@ export function staffelWaarde(staffel: Staffel, inkomen: number, maximum = Infin
   return Math.min(maximum, Math.max(0, w));
 }
 
+/**
+ * Sprongen in een staffel: waar het vorige stuk bij het begin van het volgende niet op hetzelfde bedrag uitkomt. Een
+ * staffel is één doorlopende lijn; een sprong groter dan `marge` euro wijst op een tikfout in de parameters.
+ */
+export function staffelSprongen(
+  staffel: Staffel,
+  marge = 1.5,
+): { vanaf: number; verwacht: number; bedrag: number }[] {
+  const sprongen: { vanaf: number; verwacht: number; bedrag: number }[] = [];
+  for (let i = 1; i < staffel.length; i++) {
+    const vorig = staffel[i - 1]!;
+    const s = staffel[i]!;
+    const verwacht = vorig.bedrag + (vorig.tarief / 100) * (s.vanaf - vorig.vanaf);
+    if (Math.abs(verwacht - s.bedrag) > marge) sprongen.push({ vanaf: s.vanaf, verwacht, bedrag: s.bedrag });
+  }
+  return sprongen;
+}
+
 export interface PersoonKenmerken {
   /** Heeft inkomen uit werk (recht op arbeidskorting). */
   werkt: boolean;

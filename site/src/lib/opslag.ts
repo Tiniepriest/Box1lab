@@ -90,6 +90,7 @@ export function voorbeeldInvoer(params: Parameters): Invoer {
     kinderen: [],
     wonen: "huur",
     huurPerMaand: 850,
+    zelfstandigeWoning: true,
     woz: 0,
     hypotheekrente: 0,
     vermogen: 0,

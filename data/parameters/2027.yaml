@@ -30,6 +30,10 @@ box1:
   # minder verdient dan de vrijstelling, of meer korting heeft dan belasting, krijgt het verschil uitbetaald.
   negatieveBelasting: false
   aowVerlagingEersteSchijf: 17.9
+  # Premies volksverzekeringen in het tarief van de eerste schijf (AOW 17,90% + Anw 0,10% + Wlz 9,65%); de rest
+  # is inkomstenbelasting. Een heffingskorting is in dezelfde verhouding belastingdeel en premiedeel; alleen het
+  # belastingdeel kan ook van de belasting in box 3 af.
+  premieVolksverzekeringen: 27.65
 
 # Een heffingskorting is een "staffel": een reeks stukken die elk beginnen bij een inkomen ("vanaf").
 # Op elk stuk is de korting: bedrag + tarief% × (inkomen − vanaf). Een negatief tarief is afbouw.
@@ -131,7 +135,7 @@ toeslagen:
     maxToetsingsinkomen: { alleenstaand: 42948, partners: 54156 }
     maxVermogen: { alleenstaand: 119122, partners: 158748 }
   huurtoeslag:
-    bron: "Raming: alle bedragen van 2026 × de tabelcorrectiefactor 2027 van 1,026 (Belastingplan 2027, memorie van toelichting, paragraaf 4: zonder de vrijheidsbijdrage 2,6%; de beperking tot 48% geldt alleen voor de inkomstenbelasting; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). Voor de huurgrens en de inkomens schrijft de Wet op de huurtoeslag (artikel 27, eerste lid) die factor voor; de andere grenzen en de basishuur stijgen met de huurprijsontwikkeling (artikel 27, derde lid; https://wetten.overheid.nl/BWBR0008659), die nog niet bekend is. Inkomens naar boven afgerond op € 25 (artikel 27, vijfde lid). De officiële bedragen komen eind november 2026 in de Staatscourant."
+    bron: "Raming: alle bedragen van 2026 × de tabelcorrectiefactor 2027 van 1,026 (Belastingplan 2027, memorie van toelichting, paragraaf 4: zonder de vrijheidsbijdrage 2,6%; de beperking tot 48% geldt alleen voor de inkomstenbelasting; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). Voor de huurgrens en de inkomens schrijft de Wet op de huurtoeslag (artikel 27, eerste lid) die factor voor; de andere grenzen en de basishuur stijgen met de huurprijsontwikkeling (artikel 27, derde lid; https://wetten.overheid.nl/BWBR0008659), die nog niet bekend is. Inkomens naar boven afgerond op € 25 (artikel 27, vijfde lid). De officiële bedragen komen eind november 2026 in de Staatscourant. De huurgrens voor jongeren (artikel 13 lid 1 onder b) ook zo: € 498,20 × 1,026, afgerond € 511,15."
     niveau: 100
     # Bedragen in deze sectie zijn per maand, behalve inkomens en vermogen.
     huurgrens: 957.19
@@ -146,6 +150,9 @@ toeslagen:
     # Van inwonende kinderen jonger dan 23 telt alleen het inkomen boven dit bedrag mee in het rekeninkomen.
     inkomensvrijstellingKind: 6380
     maxVermogen: { alleenstaand: 39479, partners: 78959 }
+    # Is iedereen in het huishouden jonger dan 21 en zijn er geen kinderen, dan telt de huur tot deze grens
+    # (Wet op de huurtoeslag, artikel 13 lid 1 onder b). Een handicap is een uitzondering; die zit niet in het model.
+    jongeren: { totLeeftijd: 21, huurgrens: 511.15 }
   kindgebondenBudget:
     bron: "Raming: de bedragen van 2026 × de tabelcorrectiefactor 2027 van 1,026 (Belastingplan 2027, memorie van toelichting, paragraaf 4: zonder de vrijheidsbijdrage 2,6%; de beperking tot 48% geldt alleen voor de inkomstenbelasting; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), zoals de Wet op het kindgebonden budget voorschrijft (artikel 3, eerste lid), en daarna € 66 extra per kind (artikel 3, zevende en achtste lid). Afbouwpercentage: artikel 3, vijfde lid, tekst per 1 januari 2027 (https://wetten.overheid.nl/BWBR0022751/2027-01-01). Drempelinkomen: 108% van 12 × het referentiemaandloon van € 2.385,00 per 1 januari 2027 (Regeling indexatie wettelijk minimumloon per 1 januari 2027, 29 oktober 2026; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072), gelijk aan het afbouwpunt in het Belastingplan 2027. Voor partners komt daar € 9.405 × 1,026 = € 9.650 bij (artikel 2, achtste lid). Vermogensgrens: gelijk aan die van de zorgtoeslag (VWS-begroting 2027, artikel 8). De officiële bedragen volgen eind 2026. Het wetsvoorstel voor een snellere afbouw bij hogere inkomens (Kamerstukken 36 923) is aangehouden en zit hier niet in."
     niveau: 100
@@ -239,12 +246,22 @@ uitkeringen:
   bron: "AOW-leeftijd: Rijksoverheid, AOW-leeftijd 2025–2031 (https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd). AOW-bedragen: Raming: de bedragen per 1 juli 2026 + 2,05%, de stijging van het referentiemaandloon per 1 januari 2027 (Regeling indexatie wettelijk minimumloon per 1 januari 2027, 29 oktober 2026; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072). De AOW volgt het netto minimumloon; de SVB publiceert de bedragen in december. De verhoging per 1 juli 2027 is nog niet bekend en zit er niet in."
   aowLeeftijd: 67
   # Bruto AOW per persoon, zoals de SVB ze publiceert. Per jaar = 6 × eerste halfjaar + 6 × tweede halfjaar
-  # + 12 × vakantiegeld.
+  # + 6 × vakantiegeld eerste halfjaar + 6 × vakantiegeld tweede halfjaar.
   aow:
     alleenstaand:
-      { perMaandEersteHalfjaar: 1696.23, perMaandTweedeHalfjaar: 1696.23, vakantiegeldPerMaand: 106.93 }
+      {
+        perMaandEersteHalfjaar: 1696.23,
+        perMaandTweedeHalfjaar: 1696.23,
+        vakantiegeldEersteHalfjaar: 106.93,
+        vakantiegeldTweedeHalfjaar: 106.93,
+      }
     partners:
-      { perMaandEersteHalfjaar: 1162.75, perMaandTweedeHalfjaar: 1162.75, vakantiegeldPerMaand: 76.38 }
+      {
+        perMaandEersteHalfjaar: 1162.75,
+        perMaandTweedeHalfjaar: 1162.75,
+        vakantiegeldEersteHalfjaar: 76.38,
+        vakantiegeldTweedeHalfjaar: 76.38,
+      }
   # Netto-koppeling: in een scenario houdt deze uitkering haar netto bedrag; de overheid betaalt het verschil
   # bruto bij. AOW en bijstand zijn gekoppeld aan het netto minimumloon; WW en WIA zijn een percentage van het
   # vroegere bruto loon.
@@ -264,22 +281,27 @@ basisinkomen:
   perVolwassenePerMaand: 0
 
 bijstand:
-  bron: "Raming: de normen per 1 juli 2026 + 2,05%, de stijging van het referentiemaandloon per 1 januari 2027 (Regeling indexatie wettelijk minimumloon per 1 januari 2027, 29 oktober 2026; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072). De bijstand volgt het netto minimumloon; SZW publiceert de normen half december. De verhoging per 1 juli 2027 is nog niet bekend en zit er niet in."
+  bron: "Raming: de normen per 1 juli 2026 + 2,05%, de stijging van het referentiemaandloon per 1 januari 2027 (Regeling indexatie wettelijk minimumloon per 1 januari 2027, 29 oktober 2026; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072). De bijstand volgt het netto minimumloon; SZW publiceert de normen half december. De verhoging per 1 juli 2027 is nog niet bekend en zit er niet in. Vermogensgrens: Raming: de grenzen van 2026 (€ 8.000 en € 16.000; Gemeente Den Haag, https://www.denhaag.nl/nl/werk-bijstand-en-uitkering/hoogte-vermogen-bij-aanvragen-bijstandsuitkering/); de grenzen voor 2027 komen half december."
   # Netto bijstandsnorm per maand inclusief vakantiegeld, 21 jaar tot de AOW-leeftijd. Per jaar = 6 × eerste
   # halfjaar + 6 × tweede halfjaar. De norm voor gehuwden geldt voor het paar samen.
   alleenstaand: { eersteHalfjaar: 1448.56, tweedeHalfjaar: 1448.56 }
   gehuwden: { eersteHalfjaar: 2069.36, tweedeHalfjaar: 2069.36 }
   # Onder deze leeftijd gelden lagere jongerennormen; die zitten niet in het model.
   minimumLeeftijd: 21
+  # Vermogensgrens: bezittingen min schulden. Gezin = gehuwden, samenwonenden en alleenstaande ouders.
+  vermogensgrens: { alleenstaand: 8000, gezin: 16000 }
 
 ondernemers:
-  bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen. Startersaftrek 2027: € 10 (memorie van toelichting, paragraaf 5.5); in 2028 afgeschaft."
+  bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen. Startersaftrek 2027: € 10 (memorie van toelichting, paragraaf 5.5); in 2028 afgeschaft. Tariefsaanpassing (aftrekMaxTarief): Wet IB 2001, artikel 2.10 lid 2 en 3; het tarief volgt de tweede schijf, net als bij de eigen woning (38,02%)."
   # Ondernemersaftrek: alleen bij het urencriterium. De startersaftrek komt erbij in de eerste jaren.
   zelfstandigenaftrek: 900
   startersaftrek: 10
   # Vrijstelling over de winst na ondernemersaftrek, ook zonder urencriterium.
   mkbWinstvrijstelling: 12.7
   urencriterium: 1225
+  # Tariefsaanpassing: ondernemersaftrek en mkb-winstvrijstelling werken hoogstens tegen dit tarief (Wet IB 2001,
+  # artikel 2.10 lid 2 en 3), net als de aftrek eigen woning.
+  aftrekMaxTarief: 38.02
 
 zorg:
   bron: "Raming: nominale premie en verlaagde Zvw-bijdrage uit de Rijksbegroting 2027, XVI Volksgezondheid, Welzijn en Sport, tabel 77 Premieoverzicht Zvw (Kamerstukken II 2026/27, 37 020 XVI, nr. 2; https://www.rijksfinancien.nl/memorie-van-toelichting/2027/OWB/XVI); de verzekeraars maken hun premies uiterlijk 12 november 2026 bekend. Maximum bijdrage-inkomen: CPB, Macro Economische Verkenning 2027, bijlage 17 Belasting- en premietarieven (https://www.cpb.nl/raming/raming-september-2026-mev-2027)."

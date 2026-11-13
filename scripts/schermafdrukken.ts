@@ -422,6 +422,20 @@ try {
     "calculator: box 3 apart van wat je overhoudt",
   );
   await pg.locator("#vermogen").fill("0");
+  // Huurtoeslag alleen voor een zelfstandige woning; bij een kamer staat er waarom (D-088).
+  await pg.locator("#huur").fill("450");
+  await pg.getByLabel(/Ik huur een hele woning/).setChecked(false);
+  await pg.waitForTimeout(300);
+  controleer(
+    /Voor een kamer krijg je geen huurtoeslag/.test((await pg.locator(".let-op").textContent()) ?? ""),
+    "calculator: een kamer krijgt geen huurtoeslag, met uitleg (D-088)",
+  );
+  await pg.getByLabel(/Ik huur een hele woning/).setChecked(true);
+  await pg.waitForTimeout(300);
+  controleer(
+    (await pg.locator(".let-op").count()) === 0,
+    "calculator: zelfstandige woning, geen uitleg nodig",
+  );
   await pg.goto(`${BASIS}/lab`, { waitUntil: "networkidle" });
   // Zolang er niets veranderd is, toont het lab geen effecten (D-071); de situatiekolom staat er wel.
   await pg.waitForFunction(

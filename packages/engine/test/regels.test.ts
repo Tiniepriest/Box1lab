@@ -121,10 +121,19 @@ describe("eigen woning 2026", () => {
     expect(s.saldo).toBeCloseTo(1400 - 12000, 6);
   });
 
-  it("aftrekbeperking: aftrek in de toptariefschijf levert maar 37,56% op", () => {
-    expect(aftrekbeperking(100000, -10000, p, false)).toBeCloseTo(10000 * (0.495 - 0.3756), 6);
-    expect(aftrekbeperking(80000, -10000, p, false)).toBeCloseTo((80000 - 78426) * (0.495 - 0.3756), 6);
-    expect(aftrekbeperking(60000, -10000, p, false)).toBe(0);
+  it("aftrekbeperking: rente in de toptariefschijf levert maar 37,56% op", () => {
+    // Belastbaar inkomen ná de aftrek, en de aftrekbare rente.
+    expect(aftrekbeperking(90000, 10000, p, false)).toBeCloseTo(10000 * (0.495 - 0.3756), 6);
+    expect(aftrekbeperking(70000, 10000, p, false)).toBeCloseTo((80000 - 78426) * (0.495 - 0.3756), 6);
+    expect(aftrekbeperking(50000, 10000, p, false)).toBe(0);
+  });
+
+  it("aftrekbeperking gaat over de rente, niet over het saldo met het forfait (D-088)", () => {
+    // Het voorbeeld uit de review: € 250.000 loon, WOZ € 1,5 mln, € 30.000 rente. Forfait € 8.250, saldo −€ 21.750.
+    const s = eigenWoningSaldo(30000, 1500000, p);
+    expect(s.forfait).toBeCloseTo(0.0035 * 1350000 + 0.0235 * 150000, 6);
+    const belastbaar = 250000 + s.saldo;
+    expect(aftrekbeperking(belastbaar, s.aftrekbareRente, p, false)).toBeCloseTo(30000 * (0.495 - 0.3756), 6);
   });
 });
 
@@ -252,8 +261,9 @@ describe("kinderopvangtoeslag 2026 (Dienst Toeslagen, Berekening kinderopvangtoe
 
 describe("AOW, kinderbijslag en Zvw-bijdrage 2026", () => {
   it("AOW per jaar volgens de SVB-bedragen", () => {
-    expect(aowPerJaar(p, false)).toBeCloseTo(6 * 1637.57 + 6 * 1662.16 + 12 * 104.78, 6);
-    expect(aowPerJaar(p, true)).toBeCloseTo(6 * 1122.12 + 6 * 1139.39 + 12 * 74.85, 6);
+    // Vakantiegeld per halfjaar: € 106,55 tot juli, € 104,78 daarna (alleenstaand).
+    expect(aowPerJaar(p, false)).toBeCloseTo(6 * (1637.57 + 106.55) + 6 * (1662.16 + 104.78), 6);
+    expect(aowPerJaar(p, true)).toBeCloseTo(6 * (1122.12 + 76.1) + 6 * (1139.39 + 74.85), 6);
   });
 
   it("kinderbijslag per leeftijdsgroep; 18 jaar en ouder telt niet", () => {

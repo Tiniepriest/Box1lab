@@ -22,6 +22,7 @@ const alleen: Invoer = {
   kinderen: [],
   wonen: "huur",
   huurPerMaand: 750,
+  zelfstandigeWoning: true,
   woz: 0,
   hypotheekrente: 0,
   vermogen: 0,

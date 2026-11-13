@@ -7,6 +7,23 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-11-13
+  soort: correctie
+  modelversie: 0.6.0
+  titel: "Rekenfouten verbeterd na een controle door een expert"
+  tekst: >-
+    Een expert heeft het rekenmodel gecontroleerd. De bedragen klopten, maar een paar regels werkten niet goed
+    samen. Dat is verbeterd. Een pensioen per maand kreeg ten onrechte 8% vakantiegeld erbij. Spaargeld en
+    beleggingen tellen nu mee voor de algemene heffingskorting en de ouderenkorting, en een korting die je niet
+    helemaal kunt gebruiken, gaat van je box 3-belasting af; partners verdelen box 3 zo voordelig mogelijk.
+    Bij een hoog inkomen levert de zelfstandigenaftrek, de mkb-winstvrijstelling en de hypotheekrente hoogstens
+    37,56% op, bij de eigen woning over de hele rente. Kinderopvangtoeslag krijg je alleen als alle ouders
+    werken. Voor een kamer krijg je geen huurtoeslag (daar is een vraag voor), en onder de 21 telt de huur tot
+    € 498,20. Vanaf de AOW-leeftijd rekenen we de AOW vanzelf mee, ook als je werkt. Bijstand krijg je alleen
+    onder de vermogensgrens. Het vakantiegeld van de AOW volgt nu de bedragen per halfjaar. Voor heel Nederland
+    brengt het huidige stelsel daardoor iets meer op; een vlaktaks van 35% kost nu ongeveer € 3,7 miljard per
+    jaar in plaats van € 2,5 miljard.
+
+- datum: 2026-11-13
   soort: nieuw
   titel: "Box 3 in 2029: later verkopen is later betalen"
   tekst: >-

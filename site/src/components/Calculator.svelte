@@ -2,6 +2,10 @@
   import {
     aandeelUitVerdeling,
     berekenHuishouden,
+    bijstandVermogen,
+    bijstandVermogensgrens,
+    bijstandVermogenTeHoog,
+    heeftAowLeeftijd,
     huishoudenUitInvoer,
     inkomenscurve,
     invoerSchema,
@@ -170,6 +174,33 @@
   // Meer dan één volwassene, of kinderen: dan spreken we het huishouden aan met "jullie".
   const samen = $derived(invoer.personen.length > 1 || invoer.kinderen.length > 0);
 
+  // Waarom een toeslag of de bijstand er niet (helemaal) is (D-088): een korte uitleg onder het bedrag bovenaan.
+  const letOp = $derived.by(() => {
+    if (!r || !geldig.success) return [];
+    const x: string[] = [];
+    const ht = params.toeslagen.huurtoeslag;
+    const bijstand = geldig.data.personen.some(
+      (q) => q.soort === "bijstand" && !heeftAowLeeftijd(q.leeftijd, params),
+    );
+    if (bijstand && bijstandVermogenTeHoog(geldig.data, params))
+      x.push(
+        `Met ${euro(bijstandVermogen(geldig.data))} aan spaargeld en beleggingen krijg ${samen ? "jullie" : "je"} geen bijstand: de grens is ${euro(bijstandVermogensgrens(geldig.data, params))}. Eerst gebruik ${samen ? "jullie" : "je"} dat geld.`,
+      );
+    if (r.beperkingen.kinderopvangtoeslag === "werk")
+      x.push(
+        `Kinderopvangtoeslag krijg je alleen als ${invoer.personen.length > 1 ? "jullie allebei werken" : "je werkt"}. Studie of een traject naar werk telt ook, maar zit niet in deze berekening.`,
+      );
+    if (r.beperkingen.huurtoeslag === "kamer")
+      x.push(
+        "Voor een kamer krijg je geen huurtoeslag, alleen voor een woning met eigen voordeur, keuken en toilet.",
+      );
+    if (r.beperkingen.huurtoeslag === "jongeren")
+      x.push(
+        `Ben je jonger dan ${ht.jongeren.totLeeftijd} en woon je zonder kinderen? Dan telt voor de huurtoeslag alleen de huur tot ${euro(ht.jongeren.huurgrens)} per maand.`,
+      );
+    return x;
+  });
+
   const effectief = $derived(
     r && r.bruto > 0 ? ((r.belasting + r.zvw - r.toeslagen - r.kinderbijslag) / r.bruto) * 100 : 0,
   );
@@ -199,6 +230,11 @@
         {eigen ? (samen ? "Jullie houden" : "Je houdt") : "In dit voorbeeld houd je"}
         <strong>{euro(over / 12)}</strong> per maand over om van te leven ({euro(over)} per jaar).
       </p>
+      {#if letOp.length}
+        <ul class="let-op">
+          {#each letOp as zin (zin)}<li>{zin}</li>{/each}
+        </ul>
+      {/if}
       {#if geldig.success}
         <Loonstrook {params} invoer={geldig.data} box3={r.box3} />
       {/if}
@@ -503,6 +539,16 @@
     font-size: 23px;
     line-height: 1.35;
     margin: 0;
+  }
+  .let-op {
+    margin: 0;
+    padding: 10px 12px 10px 30px;
+    background: var(--soft);
+    border-radius: var(--radius);
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
   .voorbeeld {
     margin: 0 0 12px;

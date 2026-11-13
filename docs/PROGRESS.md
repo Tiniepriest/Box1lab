@@ -202,6 +202,19 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Zin onder de uitkomst van box 3 in 2029 over koerswinst bij verkoop (D-087)
 
+## Fase 37: rekenregels na de expertreview — klaar
+
+- [x] Geen 8% vakantiegeld op een pensioen per maand (D-088, E1)
+- [x] Box 3 in het verzamelinkomen voor de kortingen; onbenut belastingdeel van box 3 af; partners verdelen voordelig (E2, E3)
+- [x] Tariefsaanpassing voor ondernemersaftrek en mkb-winstvrijstelling; bij de eigen woning over de rente (E4)
+- [x] Kinderopvangtoeslag alleen als alle ouders werken (E5)
+- [x] Huurtoeslag: vraag naar een zelfstandige woning; huurgrens onder 21 (E6)
+- [x] AOW vanzelf vanaf de AOW-leeftijd, ook naast werk (E7)
+- [x] Vermogensgrens bijstand (E8)
+- [x] AOW-vakantiegeld per halfjaar (E9)
+- [ ] SVB-bedragen vakantiegeld 2026 nakijken (nu uit MAX Vandaag en Knab; svb.nl was niet bereikbaar)
+- [ ] December: vermogensgrens bijstand 2027 en huurgrens jongeren 2027 (nu ramingen)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

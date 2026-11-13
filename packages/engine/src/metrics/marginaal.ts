@@ -41,7 +41,7 @@ export function metInkomen(h: Huishouden, lid: number, bruto: number): Huishoude
     leden: h.leden.map((l, i) => {
       if (i !== lid) return l;
       if (l.soort === "uitkering") return { ...l, inkomen: bruto, uitkering: bruto };
-      if (l.soort === "aow") return { ...l, inkomen: Math.max(bruto, l.uitkering) };
+      if (l.soort === "aow" || l.aowLeeftijd) return { ...l, inkomen: Math.max(bruto, l.uitkering) };
       return { ...l, inkomen: bruto, soort: l.soort === "geen" && bruto > 0 ? "werk" : l.soort };
     }),
   };
