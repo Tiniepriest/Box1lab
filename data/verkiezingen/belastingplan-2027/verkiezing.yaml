@@ -13,6 +13,13 @@ aangenomen: true
 basispad:
   jaar: 2027
   toelichting: "Het Belastingplan 2027 zoals de Tweede Kamer het op 12 november 2026 aannam. De Eerste Kamer moet nog stemmen. De cijfers zijn voorlopig: de heffingskortingen zijn geraamd met de inflatiecorrectie uit de wet, en toeslagen, AOW, bijstand en kinderbijslag met de gewone jaarlijkse verhoging, tot de officiële bedragen er zijn."
+# Op sociale media ging rond 13 november 2026 rond dat iedereen met wat vermogen veel meer box 3 gaat betalen.
+# Bronnen: Belastingplan 2027, artikel III (nieuwe tarieven per 1 januari 2029) en het amendement Klaver en Dassen
+# (37 022, nr. 80, toelichting: "in de praktijk vrijwel alleen van toepassing op mensen met meer dan een miljoen
+# aan vrij vermogen"); heffingsvrij vermogen en tarief 2027 in data/parameters/2027.yaml (D-083, D-084).
+noot:
+  titel: "Box 3 in 2027."
+  tekst: "Er verandert bijna niets: je betaalt nog steeds 36% over een vast rendement op je vermogen boven ongeveer € 60.000 per persoon, en was je echte rendement lager, dan betaal je over dat lagere rendement. Het hogere tarief van 38,5% komt pas in 2029 en raakt vrijwel alleen mensen met meer dan een miljoen euro vermogen."
 fictief: false
 vierOgen: false
-uitleg: "De Tweede Kamer nam het Belastingplan 2027 op 12 november aan, met 76 tegen 74 stemmen. D66 en CDA stemden voor, de VVD tegen. De Kamer veranderde het plan van het kabinet op drie punten die je in je inkomen merkt: het tarief in de eerste schijf gaat 0,39 procentpunt omlaag en in de tweede schijf 0,14 procentpunt, de arbeidskorting stijgt minder (€ 17 in plaats van € 133 extra) en de ouderenkorting gaat niet € 100 omlaag. Eerder liet het kabinet de bedragen in box 1 al iets meer meegaan met de inflatie. Het nieuwe toptarief in box 3 geldt pas vanaf 2029. De Eerste Kamer moet nog stemmen; dat staat gepland voor december."
+uitleg: "De Tweede Kamer nam het Belastingplan 2027 op 12 november aan, met 76 tegen 74 stemmen. D66 en CDA stemden voor, de VVD tegen. De Kamer veranderde het plan van het kabinet op drie punten die je in je inkomen merkt: het tarief in de eerste schijf gaat 0,39 procentpunt omlaag en in de tweede schijf 0,14 procentpunt, de arbeidskorting stijgt minder (€ 17 in plaats van € 133 extra) en de ouderenkorting gaat niet € 100 omlaag. Eerder liet het kabinet de bedragen in box 1 al iets meer meegaan met de inflatie. De Eerste Kamer moet nog stemmen; dat staat gepland voor december."

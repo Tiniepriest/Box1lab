@@ -108,6 +108,9 @@
   {#if verkiezing.uitleg}
     <p class="kaart uitleg">{verkiezing.uitleg}</p>
   {/if}
+  {#if verkiezing.noot}
+    <p class="kaart noot" role="note"><strong>{verkiezing.noot.titel}</strong> {verkiezing.noot.tekst}</p>
+  {/if}
   {#if vooraf}
     <JaarVergelijking
       params={vooraf.huidig}
@@ -390,6 +393,11 @@
   }
   .uitleg {
     margin: 0 0 12px;
+  }
+  .noot {
+    margin: 0;
+    border-left: 4px solid var(--accent);
+    background: var(--accent-soft);
   }
   .fictief {
     font-size: 15px;

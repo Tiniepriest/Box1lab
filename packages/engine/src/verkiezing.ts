@@ -27,6 +27,8 @@ export const verkiezingSchema = z.strictObject({
   soort: z.enum(["verkiezing", "akkoord"]).default("verkiezing"),
   /** Uitleg bovenaan de pagina. */
   uitleg: z.string().optional(),
+  /** Korte, opvallende noot onder de uitleg, bijvoorbeeld om een misverstand recht te zetten (fase 32). */
+  noot: z.strictObject({ titel: z.string().min(1), tekst: z.string().min(1) }).optional(),
   /**
    * Vier-ogen-principe: gepubliceerde partijen moeten door een tweede persoon gecontroleerd zijn. Alleen op besluit
    * van de eigenaar uit te zetten; de site meldt dan duidelijk dat er niet onafhankelijk is gecontroleerd.

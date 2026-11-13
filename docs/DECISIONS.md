@@ -745,3 +745,13 @@ Effect ten opzichte van het oude basispad: het model geeft de overheid € 1,37 
 De site: `aangenomen: true` in `verkiezing.yaml` (nieuw veld in het schema). De pagina, de home, "Volgende stap" op Jouw situatie en het deelplaatje spreken dan van het aangenomen plan in plaats van het plan van het kabinet en de routes; er is geen stap 2 meer. Geen andere rekenregels, dus geen nieuwe modelversie; de golden tests (2026) blijven gelijk.
 
 Bijwerken: na de stemming in de Eerste Kamer (december) en als de officiële bedragen van de heffingskortingen er zijn.
+
+## Fase 32: noot over box 3
+
+### D-084 Box 3 in 2027 in één noot
+
+Vraag van de eigenaar (13 november 2026): op sociale media ging rond dat iedereen met wat vermogen in box 3 veel meer gaat betalen. In twee zinnen op de pagina Belastingplan 2027 zetten wat er echt verandert.
+
+- Nieuw, optioneel veld `noot` (titel en tekst) in `verkiezing.yaml`, getoond als opvallende kaart onder de uitleg.
+- Inhoud: in 2027 blijft het forfaitaire stelsel met 36% en de tegenbewijsregeling; het heffingsvrij vermogen gaat naar ongeveer € 60.000 (€ 60.280, raming, D-083). Het tarief van 38,5% boven € 60.000 rendement per jaar (amendement 80) gaat met de rest van het nieuwe stelsel in op 1 januari 2029 (Belastingplan 2027, artikel III); volgens de toelichting van het amendement raakt het vrijwel alleen mensen met meer dan een miljoen euro vermogen.
+- De zin over box 3 aan het eind van de uitleg is weg, zodat het niet dubbel staat.
