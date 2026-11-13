@@ -194,6 +194,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] Rekenvoorbeeld "Box 3 in 2029" naast stap 1 op de pagina Belastingplan 2027, met eigen rendementen (D-085)
 - [ ] Na de Eerste Kamer: de regels in `data/vooruitblik/box3-2029.yaml` controleren; de bedragen voor 2029 met inflatiecorrectie zodra bekend
 
+## Fase 34: verkoopbedrag in box 3 in 2029 — klaar
+
+- [x] Bedrag dat je verkoopt in plaats van het vinkje; alleen de winst op dat deel telt (D-086)
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

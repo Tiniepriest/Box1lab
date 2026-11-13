@@ -776,3 +776,17 @@ Wens van de eigenaar (13 november 2026): naast "Wat doet het plan met jou?" een 
 **Opmaak:** naast stap 1 als er ruimte is (twee kolommen vanaf ongeveer 816 px voor de inhoud), anders eronder. Nieuw veld `box3Vooruitblik` (jaar) in `verkiezing.yaml`.
 
 Voorbeeld (alleenstaand, € 40.000 spaargeld en € 150.000 beleggingen, 1,5% / 2% / 5%): 2027 € 2.474, 2029 € 639 zonder verkoop en € 3.302 als je verkoopt. De rekenregels van het model voor 2026 en 2027 veranderen niet: geen nieuwe modelversie, golden tests gelijk.
+
+## Fase 34: verkoopbedrag
+
+### D-086 Hoeveel je verkoopt in plaats van alles of niets
+
+Wens van de eigenaar (13 november 2026): in het rekenvoorbeeld van D-085 een veld voor het bedrag dat je verkoopt, omdat bijvoorbeeld € 10.000 verkopen iets anders oplevert dan alles verkopen.
+
+- Het vinkje "Ik verkoop mijn beleggingen" is vervangen door "Bedrag dat je in 2029 verkoopt (€)", standaard 0.
+- Belast is alleen de winst op dat deel: de verkoopprijs min de verkrijgingsprijs. Voor wat je op 1 januari 2029 al had, is de verkrijgingsprijs de waarde op die dag (novelle 37 053, memorie van toelichting, paragraaf 2.2). Het voorbeeld verkoopt aan het eind van het jaar, dus het verkochte deel was op 1 januari verkocht / (1 + koersstijging) waard; winst = verkocht × koersstijging / (1 + koersstijging). Bij een koersdaling is het verlies.
+- Meer verkopen dan de beleggingen aan het eind van het jaar waard zijn, kan niet; het voorbeeld rekent dan met die waarde en zegt dat erbij.
+- In de uitleg staat nu ook: "verkoopprijs min de waarde op 1 januari 2029 (of je aankoopprijs als je later koopt)".
+- Niet in het voorbeeld: verkopen na meer jaren groei, bijkopen tegen een andere prijs (gemiddelde verkrijgingsprijs) en kosten. Het blok blijft één jaar.
+
+Voorbeeld: € 200.000 beleggingen, 2% dividend, 5% koersstijging, € 10.000 verkocht: € 476 winst, belasting 2029 € 950 (zonder verkoop € 781).

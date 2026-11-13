@@ -8,7 +8,7 @@ const r = (o: Partial<Parameters<typeof vergelijkBox3>[2]> = {}) => ({
   spaarrente: 0,
   dividend: 0,
   koersstijging: 0,
-  verkopen: false,
+  verkocht: 0,
   ...o,
 });
 
@@ -47,12 +47,37 @@ describe("box 3 in 2029 naast 2027 (D-085)", () => {
     const met = vergelijkBox3(
       { bank: 0, overig: 200000 },
       false,
-      r({ dividend: 2, koersstijging: 5, verkopen: true }),
+      r({ dividend: 2, koersstijging: 5, verkocht: 210000 }),
       p27,
       w,
     );
-    // € 14.000 − € 1.800 = € 12.200 × 35,5% = € 4.331.
+    // Alles verkocht (€ 210.000): € 10.000 winst. € 14.000 − € 1.800 = € 12.200 × 35,5% = € 4.331.
+    expect(met.later.koerswinst).toBeCloseTo(10000, 6);
     expect(met.later.belasting).toBeCloseTo(4331, 6);
+  });
+
+  it("verkoop van een deel: alleen de winst op dat deel telt (D-086)", () => {
+    const u = vergelijkBox3(
+      { bank: 0, overig: 200000 },
+      false,
+      r({ dividend: 2, koersstijging: 5, verkocht: 10000 }),
+      p27,
+      w,
+    );
+    // Van € 10.000 is € 10.000 / 1,05 = € 9.523,81 de waarde op 1 januari: € 476,19 winst.
+    expect(u.later.koerswinst).toBeCloseTo(476.19, 2);
+    // € 4.000 dividend + € 476,19 − € 1.800 = € 2.676,19 × 35,5% = € 950,05.
+    expect(u.later.belasting).toBeCloseTo(950.05, 2);
+    // Meer verkopen dan er is: hoogstens de waarde aan het eind van het jaar.
+    const teVeel = vergelijkBox3(
+      { bank: 0, overig: 200000 },
+      false,
+      r({ koersstijging: 5, verkocht: 1e6 }),
+      p27,
+      w,
+    );
+    expect(teVeel.later.verkocht).toBe(210000);
+    expect(teVeel.later.koerswinst).toBeCloseTo(10000, 6);
   });
 
   it("toptarief per persoon; partners verdelen gelijk en hebben samen € 3.600 vrij", () => {
@@ -68,7 +93,7 @@ describe("box 3 in 2029 naast 2027 (D-085)", () => {
     const u = vergelijkBox3(
       { bank: 0, overig: 100000 },
       false,
-      r({ koersstijging: -10, verkopen: true }),
+      r({ koersstijging: -10, verkocht: 90000 }),
       p27,
       w,
     );

@@ -53,8 +53,11 @@ export interface Box3Rendementen {
   dividend: number;
   /** Koersstijging (of -daling) van de beleggingen: vanaf 2029 alleen belast bij verkoop. */
   koersstijging: number;
-  /** Verkoopt de bezoeker de beleggingen in het jaar zelf? Dan telt de koerswinst van dat jaar mee. */
-  verkopen: boolean;
+  /**
+   * Bedrag in euro dat de bezoeker in het jaar verkoopt, aan het eind van het jaar; hoogstens wat de beleggingen
+   * dan waard zijn. Alleen de winst op dat deel telt mee.
+   */
+  verkocht: number;
 }
 
 export interface Box3Vergelijking {
@@ -76,6 +79,10 @@ export interface Box3Vergelijking {
     jaar: number;
     /** Resultaat: rente, dividend en, bij verkoop, de koerswinst van dat jaar. */
     resultaat: number;
+    /** Wat er werkelijk verkocht is (hoogstens de waarde aan het eind van het jaar). */
+    verkocht: number;
+    /** Winst (of verlies) op het verkochte deel: verkoopprijs min de waarde op 1 januari. */
+    koerswinst: number;
     vrijgesteld: number;
     /** Belastbaar inkomen uit sparen en beleggen. */
     belastbaar: number;
@@ -122,9 +129,13 @@ export function vergelijkBox3(
   const nuBelasting = tegenbewijs ? opWerkelijk : forfaitair;
   const belast = tegenbewijs ? Math.max(0, werkelijkRendement) : (forfaitair * 100) / p.box3.tarief;
 
-  // Later: rente en dividend elk jaar, koerswinst alleen bij verkoop (alleen de winst sinds de invoering).
-  const resultaat =
-    (bank * r.spaarrente + overig * r.dividend + (r.verkopen ? overig * r.koersstijging : 0)) / 100;
+  // Later: rente en dividend elk jaar, koerswinst alleen bij verkoop. De verkrijgingsprijs van wat je op de
+  // invoeringsdatum al had, is de waarde op die dag; van het verkochte deel is dat verkocht / (1 + groei).
+  const groei = r.koersstijging / 100;
+  const eindwaarde = overig * (1 + groei);
+  const verkocht = eindwaarde > 0 ? Math.min(Math.max(0, r.verkocht), eindwaarde) : 0;
+  const koerswinst = verkocht > 0 ? (verkocht * groei) / (1 + groei) : 0;
+  const resultaat = (bank * r.spaarrente + overig * r.dividend) / 100 + koerswinst;
   const vrij = personen * w.regels.heffingsvrijResultaat;
   const vrijgesteld = resultaat > 0 ? Math.min(resultaat, vrij) : 0;
   const belastbaar = Math.max(0, resultaat - vrij);
@@ -141,7 +152,7 @@ export function vergelijkBox3(
       belasting: nuBelasting,
       tegenbewijs,
     },
-    later: { jaar: w.jaar, resultaat, vrijgesteld, belastbaar, belasting, verlies },
+    later: { jaar: w.jaar, resultaat, verkocht, koerswinst, vrijgesteld, belastbaar, belasting, verlies },
     verschil: belasting - nuBelasting,
   };
 }
