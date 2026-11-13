@@ -10,6 +10,8 @@ soort: akkoord
 # Stemming in de Tweede Kamer.
 datum: 2026-11-12
 aangenomen: true
+# Rekenvoorbeeld box 3 op basis van werkelijk rendement naast de vergelijking met 2026 (fase 33, D-085).
+box3Vooruitblik: 2029
 basispad:
   jaar: 2027
   toelichting: "Het Belastingplan 2027 zoals de Tweede Kamer het op 12 november 2026 aannam. De Eerste Kamer moet nog stemmen. De cijfers zijn voorlopig: de heffingskortingen zijn geraamd met de inflatiecorrectie uit de wet, en toeslagen, AOW, bijstand en kinderbijslag met de gewone jaarlijkse verhoging, tot de officiële bedragen er zijn."

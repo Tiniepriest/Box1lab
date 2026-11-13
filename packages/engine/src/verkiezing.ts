@@ -39,6 +39,11 @@ export const verkiezingSchema = z.strictObject({
    * de site toont wat het aangenomen plan met jou doet en waar het verschil vandaan komt.
    */
   aangenomen: z.boolean().default(false),
+  /**
+   * Jaar van een rekenvoorbeeld voor box 3 op basis van werkelijk rendement (data/vooruitblik/box3-<jaar>.yaml),
+   * naast de vergelijking met dit jaar (fase 33).
+   */
+  box3Vooruitblik: z.number().int().optional(),
 });
 
 const wijzigingSoort = z.union([

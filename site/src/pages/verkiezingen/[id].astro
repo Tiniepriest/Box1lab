@@ -5,6 +5,7 @@ import Verkiezingen from "../../components/verkiezingen/Verkiezingen.svelte";
 import Base from "../../layouts/Base.astro";
 import { JAAR, pad, params as nu } from "../../lib/data.ts";
 import { nogNietOfficieel } from "../../lib/secties.ts";
+import { laadBox3Werkelijk } from "@box1lab/engine/node";
 import { PREVIEW, verkiezingData, verkiezingIds, type VerkiezingData } from "../../lib/verkiezingen.ts";
 
 export function getStaticPaths() {
@@ -14,6 +15,8 @@ export function getStaticPaths() {
 const { data } = Astro.props as { data: VerkiezingData };
 const { verkiezing, params, partijen, macro } = data;
 const akkoord = verkiezing.soort === "akkoord";
+// Rekenvoorbeeld box 3 op basis van werkelijk rendement (fase 33).
+const box3Later = verkiezing.box3Vooruitblik ? laadBox3Werkelijk(verkiezing.box3Vooruitblik) : null;
 // Basispad in volgend jaar: eerst wat dat met jou doet ten opzichte van nu (D-064).
 const vooraf = verkiezing.basispad.jaar > JAAR ? { huidig: nu, ...nogNietOfficieel(params) } : null;
 // Titel en omschrijving zoals mensen zoeken: "wat betekent het voor mij?" (punt 7 van 2 november 2026).
@@ -50,7 +53,16 @@ const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
   {!verkiezing.fictief && <Deel titel={titel} />}
   <div class="met-situatie">
     <Situatie client:load params={nu} plakken />
-    <Verkiezingen client:load {params} {verkiezing} {partijen} {macro} {vooraf} preview={PREVIEW} />
+    <Verkiezingen
+      client:load
+      {params}
+      {verkiezing}
+      {partijen}
+      {macro}
+      {vooraf}
+      {box3Later}
+      preview={PREVIEW}
+    />
   </div>
 </Base>
 

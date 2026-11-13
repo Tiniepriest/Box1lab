@@ -1,0 +1,27 @@
+# Box 3 op basis van werkelijk rendement, voor het rekenvoorbeeld "Box 3 in 2029" op de pagina Belastingplan 2027
+# (fase 33, D-085). Dit is geen volledig parameterjaar: alleen de regels die het voorbeeld nodig heeft.
+#
+# Afspraken zoals in data/parameters: percentages als percentage (35,5% wordt 35.5), bedragen in euro per jaar, en
+# elke sectie een "bron".
+jaar: 2029
+toelichting: "De Wet werkelijk rendement box 3 is op 12 februari 2026 aangenomen door de Tweede Kamer, de novelle die de vermogenswinstbelasting uitbreidt op 12 november 2026, net als het Belastingplan 2027. De Eerste Kamer moet over alle drie nog stemmen. Bedragen zonder inflatiecorrectie."
+
+regels:
+  bron: "Wet werkelijk rendement box 3, voorstel van wet (Kamerstukken II 2024/25, 36 748, nr. 2; https://www.tweedekamer.nl/downloads/document?id=2025D22295): artikel 5.2 (inkomen is het resultaat min het heffingsvrije resultaat, voor partners samen), artikel 5.7 (rente en dividend zijn reguliere voordelen), artikel 5.40 (heffingsvrij resultaat € 1.800) en artikel 5.65 (verlies telt voor zover het hoger is dan € 500). Novelle uitbreiding vermogenswinstbelasting box 3, memorie van toelichting (Kamerstukken II 2026/27, 37 053, nr. 3; https://www.tweedekamer.nl/downloads/document?id=2026D55228): alle financiële instrumenten onder de vermogenswinstbelasting (dividend elk jaar, koerswinst bij verkoop), verkrijgingsprijs is de waarde op 1 januari 2029, banktegoeden alleen de rente. Ingangsdatum 1 januari 2029."
+  # Per persoon; fiscale partners hebben samen het dubbele.
+  heffingsvrijResultaat: 1800
+  # Een negatief resultaat telt als verlies voor zover het hoger is dan dit bedrag (per persoon).
+  verliesdrempel: 500
+
+tarief:
+  bron: "Belastingplan 2027, artikel III, onderdeel Aa (artikel 2.13 Wet IB 2001 per 1 januari 2029), ingevoegd door het amendement Klaver en Dassen (Kamerstukken II 2026/27, 37 022, nr. 80; https://www.tweedekamer.nl/downloads/document?id=2026D57504), aangenomen op 12 november 2026. De schijfgrens geldt per persoon; partners kunnen het inkomen verdelen, het voorbeeld verdeelt het gelijk."
+  schijven:
+    - { tot: 60000, tarief: 35.5 }
+    - { tot: null, tarief: 38.5 }
+
+voorbeeld:
+  bron: "Voorbeeldwaarden van Box1lab om mee te beginnen, geen voorspelling: bezoekers vullen hun eigen percentages in. Ter vergelijking: het vaste rendement in 2027 is 1,28% voor banktegoeden en 6,37% voor overige bezittingen (data/parameters/2027.yaml)."
+  # Procent per jaar.
+  spaarrente: 1.5
+  dividend: 2
+  koersstijging: 5

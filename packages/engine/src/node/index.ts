@@ -12,6 +12,7 @@ import {
   valideerPartij,
   valideerVerkiezing,
   valideerChangelog,
+  valideerBox3Werkelijk,
   type Kalibratie,
   type Parameters,
   type Populatie,
@@ -21,6 +22,7 @@ import {
   type Partij,
   type Verkiezing,
   type Changelog,
+  type Box3Werkelijk,
 } from "../index.ts";
 
 /*
@@ -113,6 +115,17 @@ export function laadVerkiezing(
 }
 
 /** De publieke lijst van wijzigingen, nieuwste bovenaan. */
+/** Regels voor box 3 op basis van werkelijk rendement in een later jaar (data/vooruitblik/box3-<jaar>.yaml). */
+export function laadBox3Werkelijk(jaar: number): Box3Werkelijk {
+  const w = valideerBox3Werkelijk(
+    lees(`vooruitblik/box3-${jaar}.yaml`),
+    `data/vooruitblik/box3-${jaar}.yaml`,
+  );
+  if (w.jaar !== jaar)
+    throw new Error(`data/vooruitblik/box3-${jaar}.yaml: jaar ${w.jaar} hoort ${jaar} te zijn.`);
+  return w;
+}
+
 export function laadChangelog(): Changelog {
   return valideerChangelog(lees("changelog.yaml"), "data/changelog.yaml");
 }

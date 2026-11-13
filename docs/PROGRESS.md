@@ -189,6 +189,11 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Korte noot op de pagina Belastingplan 2027: box 3 verandert in 2027 bijna niet, het toptarief komt in 2029 (D-084)
 
+## Fase 33: box 3 in 2029 — klaar
+
+- [x] Rekenvoorbeeld "Box 3 in 2029" naast stap 1 op de pagina Belastingplan 2027, met eigen rendementen (D-085)
+- [ ] Na de Eerste Kamer: de regels in `data/vooruitblik/box3-2029.yaml` controleren; de bedragen voor 2029 met inflatiecorrectie zodra bekend
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
