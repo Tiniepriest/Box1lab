@@ -717,5 +717,31 @@ Wens van de eigenaar (4 november 2026): bij voorstellen als "toeslagen afschaffe
 - Derde vinkje "Uitkeringen en toeslagen", alleen bij "Verschil met nu" en standaard aan. Minder ontvangen telt omhoog, net als meer belasting: voor de portemonnee is dat hetzelfde. Titel dan "Hoeveel meer betaalt of minder krijgt elke inkomensgroep?". Zonder verschil blijft de grafiek het aandeel in de belasting; uitkeringen passen niet in "welk deel van de belasting".
 - Wat erin zit: AOW (alleen het AOW-deel, niet het aanvullend pensioen), bijstand, WW en WIA, de vier toeslagen, kinderbijslag en basisinkomen. Uitkeringen tellen bruto, want de belasting erover staat al bij box 1; zo telt niets dubbel. Bij een netto gekoppelde uitkering vallen het bruto verschil en het verschil in belasting tegen elkaar weg.
 - De engine geeft per huishouden een nieuw veld `uitkering` (bruto uitkeringen na netto-koppeling en na wat het basisinkomen vervangt; zit al in `bruto`). `belastingPerDeciel` telt per groep `ontvangen` op. Geen andere rekenregels, dus geen nieuwe modelversie; de golden tests blijven gelijk.
-- Het totaal per groep komt dicht bij "Wie gaat erop vooruit of achteruit?", maar niet precies: daar tellen ook de Zvw-bijdrage en het gedragseffect mee, en de groepen zijn daar ingedeeld met de box 3-belasting erin (zie de open vraag bij fase 27).
+- Het totaal per groep komt dicht bij "Wie gaat erop vooruit of achteruit?", maar niet precies, omdat de groepen daar zijn ingedeeld met de box 3-belasting erin (zie de open vraag bij fase 27). (Gecorrigeerd in fase 31: hier stond dat ook de Zvw-bijdrage en het gedragseffect meetellen. Het gedragseffect staat standaard uit, dus het verschil komt alleen door de indeling.)
 - Kleur: paars (`--ontvangen`, licht #9c6bc9, donker #9a52b8), naast box 1 en box 3 gecontroleerd op alle paren (kleurenblindheid, normaal zicht, contrast) in licht en donker.
+
+## Fase 31: Belastingplan 2027 aangenomen in de Tweede Kamer
+
+### D-083 Basispad 2027 is het aangenomen plan, zonder routes
+
+De Tweede Kamer nam het Belastingplan 2027 op 12 november 2026 aan met 76 tegen 74 stemmen (Handelingen II 2026/27, nr. 24). Vraag van de eigenaar (13 november): 2027 bijwerken met het akkoord. Besluit van de eigenaar: de pagina "Belastingplan 2027" toont het aangenomen plan, zonder de drie routes (D-063, D-070). Die routes waren wijzigingen op het oude voorstel en zouden op het aangenomen plan dubbel tellen. Ze staan in de git-geschiedenis.
+
+Wat er in de wet zit, naast het wetsvoorstel met de tweede nota van wijziging:
+
+- **Derde nota van wijziging** (37 022, nr. 29, 4 november): de inflatiecorrectie voor 2027 wordt voor 59,8% toegepast in plaats van 48%, dus × 1,015548 in plaats van × 1,01248 (de € 347 miljoen uit de Kamerbrief van 3 november), en × 1,011661 voor de eerste schijfgrens. Ook de aftrek specifieke zorgkosten (per 2028) en de btw op sierteelt; die zitten niet in het model.
+- **Vierde nota van wijziging** (37 022, nr. 51, 10 november): de schijfgrenzen met die indexatie: € 39.337 en € 80.819.
+- **Amendement Grinwis c.s.** (nr. 42): eerste en tweede schijf −0,14 procentpunt, de verlaging van de ouderenkorting met € 100 vervalt, en de drie bedragen van de arbeidskorting stijgen € 17 in plaats van € 133.
+- **Amendement Klaver en Dassen** (nr. 80, PRO en Volt): eerste schijf nog eens −0,25 procentpunt. Het lagere box 3-tarief (35,5%) en het toptarief van 38,5% gelden pas vanaf 2029; de bevroren schijfgrens in box 2 en de erf- en schenkbelasting zitten niet in het model.
+- Niet voor 2027: amendement 78 (eerste schijf −0,03 procentpunt vanaf 2028), 73 (geen beperkte indexatie in 2028), en de amendementen over auto's, vliegbelasting en de WBSO.
+
+Gevolg in `data/parameters/2027.yaml`:
+
+- Tarieven 35,84% (8,19% belasting plus 27,65% premies volksverzekeringen) tot € 39.337, 38,02% tot € 80.819, daarboven 49,50%. Voor AOW'ers in de eerste schijf 17,94%. Officieel: vierde nota van wijziging plus de amendementen.
+- Maximaal aftrektarief eigen woning 38,02%: dat beweegt mee met de tweede schijf. In D-070 bleef het bij de route nog 38,16%; dat was te voorzichtig.
+- Heffingskortingen en het heffingsvrij vermogen in box 3: de bedragen van 2026 × 1,015548, naar boven afgerond op hele euro's. Zo komen ook de bedragen in tabel 1 en 2 van de memorie van toelichting uit (bijvoorbeeld € 3.115 × 1,01248 = € 3.153,87 → € 3.154). Dit blijft een raming tot de officiële bedragen in december: algemene heffingskorting € 3.164 (AOW'ers € 1.584, het deel zonder AOW-premie), arbeidskorting € 1.029 / € 5.400 / € 5.791 met knikken op € 12.151 en € 26.247, ouderenkorting € 2.100 tot € 46.718, alleenstaande ouderenkorting € 549, combinatiekorting maximaal € 2.927 vanaf € 6.336, heffingsvrij vermogen € 60.280. Afbouwpunten die aan het minimumloon hangen (€ 30.910 en € 47.834) blijven gelijk; de afbouw van de algemene heffingskorting is weer zo dat die nul is bij het toptarief (6,34% en 3,174%).
+
+Effect ten opzichte van het oude basispad: het model geeft de overheid € 1,37 mld minder aan box 1 (de stukken: € 0,88 mld voor amendement 80 en € 0,35 mld voor de derde nota; amendement 42 is budgetneutraal). Wie werkt en € 46.000 verdient, houdt € 6 per maand meer over, bij € 120.000 € 12; AOW'ers € 16 tot € 23 (ouderenkorting); bij € 20.000 is het € 3 minder, omdat de arbeidskorting minder stijgt. De bijstand verandert niet (netto-koppeling).
+
+De site: `aangenomen: true` in `verkiezing.yaml` (nieuw veld in het schema). De pagina, de home, "Volgende stap" op Jouw situatie en het deelplaatje spreken dan van het aangenomen plan in plaats van het plan van het kabinet en de routes; er is geen stap 2 meer. Geen andere rekenregels, dus geen nieuwe modelversie; de golden tests (2026) blijven gelijk.
+
+Bijwerken: na de stemming in de Eerste Kamer (december) en als de officiële bedragen van de heffingskortingen er zijn.

@@ -153,14 +153,29 @@ describe("parameters 2027 (voorlopig)", () => {
     expect(p27.toelichting).toMatch(/Belastingplan 2027/);
     expect(laadParameters(2026).status).toBe("definitief");
   });
-  it("tarieven volgens het Belastingplan 2027 met de tweede nota van wijziging", () => {
-    // Eerste schijf 36,23% tot € 39.247; tweede 38,16% tot € 80.578
-    expect(heffingVoorKortingen(39247, p27, false)).toBeCloseTo(39247 * 0.3623, 2);
-    expect(heffingVoorKortingen(80578, p27, false)).toBeCloseTo(39247 * 0.3623 + (80578 - 39247) * 0.3816, 2);
+  it("tarieven volgens het Belastingplan 2027 zoals aangenomen door de Tweede Kamer (D-083)", () => {
+    // Vierde nota van wijziging met de amendementen 42 en 80: eerste schijf 35,84% tot € 39.337; tweede 38,02% tot
+    // € 80.819.
+    expect(heffingVoorKortingen(39337, p27, false)).toBeCloseTo(39337 * 0.3584, 2);
+    expect(heffingVoorKortingen(80819, p27, false)).toBeCloseTo(39337 * 0.3584 + (80819 - 39337) * 0.3802, 2);
+    // AOW'ers: zonder AOW-premie van 17,90%.
+    expect(heffingVoorKortingen(39337, p27, true)).toBeCloseTo(39337 * 0.1794, 2);
+    // Het maximale aftrektarief beweegt mee met de tweede schijf.
+    expect(p27.eigenWoning.aftrekMaxTarief).toBe(p27.box1.schijven[1]!.tarief);
   });
   it("de algemene heffingskorting is nul bij het aanvangspunt van het toptarief", () => {
     const k = { werkt: false, aow: false, alleenstaand: true, combinatiekorting: false };
-    expect(heffingskortingen(80578, 0, p27, k).algemeen).toBeLessThan(5);
+    expect(heffingskortingen(80819, 0, p27, k).algemeen).toBeLessThan(5);
+    expect(heffingskortingen(80819, 0, p27, { ...k, aow: true }).algemeen).toBeLessThan(5);
+  });
+  it("arbeidskorting: de knikken sluiten op elkaar aan (amendement 42: € 17 extra)", () => {
+    const s = p27.heffingskortingen.arbeid.staffel;
+    for (let i = 1; i < s.length; i++) {
+      const vorig = s[i - 1]!;
+      const eind = vorig.bedrag + (vorig.tarief / 100) * (s[i]!.vanaf - vorig.vanaf);
+      expect(Math.abs(eind - s[i]!.bedrag)).toBeLessThan(1);
+    }
+    expect(s[3]!.bedrag).toBe(5791);
   });
   it("maximale zorgtoeslag zoals geraamd in de VWS-begroting 2027 (tabel 77)", () => {
     expect(Math.round(zorgtoeslag(0, false, 0, p27))).toBe(1680);

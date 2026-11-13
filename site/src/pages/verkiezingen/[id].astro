@@ -20,9 +20,11 @@ const vooraf = verkiezing.basispad.jaar > JAAR ? { huidig: nu, ...nogNietOfficie
 const titel = akkoord
   ? `${verkiezing.menu ?? verkiezing.naam}: wat betekent het voor jou?`
   : `${verkiezing.naam}: wat betekenen de plannen voor jou?`;
-const omschrijving = akkoord
-  ? `Wat betekent ${verkiezing.menu ?? verkiezing.naam} voor jouw netto inkomen? Reken het uit voor je eigen situatie, en zie wat de routes naar een meerderheid daaraan veranderen (${partijen.map((p) => p.naam.replace(/^Route /, "")).join("; ")}).`
-  : `Wat betekenen de plannen van de partijen voor jouw netto inkomen? Reken het uit voor je eigen situatie.`;
+const omschrijving = verkiezing.aangenomen
+  ? `Wat betekent ${verkiezing.menu ?? verkiezing.naam} voor jouw netto inkomen? Reken het uit voor je eigen situatie, en zie waar het verschil vandaan komt.`
+  : akkoord
+    ? `Wat betekent ${verkiezing.menu ?? verkiezing.naam} voor jouw netto inkomen? Reken het uit voor je eigen situatie, en zie wat de routes naar een meerderheid daaraan veranderen (${partijen.map((p) => p.naam.replace(/^Route /, "")).join("; ")}).`
+    : `Wat betekenen de plannen van de partijen voor jouw netto inkomen? Reken het uit voor je eigen situatie.`;
 const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
   day: "numeric",
   month: "long",
@@ -39,9 +41,11 @@ const datum = new Date(verkiezing.datum).toLocaleDateString("nl-NL", {
 >
   <h1>{titel}</h1>
   <p class="intro">
-    {akkoord
-      ? `Stemming in de Tweede Kamer gepland op ${datum}. ${vooraf ? "Eerst: wat het plan van het kabinet voor jou betekent. Dan: wat de routes daaraan veranderen, voor jouw huishouden en voor Nederland." : "Per route: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland."}`
-      : `Verkiezing van ${datum}. Per partij: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland.`}
+    {verkiezing.aangenomen
+      ? `Aangenomen in de Tweede Kamer op ${datum}. Wat het plan voor jou betekent, en waar het verschil vandaan komt.`
+      : akkoord
+        ? `Stemming in de Tweede Kamer gepland op ${datum}. ${vooraf ? "Eerst: wat het plan van het kabinet voor jou betekent. Dan: wat de routes daaraan veranderen, voor jouw huishouden en voor Nederland." : "Per route: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland."}`
+        : `Verkiezing van ${datum}. Per partij: wat de doorrekenbare plannen doen voor jouw huishouden en voor Nederland.`}
   </p>
   {!verkiezing.fictief && <Deel titel={titel} />}
   <div class="met-situatie">

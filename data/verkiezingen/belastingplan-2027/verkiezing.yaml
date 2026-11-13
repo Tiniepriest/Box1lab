@@ -1,16 +1,18 @@
-# Drie routes naar een meerderheid voor het Belastingplan 2027 (stand 3 november 2026). Besluit van de eigenaar:
-# nu online, met aannames van Box1lab waar de partijen geen bedragen noemen, en zonder controle door een tweede
-# persoon (D-063). Werk dit bij als er amendementen, een akkoord of een stemuitslag is.
+# Belastingplan 2027, zoals de Tweede Kamer het op 12 november 2026 aannam (fase 31, D-083). Tot die dag stonden hier
+# drie routes naar een meerderheid (D-063, D-070); die staan in de git-geschiedenis. Besluit van de eigenaar
+# (13 november 2026): de pagina toont het aangenomen plan, zonder routes. Werk dit bij na de stemming in de Eerste
+# Kamer.
 id: belastingplan-2027
-naam: "Belastingplan 2027: drie routes"
+naam: "Belastingplan 2027"
 # Naam van het tabblad in het menu.
 menu: "Belastingplan 2027"
 soort: akkoord
 # Stemming in de Tweede Kamer.
 datum: 2026-11-12
+aangenomen: true
 basispad:
   jaar: 2027
-  toelichting: "Het vergelijkingspunt is het Belastingplan 2027 van het kabinet zoals het bij de Kamer ligt (met de tweede nota van wijziging van 20 oktober). Die cijfers zijn voorlopig. Toeslagen, AOW, bijstand en kinderbijslag zijn geraamd met de gewone jaarlijkse verhoging, tot de officiële bedragen er zijn."
+  toelichting: "Het Belastingplan 2027 zoals de Tweede Kamer het op 12 november 2026 aannam. De Eerste Kamer moet nog stemmen. De cijfers zijn voorlopig: de heffingskortingen zijn geraamd met de inflatiecorrectie uit de wet, en toeslagen, AOW, bijstand en kinderbijslag met de gewone jaarlijkse verhoging, tot de officiële bedragen er zijn."
 fictief: false
 vierOgen: false
-uitleg: "Het kabinet-Jetten (D66, VVD, CDA) heeft geen meerderheid voor het Belastingplan 2027. Op 3 november paste het het plan aan: € 347 miljoen extra koopkracht, zodat de vrijheidsbijdrage in 2027 wegvalt, en steun voor het amendement van ChristenUnie en 50PLUS. Met die partijen en de Groep Markuszower lijkt een meerderheid in de Tweede Kamer mogelijk; in de Eerste Kamer is steun van links (PRO en Volt) of rechts (JA21, BBB en SGP) nodig. Waar partijen geen bedragen noemen, vertalen wij hun belangrijkste wens naar een maatregel die het model kan doorrekenen. Bij elke route staat wat er niet in zit, zoals de dekking."
+uitleg: "De Tweede Kamer nam het Belastingplan 2027 op 12 november aan, met 76 tegen 74 stemmen. D66 en CDA stemden voor, de VVD tegen. De Kamer veranderde het plan van het kabinet op drie punten die je in je inkomen merkt: het tarief in de eerste schijf gaat 0,39 procentpunt omlaag en in de tweede schijf 0,14 procentpunt, de arbeidskorting stijgt minder (€ 17 in plaats van € 133 extra) en de ouderenkorting gaat niet € 100 omlaag. Eerder liet het kabinet de bedragen in box 1 al iets meer meegaan met de inflatie. Het nieuwe toptarief in box 3 geldt pas vanaf 2029. De Eerste Kamer moet nog stemmen; dat staat gepland voor december."

@@ -39,11 +39,19 @@
     /** Parameters van volgend jaar, met de secties die nog geen bron hebben. */
     volgend?: { params: Parameters; nogNiet: string[]; geraamd: string[] } | null;
     /** Het tabblad met de nieuwste verkiezing of het Belastingplan, voor "Volgende stap" (D-064). */
-    actueel?: { href: string; naam: string; soort: "verkiezing" | "akkoord"; jaar: number } | null;
+    actueel?: {
+      href: string;
+      naam: string;
+      soort: "verkiezing" | "akkoord";
+      jaar: number;
+      aangenomen?: boolean;
+    } | null;
   } = $props();
 
   // Heeft volgend jaar een eigen pagina (zoals het Belastingplan)? Dan staat het overzicht daar en hier alleen de kern.
   const jaarPagina = $derived(!!volgend && actueel?.jaar === volgend.params.jaar);
+  // Na de stemming is het niet meer alleen het plan van het kabinet: de Kamer heeft het gewijzigd.
+  const welkPlan = $derived(actueel?.aangenomen ? "het aangenomen plan" : "het plan van het kabinet");
 
   // Wat doen de voorstellen met dit huishouden? De parametersets rekenen we één keer uit.
   const voorstelParams = presets
@@ -237,10 +245,10 @@
                 {#if volgendJaar !== null}
                   {#if Math.abs(volgendJaar) < 1}
                     In {actueel.jaar}
-                    {samen ? "houden jullie" : "houd je"} volgens het plan van het kabinet evenveel over.
+                    {samen ? "houden jullie" : "houd je"} volgens {welkPlan} evenveel over.
                   {:else}
                     In {actueel.jaar}
-                    {samen ? "houden jullie" : "houd je"} volgens het plan van het kabinet
+                    {samen ? "houden jullie" : "houd je"} volgens {welkPlan}
                     <strong class={volgendJaar > 0 ? "vooruit" : "achteruit"}
                       >{euro(Math.abs(volgendJaar / 12))}</strong
                     >
@@ -251,7 +259,9 @@
                   {/if}
                 {/if}
                 {actueel.soort === "akkoord"
-                  ? "Wat veranderen de routes naar een meerderheid daaraan?"
+                  ? actueel.aangenomen
+                    ? "Waar komt het verschil vandaan?"
+                    : "Wat veranderen de routes naar een meerderheid daaraan?"
                   : "Wat doen de plannen van de partijen met jou?"}
               </span>
               <span class="actie">Bekijk {actueel.naam} →</span>

@@ -45,10 +45,12 @@ const piek = Math.max(...curve.marginaleDruk);
         <h2>{actueel.menu ?? actueel.naam}</h2>
         <p>
           {actueel.soort === "akkoord"
-            ? "Wat doet het plan van het kabinet met jou, en wat veranderen de routes naar een meerderheid daaraan?"
+            ? actueel.aangenomen
+              ? "Wat doet het plan dat de Tweede Kamer aannam met jou, en waar komt het verschil vandaan?"
+              : "Wat doet het plan van het kabinet met jou, en wat veranderen de routes naar een meerderheid daaraan?"
             : "Wat betekenen de plannen van partijen voor jouw portemonnee?"}
         </p>
-        <span class="actie">Vergelijk →</span>
+        <span class="actie">{actueel.aangenomen ? "Bekijk" : "Vergelijk"} →</span>
       </a>
     )}
     <a class="tegel" href={pad("lab")}>

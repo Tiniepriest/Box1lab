@@ -48,6 +48,8 @@
 
   // Woorden: bij een akkoord gaat het om routes en bronnen, bij een verkiezing om partijen en programma's.
   const akkoord = verkiezing.soort === "akkoord";
+  // Aangenomen plan: geen routes meer, alleen wat het plan met jou doet (fase 31).
+  const aangenomen = akkoord && verkiezing.aangenomen;
   const W = akkoord
     ? { een: "route", meer: "routes", Een: "Route", bron: "bron", Bron: "Bron" }
     : { een: "partij", meer: "partijen", Een: "Partij", bron: "programma", Bron: "Programma" };
@@ -111,11 +113,15 @@
       params={vooraf.huidig}
       volgend={{ params, nogNiet: vooraf.nogNiet, geraamd: vooraf.geraamd }}
       {invoer}
-      titel={`Stap 1: wat doet het plan van het kabinet met ${samen ? "jullie" : "jou"}?`}
+      titel={aangenomen
+        ? `Wat doet het plan met ${samen ? "jullie" : "jou"}?`
+        : `Stap 1: wat doet het plan van het kabinet met ${samen ? "jullie" : "jou"}?`}
     />
-    <h2 class="stapkop">Stap 2: wat veranderen de {W.meer} daaraan?</h2>
+    {#if !aangenomen}<h2 class="stapkop">Stap 2: wat veranderen de {W.meer} daaraan?</h2>{/if}
   {/if}
-  {#if !verkiezing.vierOgen}
+  {#if aangenomen}
+    <!-- Geen routes meer: alleen de vergelijking met dit jaar hierboven. -->
+  {:else if !verkiezing.vierOgen}
     <p class="waarschuwing" role="note">
       <strong>Niet onafhankelijk gecontroleerd.</strong> De vertaling van de wensen naar maatregelen is door Box1lab
       gemaakt en niet door een tweede persoon nagekeken. Bij elke maatregel staat hoe zeker die vertaling is en
@@ -128,7 +134,9 @@
     </p>
   {/if}
 
-  {#if !geldig.success}
+  {#if aangenomen}
+    <!-- Geen routes. -->
+  {:else if !geldig.success}
     <p class="waarschuwing">Vul alle velden in met een getal (0 mag ook).</p>
   {:else if effecten.length === 0}
     <p class="notitie">Er zijn nog geen {W.meer} gepubliceerd.</p>
@@ -352,13 +360,15 @@
         <strong>{akkoord ? "Geen oordeel." : "Geen stemadvies."}</strong> Deze pagina laat alleen zien wat de doorrekenbare
         plannen doen voor inkomens.
       </li>
-      <li>
-        <strong>Vereenvoudigd.</strong> Niet alle maatregelen zijn door te rekenen; per {W.een} staat wat er niet
-        in zit.
-        {akkoord
-          ? "De dekking (box 2, bezuinigingen) zit er meestal niet in; het saldo voor de overheid is dus zonder dekking."
-          : "Het CPB (Keuzes in Kaart) is leidend."}
-      </li>
+      {#if !aangenomen}
+        <li>
+          <strong>Vereenvoudigd.</strong> Niet alle maatregelen zijn door te rekenen; per {W.een} staat wat er niet
+          in zit.
+          {akkoord
+            ? "De dekking (box 2, bezuinigingen) zit er meestal niet in; het saldo voor de overheid is dus zonder dekking."
+            : "Het CPB (Keuzes in Kaart) is leidend."}
+        </li>
+      {/if}
       <li><strong>Basispad.</strong> {verkiezing.basispad.toelichting}</li>
       <li>
         Hoe we plannen vertalen, staat in de <a href="{REPO}/blob/main/docs/METHODIEK-VERKIEZINGEN.md"

@@ -231,23 +231,24 @@ try {
       plaatje.headers.get("content-type") === "image/png",
     "belastingplan 2027: eigen deelplaatje",
   );
+  // Aangenomen in de Tweede Kamer (D-083): geen routes meer, alleen wat het plan met jou doet.
   const routes = await pg.locator("details.partij").count();
-  const routeTekst = (await pg.textContent("body")) ?? "";
+  const paginaTekst = (await pg.textContent("body")) ?? "";
   controleer(
-    routes === 3 &&
-      /Niet onafhankelijk gecontroleerd/.test(routeTekst) &&
-      /Twee routes naast elkaar/.test(routeTekst),
-    `belastingplan 2027: ${routes} routes, met waarschuwing en vergelijking`,
+    routes === 0 &&
+      /Aangenomen in de Tweede Kamer op 12 november 2026/.test(paginaTekst) &&
+      !/Stap 2|Niet onafhankelijk gecontroleerd|Er zijn nog geen routes/.test(paginaTekst),
+    `belastingplan 2027: aangenomen plan, ${routes} routes, geen stap 2`,
   );
-  const stap1 = (await pg.locator(".jaar").textContent()) ?? "";
+  const plan = (await pg.locator(".jaar").textContent()) ?? "";
   controleer(
-    /Stap 1: wat doet het plan van het kabinet/.test(stap1) &&
-      /Voorlopig/.test(stap1) &&
-      /Stap 2/.test(routeTekst),
-    "belastingplan 2027: stap 1 (kabinetsplan, voorlopig) en stap 2 (routes)",
+    /Wat doet het plan met jou\?/.test(plan) &&
+      /Voorlopig/.test(plan) &&
+      /Waar komt het verschil vandaan/.test(plan),
+    "belastingplan 2027: wat het plan met jou doet (voorlopig), per onderdeel",
   );
   const kolom = pg.locator("section.situatie");
-  const routeBedragen = () => pg.locator("details.partij summary .num").allTextContents();
+  const routeBedragen = async () => [(await pg.locator(".jaar").textContent()) ?? ""];
   controleer(
     /Gerekend met een voorbeeld/.test((await kolom.textContent()) ?? ""),
     "situatiekolom: zonder eigen situatie staat er dat we met een voorbeeld rekenen",
@@ -259,7 +260,7 @@ try {
   controleer(
     /Gerekend met jouw situatie/.test((await kolom.textContent()) ?? "") &&
       (await routeBedragen()).join() !== voorKolom,
-    "situatiekolom: aanpassen rekent meteen mee met de routes",
+    "situatiekolom: aanpassen rekent meteen mee met het plan",
   );
   await kolom.getByRole("button", { name: "Wis mijn gegevens" }).click();
   await pg.waitForTimeout(300);
@@ -298,7 +299,8 @@ try {
   controleer(bevolking.length === 0, "calculator: plek in de inkomensverdeling zonder de bevolking te laden");
   const volgende = ((await pg.locator(".volgende").textContent()) ?? "").replace(/\s+/g, " ");
   controleer(
-    /In 2027 houd je volgens het plan van het kabinet/.test(volgende) &&
+    /In 2027 houd je volgens het aangenomen plan/.test(volgende) &&
+      /Waar komt het verschil vandaan\?/.test(volgende) &&
       /voorlopig/.test(volgende) &&
       /Scenariolab/.test(volgende),
     "calculator: volgende stap naar Belastingplan 2027 (met de kern) en het Scenariolab",

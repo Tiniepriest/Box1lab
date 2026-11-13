@@ -35,6 +35,8 @@ Zekerheid `middel` of `laag` vereist altijd een `toelichting`; de build faalt an
 
 Dezelfde module werkt voor onderhandelingen, zoals over een belastingplan. Zet in `verkiezing.yaml` `soort: akkoord`, de datum van de stemming, een korte `uitleg`, en als basispad het voorstel waarover onderhandeld wordt (dat mag een ander parameterjaar zijn dan de site). Elke route is een bestand zoals een partij. Noemen de partijen geen bedragen, dan geldt regel 2 hierboven, tenzij de eigenaar anders besluit; leg dat dan vast in `docs/DECISIONS.md` en behandel alle routes op dezelfde manier. Voorbeeld: `data/verkiezingen/belastingplan-2027/` (D-063).
 
+Is het plan aangenomen, zet dan in `verkiezing.yaml` `aangenomen: true` en `datum` op de stemming, werk het parameterbestand van het basispad bij naar wat is aangenomen, en verwijder de routes: die waren wijzigingen op het oude voorstel. De pagina laat dan alleen zien wat het aangenomen plan met jou doet en waar het verschil vandaan komt (D-083).
+
 ## Vier-ogen-principe
 
 - Iedereen mag een partij toevoegen met `status: concept`.
