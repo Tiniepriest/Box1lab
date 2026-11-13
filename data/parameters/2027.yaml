@@ -12,20 +12,20 @@
 jaar: 2027
 # Voorlopig: zie de toelichting. Zet op "definitief" als alle bedragen officieel zijn en geen TODO meer hebben.
 status: voorlopig
-toelichting: "Gebaseerd op het Belastingplan 2027 zoals ingediend op 15 september 2026, met de tweede nota van wijziging van 20 oktober 2026. Het voorstel is nog niet aangenomen door de Tweede en Eerste Kamer. Bedragen die nog niet officieel zijn, zijn geraamd met de gewone jaarlijkse verhoging; de officiële bedragen volgen in november en december 2026. Wat nog helemaal niet bekend is, staat op het niveau van 2026."
+toelichting: "Gebaseerd op het Belastingplan 2027 zoals de Tweede Kamer het op 12 november 2026 aannam: met de vier nota's van wijziging en de amendementen van ChristenUnie en 50PLUS (nr. 42) en van PRO en Volt (nr. 80). De Eerste Kamer moet nog stemmen. Bedragen die nog niet officieel zijn, zijn geraamd met de gewone jaarlijkse verhoging; de officiële bedragen volgen in november en december 2026. Wat nog helemaal niet bekend is, staat op het niveau van 2026."
 
 box1:
-  bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen."
+  bron: "Tarieftabel: vierde nota van wijziging (37 022, nr. 51; https://www.tweedekamer.nl/downloads/document?id=2026D56605), met het amendement Grinwis c.s. (37 022, nr. 42; https://www.tweedekamer.nl/downloads/document?id=2026D56417) (eerste en tweede schijf −0,14 procentpunt) en het amendement Klaver en Dassen (37 022, nr. 80; https://www.tweedekamer.nl/downloads/document?id=2026D57504) (eerste schijf −0,25 procentpunt). Het tarief van de eerste schijf is 8,19% inkomstenbelasting plus 27,65% premies volksverzekeringen, waarvan 17,90% AOW-premie (memorie van toelichting, tabel 1 en 2; Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). Aangenomen door de Tweede Kamer op 12 november 2026 (Handelingen II 2026/27, nr. 24; https://www.tweedekamer.nl/kamerstukken/plenaire_verslagen/detail/2026-2027/24); de Eerste Kamer moet nog stemmen."
   # Belastingvrij deel per persoon. Bestaat nu niet (0); handig voor scenario's als een vlaktaks.
   vrijstelling: 0
   # Inkomstenbelasting plus premies volksverzekeringen. De laatste schijf heeft "tot: null" (geen bovengrens).
   schijven:
-    - { tot: 39247, tarief: 36.23 }
-    # Aanvangspunt toptarief volgens de tweede nota van wijziging (was € 78.426 in het voorstel).
-    - { tot: 80578, tarief: 38.16 }
+    - { tot: 39337, tarief: 35.84 }
+    # Aanvangspunt toptarief volgens de vierde nota van wijziging (was € 78.426 in het voorstel).
+    - { tot: 80819, tarief: 38.02 }
     - { tot: null, tarief: 49.5 }
   # AOW'ers betalen geen AOW-premie: hun tarief in de eerste schijf is zoveel procentpunt lager
-  # (36,23% − 18,33% voor AOW'ers geboren in of na 1946 = 17,90).
+  # (35,84% − 17,94% voor AOW'ers geboren in of na 1946 = 17,90).
   # Negatieve belasting bestaat nu niet (false); voor scenario's als een negatieve inkomstenbelasting. Aan: wie
   # minder verdient dan de vrijstelling, of meer korting heeft dan belasting, krijgt het verschil uitbetaald.
   negatieveBelasting: false
@@ -37,54 +37,55 @@ box1:
 # "staffelAow" geldt voor wie het hele jaar de AOW-leeftijd heeft.
 heffingskortingen:
   algemeen:
-    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen. Het afbouwpercentage is afgeleid: de korting is nul bij het aanvangspunt van het toptarief, zoals in eerdere jaren. Het afbouwpunt hangt af van het minimumloon (november 2026)."
+    bron: "Raming: de bedragen van 2026 × de inflatiecorrectie 1,015548 in plaats van 1,01248 (derde nota van wijziging (37 022, nr. 29; https://www.tweedekamer.nl/downloads/document?id=2026D55208), onderdelen 4 tot en met 6), naar boven afgerond op hele euro's zoals in tabel 1 en 2 van de memorie van toelichting (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). Aangenomen door de Tweede Kamer op 12 november 2026 (Handelingen II 2026/27, nr. 24; https://www.tweedekamer.nl/kamerstukken/plenaire_verslagen/detail/2026-2027/24); de Eerste Kamer moet nog stemmen. De officiële bedragen volgen in december. Voor AOW'ers: het maximum × 17,94 / 35,84, het deel zonder AOW-premie. Het afbouwpercentage is afgeleid: de korting is nul bij het aanvangspunt van het toptarief, zoals in eerdere jaren. Het afbouwpunt is 108% van het minimumloon (Regeling indexatie wettelijk minimumloon per 1 januari 2027; https://www.tweedekamer.nl/kamerstukken/detail?id=2026D54072&did=2026D54072)."
     niveau: 100
     staffel:
-      - { vanaf: 0, bedrag: 3154, tarief: 0 }
-      # 3.154 / (80.578 − 30.910) = 6,350%
-      - { vanaf: 30910, bedrag: 3154, tarief: -6.35 }
+      - { vanaf: 0, bedrag: 3164, tarief: 0 }
+      # 3.164 / (80.819 − 30.910) = 6,340%
+      - { vanaf: 30910, bedrag: 3164, tarief: -6.34 }
     staffelAow:
-      - { vanaf: 0, bedrag: 1596, tarief: 0 }
-      # 1.596 / (80.578 − 30.910) = 3,213%
-      - { vanaf: 30910, bedrag: 1596, tarief: -3.213 }
+      - { vanaf: 0, bedrag: 1584, tarief: 0 }
+      # 1.584 / (80.819 − 30.910) = 3,174%
+      - { vanaf: 30910, bedrag: 1584, tarief: -3.174 }
   arbeid:
-    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen. Deelbedragen: tabel 1 min € 40 (verhoging € 133 in plaats van € 173). De inkomensgrenzen van de eerste twee knikken zijn die van 2026 × 1,01248 (beperkte indexatie volgens de memorie van toelichting) en de percentages zijn daaruit afgeleid. Bedragen voor AOW'ers: TODO: bron nodig, tijdelijk die van 2026."
+    bron: "Raming: de drie bedragen zijn die van 2026 × 1,015548 plus € 17, naar boven afgerond (Belastingplan 2027, artikel I, onderdeel J, en artikel L; € 133 in het wetsvoorstel, € 116 lager door het amendement Grinwis c.s. (37 022, nr. 42; https://www.tweedekamer.nl/downloads/document?id=2026D56417); inflatiecorrectie 1,015548 in plaats van 1,01248 (derde nota van wijziging (37 022, nr. 29; https://www.tweedekamer.nl/downloads/document?id=2026D55208), onderdelen 4 tot en met 6)). De inkomensgrenzen van de eerste twee knikken zijn die van 2026 × 1,015548 en de percentages zijn daaruit afgeleid. Het afbouwpunt is gekoppeld aan het minimumloon (memorie van toelichting, tabel 1; Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). Aangenomen door de Tweede Kamer op 12 november 2026 (Handelingen II 2026/27, nr. 24; https://www.tweedekamer.nl/kamerstukken/plenaire_verslagen/detail/2026-2027/24); de Eerste Kamer moet nog stemmen. Bedragen voor AOW'ers: TODO: bron nodig, tijdelijk die van 2026."
     niveau: 100
     staffel:
-      - { vanaf: 0, bedrag: 0, tarief: 9.427 }
-      - { vanaf: 12114, bedrag: 1142, tarief: 31.009 }
-      - { vanaf: 26168, bedrag: 5500, tarief: 1.795 }
-      - { vanaf: 47834, bedrag: 5889, tarief: -6.51 }
+      # 1.029 / 12.151 = 8,468%; (5.400 − 1.029) / (26.247 − 12.151) = 31,009%; (5.791 − 5.400) / (47.834 − 26.247) = 1,811%
+      - { vanaf: 0, bedrag: 0, tarief: 8.468 }
+      - { vanaf: 12151, bedrag: 1029, tarief: 31.009 }
+      - { vanaf: 26247, bedrag: 5400, tarief: 1.811 }
+      - { vanaf: 47834, bedrag: 5791, tarief: -6.51 }
     staffelAow:
       - { vanaf: 0, bedrag: 0, tarief: 4.156 }
       - { vanaf: 11965, bedrag: 498, tarief: 15.483 }
       - { vanaf: 25845, bedrag: 2647, tarief: 0.974 }
       - { vanaf: 45592, bedrag: 2840, tarief: -3.25 }
   ouderen:
-    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen."
+    bron: "Raming: de bedragen van 2026 × de inflatiecorrectie 1,015548 in plaats van 1,01248 (derde nota van wijziging (37 022, nr. 29; https://www.tweedekamer.nl/downloads/document?id=2026D55208), onderdelen 4 tot en met 6), naar boven afgerond op hele euro's zoals in tabel 1 en 2 van de memorie van toelichting (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). Aangenomen door de Tweede Kamer op 12 november 2026 (Handelingen II 2026/27, nr. 24; https://www.tweedekamer.nl/kamerstukken/plenaire_verslagen/detail/2026-2027/24); de Eerste Kamer moet nog stemmen. De officiële bedragen volgen in december. De verlaging met € 100 uit het wetsvoorstel (artikel I, onderdeel K) gaat niet door: amendement Grinwis c.s. (37 022, nr. 42; https://www.tweedekamer.nl/downloads/document?id=2026D56417)."
     niveau: 100
     staffel:
-      - { vanaf: 0, bedrag: 1993, tarief: 0 }
-      - { vanaf: 46577, bedrag: 1993, tarief: -15 }
+      - { vanaf: 0, bedrag: 2100, tarief: 0 }
+      - { vanaf: 46718, bedrag: 2100, tarief: -15 }
   alleenstaandeOuderen:
-    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen."
+    bron: "Raming: de bedragen van 2026 × de inflatiecorrectie 1,015548 in plaats van 1,01248 (derde nota van wijziging (37 022, nr. 29; https://www.tweedekamer.nl/downloads/document?id=2026D55208), onderdelen 4 tot en met 6), naar boven afgerond op hele euro's zoals in tabel 1 en 2 van de memorie van toelichting (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). Aangenomen door de Tweede Kamer op 12 november 2026 (Handelingen II 2026/27, nr. 24; https://www.tweedekamer.nl/kamerstukken/plenaire_verslagen/detail/2026-2027/24); de Eerste Kamer moet nog stemmen. De officiële bedragen volgen in december."
     niveau: 100
     # Voor AOW'ers zonder partner.
-    bedrag: 547
+    bedrag: 549
   combinatie:
-    bron: "Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen. Bedragen voor AOW'ers: TODO: bron nodig, tijdelijk die van 2026."
+    bron: "Raming: inkomensgrens € 6.239 × 1,015548, naar beneden afgerond zoals in tabel 1 van de memorie van toelichting (€ 6.316); maximum € 2.882 × 1,015548, naar boven afgerond: € 2.882 is het maximum van 2027 uit tabel 1 (€ 2.918, met de afbouw uit het Belastingplan 2024) gedeeld door 1,01248 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf; inflatiecorrectie 1,015548 in plaats van 1,01248 (derde nota van wijziging (37 022, nr. 29; https://www.tweedekamer.nl/downloads/document?id=2026D55208), onderdelen 4 tot en met 6); ook voor de afbouw, artikel LIII). Aangenomen door de Tweede Kamer op 12 november 2026 (Handelingen II 2026/27, nr. 24; https://www.tweedekamer.nl/kamerstukken/plenaire_verslagen/detail/2026-2027/24); de Eerste Kamer moet nog stemmen. Bedragen voor AOW'ers: TODO: bron nodig, tijdelijk die van 2026."
     niveau: 100
     staffel:
       - { vanaf: 0, bedrag: 0, tarief: 0 }
-      - { vanaf: 6316, bedrag: 0, tarief: 11.45 }
-    maximum: 2918
+      - { vanaf: 6336, bedrag: 0, tarief: 11.45 }
+    maximum: 2927
     staffelAow:
       - { vanaf: 0, bedrag: 0, tarief: 0 }
       - { vanaf: 6239, bedrag: 0, tarief: 5.72 }
     maximumAow: 1514
 
 eigenWoning:
-  bron: "Maximaal aftrektarief: gelijk aan het tarief van de tweede schijf, zoals in 2025 en 2026 (Belastingplan 2027, memorie van toelichting, tabel 1 en 2 (Kamerstukken II 2026/27, 37 022, nr. 3; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf), met de tweede nota van wijziging van 20 oktober 2026 (37 022, nr. 22; https://www.tweedekamer.nl/downloads/document?id=2026D50329). Voorstel, nog niet aangenomen.) Forfait, villataks en Wet Hillen: TODO: bron nodig, tijdelijk de bedragen van 2026."
+  bron: "Maximaal aftrektarief: gelijk aan het tarief van de tweede schijf, zoals in 2025 en 2026 ('Het maximale aftrekpercentage voor de grondslagverminderende posten beweegt mee met het tarief van de tweede schijf', Taxlive, 22 augustus 2025; https://www.taxlive.nl/nl/documenten/vn-vandaag/relatie-gezamenlijke-basistarief-inkomstenbelasting-en-mogelijkheden-van-koppelen-hypotheekrenteaftrek-opgehelderd/), dus 38,02% na het amendement Grinwis c.s. (37 022, nr. 42; https://www.tweedekamer.nl/downloads/document?id=2026D56417). Forfait, villataks en Wet Hillen: TODO: bron nodig, tijdelijk de bedragen van 2026."
   forfait:
     niveau: 100
     # Eigenwoningforfait als percentage van de hele WOZ-waarde, afhankelijk van de WOZ-waarde.
@@ -97,7 +98,7 @@ eigenWoning:
     # Boven deze WOZ-waarde: het forfait op de grens, plus dit percentage van het deel daarboven.
     villataks: { vanaf: 1350000, percentage: 2.35 }
   # Hoogste tarief waartegen de aftrek eigen woning werkt. 0 = geen hypotheekrenteaftrek.
-  aftrekMaxTarief: 38.16
+  aftrekMaxTarief: 38.02
   # Wet Hillen: is het forfait hoger dan de aftrekbare rente, dan is dit percentage van het verschil aftrekbaar.
   hillenAftrek: 71.867
 
@@ -250,9 +251,9 @@ uitkeringen:
   nettoKoppeling: { aow: true, bijstand: true, werknemersverzekering: false }
 
 box3:
-  bron: "Raming: banktegoeden, schulden en schuldendrempel zoals in 2026; die percentages worden pas begin 2028 vastgesteld. Heffingsvrij vermogen € 60.098: € 59.357 × 1,01248, de beperkte inflatiecorrectie uit het Belastingplan 2027 (memorie van toelichting, paragraaf 4; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf). De voorgestelde verlaging naar € 30.846 (Kamerbrief van 29 september 2026) gaat niet door (Kamerbrief Aanpassingen Belastingplan en box 3, 3 november 2026; https://www.tweedekamer.nl/kamerstukken/brieven_regering/detail?id=2026Z23851&did=2026D55029). Overige bezittingen 6,37%: Rendement, Forfait box 3 voor beleggingen in 2027 weer hoger (26 januari 2026; https://www.rendement.nl/inkomen-uit-sparen-en-beleggen/nieuws/forfait-box-3-voor-beleggingen-in-2027-weer-hoger.html). Tarief 36%."
+  bron: "Raming: banktegoeden, schulden en schuldendrempel zoals in 2026; die percentages worden pas begin 2028 vastgesteld. Heffingsvrij vermogen € 60.280: € 59.357 × 1,015548, naar boven afgerond, de beperkte inflatiecorrectie uit het Belastingplan 2027 (memorie van toelichting, paragraaf 4; https://www.rijksfinancien.nl/sites/default/files/bestanden/belastingplan-2027/wetsvoorstel-belastingplan-2027/Wetsvoorstel-Belastingplan-2027.pdf; inflatiecorrectie 1,015548 in plaats van 1,01248 (derde nota van wijziging (37 022, nr. 29; https://www.tweedekamer.nl/downloads/document?id=2026D55208), onderdelen 4 tot en met 6)). De voorgestelde verlaging naar € 30.846 (Kamerbrief van 29 september 2026) gaat niet door (Kamerbrief Aanpassingen Belastingplan en box 3, 3 november 2026; https://www.tweedekamer.nl/kamerstukken/brieven_regering/detail?id=2026Z23851&did=2026D55029). Overige bezittingen 6,37%: Rendement, Forfait box 3 voor beleggingen in 2027 weer hoger (26 januari 2026; https://www.rendement.nl/inkomen-uit-sparen-en-beleggen/nieuws/forfait-box-3-voor-beleggingen-in-2027-weer-hoger.html). Tarief 36%: het lagere tarief van 35,5% en het toptarief van 38,5% uit het amendement Klaver en Dassen (37 022, nr. 80; https://www.tweedekamer.nl/downloads/document?id=2026D57504) gelden pas vanaf 2029 (Belastingplan 2027, artikel III)."
   # Heffingsvrij vermogen en schuldendrempel per persoon; fiscale partners hebben samen het dubbele.
-  heffingsvrijVermogen: 60098
+  heffingsvrijVermogen: 60280
   schuldendrempel: 3800
   # Forfaitair rendement in procent: banktegoeden, overige bezittingen (beleggingen, tweede woning) en schulden.
   rendement: { banktegoeden: 1.28, overig: 6.37, schulden: 2.7 }

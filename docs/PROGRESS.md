@@ -178,6 +178,13 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Derde laag "Uitkeringen en toeslagen" bij "Verschil met nu" (D-082)
 
+## Fase 31: Belastingplan 2027 aangenomen — klaar
+
+- [x] 2027 volgens het plan dat de Tweede Kamer op 12 november aannam: derde en vierde nota van wijziging, amendementen 42 en 80 (D-083)
+- [x] Pagina "Belastingplan 2027" zonder routes; tekst over het aangenomen plan op de pagina, de home, Jouw situatie en het deelplaatje
+- [x] Correctie in D-082: het verschil met "Wie gaat erop vooruit" komt alleen door de indeling in groepen
+- [ ] Na de stemming in de Eerste Kamer (december) en de officiële bedragen van de heffingskortingen: ramingen vervangen
+
 ## Open vragen voor de eigenaar
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?

@@ -30,9 +30,11 @@ export const GET: APIRoute = async ({ params: p }) => {
           titel: `${v.menu ?? v.naam}: wat betekent het voor jou?`,
           zin:
             v.soort === "akkoord"
-              ? "Reken uit wat het plan van het kabinet en de routes naar een meerderheid met jouw portemonnee doen."
+              ? v.aangenomen
+                ? "Reken uit wat het plan dat de Tweede Kamer aannam met jouw portemonnee doet."
+                : "Reken uit wat het plan van het kabinet en de routes naar een meerderheid met jouw portemonnee doen."
               : "Reken uit wat de plannen van de partijen met jouw portemonnee doen.",
-          voet: `${v.soort === "akkoord" ? "Stemming in de Tweede Kamer" : "Verkiezing"}: ${datum} · gratis en onafhankelijk`,
+          voet: `${v.soort === "akkoord" ? (v.aangenomen ? "Aangenomen in de Tweede Kamer" : "Stemming in de Tweede Kamer") : "Verkiezing"}: ${datum} · gratis en onafhankelijk`,
         })
       : await maakAfbeelding({
           titel: "Wat betekent het belastingstelsel voor jou?",

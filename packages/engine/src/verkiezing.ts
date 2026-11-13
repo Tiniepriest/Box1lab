@@ -32,6 +32,11 @@ export const verkiezingSchema = z.strictObject({
    * van de eigenaar uit te zetten; de site meldt dan duidelijk dat er niet onafhankelijk is gecontroleerd.
    */
   vierOgen: z.boolean().default(true),
+  /**
+   * Alleen bij een akkoord: de Tweede Kamer heeft het plan aangenomen (op `datum`). Er zijn dan geen routes meer;
+   * de site toont wat het aangenomen plan met jou doet en waar het verschil vandaan komt.
+   */
+  aangenomen: z.boolean().default(false),
 });
 
 const wijzigingSoort = z.union([
