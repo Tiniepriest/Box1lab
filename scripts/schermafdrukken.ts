@@ -244,6 +244,12 @@ try {
     /Box 3 in 2027\. Er verandert bijna niets/.test((await pg.locator(".noot").textContent()) ?? ""),
     "belastingplan 2027: noot over box 3 (D-084)",
   );
+  controleer(
+    /Box 3 in 2029: belasting over je echte rendement/.test(
+      (await pg.locator(".box3later").textContent()) ?? "",
+    ) && /geen spaargeld of beleggingen ingevuld/.test((await pg.locator(".box3later").textContent()) ?? ""),
+    "belastingplan 2027: rekenvoorbeeld box 3 in 2029, zonder vermogen een uitnodiging (D-085)",
+  );
   const plan = (await pg.locator(".jaar").textContent()) ?? "";
   controleer(
     /Wat doet het plan met jou\?/.test(plan) &&

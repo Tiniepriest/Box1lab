@@ -755,3 +755,24 @@ Vraag van de eigenaar (13 november 2026): op sociale media ging rond dat iederee
 - Nieuw, optioneel veld `noot` (titel en tekst) in `verkiezing.yaml`, getoond als opvallende kaart onder de uitleg.
 - Inhoud: in 2027 blijft het forfaitaire stelsel met 36% en de tegenbewijsregeling; het heffingsvrij vermogen gaat naar ongeveer € 60.000 (€ 60.280, raming, D-083). Het tarief van 38,5% boven € 60.000 rendement per jaar (amendement 80) gaat met de rest van het nieuwe stelsel in op 1 januari 2029 (Belastingplan 2027, artikel III); volgens de toelichting van het amendement raakt het vrijwel alleen mensen met meer dan een miljoen euro vermogen.
 - De zin over box 3 aan het eind van de uitleg is weg, zodat het niet dubbel staat.
+
+## Fase 33: box 3 in 2029
+
+### D-085 Rekenvoorbeeld box 3 op basis van werkelijk rendement
+
+Wens van de eigenaar (13 november 2026): naast "Wat doet het plan met jou?" een blok voor 2029, met een invulveld voor je rendement, dat laat zien hoeveel belasting je dan betaalt. Geen volledige kolom 2029: de meeste bedragen voor 2029 zijn onbekend, en box 3 hangt dan af van je echte rendement, dat het model niet kent.
+
+**Regels** (`data/vooruitblik/box3-2029.yaml`, schema en rekenregel in `regels/box3werkelijk.ts`):
+
+- Wet werkelijk rendement box 3 (36 748, nr. 2; aangenomen door de Tweede Kamer op 12 februari 2026): het inkomen is het resultaat min € 1.800 heffingsvrij resultaat per persoon (artikel 5.2 en 5.40); rente en dividend zijn reguliere voordelen (artikel 5.7); een negatief resultaat telt als verlies voor zover het hoger is dan € 500 en wordt verrekend met latere jaren (artikel 5.65 en 5.67).
+- Novelle uitbreiding vermogenswinstbelasting box 3 (37 053, aangenomen op 12 november 2026): alle financiële instrumenten vallen onder de vermogenswinstbelasting, dus koerswinst telt pas bij verkoop; de verkrijgingsprijs is de waarde op 1 januari 2029, dus winst van daarvoor blijft onbelast; bij banktegoeden is het rendement de rente. Ingang 1 januari 2029.
+- Tarief 35,5%, boven € 60.000 per persoon 38,5% (Belastingplan 2027, artikel III, amendement 80). Partners verdelen in het voorbeeld gelijk; bij oplopende tarieven is dat het voordeligst.
+- De Eerste Kamer moet over alle drie nog stemmen. Bedragen zonder inflatiecorrectie.
+
+**Vergelijking met 2027:** het forfaitaire stelsel (`box3`), maar nooit meer dan 36% over het echte rendement, zonder heffingsvrij vermogen en met de koersstijging, ook als je niet verkoopt (tegenbewijsregeling; Belastingdienst, "Wat is mijn werkelijk rendement?").
+
+**Invoer:** spaargeld en "beleggingen en tweede woning" uit de situatie; de bezoeker kiest rente op spaargeld, dividend en rente op beleggingen, koersstijging, en of hij de beleggingen in 2029 verkoopt. Startwaarden 1,5%, 2% en 5%: voorbeeldwaarden van Box1lab, geen voorspelling (in het databestand, met die toelichting). Schulden en de andere regels voor een tweede woning (vermogenswinst bij verkoop, huur) zitten niet in het voorbeeld; dat staat erbij. Zonder spaargeld en beleggingen staat er alleen een korte uitleg en de uitnodiging ze in te vullen.
+
+**Opmaak:** naast stap 1 als er ruimte is (twee kolommen vanaf ongeveer 816 px voor de inhoud), anders eronder. Nieuw veld `box3Vooruitblik` (jaar) in `verkiezing.yaml`.
+
+Voorbeeld (alleenstaand, € 40.000 spaargeld en € 150.000 beleggingen, 1,5% / 2% / 5%): 2027 € 2.474, 2029 € 639 zonder verkoop en € 3.302 als je verkoopt. De rekenregels van het model voor 2026 en 2027 veranderen niet: geen nieuwe modelversie, golden tests gelijk.

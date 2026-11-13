@@ -8,6 +8,7 @@
     type Parameters,
     type Partij,
     type Verkiezing,
+    type Box3Werkelijk,
   } from "@box1lab/engine";
   import { euroVerschil, getal, miljard, procent, procentVerschil } from "../../lib/format.ts";
   import { SITUATIE_GEWIJZIGD, leesInvoer, voorbeeldInvoer } from "../../lib/opslag.ts";
@@ -15,6 +16,7 @@
   import { REPO, meldFoutUrl } from "../../lib/project.ts";
   import Figuur from "../grafieken/Figuur.svelte";
   import StavenDivergent from "../grafieken/StavenDivergent.svelte";
+  import Box3Later from "../Box3Later.svelte";
   import JaarVergelijking from "../JaarVergelijking.svelte";
 
   interface Macro {
@@ -33,6 +35,7 @@
     macro,
     preview,
     vooraf = null,
+    box3Later = null,
   }: {
     params: Parameters;
     verkiezing: Verkiezing;
@@ -44,6 +47,8 @@
      * dan wat de partijen of routes daaraan veranderen (stap 2). D-064.
      */
     vooraf?: { huidig: Parameters; nogNiet: string[]; geraamd: string[] } | null;
+    /** Rekenvoorbeeld box 3 op basis van werkelijk rendement, naast stap 1 (fase 33). */
+    box3Later?: Box3Werkelijk | null;
   } = $props();
 
   // Woorden: bij een akkoord gaat het om routes en bronnen, bij een verkiezing om partijen en programma's.
@@ -112,14 +117,17 @@
     <p class="kaart noot" role="note"><strong>{verkiezing.noot.titel}</strong> {verkiezing.noot.tekst}</p>
   {/if}
   {#if vooraf}
-    <JaarVergelijking
-      params={vooraf.huidig}
-      volgend={{ params, nogNiet: vooraf.nogNiet, geraamd: vooraf.geraamd }}
-      {invoer}
-      titel={aangenomen
-        ? `Wat doet het plan met ${samen ? "jullie" : "jou"}?`
-        : `Stap 1: wat doet het plan van het kabinet met ${samen ? "jullie" : "jou"}?`}
-    />
+    <div class:naast={!!box3Later}>
+      <JaarVergelijking
+        params={vooraf.huidig}
+        volgend={{ params, nogNiet: vooraf.nogNiet, geraamd: vooraf.geraamd }}
+        {invoer}
+        titel={aangenomen
+          ? `Wat doet het plan met ${samen ? "jullie" : "jou"}?`
+          : `Stap 1: wat doet het plan van het kabinet met ${samen ? "jullie" : "jou"}?`}
+      />
+      {#if box3Later}<Box3Later {params} regels={box3Later} {invoer} />{/if}
+    </div>
     {#if !aangenomen}<h2 class="stapkop">Stap 2: wat veranderen de {W.meer} daaraan?</h2>{/if}
   {/if}
   {#if aangenomen}
@@ -393,6 +401,13 @@
   }
   .uitleg {
     margin: 0 0 12px;
+  }
+  /* Stap 1 en het rekenvoorbeeld box 3 naast elkaar als er ruimte is (fase 33). */
+  .naast {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: 16px;
+    align-items: start;
   }
   .noot {
     margin: 0;

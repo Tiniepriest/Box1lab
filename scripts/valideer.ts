@@ -18,6 +18,7 @@ import {
   laadVerkiezing,
   laadVerkiezingen,
   laadChangelog,
+  laadBox3Werkelijk,
 } from "@box1lab/engine/node";
 
 let fouten = 0;
@@ -67,6 +68,7 @@ controleer(`data/lab/knoppen.yaml (tegen parameters ${laatste})`, () =>
 for (const v of laadVerkiezingen()) {
   controleer(`data/verkiezingen/${v}/ (alle partijen, ook concepten)`, () => laadVerkiezing(v, true));
 }
+controleer("data/vooruitblik/box3-2029.yaml", () => laadBox3Werkelijk(2029));
 controleer("data/changelog.yaml", () => laadChangelog());
 
 if (todo.length) {
