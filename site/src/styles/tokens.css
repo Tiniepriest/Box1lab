@@ -12,6 +12,8 @@
   --fg: #1d1b18;
   --muted: #6a6359;
   --line: #e2dbcd;
+  /* Rand van invoervelden: minstens 3:1 tegen het vlak (WCAG 1.4.11); --line is alleen voor lijnen. */
+  --rand-invoer: #8a8378;
   --soft: #efe9de;
   --accent: #26365e;
   --accent-soft: #e6e8ef;
@@ -44,6 +46,7 @@
     --fg: #eee9df;
     --muted: #aca392;
     --line: #3a352c;
+    --rand-invoer: #7d776c;
     --soft: #2e2a23;
     --accent: #a9b9e4;
     --accent-soft: #2a2f40;
@@ -71,6 +74,7 @@
   --fg: #eee9df;
   --muted: #aca392;
   --line: #3a352c;
+  --rand-invoer: #7d776c;
   --soft: #2e2a23;
   --accent: #a9b9e4;
   --accent-soft: #2a2f40;

@@ -11,6 +11,7 @@
     invoerSchema,
     marginaleDrukVan,
     metInkomen,
+    MODEL_VERSIE,
     overVanInkomen,
     pasToe,
     type Invoer,
@@ -35,6 +36,7 @@
     presets,
     volgend = null,
     actueel = null,
+    begroting = {},
   }: {
     params: Parameters;
     /** Verdeling van het gestandaardiseerd besteedbaar inkomen, gemaakt tijdens de build (zie lib/verdeling.ts). */
@@ -42,6 +44,8 @@
     presets: Preset[];
     /** Parameters van volgend jaar, met de secties die nog geen bron hebben. */
     volgend?: { params: Parameters; nogNiet: string[]; geraamd: string[] } | null;
+    /** Wat elk voorstel de overheid per jaar oplevert (+) of kost (−), in miljard euro; berekend tijdens de build. */
+    begroting?: Record<string, number>;
     /** Het tabblad met de nieuwste verkiezing of het Belastingplan, voor "Volgende stap" (D-064). */
     actueel?: {
       href: string;
@@ -85,7 +89,13 @@
   });
 
   const geldig = $derived(invoerSchema.safeParse($state.snapshot(invoer)));
-  const huishouden = $derived(geldig.success ? huishoudenUitInvoer(geldig.data, params) : null);
+  // De laatste geldige invoer: klopt één veld even niet, dan blijft de uitkomst staan (review 3.3).
+  let vorige = $state<Invoer | null>(null);
+  $effect(() => {
+    if (geldig.success) vorige = geldig.data;
+  });
+  const data = $derived(geldig.success ? geldig.data : vorige);
+  const huishouden = $derived(data ? huishoudenUitInvoer(data, params) : null);
   const r = $derived(huishouden ? berekenHuishouden(huishouden, params) : null);
   const marginaal = $derived(huishouden ? marginaleDrukVan(huishouden, params, 0, 100) : 0);
 
@@ -112,7 +122,7 @@
 
   // Boven de zin bovenaan: van bruto naar wat je overhoudt, in één regel die optelt (D-078).
   const opbouw = $derived.by(() => {
-    if (!r) return "";
+    if (!r || !huishouden) return "";
     // "a, b en c"
     const lijst = (x: string[]) => (x.length > 1 ? `${x.slice(0, -1).join(", ")} en ${x.at(-1)}` : x[0]!);
     const belasting = r.belasting + r.zvw;
@@ -135,10 +145,18 @@
       gekregen.push(`${euro(r.toeslagen + r.kinderbijslag)} aan ${wat}`);
     }
     if (r.basisinkomen > 0) gekregen.push(`${euro(r.basisinkomen)} basisinkomen`);
-    const zinnen = [
-      `${samen ? "Jullie bruto inkomen is" : "Je bruto inkomen is"} ${euro(r.bruto)} per jaar.`,
-      betaaldZin,
-    ];
+    // Alleen bijstand: wat je netto krijgt; de gemeente betaalt de belasting over de bruto bijstand.
+    const alleenBijstand = huishouden.leden.every(
+      (l) => l.soort === "uitkering" && l.uitkeringSoort === "bijstand",
+    );
+    const zinnen = alleenBijstand
+      ? [
+          `${samen ? "Jullie krijgen" : "Je krijgt"} ${euro((r.bruto - r.belasting - r.zvw) / 12)} bijstand per maand. De gemeente betaalt de belasting daarover.`,
+        ]
+      : [
+          `${samen ? "Jullie bruto inkomen is" : "Je bruto inkomen is"} ${euro(r.bruto)} per jaar.`,
+          betaaldZin,
+        ];
     if (gekregen.length) zinnen.push(`${samen ? "Jullie krijgen" : "Je krijgt"} ${lijst(gekregen)}.`);
     return zinnen.join(" ");
   });
@@ -157,8 +175,8 @@
 
   // Hetzelfde huishouden met de regels van volgend jaar, bij hetzelfde bruto inkomen: de kern voor "Volgende stap".
   const volgendJaar = $derived.by(() => {
-    if (!volgend || !jaarPagina || !geldig.success || !r) return null;
-    const r2 = berekenHuishouden(huishoudenUitInvoer(geldig.data, volgend.params), volgend.params);
+    if (!volgend || !jaarPagina || !data || !r) return null;
+    const r2 = berekenHuishouden(huishoudenUitInvoer(data, volgend.params), volgend.params);
     return r2.besteedbaar - r.besteedbaar;
   });
 
@@ -174,17 +192,73 @@
   // Meer dan één volwassene, of kinderen: dan spreken we het huishouden aan met "jullie".
   const samen = $derived(invoer.personen.length > 1 || invoer.kinderen.length > 0);
 
+  /** "kost de overheid € 3,7 mld per jaar" of "levert de overheid € 29,8 mld per jaar op". */
+  function overheid(id: string): string | undefined {
+    const mld = begroting[id];
+    if (mld === undefined) return undefined;
+    const bedrag = `€ ${getal(Math.abs(mld), 1)} mld`;
+    if (Math.abs(mld) < 0.05) return "kost de overheid bijna niets";
+    return mld < 0 ? `kost de overheid ${bedrag} per jaar` : `levert de overheid ${bedrag} per jaar op`;
+  }
+
+  // Ongeveer tien punten van de curve voor de tabel.
+  const curvePunten = $derived(
+    curve ? curve.x.map((_, i) => i).filter((i) => i % 12 === 0 || i === curve.x.length - 1) : [],
+  );
+
+  // Wat er niet in de berekening zit; alleen wat voor deze situatie kan uitmaken.
+  const nietIn = $derived.by(() => {
+    const x = ["box 2 (een eigen bv)", "gemeentelijke regelingen en afronding door de Belastingdienst"];
+    if (!data) return x;
+    const d = data;
+    if (d.vermogen + d.beleggingen > 0)
+      x.push("de tegenbewijsregeling in box 3 (als je echte rendement lager was)");
+    if (d.personen.some((q) => q.soort === "bijstand"))
+      x.push("jongerennormen, de kostendelersnorm en bijverdienen in de bijstand");
+    if (d.wonen === "huur" && d.huurPerMaand > 0) x.push("het inkomen van medebewoners bij de huurtoeslag");
+    if (d.personen.some((q) => q.soort === "aow" || heeftAowLeeftijd(q.leeftijd, params)))
+      x.push("een onvolledige AOW, bijvoorbeeld na jaren in het buitenland");
+    x.push("alimentatie, aftrek van giften en zorgkosten, en veranderingen halverwege het jaar");
+    return x;
+  });
+
+  // Welk veld klopt niet? Met een aanwijzing waar (review 3.3).
+  const foutmelding = $derived.by(() => {
+    if (geldig.success) return "";
+    const pad0 = geldig.error.issues[0]?.path ?? [];
+    const wie = pad0[0] === "personen" ? (pad0[1] === 1 ? " van je partner" : "") : "";
+    const veld = String(pad0.at(-1) ?? "");
+    const namen: Record<string, string> = {
+      leeftijd: `Vul de leeftijd${wie} in, tussen 15 en 110 jaar.`,
+      bedrag: `Vul het bedrag${wie} in, 0 of meer.`,
+      extraPerJaar: "Vul de bonus in, 0 of meer.",
+      pensioenpremiePerMaand: "Vul de pensioenpremie in, 0 of meer.",
+      huurPerMaand: "Vul de huur in, 0 of meer.",
+      woz: "Vul de WOZ-waarde in, 0 of meer.",
+      hypotheekrente: "Vul de hypotheekrente in, 0 of meer.",
+      vermogen: "Vul je spaargeld in, 0 of meer.",
+      beleggingen: "Vul je beleggingen in, 0 of meer.",
+      schulden: "Vul je schulden in, 0 of meer.",
+      urenPerMaand: "Vul de uren kinderopvang in, 0 of meer.",
+      uurprijs: "Vul de uurprijs van de kinderopvang in, 0 of meer.",
+      inkomen: "Vul het inkomen van je kind in, 0 of meer.",
+    };
+    if (pad0[0] === "kinderen" && veld === "leeftijd")
+      return "Vul de leeftijd van elk kind in, tussen 0 en 30 jaar.";
+    return namen[veld] ?? "Vul alle velden in met een getal (0 mag ook).";
+  });
+
   // Waarom een toeslag of de bijstand er niet (helemaal) is (D-088): een korte uitleg onder het bedrag bovenaan.
   const letOp = $derived.by(() => {
-    if (!r || !geldig.success) return [];
+    if (!r || !data) return [];
     const x: string[] = [];
     const ht = params.toeslagen.huurtoeslag;
-    const bijstand = geldig.data.personen.some(
+    const bijstand = data.personen.some(
       (q) => q.soort === "bijstand" && !heeftAowLeeftijd(q.leeftijd, params),
     );
-    if (bijstand && bijstandVermogenTeHoog(geldig.data, params))
+    if (bijstand && bijstandVermogenTeHoog(data, params))
       x.push(
-        `Met ${euro(bijstandVermogen(geldig.data))} aan spaargeld en beleggingen krijg ${samen ? "jullie" : "je"} geen bijstand: de grens is ${euro(bijstandVermogensgrens(geldig.data, params))}. Eerst gebruik ${samen ? "jullie" : "je"} dat geld.`,
+        `Met ${euro(bijstandVermogen(data))} aan spaargeld en beleggingen krijg ${samen ? "jullie" : "je"} geen bijstand: de grens is ${euro(bijstandVermogensgrens(data, params))}. Eerst gebruik ${samen ? "jullie" : "je"} dat geld.`,
       );
     if (r.beperkingen.kinderopvangtoeslag === "werk")
       x.push(
@@ -220,24 +294,30 @@
     <InvoerFormulier bind:invoer {params} />
   </section>
 
-  <section class="uitkomsten" aria-live="polite" aria-labelledby="titel-uitkomst" bind:this={uitkomsten}>
+  <section class="uitkomsten" aria-labelledby="titel-uitkomst" bind:this={uitkomsten}>
     <h2 id="titel-uitkomst" class="visueel-verborgen">Uitkomst</h2>
-    {#if !geldig.success || !r}
-      <p class="waarschuwing">Vul alle velden in met een getal (0 mag ook).</p>
-    {:else}
+    {#if !geldig.success}
+      <p class="waarschuwing" role="status">
+        {foutmelding}{r ? " Hieronder staat nog de uitkomst van wat je eerst invulde." : ""}
+      </p>
+    {/if}
+    {#if r && data}
       <p class="opbouw">{opbouw}</p>
-      <p class="kernzin">
-        {eigen ? (samen ? "Jullie houden" : "Je houdt") : "In dit voorbeeld houd je"}
-        <strong>{euro(over / 12)}</strong> per maand over om van te leven ({euro(over)} per jaar).
+      <!-- Het antwoord als grootste getal op de pagina; alleen deze regel wordt voorgelezen als hij verandert. -->
+      <p class="kernzin" aria-live="polite">
+        <span class="kern-label"
+          >{eigen ? (samen ? "Jullie houden" : "Je houdt") : "In dit voorbeeld houd je"} per maand over om van te
+          leven</span
+        >
+        <strong class="kern-bedrag">{euro(over / 12)}</strong>
+        <span class="kern-jaar">{euro(over)} per jaar</span>
       </p>
       {#if letOp.length}
         <ul class="let-op">
           {#each letOp as zin (zin)}<li>{zin}</li>{/each}
         </ul>
       {/if}
-      {#if geldig.success}
-        <Loonstrook {params} invoer={geldig.data} box3={r.box3} />
-      {/if}
+      <Loonstrook {params} invoer={data} box3={r.box3} />
 
       <div class="kerngetallen">
         {#if invoer.personen[0]!.soort === "bijstand"}
@@ -263,10 +343,13 @@
           </div>
         </div>
         <div class="kerngetal">
-          <div class="l">Je plek in Nederland</div>
+          <div class="l">Je plek in Nederland (schatting)</div>
           {#if positie !== null}
-            <div class="w">{getal(positie * 100)}%</div>
-            <div class="t">van de mensen heeft minder te besteden dan {samen ? "jullie" : "jij"}</div>
+            <div class="w">ongeveer {getal(positie * 100)}%</div>
+            <div class="t">
+              van de mensen heeft minder te besteden dan {samen ? "jullie" : "jij"}, volgens een nagebootste
+              bevolking
+            </div>
           {/if}
         </div>
       </div>
@@ -293,6 +376,7 @@
                       ? " (voorlopig)"
                       : ""}.
                   {/if}
+                  Bij hetzelfde bruto inkomen; prijzen stijgen ook, dus dit is geen koopkrachtcijfer.
                 {/if}
                 {actueel.soort === "akkoord"
                   ? actueel.aangenomen
@@ -347,9 +431,7 @@
         {/if}
       </div>
 
-      {#if geldig.success}
-        <WatAls {params} invoer={geldig.data} {samen} />
-      {/if}
+      <WatAls {params} invoer={data} {samen} />
 
       {#if curve}
         <div class="kaart">
@@ -362,15 +444,30 @@
             {#snippet grafiek()}
               <Lijnen
                 x={curve.x}
-                reeksen={[{ naam: "Te besteden", waarden: curve.besteedbaar, soort: "scenario" }]}
+                reeksen={[{ naam: "Wat je overhoudt", waarden: curve.over, soort: "scenario" }]}
                 markering={{ x: curve.nu, label: "jij" }}
-                beschrijving="Besteedbaar inkomen bij verschillende bruto inkomens"
+                beschrijving={`Wat je per jaar overhoudt bij verschillende bruto inkomens. Bij jouw inkomen: ${euro(over)} per jaar.`}
               />
+            {/snippet}
+            {#snippet tabel()}
+              <table class="data">
+                <thead><tr><th>Bruto per jaar</th><th>Wat je overhoudt</th><th>Marginale druk</th></tr></thead
+                >
+                <tbody>
+                  {#each curvePunten as i (i)}
+                    <tr>
+                      <td class="num">{euro(curve.x[i]!)}</td>
+                      <td class="num">{euro(curve.over[i]!)}</td>
+                      <td class="num">{procent(curve.marginaleDruk[i]!, 0)}</td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
             {/snippet}
           </Figuur>
           <Figuur
             titel="Hoeveel gaat er af van elke extra euro?"
-            uitleg="De marginale druk: belasting plus toeslagen die je kwijtraakt. Pieken boven de 50% heten de armoedeval."
+            uitleg="De marginale druk: belasting plus toeslagen die je kwijtraakt. Boven de stippellijn houd je minder dan de helft over van elke extra euro. Bij lage inkomens heet dat de armoedeval."
           >
             {#snippet grafiek()}
               <Lijnen
@@ -380,54 +477,72 @@
                 yMin={-20}
                 yMax={110}
                 markering={{ x: curve.nu, label: "jij" }}
-                beschrijving="Marginale druk bij verschillende bruto inkomens"
+                hulplijn={{ y: 50, label: "50%" }}
+                beschrijving={`Marginale druk bij verschillende bruto inkomens. Bij jouw inkomen: ${procent(marginaal, 0)}.`}
               />
+            {/snippet}
+            {#snippet tabel()}
+              <table class="data">
+                <thead><tr><th>Bruto per jaar</th><th>Marginale druk</th></tr></thead>
+                <tbody>
+                  {#each curvePunten as i (i)}
+                    <tr>
+                      <td class="num">{euro(curve.x[i]!)}</td>
+                      <td class="num">{procent(curve.marginaleDruk[i]!, 0)}</td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
             {/snippet}
           </Figuur>
         </div>
       {/if}
-      {#if volgend && !jaarPagina && geldig.success}
+      {#if volgend && !jaarPagina}
         <JaarVergelijking {params} {volgend} {invoer} />
       {/if}
       {#if voorstellen.length}
         <div class="kaart">
           <Figuur
             titel="Wat doen de voorstellen met {samen ? 'jullie' : 'jou'}?"
-            uitleg="Verandering van wat {samen
-              ? 'jullie'
-              : 'je'} per maand overhoudt als het voorstel zou worden ingevoerd."
+            uitleg="Plus: {samen
+              ? 'jullie houden'
+              : 'je houdt'} per maand meer over als het voorstel zou worden ingevoerd; min: minder. Daarbij staat wat het voorstel de overheid per jaar kost of oplevert; dat geld komt ergens vandaan of gaat ergens naartoe."
           >
-            {#snippet legenda()}
-              <span><i class="legenda-blok" style="background: var(--gain)"></i>meer over</span>
-              <span><i class="legenda-blok" style="background: var(--loss)"></i>minder over</span>
-            {/snippet}
             {#snippet grafiek()}
               <StavenDivergent
                 rijen={voorstellen.map((v) => ({
                   label: v.preset.naam,
+                  sub: overheid(v.preset.id),
                   waarde: v.d / 12,
                   tekst: euroVerschil(v.d / 12),
                   tip: [
                     v.preset.naam,
                     `${euroVerschil(v.d / 12)} per maand`,
                     `${euroVerschil(v.d)} per jaar`,
+                    ...(overheid(v.preset.id) ? [overheid(v.preset.id)!] : []),
                   ],
                 }))}
                 asLabel={(v) => euroVerschil(v)}
                 drempel={5}
                 labelBreedte={220}
+                neutraal
+                subAltijd
                 beschrijving="Verandering per maand per voorstel voor dit huishouden"
               />
             {/snippet}
             {#snippet tabel()}
               <table class="data">
-                <thead><tr><th>Voorstel</th><th>Per maand</th><th>Per jaar</th></tr></thead>
+                <thead
+                  ><tr><th>Voorstel</th><th>Per maand</th><th>Per jaar</th><th>Overheid per jaar</th></tr
+                  ></thead
+                >
                 <tbody>
                   {#each voorstellen as v (v.preset.id)}
                     <tr>
                       <td><a href={pad(`voorstellen/${v.preset.id}`)}>{v.preset.naam}</a></td>
                       <td class="num">{euroVerschil(v.d / 12)}</td>
                       <td class="num">{euroVerschil(v.d)}</td>
+                      <td>{overheid(v.preset.id) ?? "—"}</td>
                     </tr>
                   {/each}
                 </tbody>
@@ -439,12 +554,16 @@
           </p>
         </div>
       {/if}
-      <p class="notitie">
-        Dit is een vereenvoudigde berekening voor {params.jaar}. Niet meegenomen: box 2, de
-        tegenbewijsregeling in box 3, jongerennormen en de kostendelersnorm in de bijstand, gemeentelijke
-        regelingen en afronding door de Belastingdienst.
-        <a href={pad("methodiek")}>Hoe rekenen we?</a>
-      </p>
+      <div class="notitie niet-in">
+        <p>
+          Dit is een vereenvoudigde berekening: regels van {params.jaar}, model {MODEL_VERSIE}. Wat zit er
+          niet in?
+        </p>
+        <ul>
+          {#each nietIn as zin (zin)}<li>{zin}</li>{/each}
+        </ul>
+        <p><a href={pad("methodiek")}>Hoe rekenen we?</a></p>
+      </div>
     {/if}
   </section>
 </div>
@@ -535,10 +654,33 @@
     font-size: 15px;
   }
   .kernzin {
-    font-family: var(--f-display);
-    font-size: 23px;
-    line-height: 1.35;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .kern-label {
+    font-size: 16px;
+  }
+  .kern-bedrag {
+    font-family: var(--f-display);
+    font-size: 44px;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .kern-jaar {
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .kerngetal .w {
+    font-size: 26px;
+  }
+  .niet-in p {
+    margin: 0;
+  }
+  .niet-in ul {
+    margin: 4px 0;
+    padding-left: 18px;
   }
   .let-op {
     margin: 0;

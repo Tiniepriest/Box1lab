@@ -14,6 +14,7 @@
     yMin,
     yMax,
     markering,
+    hulplijn,
     beschrijving,
     xTitel = "bruto inkomen per jaar",
   }: {
@@ -26,6 +27,8 @@
     yMax?: number;
     /** Optioneel: een punt om te markeren (bijvoorbeeld "jij"). */
     markering?: { x: number; label: string };
+    /** Optioneel: een horizontale stippellijn met label, met het gebied erboven licht gekleurd (bijvoorbeeld 50%). */
+    hulplijn?: { y: number; label: string };
     beschrijving: string;
     xTitel?: string;
   } = $props();
@@ -98,6 +101,11 @@
       >
     {/each}
     <text x={L + IB / 2} y={H - 3} text-anchor="middle" class="as">{xTitel}</text>
+    {#if hulplijn && hulplijn.y > bereik.lo && hulplijn.y < bereik.hi}
+      <rect x={L} y={T} width={IB} height={Y(hulplijn.y) - T} class="boven-hulplijn" />
+      <line x1={L} x2={B - R} y1={Y(hulplijn.y)} y2={Y(hulplijn.y)} class="hulplijn-y" />
+      <text x={B - R} y={Y(hulplijn.y) - 4} text-anchor="end" class="hulplijn-tekst">{hulplijn.label}</text>
+    {/if}
     {#each reeksen as r (r.naam)}
       <path d={pad(r.waarden)} class={r.soort} />
     {/each}
@@ -157,6 +165,19 @@
     stroke: var(--fg);
     stroke-width: 1;
     stroke-dasharray: 2 3;
+  }
+  .boven-hulplijn {
+    fill: var(--loss);
+    opacity: 0.06;
+  }
+  .hulplijn-y {
+    stroke: var(--loss);
+    stroke-width: 1;
+    stroke-dasharray: 4 3;
+  }
+  .hulplijn-tekst {
+    fill: var(--loss-tekst);
+    font-size: 11px;
   }
   .markering-tekst {
     fill: var(--fg);

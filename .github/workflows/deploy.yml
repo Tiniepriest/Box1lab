@@ -24,6 +24,12 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      # Dezelfde controles als CI, zodat er nooit een site live gaat die daar zou falen.
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run valideer
+      - run: npm run kalibreer:controle
       - run: npm test
       - run: npm run build
       - uses: actions/upload-pages-artifact@v5

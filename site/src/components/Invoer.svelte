@@ -128,15 +128,13 @@
 
 <form class="invoer" onsubmit={(e) => e.preventDefault()} aria-label="Jouw situatie">
   <p class="privacy">
-    <strong>Privacy:</strong> wat je invult blijft in je eigen browser. Er gaat niets naar een server. We onthouden
-    het op dit apparaat, zodat je jouw situatie ook bij het Belastingplan en in het lab ziet, en de volgende keer
-    verder kunt waar je was. Op een computer die je met anderen deelt? Zet onderaan "Onthoud" uit, of wis je gegevens
-    als je klaar bent.
+    <strong>Privacy:</strong> wat je invult, verlaat je browser niet. We onthouden het op dit apparaat; op een gedeelde
+    computer zet je onderaan "Onthoud" uit.
   </p>
 
   <fieldset>
     <legend>1. Je huishouden</legend>
-    <div class="keuze" role="radiogroup" aria-label="Woon je alleen of met een partner?">
+    <div class="keuze" role="group" aria-label="Woon je alleen of met een partner?">
       <button type="button" aria-pressed={!partner} onclick={() => zetPartner(false)}>Alleen</button>
       <button type="button" aria-pressed={partner} onclick={() => zetPartner(true)}>Met partner</button>
     </div>
@@ -175,10 +173,22 @@
       {#if persoon.soort === "bijstand"}
         <p class="notitie">
           De bijstand is een vast bedrag: {euro(bijstandsnormPerJaar(params, partner) / 12)} netto per maand
-          {partner ? "voor jullie samen" : ""}, inclusief vakantiegeld (gemiddelde over {params.jaar}).
+          {partner ? "voor jullie samen" : ""}, met vakantiegeld. Dat is het gemiddelde over {params.jaar}.
           {#if partner}Heeft je partner inkomen, dan gaat dat er netto vanaf.{/if}
-          Niet in het model: lagere bedragen onder de {params.bijstand.minimumLeeftijd} jaar, de kostendelersnorm
-          als je met andere volwassenen woont, en bijverdienen.
+          Heb je meer dan {euro(params.bijstand.vermogensgrens[partner ? "gezin" : "alleenstaand"])} aan spaargeld
+          en beleggingen{partner
+            ? ""
+            : " (met kinderen: " + euro(params.bijstand.vermogensgrens.gezin) + ")"}, dan krijg je geen
+          bijstand.
+        </p>
+        <p class="notitie">
+          Let op: lagere bedragen onder de {params.bijstand.minimumLeeftijd} jaar, de kostendelersnorm (als je met
+          andere volwassenen woont) en bijverdienen zitten er niet in.
+        </p>
+      {/if}
+      {#if persoon.soort === "geen" && !heeftAowLeeftijd(persoon.leeftijd, params)}
+        <p class="notitie">
+          Heb je geen inkomen en weinig spaargeld? Dan kun je misschien bijstand krijgen. Kies dan "Bijstand".
         </p>
       {/if}
       {#if persoon.soort !== "geen" && persoon.soort !== "bijstand" && !(heeftAowLeeftijd(persoon.leeftijd, params) && persoon.soort === "werknemersverzekering")}
@@ -202,6 +212,10 @@
             </select>
           </div>
         </div>
+        <!-- Geen rekenregel, alleen een vraag: zo'n maandbedrag is bijna altijd een jaarbedrag. -->
+        {#if persoon.periode === "maand" && persoon.bedrag > 50000}
+          <p class="notitie">Klopt dit? Je vulde {euro(persoon.bedrag)} per maand in.</p>
+        {/if}
         {#if persoon.periode === "maand" && persoon.soort !== "aow" && persoon.soort !== "zzp"}
           <div class="vinkjes">
             <label class="vinkje">
@@ -210,7 +224,7 @@
                 checked={!persoon.inclusiefVakantiegeld}
                 onchange={(e) => (persoon.inclusiefVakantiegeld = !e.currentTarget.checked)}
               />
-              Vakantiegeld
+              Vakantiegeld komt er nog bij (8%)
             </label>
             {#if persoon.soort === "loondienst"}
               <label class="vinkje">
@@ -317,7 +331,7 @@
 
   <fieldset>
     <legend>4. Wonen</legend>
-    <div class="keuze" role="radiogroup" aria-label="Hoe woon je?">
+    <div class="keuze" role="group" aria-label="Hoe woon je?">
       <button type="button" aria-pressed={invoer.wonen === "huur"} onclick={() => (invoer.wonen = "huur")}
         >Huur</button
       >
@@ -327,7 +341,7 @@
     </div>
     {#if invoer.wonen === "huur"}
       <div class="rij">
-        <label for="huur">Kale huur per maand (€)</label>
+        <label for="huur">Huur per maand, zonder servicekosten (€)</label>
         <input id="huur" type="number" min="0" step="10" bind:value={invoer.huurPerMaand} />
       </div>
       <p class="notitie">
@@ -507,7 +521,7 @@
     gap: 14px;
   }
   .privacy {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--muted);
     margin: 0;
   }
@@ -538,7 +552,7 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-size: 13px;
+    font-size: 14px;
   }
   /* Op een smal scherm staat de vraag boven het veld. */
   @media (max-width: 480px) {
@@ -629,7 +643,7 @@
     display: flex;
     gap: 8px;
     align-items: center;
-    font-size: 13px;
+    font-size: 14px;
   }
   .kind {
     display: flex;
@@ -644,7 +658,7 @@
   .hint {
     display: block;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 14px;
   }
   .opslaan {
     display: flex;

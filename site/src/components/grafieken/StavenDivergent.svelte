@@ -21,12 +21,18 @@
     asLabel = (v: number) => String(v),
     drempel = 0,
     labelBreedte = 150,
+    neutraal = false,
+    subAltijd = false,
     beschrijving,
   }: {
     rijen: Rij[];
     asLabel?: (v: number) => string;
     drempel?: number;
     labelBreedte?: number;
+    /** Eén kleur voor plus en min (het teken staat bij de waarde), zodat de kleur geen oordeel geeft. */
+    neutraal?: boolean;
+    /** De toelichting altijd tonen; past hij niet naast het label, dan op een eigen regel eronder. */
+    subAltijd?: boolean;
     beschrijving: string;
   } = $props();
 
@@ -41,8 +47,10 @@
   const LB = $derived(boven ? 0 : LBMax);
   /** Past label plus toelichting op één regel boven de staaf? Anders laten we de toelichting weg. */
   const past = (r: Rij) => r.label.length * 7.2 + ((r.sub ?? "").length + 3) * 6.2 <= B;
-  const RIJ = $derived(boven ? 50 : 34);
-  const LABELRUIMTE = $derived(boven ? 17 : 0);
+  // Labels boven de staven en een toelichting die moet blijven staan maar niet naast het label past: twee regels.
+  const tweeRegels = $derived(boven && subAltijd && rijen.some((r) => r.sub && !past(r)));
+  const RIJ = $derived(boven ? (tweeRegels ? 64 : 50) : 34);
+  const LABELRUIMTE = $derived(boven ? (tweeRegels ? 31 : 17) : 0);
   const RAND = 12;
   const H = $derived(rijen.length * RIJ + 28);
   // Zonder verschillen (huidig beleid) toch een leesbare as van −1 tot +1.
@@ -71,6 +79,7 @@
 
   function kleur(v: number): string {
     if (Math.abs(v) <= drempel) return "var(--zero)";
+    if (neutraal) return "var(--accent)";
     return v > 0 ? "var(--gain)" : "var(--loss)";
   }
 
@@ -100,7 +109,10 @@
         onpointerleave={() => (tip = null)}
       >
         <rect x="0" y={y - 4 - LABELRUIMTE} width={B} height={RIJ} fill="transparent" />
-        {#if boven}
+        {#if boven && tweeRegels}
+          <text x="0" y={y - 21} class="label">{r.label}</text>
+          {#if r.sub}<text x="0" y={y - 7} class="sub">{r.sub}</text>{/if}
+        {:else if boven}
           <text x="0" y={y - 7} class="label"
             >{r.label}{#if r.sub && past(r)}<tspan class="sub"> · {r.sub}</tspan>{/if}</text
           >
