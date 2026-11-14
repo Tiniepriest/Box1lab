@@ -150,8 +150,17 @@
         <input id="leeftijd-{i}" type="number" min="15" max="110" bind:value={persoon.leeftijd} />
       </div>
       {#if heeftAowLeeftijd(persoon.leeftijd, params) && persoon.soort !== "aow"}
+        <!-- Vanaf de AOW-leeftijd rekent de engine de AOW vanzelf mee (D-088). -->
         <p class="notitie">
-          Je hebt de AOW-leeftijd ({params.uitkeringen.aowLeeftijd}). Kies "AOW en pensioen".
+          Je hebt de AOW-leeftijd ({params.uitkeringen.aowLeeftijd}): we rekenen je AOW mee.
+          {#if persoon.soort === "loondienst" || persoon.soort === "zzp"}
+            Vul hieronder in wat je daarnaast verdient. Heb je ook pensioen? Kies dan "AOW en pensioen" en tel
+            je loon bij het pensioen op.
+          {:else if persoon.soort === "bijstand" || persoon.soort === "werknemersverzekering"}
+            Bijstand, WW en WIA stoppen bij de AOW-leeftijd; we rekenen alleen met de AOW.
+          {:else}
+            Heb je ook pensioen? Kies dan "AOW en pensioen".
+          {/if}
         </p>
       {/if}
       <div class="rij">
@@ -172,14 +181,18 @@
           als je met andere volwassenen woont, en bijverdienen.
         </p>
       {/if}
-      {#if persoon.soort !== "geen" && persoon.soort !== "bijstand"}
+      {#if persoon.soort !== "geen" && persoon.soort !== "bijstand" && !(heeftAowLeeftijd(persoon.leeftijd, params) && persoon.soort === "werknemersverzekering")}
         <div class="rij">
           <label for="bedrag-{i}">
             {persoon.soort === "aow"
               ? "Aanvullend pensioen, bruto"
               : persoon.soort === "zzp"
-                ? "Winst"
-                : "Bruto bedrag"}
+                ? heeftAowLeeftijd(persoon.leeftijd, params)
+                  ? "Winst naast je AOW"
+                  : "Winst"
+                : persoon.soort === "loondienst" && heeftAowLeeftijd(persoon.leeftijd, params)
+                  ? "Bruto loon naast je AOW"
+                  : "Bruto bedrag"}
           </label>
           <div class="bedrag">
             <input id="bedrag-{i}" type="number" min="0" step="50" bind:value={persoon.bedrag} />
@@ -241,7 +254,10 @@
           </p>
         {/if}
         {#if persoon.soort === "aow"}
-          <p class="notitie">De AOW zelf rekenen we volgens de bedragen van de SVB.</p>
+          <p class="notitie">
+            De AOW zelf rekenen we volgens de bedragen van de SVB. Vul je pensioen in zoals het op je rekening
+            komt, bruto; vakantiegeld tellen we er niet bij.
+          </p>
         {/if}
       {/if}
     </fieldset>
@@ -318,6 +334,12 @@
         Kale huur: zonder servicekosten, gas, water en licht. Staat in je huurcontract. Woon je in,
         bijvoorbeeld bij je ouders? Vul dan 0 in.
       </p>
+      {#if invoer.huurPerMaand > 0}
+        <label class="vinkje">
+          <input type="checkbox" bind:checked={invoer.zelfstandigeWoning} />
+          Ik huur een hele woning, met een eigen voordeur, keuken en toilet (geen kamer)
+        </label>
+      {/if}
     {:else if invoer.wonen === "koop"}
       <div class="rij">
         <label for="woz">WOZ-waarde (€)</label>

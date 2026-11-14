@@ -45,6 +45,10 @@ export function samenvatting(invoer: Invoer): string[] {
     ),
   );
   if (invoer.wonen === "koop") regels.push(`Koopwoning, WOZ ${euro(invoer.woz)}`);
-  else regels.push(invoer.huurPerMaand > 0 ? `Huur ${euro(invoer.huurPerMaand)} per maand` : "Geen huur");
+  else if (invoer.huurPerMaand <= 0) regels.push("Geen huur");
+  else
+    regels.push(
+      `${invoer.zelfstandigeWoning ? "Huur" : "Kamer, huur"} ${euro(invoer.huurPerMaand)} per maand`,
+    );
   return regels;
 }

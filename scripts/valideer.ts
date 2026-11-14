@@ -20,6 +20,7 @@ import {
   laadChangelog,
   laadBox3Werkelijk,
 } from "@box1lab/engine/node";
+import { staffelSprongen, type Parameters } from "@box1lab/engine";
 
 let fouten = 0;
 const todo: string[] = [];
@@ -47,8 +48,30 @@ function controleer(naam: string, f: () => unknown): void {
 const jaren = parameterJaren();
 
 console.log("Databestanden controleren:");
+/** Elke staffel van de heffingskortingen loopt door: geen sprong waar een stuk begint (een tikfout). */
+function staffelsDoorlopend(p: Parameters): Parameters {
+  const h = p.heffingskortingen;
+  const staffels = {
+    "algemeen.staffel": h.algemeen.staffel,
+    "algemeen.staffelAow": h.algemeen.staffelAow,
+    "arbeid.staffel": h.arbeid.staffel,
+    "arbeid.staffelAow": h.arbeid.staffelAow,
+    "ouderen.staffel": h.ouderen.staffel,
+    "combinatie.staffel": h.combinatie.staffel,
+    "combinatie.staffelAow": h.combinatie.staffelAow,
+  };
+  const fout = Object.entries(staffels).flatMap(([naam, s]) =>
+    staffelSprongen(s).map(
+      (x) =>
+        `heffingskortingen.${naam}: bij € ${x.vanaf} komt het vorige stuk uit op € ${x.verwacht.toFixed(2)}, maar het nieuwe begint bij € ${x.bedrag}`,
+    ),
+  );
+  if (fout.length) throw new Error(`data/parameters/${p.jaar}.yaml: ${fout.join("; ")}`);
+  return p;
+}
+
 for (const jaar of jaren) {
-  controleer(`data/parameters/${jaar}.yaml`, () => laadParameters(jaar));
+  controleer(`data/parameters/${jaar}.yaml`, () => staffelsDoorlopend(laadParameters(jaar)));
   // Een nieuw (voorlopig) jaar heeft nog geen kalibratie en bevolking; dan rekent alleen de calculator ermee.
   if (existsSync(join(DATA_MAP, `kalibratie/${jaar}.yaml`))) {
     controleer(`data/kalibratie/${jaar}.yaml`, () => laadKalibratie(jaar));

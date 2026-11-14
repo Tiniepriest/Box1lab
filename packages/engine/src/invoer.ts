@@ -19,7 +19,7 @@ export const persoonInvoerSchema = z.strictObject({
   /** Bruto inkomen uit werk of uitkering; bij "zzp" de winst; bij "aow" het aanvullend pensioen; niet bij bijstand. */
   bedrag,
   periode: z.enum(["jaar", "maand"]),
-  /** Alleen bij loondienst en uitkering per maand: zit het vakantiegeld al in het maandbedrag? */
+  /** Alleen bij loondienst en WW of WIA per maand: zit het vakantiegeld al in het maandbedrag? */
   inclusiefVakantiegeld: z.boolean(),
   /** Alleen bij loondienst per maand: een 13e maand, één maandbedrag extra per jaar. */
   dertiendeMaand: z.boolean().default(false),
@@ -48,6 +48,8 @@ export const invoerSchema = z.strictObject({
   /** Wie inwoont of geen woonlasten heeft, kiest "huur" met huur 0: dat rekent hetzelfde. */
   wonen: z.enum(["huur", "koop"]),
   huurPerMaand: bedrag,
+  /** Alleen bij huur: een zelfstandige woning met eigen voordeur, keuken en toilet (geen kamer). */
+  zelfstandigeWoning: z.boolean().default(true),
   woz: bedrag,
   hypotheekrente: bedrag,
   /** Spaargeld en betaalrekeningen op 1 januari (box 3: banktegoeden). */
@@ -69,19 +71,55 @@ export function valideerInvoer(data: unknown): Invoer {
 
 /**
  * Bruto jaarinkomen uit wat iemand invult: per maand of per jaar, met of zonder vakantiegeld, plus wat er bij
- * loondienst eens per jaar bij komt (13e maand, bonus). Een zzp'er krijgt geen vakantiegeld.
+ * loondienst eens per jaar bij komt (13e maand, bonus). Vakantiegeld komt er alleen bij loon en bij WW of WIA bij;
+ * een zzp'er krijgt het niet, en bij een pensioen tellen we het bedrag dat je per maand krijgt (D-088).
  */
 export function jaarbedrag(persoon: PersoonInvoer, p: Parameters): number {
   const loondienst = persoon.soort === "loondienst";
   const extra = loondienst ? persoon.extraPerJaar : 0;
   if (persoon.periode === "jaar") return persoon.bedrag + extra;
-  const metVakantiegeld = persoon.soort !== "zzp" && !persoon.inclusiefVakantiegeld;
+  const metVakantiegeld =
+    (loondienst || persoon.soort === "werknemersverzekering") && !persoon.inclusiefVakantiegeld;
   const factor = metVakantiegeld ? 1 + p.loon.vakantiegeld / 100 : 1;
   const dertiende = loondienst && persoon.dertiendeMaand ? persoon.bedrag : 0;
   return persoon.bedrag * 12 * factor + dertiende + extra;
 }
 
+/**
+ * Vanaf de AOW-leeftijd krijg je AOW, ook als je werkt (D-088). Werk je, dan komt je loon of winst erbij. Bijstand,
+ * WW en WIA stoppen bij de AOW-leeftijd: dan rekenen we alleen met de AOW.
+ */
+function lidMetAow(persoon: PersoonInvoer, partners: boolean, p: Parameters): Lid {
+  const aow = aowPerJaar(p, partners);
+  const leeftijd = persoon.leeftijd;
+  const bedrag = jaarbedrag(persoon, p);
+  if (persoon.soort === "loondienst")
+    return {
+      inkomen: aow + bedrag,
+      soort: "werk",
+      uitkering: aow,
+      aowLeeftijd: true,
+      leeftijd,
+      pensioenpremie: persoon.pensioenpremiePerMaand * 12,
+    };
+  if (persoon.soort === "zzp")
+    return {
+      inkomen: aow + bedrag,
+      soort: "werk",
+      uitkering: aow,
+      aowLeeftijd: true,
+      leeftijd,
+      ondernemer: { urencriterium: persoon.urencriterium, starter: persoon.starter },
+    };
+  return { inkomen: aow + (persoon.soort === "aow" ? bedrag : 0), soort: "aow", uitkering: aow, leeftijd };
+}
+
 function lid(persoon: PersoonInvoer, partners: boolean, p: Parameters): Lid {
+  if (heeftAowLeeftijd(persoon.leeftijd, p)) return lidMetAow(persoon, partners, p);
+  return { ...lidZonderLeeftijd(persoon, partners, p), leeftijd: persoon.leeftijd };
+}
+
+function lidZonderLeeftijd(persoon: PersoonInvoer, partners: boolean, p: Parameters): Lid {
   const bedrag = jaarbedrag(persoon, p);
   switch (persoon.soort) {
     case "loondienst":
@@ -123,12 +161,16 @@ export function huishoudenUitInvoer(invoer: Invoer, p: Parameters): Huishouden {
       uurprijs: k.uurprijs,
     }));
   const leden = invoer.personen.map((persoon) => lid(persoon, partners, p));
-  vulBijstandIn(
-    leden,
-    invoer.personen.map((x) => x.soort === "bijstand"),
-    partners,
-    p,
+  // Bijstand alleen onder de AOW-leeftijd en onder de vermogensgrens; anders geen inkomen.
+  const teVeelVermogen = bijstandVermogenTeHoog(invoer, p);
+  const bijstand = invoer.personen.map(
+    (x) => x.soort === "bijstand" && !heeftAowLeeftijd(x.leeftijd, p) && !teVeelVermogen,
   );
+  invoer.personen.forEach((x, i) => {
+    if (x.soort === "bijstand" && teVeelVermogen && !heeftAowLeeftijd(x.leeftijd, p))
+      leden[i] = { inkomen: 0, soort: "geen", uitkering: 0, leeftijd: x.leeftijd };
+  });
+  vulBijstandIn(leden, bijstand, partners, p);
   const vermogen = { bank: invoer.vermogen, overig: invoer.beleggingen, schulden: invoer.schulden };
   return {
     leden,
@@ -136,6 +178,7 @@ export function huishoudenUitInvoer(invoer: Invoer, p: Parameters): Huishouden {
     kinderen: invoer.kinderen.map((k) => k.leeftijd),
     kindInkomens: invoer.kinderen.map((k) => (k.leeftijd >= p.zorg.volwassenVanaf ? k.inkomen : 0)),
     huurPerMaand: invoer.wonen === "huur" ? invoer.huurPerMaand : 0,
+    zelfstandigeWoning: invoer.wonen === "huur" ? invoer.zelfstandigeWoning : true,
     hypotheekrente: invoer.wonen === "koop" ? invoer.hypotheekrente : 0,
     woz: invoer.wonen === "koop" ? invoer.woz : 0,
     kinderopvang,
@@ -156,4 +199,20 @@ export function renteUitHypotheek(schuld: number, rentePercentage: number): numb
 /** Een persoon heeft de AOW-leeftijd volgens de parameters. */
 export function heeftAowLeeftijd(leeftijd: number, p: Parameters): boolean {
   return leeftijd >= p.uitkeringen.aowLeeftijd;
+}
+
+/** Vermogen voor de bijstand: spaargeld en beleggingen min schulden (de eigen woning zit er niet in). */
+export function bijstandVermogen(invoer: Invoer): number {
+  return Math.max(0, invoer.vermogen + invoer.beleggingen - invoer.schulden);
+}
+
+/** De vermogensgrens van de bijstand voor dit huishouden: een gezin (partners of een minderjarig kind) of alleen. */
+export function bijstandVermogensgrens(invoer: Invoer, p: Parameters): number {
+  const gezin = invoer.personen.length > 1 || invoer.kinderen.some((k) => k.leeftijd < 18);
+  return p.bijstand.vermogensgrens[gezin ? "gezin" : "alleenstaand"];
+}
+
+/** Heeft dit huishouden meer vermogen dan de bijstand toestaat? Dan eerst dat vermogen gebruiken (D-088). */
+export function bijstandVermogenTeHoog(invoer: Invoer, p: Parameters): boolean {
+  return bijstandVermogen(invoer) > bijstandVermogensgrens(invoer, p);
 }

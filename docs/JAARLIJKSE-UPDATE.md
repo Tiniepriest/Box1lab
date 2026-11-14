@@ -16,6 +16,8 @@ Vaste regels voor de ramingen:
 | Standaardpremie, nominale premie, Zvw-bijdrage  | Rijksbegroting VWS, tabel "Premieoverzicht Zvw"                               | november                   |
 | Huurtoeslag, kindgebonden budget, kinderbijslag | × tabelcorrectiefactor (memorie van toelichting Belastingplan)                | eind november tot december |
 | AOW, bijstand                                   | bedrag per 1 juli + stijging referentiemaandloon per 1 januari                | december                   |
+| Vermogensgrens bijstand                         | grens van dit jaar (wordt per 1 januari geïndexeerd)                          | december                   |
+| Huurgrens jongeren (huurtoeslag)                | × tabelcorrectiefactor, net als de huurgrens                                  | eind november              |
 
 `npm run valideer` toont alle ramingen, zodat je ze kunt vervangen als de officiële bedragen er zijn. De site laat dan "Wat verandert er?" zien, met een duidelijke melding dat het voorlopig is en welke bedragen nog ontbreken: op de pagina van de verkiezing of het Belastingplan als stap 1 als die pagina dat jaar als basispad heeft, anders op Jouw situatie (D-064). Kalibratie en bevolking hoeven dan nog niet.
 
@@ -29,7 +31,7 @@ Kopieer het bestand van het vorige jaar:
 data/parameters/2026.yaml  →  data/parameters/2027.yaml
 ```
 
-Pas bovenaan `jaar: 2027` aan. Loop daarna elke sectie langs en vul de nieuwe bedragen in. Werk bij elke sectie ook de `bron` bij (een link naar de Belastingdienst, rijksoverheid.nl, CBS of CPB). Vergeet `loon.modaal` niet: het bruto modaal inkomen uit de kerngegevens van de nieuwste MEV of het CEP van het CPB; het voorbeeldhuishouden op de site verdient dat.
+Pas bovenaan `jaar: 2027` aan. Loop daarna elke sectie langs en vul de nieuwe bedragen in. Werk bij elke sectie ook de `bron` bij (een link naar de Belastingdienst, rijksoverheid.nl, CBS of CPB). Vergeet `loon.modaal` niet: het bruto modaal inkomen uit de kerngegevens van de nieuwste MEV of het CEP van het CPB; het voorbeeldhuishouden op de site verdient dat. Ook makkelijk te vergeten (D-088): `box1.premieVolksverzekeringen` (de premies in het tarief van de eerste schijf), `ondernemers.aftrekMaxTarief` en `eigenWoning.aftrekMaxTarief` (allebei het tarief van de tweede schijf), het AOW-vakantiegeld per halfjaar, `bijstand.vermogensgrens` en `toeslagen.huurtoeslag.jongeren`.
 
 Let op de schrijfwijze, die bovenaan het bestand staat:
 

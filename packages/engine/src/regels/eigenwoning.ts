@@ -1,5 +1,5 @@
 import type { Parameters } from "../parameters/schema.ts";
-import { tariefStukken } from "./box1.ts";
+import { tariefsaanpassing } from "./box1.ts";
 
 /** Eigenwoningforfait per jaar bij een WOZ-waarde, inclusief de niveau-knop. */
 export function eigenwoningforfait(woz: number, p: Parameters): number {
@@ -39,26 +39,22 @@ export function eigenWoningSaldo(hypotheekrente: number, woz: number, p: Paramet
 }
 
 /**
- * Aftrekbeperking: een negatief saldo eigen woning levert hoogstens voordeel op tegen het maximale
- * aftrektarief. Voor het deel van de aftrek dat in een schijf met een hoger tarief valt, wordt het verschil
- * als extra heffing teruggenomen.
+ * Aftrekbeperking eigen woning (tariefsaanpassing, Wet IB 2001, artikel 2.10 lid 2 en 3): de aftrekbare kosten,
+ * dus de hypotheekrente, leveren hoogstens voordeel op tegen het maximale aftrektarief. Het gaat om de rente, niet
+ * om het saldo met het forfait: het forfait wordt gewoon in de hoogste schijf belast (D-088).
  *
- * @param inkomenZonderWoning belastbaar inkomen vóór het saldo eigen woning
+ * @param belastbaar belastbaar inkomen uit werk en woning, met het saldo eigen woning erin
  */
 export function aftrekbeperking(
-  inkomenZonderWoning: number,
-  saldo: number,
+  belastbaar: number,
+  aftrekbareRente: number,
   p: Parameters,
   aow: boolean,
 ): number {
-  if (saldo >= 0) return 0;
-  const max = p.eigenWoning.aftrekMaxTarief;
-  const onder = inkomenZonderWoning + saldo;
-  let extra = 0;
-  for (const s of tariefStukken(p, aow)) {
-    if (s.tarief <= max) continue;
-    const deel = Math.min(inkomenZonderWoning, s.boven) - Math.max(onder, s.onder);
-    if (deel > 0) extra += (deel * (s.tarief - max)) / 100;
-  }
-  return extra;
+  return tariefsaanpassing(
+    belastbaar,
+    [{ bedrag: aftrekbareRente, maxTarief: p.eigenWoning.aftrekMaxTarief }],
+    p,
+    aow,
+  );
 }

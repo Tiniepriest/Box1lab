@@ -2,10 +2,13 @@ import type { Parameters } from "../parameters/schema.ts";
 import { belastingBox1 } from "./box1.ts";
 import type { PersoonKenmerken } from "./heffingskortingen.ts";
 
-/** Bruto AOW per jaar per persoon: 6 maanden eerste halfjaar, 6 maanden tweede halfjaar, plus vakantiegeld. */
+/** Bruto AOW per jaar per persoon: 6 maanden eerste halfjaar, 6 maanden tweede halfjaar, plus het vakantiegeld. */
 export function aowPerJaar(p: Parameters, partners: boolean): number {
   const a = p.uitkeringen.aow[partners ? "partners" : "alleenstaand"];
-  return 6 * a.perMaandEersteHalfjaar + 6 * a.perMaandTweedeHalfjaar + 12 * a.vakantiegeldPerMaand;
+  return (
+    6 * (a.perMaandEersteHalfjaar + a.vakantiegeldEersteHalfjaar) +
+    6 * (a.perMaandTweedeHalfjaar + a.vakantiegeldTweedeHalfjaar)
+  );
 }
 
 /**

@@ -42,6 +42,7 @@ const basisInvoer: Invoer = {
   kinderen: [],
   wonen: "huur",
   huurPerMaand: 800,
+  zelfstandigeWoning: true,
   woz: 0,
   hypotheekrente: 0,
   vermogen: 0,

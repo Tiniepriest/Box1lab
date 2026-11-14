@@ -40,7 +40,9 @@ const staffel = oplopendVanafNul(
 const aowBedragen = z.strictObject({
   perMaandEersteHalfjaar: nietNegatief,
   perMaandTweedeHalfjaar: nietNegatief,
-  vakantiegeldPerMaand: nietNegatief,
+  /** Vakantiegeld dat per maand wordt opgebouwd (uitbetaald in mei), per halfjaar. */
+  vakantiegeldEersteHalfjaar: nietNegatief,
+  vakantiegeldTweedeHalfjaar: nietNegatief,
 });
 
 const halfjaren = z.strictObject({ eersteHalfjaar: nietNegatief, tweedeHalfjaar: nietNegatief });
@@ -68,6 +70,12 @@ export const parametersSchema = z.strictObject({
         "De schijfgrenzen lopen op van laag naar hoog.",
       ),
     aowVerlagingEersteSchijf: pct,
+    /**
+     * Premies volksverzekeringen in het tarief van de eerste schijf (AOW, Anw, Wlz; voor AOW'ers zonder de
+     * AOW-premie). De rest van dat tarief is inkomstenbelasting. Een heffingskorting bestaat in dezelfde verhouding
+     * uit een belastingdeel en premiedelen; alleen het belastingdeel kan ook van de belasting in box 3 af.
+     */
+    premieVolksverzekeringen: pct,
     /**
      * Negatieve belasting (alleen voor scenario's): wie minder verdient dan de vrijstelling, of meer korting heeft dan
      * belasting, krijgt het verschil uitbetaald.
@@ -131,6 +139,11 @@ export const parametersSchema = z.strictObject({
       afbouw: perOmvang(pct),
       inkomensvrijstellingKind: nietNegatief,
       maxVermogen: perHuishouden(nietNegatief),
+      /**
+       * Lagere huurgrens als iedereen in het huishouden jonger is dan `totLeeftijd` en er geen kinderen zijn
+       * (Wet op de huurtoeslag, artikel 13). Huur daarboven telt niet mee.
+       */
+      jongeren: z.strictObject({ totLeeftijd: z.number().int().positive(), huurgrens: nietNegatief }),
     }),
     kindgebondenBudget: z.strictObject({
       bron,
@@ -192,6 +205,11 @@ export const parametersSchema = z.strictObject({
     alleenstaand: halfjaren,
     gehuwden: halfjaren,
     minimumLeeftijd: z.number().int().positive(),
+    /**
+     * Vermogensgrens: met meer vermogen (bezittingen min schulden) krijg je geen bijstand. Gezin = gehuwden,
+     * samenwonenden en alleenstaande ouders.
+     */
+    vermogensgrens: z.strictObject({ alleenstaand: nietNegatief, gezin: nietNegatief }),
   }),
 
   ondernemers: z.strictObject({
@@ -201,6 +219,11 @@ export const parametersSchema = z.strictObject({
     mkbWinstvrijstelling: pct,
     /** Uren per jaar in de onderneming die nodig zijn voor de ondernemersaftrek. */
     urencriterium: nietNegatief,
+    /**
+     * Hoogste tarief waartegen de ondernemersaftrek en de mkb-winstvrijstelling werken (tariefsaanpassing, Wet IB
+     * 2001, artikel 2.10 lid 2 en 3). Voor de eigen woning staat dit in `eigenWoning.aftrekMaxTarief`.
+     */
+    aftrekMaxTarief: pct,
   }),
 
   pensioenpremie: z.strictObject({
