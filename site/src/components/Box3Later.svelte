@@ -219,7 +219,7 @@
       {#if situatie.overig > 0 || situatie.schulden > 0}
         <li>
           {situatie.overig > 0
-            ? `"Beleggingen en tweede woning" rekenen we als beleggingen; voor een tweede woning gelden in ${later} andere regels.`
+            ? `"Beleggingen en 2e woning" rekenen we als beleggingen; voor een tweede woning gelden in ${later} andere regels.`
             : ""}
           {situatie.schulden > 0 ? "Schulden laten we in dit voorbeeld weg." : ""}
         </li>

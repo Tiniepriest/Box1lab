@@ -226,6 +226,11 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] Randen van invoervelden 3:1, kleine tekst 14px, knoppen als groep
 - [x] Content-Security-Policy en een controle op verzoeken naar andere sites; deploy draait alle controles
 
+## Fase 39: formulier in een smalle kolom — klaar
+
+- [x] Vraag boven het veld als het formulier smal is (container query in plaats van schermbreedte, D-090)
+- [x] Uitlegregels bij pensioenpremie en hypotheekrente weg; kortere labels
+
 ## Open vragen voor de eigenaar
 
 - Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?
