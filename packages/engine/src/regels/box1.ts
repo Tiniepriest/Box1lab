@@ -13,6 +13,20 @@ export interface TariefStuk {
  * tarief in de eerste schijf.
  */
 export function tariefStukken(p: Parameters, aow: boolean): TariefStuk[] {
+  // Per parameterset één keer uitrekenen: dit draait voor elke persoon in elke berekening (prestatie, D-088).
+  // Parametersets worden na het maken niet meer aangepast (pasToe en valideerParameters maken een kopie).
+  const bewaard = STUKKEN.get(p.box1)?.[aow ? 1 : 0];
+  if (bewaard) return bewaard;
+  const stukken = maakStukken(p, aow);
+  const paar = STUKKEN.get(p.box1) ?? [undefined, undefined];
+  paar[aow ? 1 : 0] = stukken;
+  STUKKEN.set(p.box1, paar);
+  return stukken;
+}
+
+const STUKKEN = new WeakMap<object, [TariefStuk[] | undefined, TariefStuk[] | undefined]>();
+
+function maakStukken(p: Parameters, aow: boolean): TariefStuk[] {
   const { vrijstelling, schijven, aowVerlagingEersteSchijf } = p.box1;
   const stukken: TariefStuk[] = [];
   let vorige = 0;

@@ -289,16 +289,20 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
   const b3 = box3(h.box3 ?? { bank: h.vermogen, overig: 0, schulden: 0 }, h.partners, p);
   toetsingsinkomen += b3.voordeel;
 
-  // Box 1 en box 3 samen, bij een verdeling van het box 3-voordeel over de personen.
-  const reken = (aandelen: readonly number[]) => {
+  // Box 1 en box 3 samen, bij een verdeling van het box 3-voordeel over de personen. De belasting zonder eigen
+  // woning (voor het voordeel van de eigen woning) is alleen nodig zonder vermogen; `ookZonder` rekent hem uit.
+  const reken = (aandelen: readonly number[], ookZonder = false) => {
     let belasting = 0;
     let zonderWoning = 0;
     let box3Belasting = 0;
     const ruimte: number[] = [];
     box1.forEach((b, i) => {
       const v = aandelen[i] ?? 0;
-      const zonder = box1Uitkomst(b.inkomen, b.arbeid, p, b.k, b.extraZonder, v);
-      const met = b.woning ? box1Uitkomst(b.belastbaar, b.arbeid, p, b.k, b.extraMet, v) : zonder;
+      const met = b.woning
+        ? box1Uitkomst(b.belastbaar, b.arbeid, p, b.k, b.extraMet, v)
+        : box1Uitkomst(b.inkomen, b.arbeid, p, b.k, b.extraZonder, v);
+      const zonder =
+        b.woning && ookZonder ? box1Uitkomst(b.inkomen, b.arbeid, p, b.k, b.extraZonder, v) : met;
       belasting += met.belasting;
       zonderWoning += zonder.belasting;
       const korting = belastingdeelKortingen(p, b.k.aow) * met.onbenut;
@@ -307,11 +311,19 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     });
     return { belasting, zonderWoning, box3Belasting, totaal: belasting + box3Belasting, ruimte };
   };
-  const uitkomst = verdeelBox3(b3.voordeel, box1.length, reken);
   // Alles wat het vermogen aan belasting kost, staat bij box 3: de box 3-belasting na de onbenutte kortingen, plus de
   // lagere algemene heffingskorting en ouderenkorting door het box 3-inkomen. Zo blijft de box 1-belasting (en het
   // bedrag bovenaan, D-076) los van het vermogen.
-  const zonderVermogen = b3.voordeel > 0 ? reken(box1.map(() => 0)) : uitkomst;
+  const zonderVermogen = reken(
+    box1.map(() => 0),
+    true,
+  );
+  // Bij welk box 3-inkomen verandert de afbouw van de kortingen van ieder van helling?
+  const knikPunten = box1.map((b) =>
+    knikken(p, b.k.aow).map((g) => g - Math.max(0, b.woning ? b.belastbaar : b.inkomen)),
+  );
+  const uitkomst =
+    b3.voordeel > 0 ? verdeelBox3(b3.voordeel, zonderVermogen, knikPunten, reken) : zonderVermogen;
   const box3Belasting = Math.max(0, uitkomst.totaal - zonderVermogen.belasting);
   // De belasting van meerderjarige kinderen komt er hieronder nog bij.
   let belasting = zonderVermogen.belasting;
@@ -398,24 +410,53 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
 }
 
 /**
+ * Inkomens (verzamelinkomen) waarbij de algemene heffingskorting of de ouderenkorting van helling verandert: het begin
+ * van elk stuk van de staffel en het punt waar de afbouw op 0 uitkomt.
+ */
+function knikken(p: Parameters, aow: boolean): number[] {
+  const bewaard = KNIKKEN.get(p.heffingskortingen)?.[aow ? 1 : 0];
+  if (bewaard) return bewaard;
+  const x = maakKnikken(p, aow);
+  const paar = KNIKKEN.get(p.heffingskortingen) ?? [undefined, undefined];
+  paar[aow ? 1 : 0] = x;
+  KNIKKEN.set(p.heffingskortingen, paar);
+  return x;
+}
+
+const KNIKKEN = new WeakMap<object, [number[] | undefined, number[] | undefined]>();
+
+function maakKnikken(p: Parameters, aow: boolean): number[] {
+  const h = p.heffingskortingen;
+  const staffels = aow ? [h.algemeen.staffelAow, h.ouderen.staffel] : [h.algemeen.staffel];
+  const x: number[] = [];
+  for (const s of staffels)
+    for (const stuk of s) {
+      x.push(stuk.vanaf);
+      if (stuk.tarief < 0) x.push(stuk.vanaf + stuk.bedrag / (-stuk.tarief / 100));
+    }
+  return x;
+}
+
+/**
  * Verdeelt het box 3-voordeel over de personen zo dat de belasting samen (box 1 en box 3) het laagst is. Fiscale
  * partners mogen het vrij verdelen (Wet IB 2001, artikel 2.17). De verdeling telt mee voor de afbouw van de kortingen
- * en voor welk deel van de onbenutte kortingen van box 3 af kan. We proberen stappen van 5% en de verdelingen waarbij
- * iemand precies zijn onbenutte korting opmaakt, en nemen de goedkoopste.
+ * en voor welk deel van de onbenutte kortingen van box 3 af kan (D-088).
+ *
+ * De belasting is stuksgewijs lineair in de verdeling, dus de goedkoopste ligt op een uiteinde of een knik: waar iemands
+ * verzamelinkomen een knik van de afbouw bereikt (`knikPunten`, het box 3-inkomen van die persoon), of waar iemand
+ * met de onbenutte korting precies zijn deel belastingvrij maakt (`ruimte`, berekend zonder box 3-inkomen).
  */
 function verdeelBox3<T extends { totaal: number; ruimte: number[] }>(
   voordeel: number,
-  personen: number,
+  nul: T,
+  knikPunten: readonly number[][],
   reken: (aandelen: readonly number[]) => T,
 ): T {
-  if (personen < 2 || voordeel <= 0) return reken([voordeel]);
-  const kandidaten = new Set<number>();
-  for (let i = 0; i <= 20; i++) kandidaten.add((voordeel * i) / 20);
-  // Zonder box 3-inkomen: hoeveel box 3-inkomen kan ieder met de onbenutte korting belastingvrij maken? Daar ligt
-  // vaak het voordeligste punt.
-  const [r0 = 0, r1 = 0] = reken([0, 0]).ruimte;
-  kandidaten.add(Math.min(voordeel, r0));
-  kandidaten.add(Math.max(0, voordeel - r1));
+  if (nul.ruimte.length < 2) return reken([voordeel]);
+  const [r0 = 0, r1 = 0] = nul.ruimte;
+  const kandidaten = new Set([0, voordeel, Math.min(voordeel, r0), Math.max(0, voordeel - r1)]);
+  for (const g of knikPunten[0] ?? []) if (g > 0 && g < voordeel) kandidaten.add(g);
+  for (const g of knikPunten[1] ?? []) if (g > 0 && g < voordeel) kandidaten.add(voordeel - g);
   let beste: T | null = null;
   for (const v of kandidaten) {
     const u = reken([v, voordeel - v]);
