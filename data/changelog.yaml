@@ -8,6 +8,13 @@
 
 - datum: 2026-11-14
   soort: nieuw
+  titel: "Licht of donker"
+  tekst: >-
+    Rechtsboven staat een knop om de site licht of donker te maken. Kies je niets, dan volgt de site je apparaat,
+    zoals eerst. Je keuze onthouden we op dit apparaat.
+
+- datum: 2026-11-14
+  soort: nieuw
   titel: "Formulier: de vraag staat boven het veld"
   tekst: >-
     In de smalle kolom naast de uitkomst stonden de vragen naast de invoervelden, en liepen lange woorden over

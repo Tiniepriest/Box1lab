@@ -69,6 +69,21 @@ const bijmenu = [
     <link rel="icon" type="image/svg+xml" href={pad("favicon.svg")} />
     <link rel="sitemap" href={pad("sitemap-index.xml")} />
     <title>{title}</title>
+    <script is:inline>
+      // Licht of donker: koos je zelf, dan geldt die keuze; anders volgt de site je apparaat. Vóór het tekenen,
+      // zodat de pagina niet eerst in de andere kleur verschijnt.
+      try {
+        const thema = localStorage.getItem("box1lab-thema");
+        if (thema === "light" || thema === "dark") {
+          document.documentElement.dataset.theme = thema;
+          const kleur = thema === "dark" ? "#1a1814" : "#f6f2ea";
+          for (const m of document.querySelectorAll('meta[name="theme-color"]'))
+            m.setAttribute("content", kleur);
+        }
+      } catch {
+        /* geen opslag: de kleur van het apparaat */
+      }
+    </script>
     <script is:inline define:vars={{ sleutel: SLEUTEL }}>
       // Vinkje bij "Jouw situatie" als er een bewaarde situatie is; vóór het tekenen, zodat het niet verspringt.
       try {
@@ -123,6 +138,57 @@ const bijmenu = [
             </ul>
           </details>
         </nav>
+        <button
+          type="button"
+          class="thema"
+          aria-pressed="false"
+          aria-label="Donkere weergave"
+          title="Licht of donker"
+        >
+          <svg class="maan" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+            <path
+              d="M16.5 12.6A7 7 0 0 1 7.4 3.5a7 7 0 1 0 9.1 9.1Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <svg class="zon" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+            <circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path
+              d="M10 1.8v2.2M10 16v2.2M1.8 10H4M16 10h2.2M4.2 4.2l1.6 1.6M14.2 14.2l1.6 1.6M4.2 15.8l1.6-1.6M14.2 5.8l1.6-1.6"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+        <script is:inline>
+          // Direct na de knop, zodat hij meteen het goede icoon toont. Ingedrukt = donker.
+          (() => {
+            const knop = document.currentScript.previousElementSibling;
+            const html = document.documentElement;
+            const systeem = matchMedia("(prefers-color-scheme: dark)");
+            const donker = () => (html.dataset.theme ?? (systeem.matches ? "dark" : "light")) === "dark";
+            const toon = () => knop.setAttribute("aria-pressed", String(donker()));
+            toon();
+            systeem.addEventListener("change", toon);
+            knop.addEventListener("click", () => {
+              const thema = donker() ? "light" : "dark";
+              html.dataset.theme = thema;
+              const kleur = thema === "dark" ? "#1a1814" : "#f6f2ea";
+              for (const m of document.querySelectorAll('meta[name="theme-color"]'))
+                m.setAttribute("content", kleur);
+              try {
+                localStorage.setItem("box1lab-thema", thema);
+              } catch {
+                /* geen opslag: alleen voor deze pagina */
+              }
+              toon();
+            });
+          })();
+        </script>
       </div>
       <nav aria-label="Hoofdmenu" class="wrap tabbladen">
         <ul>
@@ -199,6 +265,7 @@ const bijmenu = [
     max-width: 1320px;
   }
   .logo {
+    margin-right: auto;
     font-family: var(--f-display);
     font-weight: 600;
     font-style: italic;
@@ -231,6 +298,30 @@ const bijmenu = [
   .bij-uitklap {
     display: none;
     position: relative;
+  }
+  .thema {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .thema:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  /* Het icoon toont waar je naartoe gaat: een maan in licht, een zon in donker. */
+  .thema .zon,
+  .thema[aria-pressed="true"] .maan {
+    display: none;
+  }
+  .thema[aria-pressed="true"] .zon {
+    display: block;
   }
   .bij-uitklap summary {
     list-style: none;
