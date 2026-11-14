@@ -101,6 +101,25 @@ try {
     extern.size === 0,
     `privacy: geen verzoeken naar andere sites${extern.size ? ` (${[...extern].slice(0, 3).join(", ")})` : ""}`,
   );
+  {
+    // Licht of donker: de knop wisselt, en de keuze blijft na herladen (in een eigen context, zodat de
+    // andere controles de kleur van het apparaat houden).
+    const tc = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: "light" });
+    const tp = await tc.newPage();
+    await tp.goto(`${BASIS}/`, { waitUntil: "networkidle" });
+    const knop = tp.getByRole("button", { name: "Donkere weergave" });
+    const voor = await knop.getAttribute("aria-pressed");
+    await knop.click();
+    const na = await knop.getAttribute("aria-pressed");
+    const achtergrond = await tp.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    await tp.reload({ waitUntil: "networkidle" });
+    const thema = await tp.evaluate(() => document.documentElement.dataset.theme);
+    controleer(
+      voor === "false" && na === "true" && achtergrond === "rgb(26, 24, 20)" && thema === "dark",
+      `licht/donker: knop wisselt en de keuze blijft (${voor} → ${na}, ${achtergrond}, na herladen ${thema})`,
+    );
+    await tc.close();
+  }
   const tabblad = pg.getByRole("navigation", { name: "Hoofdmenu" }).getByRole("link");
   await pg.goto(`${BASIS}/voorstellen/vlaktaks-35`, { waitUntil: "networkidle" });
   const tabs = await tabblad.allTextContents();

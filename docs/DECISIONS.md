@@ -855,3 +855,17 @@ Op Jouw situatie staat het formulier in een kolom van hoogstens 380px. Of de vra
 - **Kortere vraag:** "Beleggingen en 2e woning" (ook in de uitleg bij Box 3 in 2029).
 
 Geen andere rekenregels; de golden tests blijven gelijk.
+
+## Fase 40: licht of donker
+
+### D-091 Een knop voor licht of donker
+
+Wens van de eigenaar. De kleuren kenden al `data-theme` op `<html>` (fase 14); er was alleen geen knop.
+
+- **Knop.** Rechtsboven in de kop, naast het menu, op elke pagina. Een maan in licht, een zon in donker; voor een schermlezer een schakelaar "Donkere weergave" met `aria-pressed`.
+- **Standaard het apparaat.** Zolang je niets kiest, volgt de site `prefers-color-scheme`, zoals eerst, en wisselt mee als je apparaat wisselt. Klik je, dan geldt je keuze.
+- **Onthouden.** De keuze staat in `localStorage` (`box1lab-thema`), los van je situatie: het is geen gegeven over jou, dus "Onthoud" en "Wis mijn gegevens" gaan er niet over. De pagina Over zegt dat we die keuze onthouden. Een klein script in `<head>` zet de keuze vóór het tekenen, zodat de pagina niet eerst in de andere kleur verschijnt; het zet ook de kleur van de adresbalk (`theme-color`).
+- **Grafieken** gebruiken alleen de kleurvariabelen, dus ze wisselen mee zonder eigen code.
+- `npm run schermafdrukken` controleert dat de knop wisselt en dat de keuze na herladen blijft.
+
+Geen andere rekenregels.

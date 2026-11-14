@@ -231,6 +231,10 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] Vraag boven het veld als het formulier smal is (container query in plaats van schermbreedte, D-090)
 - [x] Uitlegregels bij pensioenpremie en hypotheekrente weg; kortere labels
 
+## Fase 40: licht of donker — klaar
+
+- [x] Knop rechtsboven; keuze in localStorage, anders de instelling van het apparaat (D-091)
+
 ## Open vragen voor de eigenaar
 
 - Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?
