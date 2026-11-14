@@ -98,7 +98,7 @@ button[aria-pressed="true"] {
 input[type="number"],
 input[type="text"],
 select {
-  border: 1px solid var(--line);
+  border: 1px solid var(--rand-invoer);
   border-radius: var(--radius);
   background: var(--panel);
   padding: 6px 8px;

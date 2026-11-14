@@ -54,4 +54,20 @@ describe("wat als", () => {
     expect(ids).toContain("partner-minder-werken");
     expect(ids).not.toContain("samenwonen");
   });
+
+  it("zegt erbij dat er bij € 100 per maand vakantiegeld bovenop komt", () => {
+    const opslag = (inclusiefVakantiegeld: boolean) =>
+      watAls({ ...alleen, personen: [{ ...persoon, inclusiefVakantiegeld }] }, p).find(
+        (x) => x.id === "opslag",
+      )!.label;
+    expect(opslag(false)).toBe("€ 100 bruto per maand erbij (plus vakantiegeld)");
+    expect(opslag(true)).toBe("€ 100 bruto per maand erbij");
+  });
+
+  it("geen baby voor een huishouden met de AOW-leeftijd", () => {
+    const ids = watAls({ ...alleen, personen: [{ ...persoon, leeftijd: 70, soort: "aow" }] }, p).map(
+      (w) => w.id,
+    );
+    expect(ids).not.toContain("kind");
+  });
 });

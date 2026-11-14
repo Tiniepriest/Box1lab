@@ -46,6 +46,8 @@ for (let i = 0; ; i++) {
 
 const browser = await chromium.launch({ channel: "chrome" });
 let fouten = 0;
+// Wat je invult, blijft in je browser: geen enkele pagina mag iets bij een andere site ophalen of erheen sturen.
+const extern = new Set<string>();
 try {
   for (const schema of ["light", "dark"] as const) {
     for (const breedte of [375, 1280]) {
@@ -54,6 +56,10 @@ try {
         colorScheme: schema,
       });
       const pagina = await context.newPage();
+      pagina.on("request", (v) => {
+        const url = v.url();
+        if (!url.startsWith("http://localhost:4321/") && !url.startsWith("data:")) extern.add(url);
+      });
       pagina.on("console", (m) => {
         if (m.type() === "error") {
           fouten++;
@@ -91,6 +97,10 @@ try {
     if (!ok) fouten++;
     console.log(`  ${ok ? "ok  " : "FOUT"} ${wat}`);
   };
+  controleer(
+    extern.size === 0,
+    `privacy: geen verzoeken naar andere sites${extern.size ? ` (${[...extern].slice(0, 3).join(", ")})` : ""}`,
+  );
   const tabblad = pg.getByRole("navigation", { name: "Hoofdmenu" }).getByRole("link");
   await pg.goto(`${BASIS}/voorstellen/vlaktaks-35`, { waitUntil: "networkidle" });
   const tabs = await tabblad.allTextContents();

@@ -6,6 +6,17 @@
 #
 # soort: nieuw | cijfers | model | correctie
 
+- datum: 2026-11-14
+  soort: nieuw
+  titel: "Jouw situatie: duidelijker en neutraler"
+  tekst: >-
+    Na de controle door een expert is Jouw situatie op een paar punten verbeterd. Wat je per maand overhoudt, is
+    nu het grootste getal op de pagina, en de grafiek "Wat houd je over" laat hetzelfde bedrag zien. Bij de
+    voorstellen staat nu ook wat ze de overheid kosten of opleveren, en de staven hebben één kleur in plaats van
+    groen en rood. De grafiek van de marginale druk heeft een lijn bij 50%, en beide lijngrafieken hebben een
+    tabel. Klopt een veld niet, dan zie je welk veld, en blijft de uitkomst staan. Onderaan staat wat er voor jouw
+    situatie niet in de berekening zit. Invoervelden hebben een duidelijkere rand, en kleine tekst is iets groter.
+
 - datum: 2026-11-13
   soort: correctie
   modelversie: 0.6.0

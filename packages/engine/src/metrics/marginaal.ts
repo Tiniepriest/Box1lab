@@ -1,9 +1,11 @@
-import { berekenHuishouden, type Huishouden } from "../huishouden.ts";
+import { berekenHuishouden, overVanInkomen, type Huishouden } from "../huishouden.ts";
 import type { Parameters } from "../parameters/schema.ts";
 
 export interface Curve {
   bruto: number[];
   besteedbaar: number[];
+  /** Wat je overhoudt, zoals het bedrag bovenaan op Jouw situatie (`overVanInkomen`). */
+  over: number[];
   /**
    * Marginale druk in procent: welk deel van een extra euro verdwijnt aan belasting en minder toeslag. De
    * pensioenpremie telt niet mee: dat is opbouw voor later, geen verlies.
@@ -31,7 +33,12 @@ export function inkomenscurve(
   const r = (x: number) => berekenHuishouden(maak(x), params, basis);
   const nu = bruto.map(r);
   const marginaleDruk = bruto.map((x, i) => (1 - (voorDruk(r(x + stap)) - voorDruk(nu[i]!)) / stap) * 100);
-  return { bruto: [...bruto], besteedbaar: nu.map((x) => x.besteedbaar), marginaleDruk };
+  return {
+    bruto: [...bruto],
+    besteedbaar: nu.map((x) => x.besteedbaar),
+    over: nu.map(overVanInkomen),
+    marginaleDruk,
+  };
 }
 
 /** Het huishouden met een ander bruto inkomen voor één persoon (bij een uitkering verandert de uitkering mee). */

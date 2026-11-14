@@ -7,7 +7,8 @@
 # - Elke sectie heeft een "bron". Weet je de bron niet? Schrijf "TODO: bron nodig".
 # - "niveau" is een knop voor scenario's: 100 = zoals de wet nu is, 0 = afgeschaft.
 #
-# Status: fase 2. Alle bedragen zijn gecontroleerd tegen officiële bronnen (zie "bron" per sectie).
+# Elke sectie noemt haar bronnen. Niet elke bron is een officiële site: komt een bedrag uit de pers (zoals het
+# AOW-vakantiegeld per 1 januari), dan staat dat in de bron en in docs/PROGRESS.md.
 
 jaar: 2026
 

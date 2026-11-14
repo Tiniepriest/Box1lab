@@ -67,7 +67,9 @@
         </tr>
         {#if r.box3 > 0 || r2.box3 > 0}
           <tr>
-            <td>Belasting box 3</td><td class="num">{euro(r.box3)}</td><td class="num">{euro(r2.box3)}</td>
+            <td>Belasting op sparen en beleggen (box 3)</td><td class="num">{euro(r.box3)}</td><td class="num"
+              >{euro(r2.box3)}</td
+            >
           </tr>
         {/if}
         <tr>
@@ -80,8 +82,14 @@
             >
           </tr>
         {/if}
+        <tr>
+          <td>Premie zorgverzekering</td><td class="num">{euro(r.zorgpremie)}</td><td class="num"
+            >{euro(r2.zorgpremie)}</td
+          >
+        </tr>
         <tr class="totaal">
-          <td>Te besteden</td><td class="num">{euro(r.besteedbaar)}</td><td class="num"
+          <!-- Na zorgpremie en box 3: anders dan het bedrag bovenaan Jouw situatie, en dat zeggen we (review E10). -->
+          <td>Te besteden na zorgpremie</td><td class="num">{euro(r.besteedbaar)}</td><td class="num"
             >{euro(r2.besteedbaar)}</td
           >
         </tr>
@@ -104,7 +112,9 @@
     {/if}
     <p class="notitie">
       Je bruto loon, pensioen en WW houden we gelijk, zodat je ziet wat de nieuwe regels doen. AOW, bijstand,
-      kinderbijslag en toeslagen gaan wel mee met de gewone jaarlijkse verhoging.
+      kinderbijslag en toeslagen gaan wel mee met de gewone jaarlijkse verhoging. Prijzen stijgen ook; dit is
+      dus geen koopkrachtcijfer. "Te besteden na zorgpremie" is lager dan het bedrag bovenaan Jouw situatie:
+      daar gaan de premie van je zorgverzekering en de box 3-belasting er niet af.
     </p>
   {/if}
   {#if volgend.params.status === "voorlopig"}

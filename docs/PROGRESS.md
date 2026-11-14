@@ -215,7 +215,20 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [ ] SVB-bedragen vakantiegeld 2026 nakijken (nu uit MAX Vandaag en Knab; svb.nl was niet bereikbaar)
 - [ ] December: vermogensgrens bijstand 2027 en huurgrens jongeren 2027 (nu ramingen)
 
+## Fase 38: Jouw situatie na de expertreview — klaar
+
+- [x] Hetzelfde bedrag in de curve als bovenaan; Belastingplan-tabel zegt "na zorgpremie" (D-089, E10)
+- [x] Bedrag per maand als grootste getal; alleen die regel wordt voorgelezen
+- [x] Voorstellen: wat de overheid kost of oplevert, één neutrale kleur
+- [x] 50%-lijn in de marginale druk, tabellen bij de lijngrafieken
+- [x] Foutmelding per veld, vorige uitkomst blijft staan
+- [x] Wat-als-labels, geen baby bij AOW, "geen koopkrachtcijfer", wat er niet in zit
+- [x] Randen van invoervelden 3:1, kleine tekst 14px, knoppen als groep
+- [x] Content-Security-Policy en een controle op verzoeken naar andere sites; deploy draait alle controles
+
 ## Open vragen voor de eigenaar
+
+- Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?
 
 - Echte partijdata voor een verkiezing: welke verkiezing, en wie controleert (vier ogen)?
 - Advertenties: de eigenaar wil die misschien later. Eerst beslissen hoe, zonder tracking en zonder de neutraliteit te schaden (D-049).

@@ -60,6 +60,8 @@ const bijmenu = [
 <html lang="nl">
   <head>
     <meta charset="utf-8" />
+    <!-- Wat je invult, blijft in je browser: de pagina mag geen gegevens naar een andere site sturen (review 3.7). -->
+    <meta http-equiv="Content-Security-Policy" content="connect-src 'self'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#f6f2ea" media="(prefers-color-scheme: light)" />

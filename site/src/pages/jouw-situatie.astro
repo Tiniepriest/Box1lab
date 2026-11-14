@@ -5,8 +5,11 @@ import Base from "../layouts/Base.astro";
 import { actueel, pad, params, presets, volgendJaar } from "../lib/data.ts";
 import { nogNietOfficieel } from "../lib/secties.ts";
 import { plekGrenzen } from "../lib/basis.ts";
+import { kerncijfers } from "../lib/voorstellen.ts";
 
 const volgend = volgendJaar ? { params: volgendJaar, ...nogNietOfficieel(volgendJaar) } : null;
+// Wat elk voorstel de overheid kost of oplevert, naast het effect voor de bezoeker (review, neutraliteit).
+const begroting = Object.fromEntries(kerncijfers.map((k) => [k.preset.id, k.saldoMld]));
 const tabblad = actueel
   ? {
       href: pad(`verkiezingen/${actueel.id}`),
@@ -27,7 +30,7 @@ const tabblad = actueel
   <p class="intro">
     Vul je situatie in en zie hoeveel belasting je betaalt, welke toeslagen je krijgt en wat je overhoudt.
   </p>
-  <Calculator client:load {params} {plekGrenzen} {presets} {volgend} actueel={tabblad} />
+  <Calculator client:load {params} {plekGrenzen} {presets} {volgend} {begroting} actueel={tabblad} />
   <MeldFout />
 </Base>
 

@@ -1,5 +1,5 @@
 import { berekenHuishouden, type Resultaat } from "./huishouden.ts";
-import { huishoudenUitInvoer, type Invoer, type PersoonInvoer } from "./invoer.ts";
+import { heeftAowLeeftijd, huishoudenUitInvoer, type Invoer, type PersoonInvoer } from "./invoer.ts";
 import type { Parameters } from "./parameters/schema.ts";
 
 /*
@@ -53,24 +53,29 @@ export function watAls(invoer: Invoer, p: Parameters): WatAls[] {
   if (jij && WERK.has(jij.soort)) {
     const zzp = jij.soort === "zzp";
     const opslag = jij.periode === "maand" ? 100 : 1200;
+    // Bij een maandloon zonder vakantiegeld komt er over de € 100 ook 8% vakantiegeld bij; dat zeggen we erbij.
+    const plusVakantiegeld =
+      jij.soort === "loondienst" && jij.periode === "maand" && !jij.inclusiefVakantiegeld;
     uit.push({
       id: "opslag",
-      label: zzp ? "€ 1.200 per jaar meer winst" : "€ 100 per maand meer bruto loon",
+      label: zzp
+        ? "€ 1.200 per jaar meer winst"
+        : `€ 100 bruto per maand erbij${plusVakantiegeld ? " (plus vakantiegeld)" : ""}`,
       uitleg: "Hoeveel daarvan je echt overhoudt, hangt af van belasting en toeslagen.",
       ...vergelijk(nu, reken(vervang(invoer, 0, { ...jij, bedrag: jij.bedrag + opslag }))),
     });
     uit.push({
       id: "minder-werken",
-      label: "Een dag minder werken",
-      uitleg: "Bijvoorbeeld 4 in plaats van 5 dagen: 20% minder inkomen.",
+      label: "Een dag per week minder werken",
+      uitleg: "20% minder inkomen, bijvoorbeeld 4 in plaats van 5 dagen.",
       ...vergelijk(nu, reken(vervang(invoer, 0, werkFactor(jij, 0.8)))),
     });
   }
   if (partner && WERK.has(partner.soort)) {
     uit.push({
       id: "partner-minder-werken",
-      label: "Je partner werkt een dag minder",
-      uitleg: "Bijvoorbeeld 4 in plaats van 5 dagen: 20% minder inkomen.",
+      label: "Je partner werkt een dag per week minder",
+      uitleg: "20% minder inkomen, bijvoorbeeld 4 in plaats van 5 dagen.",
       ...vergelijk(nu, reken(vervang(invoer, 1, werkFactor(partner, 0.8)))),
     });
   }
@@ -106,10 +111,12 @@ export function watAls(invoer: Invoer, p: Parameters): WatAls[] {
       ...vergelijk(opgeteld, samen),
     });
   }
-  if (jij) {
+  // Een baby past niet bij een huishouden met de AOW-leeftijd.
+  const aow = invoer.personen.some((q) => q.soort === "aow" || heeftAowLeeftijd(q.leeftijd, p));
+  if (jij && !aow) {
     uit.push({
       id: "kind",
-      label: "Een kind erbij",
+      label: "Een baby erbij, zonder kinderopvang",
       uitleg: "Een baby, zonder kinderopvang. Kosten van het kind zelf zitten er niet in.",
       ...vergelijk(
         nu,
