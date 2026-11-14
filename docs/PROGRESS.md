@@ -235,6 +235,13 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Knop rechtsboven; keuze in localStorage, anders de instelling van het apparaat (D-091)
 
+## Fase 41: promotie, AI schrijft voor — klaar
+
+- [x] `npm run feitenblad`: cijfers voor 2026 en 2027 uit de engine, voor reacties op sociale media (D-092)
+- [x] `promo/instructies.md`: wanneer niet reageren, drie opties, neutraal, alleen cijfers uit het feitenblad
+- [x] Bluesky: `npm run bluesky` en de skill `/bluesky`; zoeken, voorstellen, alleen plaatsen wat de eigenaar kiest
+- [ ] Eigenaar: Bluesky-account en app-wachtwoord in `.env`; Claude-project voor X
+
 ## Open vragen voor de eigenaar
 
 - Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?

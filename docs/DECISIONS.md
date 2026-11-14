@@ -869,3 +869,17 @@ Wens van de eigenaar. De kleuren kenden al `data-theme` op `<html>` (fase 14); e
 - `npm run schermafdrukken` controleert dat de knop wisselt en dat de keuze na herladen blijft.
 
 Geen andere rekenregels.
+
+## Fase 41: promotie, AI schrijft voor
+
+### D-092 De AI schrijft voor, de eigenaar verstuurt
+
+Wens van de eigenaar: de site promoten op X en Bluesky met zo weinig mogelijk eigen werk.
+
+- **Geen bot die zelf reageert.** X verbiedt automatische reacties op mensen die er niet om vroegen; een AI die belastingvragen beantwoordt onder de naam van de site maakt ook fouten. De AI stelt per post drie reacties voor; de eigenaar kiest en verstuurt. Reacties met een link zeggen "ik maak deze site".
+- **X: de eigenaar vindt de posts.** Zoeken via de API van X kost geld per gelezen post (sinds 2026 betalen per gebruik), en de zoekfunctie van Grok kost evenveel. Lezen zonder API mag niet volgens de voorwaarden van X. Dus: een Claude-project of Claude in Chrome met `promo/instructies.md`.
+- **Bluesky: de AI zoekt ook.** Zoeken kan gratis met een app-wachtwoord (zonder inloggen geeft de zoekfunctie 403). `npm run bluesky -- zoek` toont nieuwe Nederlandstalige posts op de termen in `promo/zoektermen.txt`; de skill `/bluesky` beoordeelt ze, schrijft drie opties en plaatst alleen de gekozen tekst. Het app-wachtwoord staat in `.env`, buiten git.
+- **Alleen cijfers uit de engine.** `npm run feitenblad` schrijft `promo/feitenblad.md`: tarieven, maximale heffingskortingen en wat voorbeeldhuishoudens per maand overhouden in 2026 en 2027 (zoals de calculator, `overVanInkomen`). Geraamde bedragen staan er als "(raming)"; zolang 2027 voorlopig is, zeggen reacties "naar verwachting". Na de jaarlijkse update opnieuw draaien (JAARLIJKSE-UPDATE.md, stap 5).
+- **Neutraal:** geen reacties op posts over partijen of politici, geen oordeel over plannen.
+
+Niets aan de site of de rekenregels; geen regel in de changelog.

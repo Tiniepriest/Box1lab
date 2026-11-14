@@ -94,6 +94,8 @@ Voeg bovenaan `data/changelog.yaml` een regel toe met `soort: cijfers`, bijvoorb
     Nieuwe tarieven, heffingskortingen en toeslagen voor 2027, en een opnieuw gewogen bevolking.
 ```
 
+Draai `npm run feitenblad` (de cijfers voor reacties op sociale media, zie `promo/README.md`) en vervang het feitenblad in het Claude-project.
+
 De site toont hem op `/wijzigingen`, en de datum komt onderaan elke pagina als "bijgewerkt". Open een pull request en merge na groene CI. De site wordt automatisch bijgewerkt.
 
 ## Wat gaat vanzelf mee

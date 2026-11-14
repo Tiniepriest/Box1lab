@@ -27,7 +27,9 @@
     "vergelijk": "tsx scripts/vergelijk-prototype.ts",
     "kalibreer": "tsx scripts/kalibreer.ts",
     "kalibreer:controle": "tsx scripts/kalibreer.ts --controle",
-    "schermafdrukken": "tsx scripts/schermafdrukken.ts"
+    "schermafdrukken": "tsx scripts/schermafdrukken.ts",
+    "feitenblad": "tsx scripts/feitenblad.ts && prettier --write promo/feitenblad.md",
+    "bluesky": "tsx scripts/bluesky.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -1,0 +1,15 @@
+# Zoektermen voor `npm run bluesky -- zoek`. Eén per regel; alleen Nederlandstalige posts.
+belastingplan
+heffingskorting
+arbeidskorting
+netto 2027
+netto salaris
+loonstrook
+inkomstenbelasting
+zorgtoeslag
+huurtoeslag
+kindgebonden budget
+armoedeval
+hypotheekrenteaftrek
+vlaktaks
+toeslagen
