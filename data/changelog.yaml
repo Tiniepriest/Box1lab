@@ -8,6 +8,14 @@
 
 - datum: 2026-11-14
   soort: nieuw
+  titel: "Formulier: de vraag staat boven het veld"
+  tekst: >-
+    In de smalle kolom naast de uitkomst stonden de vragen naast de invoervelden, en liepen lange woorden over
+    het veld heen. Nu staat de vraag boven het veld als er weinig ruimte is. De uitlegregels onder "Eigen
+    pensioenpremie" en "Hypotheekrente" zijn weg; bij de hypotheekrente staat "zonder aflossing" nu in de vraag.
+
+- datum: 2026-11-14
+  soort: nieuw
   titel: "Jouw situatie: duidelijker en neutraler"
   tekst: >-
     Na de controle door een expert is Jouw situatie op een paar punten verbeterd. Wat je per maand overhoudt, is

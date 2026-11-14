@@ -240,9 +240,7 @@
             <input id="extra-{i}" type="number" min="0" step="100" bind:value={persoon.extraPerJaar} />
           </div>
           <div class="rij">
-            <label for="premie-{i}"
-              >Eigen pensioenpremie per maand <span class="hint">staat op je loonstrook</span></label
-            >
+            <label for="premie-{i}">Eigen pensioenpremie per maand</label>
             <input
               id="premie-{i}"
               type="number"
@@ -365,10 +363,7 @@
       </p>
       <div class="rentevak" bind:this={rentevak}>
         <div class="rij">
-          <label for="rente"
-            >Hypotheekrente per maand (€)
-            <span class="hint">alleen de rente; weet je die niet, klik op de rekenmachine</span></label
-          >
+          <label for="rente">Hypotheekrente per maand, zonder aflossing (€)</label>
           <div class="metknop">
             <!-- Het formulier vraagt per maand, de berekening rekent per jaar. -->
             <input
@@ -478,7 +473,7 @@
       />
     </div>
     <div class="rij">
-      <label for="beleggingen">Beleggingen en tweede woning (€)</label>
+      <label for="beleggingen">Beleggingen en 2e woning (€)</label>
       <input
         id="beleggingen"
         type="number"
@@ -516,6 +511,8 @@
 
 <style>
   .invoer {
+    /* Het formulier staat vaak in een smalle kolom: de indeling hangt af van zijn eigen breedte, niet van het scherm. */
+    container: invoer / inline-size;
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -554,8 +551,8 @@
     gap: 4px;
     font-size: 14px;
   }
-  /* Op een smal scherm staat de vraag boven het veld. */
-  @media (max-width: 480px) {
+  /* Is het formulier smal (een telefoon, of de kolom naast de uitkomst), dan staat de vraag boven het veld. */
+  @container invoer (max-width: 460px) {
     .rij {
       grid-template-columns: minmax(0, 1fr);
       gap: 4px;
@@ -654,11 +651,6 @@
   }
   .notitie {
     margin: 0;
-  }
-  .hint {
-    display: block;
-    color: var(--muted);
-    font-size: 14px;
   }
   .opslaan {
     display: flex;

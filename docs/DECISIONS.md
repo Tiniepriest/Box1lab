@@ -843,3 +843,15 @@ De punten uit dezelfde review (D-088) over de site. Bouwt voort op fase 37.
 - **Privacy en techniek.** Een Content-Security-Policy `connect-src 'self'`, en `npm run schermafdrukken` faalt als een pagina iets bij een andere site ophaalt. De deploy draait nu dezelfde controles als CI vóór de build. De kop van `2026.yaml` zei dat alles tegen officiële bronnen was gecontroleerd; nu staat er dat sommige bedragen uit de pers komen.
 
 **Niet gedaan, voor de eigenaar** (in PROGRESS): standaard niet onthouden (D-077 is een besluit van de eigenaar); meer voorbeelden van de andere kant bij de voorstellen, of de keuze uitleggen (politieke keuze); fouten melden zonder GitHub (e-mail of formulier is een externe dienst); "weet ik niet" bij de pensioenpremie. Ook niet: een andere schaal voor "Je plek in Nederland" (V1; de CBS-factoren zijn niet gecontroleerd), een rand om het scrollende formulier, een andere kleur voor belasting in de waterval en vertraagd rekenen; die zijn klein of niet gemeten.
+
+## Fase 39: formulier in een smalle kolom
+
+### D-090 De vraag boven het veld, zonder uitlegregels
+
+Op Jouw situatie staat het formulier in een kolom van hoogstens 380px. Of de vraag naast of boven het veld stond, hing af van de breedte van het scherm (480px). Op een computer stonden ze dus naast elkaar, met ongeveer 100px voor de vraag: lange woorden als "pensioenpremie" liepen over het veld heen, en de uitlegregels besloegen vier of vijf regels.
+
+- **Indeling.** Het formulier is een container (`container: invoer / inline-size`); onder 460px eigen breedte staat de vraag boven het veld. Zo is het in de kolom naast de uitkomst, in het paneel op de andere tabbladen en op een telefoon; alleen waar het formulier breed is (een tablet zonder tweede kolom) staan ze nog naast elkaar.
+- **Uitlegregels weg** (wens van de eigenaar). "Staat op je loonstrook" bij de pensioenpremie is weg. Bij de hypotheekrente is "alleen de rente; weet je die niet, klik op de rekenmachine" weg; "zonder aflossing" staat nu in de vraag zelf ("Hypotheekrente per maand, zonder aflossing"), omdat het hele maandbedrag invullen een grote fout geeft. Dat de rekenknop opvalt, rekent nu op het icoon en de tooltip "Rente uitrekenen" (wijkt af van D-075).
+- **Kortere vraag:** "Beleggingen en 2e woning" (ook in de uitleg bij Box 3 in 2029).
+
+Geen andere rekenregels; de golden tests blijven gelijk.
