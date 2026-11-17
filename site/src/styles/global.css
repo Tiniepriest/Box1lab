@@ -246,3 +246,26 @@ table.data td.num {
   margin-right: 5px;
   vertical-align: 3px;
 }
+
+/*
+ * Twee of meer figuren naast elkaar: kop, legenda en grafiek beginnen links en rechts op dezelfde hoogte, ook als
+ * de uitleg of de legenda aan één kant langer is (subgrid). Onder elkaar (smal scherm) gewoon na elkaar.
+ */
+.figuren-naast {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0 20px;
+  container-type: inline-size;
+}
+.figuren-naast > figure.figuur {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  align-content: start;
+}
+/* Onder elkaar: ruimte tussen de figuren (twee kolommen passen vanaf 2 × 300 + 20 px). */
+@container (max-width: 619px) {
+  .figuren-naast > figure.figuur + figure.figuur {
+    margin-top: 24px;
+  }
+}

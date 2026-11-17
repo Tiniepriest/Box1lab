@@ -264,19 +264,20 @@
     return geldig.success ? huishoudenUitInvoer(geldig.data, params) : null;
   });
   const huishoudens = $derived.by(() => {
-    // Je eigen situatie komt onderaan, als je die hebt ingevuld.
-    const lijst = voorbeelden.huishoudens.map((v) => ({
-      label: v.label,
-      sub: v.omschrijving,
-      h: maakHuishouden(v.invoer, params),
-    }));
-    if (jij) lijst.push({ label: "Jij", sub: "Jouw situatie", h: jij });
-    return lijst.map((x) => {
-      const a = berekenHuishouden(x.h, params);
-      // Statisch: het gedragseffect hoort bij de bevolkingscijfers, niet bij één huishouden.
-      const b = toestand.p === params ? a : berekenHuishouden(x.h, statisch(toestand.p), params);
-      return { ...x, a, b, d: b.besteedbaar - a.besteedbaar };
-    });
+    const alle: { label: string; sub: string; h: Huishouden; jij?: boolean }[] = voorbeelden.huishoudens.map(
+      (v) => ({ label: v.label, sub: v.omschrijving, h: maakHuishouden(v.invoer, params) }),
+    );
+    // Je eigen situatie doet mee, als je die hebt ingevuld.
+    if (jij) alle.push({ label: "Jij", sub: "Jouw situatie", h: jij, jij: true });
+    // Van meeste achteruit naar meeste vooruit; bij gelijke uitkomst in de volgorde van het bestand.
+    return alle
+      .map((x) => {
+        const a = berekenHuishouden(x.h, params);
+        // Statisch: het gedragseffect hoort bij de bevolkingscijfers, niet bij één huishouden.
+        const b = toestand.p === params ? a : berekenHuishouden(x.h, statisch(toestand.p), params);
+        return { ...x, a, b, d: b.besteedbaar - a.besteedbaar };
+      })
+      .sort((p, q) => p.d - q.d);
   });
 
   const groepenBasis = $derived(
@@ -537,7 +538,7 @@
               >
             {/each}
           </div>
-          <div class="twee">
+          <div class="figuren-naast">
             <Figuur
               titel="Wie gaat erop vooruit of achteruit?"
               uitleg={indeling
@@ -640,7 +641,7 @@
             </select>
           </label>
         </div>
-        <div class="twee">
+        <div class="figuren-naast">
           <Figuur titel="Wat houdt dit huishouden over?" uitleg="Besteedbaar inkomen bij elk bruto inkomen.">
             {#snippet legenda()}
               <span
@@ -698,8 +699,8 @@
           <Figuur
             titel="Wat betekent het voor deze huishoudens?"
             uitleg={jij
-              ? "Verandering van het besteedbaar inkomen per jaar. De onderste rij is jouw situatie."
-              : "Verandering van het besteedbaar inkomen per jaar. Vul je eigen situatie in om die hier te zien."}
+              ? "Verandering van het besteedbaar inkomen per jaar, van meeste achteruit naar meeste vooruit. Jouw situatie heet Jij."
+              : "Verandering van het besteedbaar inkomen per jaar, van meeste achteruit naar meeste vooruit. Vul je eigen situatie in om die hier te zien."}
           >
             {#snippet legenda()}
               <span><i class="legenda-blok" style="background: var(--gain)"></i>erop vooruit</span>
@@ -709,6 +710,7 @@
               <StavenDivergent
                 rijen={huishoudens.map((x) => ({
                   label: `${x.label} · ${euro(x.a.bruto)}`,
+                  nadruk: x.jij,
                   sub: x.sub,
                   waarde: x.d,
                   tekst: euroVerschil(x.d),
@@ -959,11 +961,6 @@
     line-height: 1.35;
     margin: 0;
     max-width: 70ch;
-  }
-  .twee {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
   }
   .indeling {
     display: flex;

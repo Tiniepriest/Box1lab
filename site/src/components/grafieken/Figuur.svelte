@@ -4,6 +4,8 @@
   /*
    * Omlijsting van elke grafiek (HANDOFF §7): een titel die de vraag stelt, één zin uitleg, een legenda, de grafiek
    * zelf en een tabelweergave voor wie de grafiek niet kan of wil lezen.
+   * Altijd drie delen (kop, legenda, inhoud), zodat figuren naast elkaar op dezelfde hoogte beginnen: zie
+   * `.figuren-naast` in global.css.
    */
   let {
     titel,
@@ -19,14 +21,18 @@
     <h3>{titel}</h3>
     {#if uitleg}<p class="uitleg">{uitleg}</p>{/if}
   </figcaption>
-  {#if legenda}<div class="legenda">{@render legenda()}</div>{/if}
-  <div class="grafiek">{@render grafiek()}</div>
-  {#if tabel}
-    <details>
-      <summary>Toon als tabel</summary>
-      <div class="tabel-wrap">{@render tabel()}</div>
-    </details>
-  {/if}
+  <div class="legenda" class:leeg={!legenda}>
+    {#if legenda}{@render legenda()}{/if}
+  </div>
+  <div class="inhoud">
+    <div class="grafiek">{@render grafiek()}</div>
+    {#if tabel}
+      <details>
+        <summary>Toon als tabel</summary>
+        <div class="tabel-wrap">{@render tabel()}</div>
+      </details>
+    {/if}
+  </div>
 </figure>
 
 <style>
@@ -53,6 +59,9 @@
     font-size: 12px;
     color: var(--muted);
     margin-bottom: 6px;
+  }
+  .legenda.leeg {
+    margin: 0;
   }
   .grafiek {
     position: relative;
