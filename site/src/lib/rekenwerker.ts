@@ -25,6 +25,7 @@ function samenvatUitkomst(b: Basis, u: ReturnType<typeof simuleer>): UitkomstSam
     armoede: u.armoede,
     gini: u.gini,
     decielen: u.decielen,
+    groepen: u.groepen,
     winnaars: u.winnaars,
     belasting: belastingPerDeciel(b, u.resultaten),
   };

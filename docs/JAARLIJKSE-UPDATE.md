@@ -31,7 +31,7 @@ Kopieer het bestand van het vorige jaar:
 data/parameters/2026.yaml  →  data/parameters/2027.yaml
 ```
 
-Pas bovenaan `jaar: 2027` aan. Loop daarna elke sectie langs en vul de nieuwe bedragen in. Werk bij elke sectie ook de `bron` bij (een link naar de Belastingdienst, rijksoverheid.nl, CBS of CPB). Vergeet `loon.modaal` niet: het bruto modaal inkomen uit de kerngegevens van de nieuwste MEV of het CEP van het CPB; het voorbeeldhuishouden op de site verdient dat. Ook makkelijk te vergeten (D-088): `box1.premieVolksverzekeringen` (de premies in het tarief van de eerste schijf), `ondernemers.aftrekMaxTarief` en `eigenWoning.aftrekMaxTarief` (allebei het tarief van de tweede schijf), het AOW-vakantiegeld per halfjaar, `bijstand.vermogensgrens` en `toeslagen.huurtoeslag.jongeren`.
+Pas bovenaan `jaar: 2027` aan. Loop daarna elke sectie langs en vul de nieuwe bedragen in. Werk bij elke sectie ook de `bron` bij (een link naar de Belastingdienst, rijksoverheid.nl, CBS of CPB). Vergeet `loon.modaal` niet: het bruto modaal inkomen uit de kerngegevens van de nieuwste MEV of het CEP van het CPB; het voorbeeldhuishouden op de site verdient dat. Zet hetzelfde bedrag bij "Alleenstaand, modaal" in `data/voorbeelden/huishoudens.yaml`. Ook makkelijk te vergeten (D-088): `box1.premieVolksverzekeringen` (de premies in het tarief van de eerste schijf), `ondernemers.aftrekMaxTarief` en `eigenWoning.aftrekMaxTarief` (allebei het tarief van de tweede schijf), het AOW-vakantiegeld per halfjaar, `bijstand.vermogensgrens` en `toeslagen.huurtoeslag.jongeren`.
 
 Let op de schrijfwijze, die bovenaan het bestand staat:
 

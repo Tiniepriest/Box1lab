@@ -278,6 +278,10 @@ export const parametersSchema = z.strictObject({
     }),
     armoedegrens: pct,
     winnaarsGrenzen: z.tuple([pct, pct, pct, pct]),
+    /** Leeftijdsgrenzen voor de groepen in het lab, oplopend en onder de AOW-leeftijd. */
+    leeftijdsgroepen: z
+      .tuple([z.number().int().positive(), z.number().int().positive()])
+      .refine(([a, b]) => a < b, "De leeftijdsgroepen lopen op: de eerste grens is lager dan de tweede."),
   }),
 });
 

@@ -114,7 +114,7 @@
           {#if r.sub}<text x="0" y={y - 7} class="sub">{r.sub}</text>{/if}
         {:else if boven}
           <text x="0" y={y - 7} class="label"
-            >{r.label}{#if r.sub && past(r)}<tspan class="sub"> · {r.sub}</tspan>{/if}</text
+            >{r.label}{#if r.sub && past(r)}<tspan class="sub">&nbsp;· {r.sub}</tspan>{/if}</text
           >
         {:else}
           <text x="0" y={y + (r.sub ? h / 2 - 3 : h / 2)} dominant-baseline="middle" class="label"
