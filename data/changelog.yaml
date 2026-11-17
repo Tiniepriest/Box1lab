@@ -7,6 +7,16 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-11-17
+  soort: nieuw
+  titel: "Lab: effect op werkenden, AOW'ers, bijstand en meer"
+  tekst: >-
+    In het lab zie je nu niet alleen wat een scenario doet per inkomensgroep, maar ook per inkomensbron
+    (werknemers, zelfstandigen, AOW'ers, bijstand, WW en arbeidsongeschiktheid), per soort huishouden, leeftijd en
+    woning, en voor wie nu toeslagen krijgt of box 3-belasting betaalt. Kies bovenaan het blok "Wie gaat erop
+    vooruit of achteruit?". De voorbeeldhuishoudens heten nu naar wie ze zijn in plaats van P10 tot P99, en er
+    zijn er meer: onder meer een eenoudergezin en een gezin in de bijstand, iemand met WW, een AOW-paar met
+    spaargeld en tweeverdieners met kinderopvang. Het blok "Vergelijk met een voorstel" is weg.
+- datum: 2026-11-17
   soort: model
   modelversie: 0.7.0
   titel: "Zorgpremie gaat nergens meer van je inkomen af"

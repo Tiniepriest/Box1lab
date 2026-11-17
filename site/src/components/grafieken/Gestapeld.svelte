@@ -16,12 +16,18 @@
   /* Gestapelde staven per groep: aandeel personen per klasse (samen 100%). */
   let {
     rijen,
+    labelBreedte = 76,
     beschrijving,
-  }: { rijen: { label: string; aandelen: number[]; vet?: boolean }[]; beschrijving: string } = $props();
+  }: {
+    rijen: { label: string; aandelen: number[]; vet?: boolean }[];
+    /** Ruimte voor de labels links, in pixels. */
+    labelBreedte?: number;
+    beschrijving: string;
+  } = $props();
 
   let breedte = $state(0);
   const B = $derived(Math.max(300, breedte || 640));
-  const LABEL = 76;
+  const LABEL = $derived(labelBreedte);
   const RIJ = 26;
   const BINNEN = $derived(B - LABEL - 8);
   const H = $derived(rijen.length * RIJ + 22);

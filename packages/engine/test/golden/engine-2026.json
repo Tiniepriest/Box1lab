@@ -385,7 +385,7 @@
  ],
  "voorbeelden": [
   {
-   "id": "p10",
+   "id": "bijstand-alleenstaand",
    "scenarios": {
     "huidig": {
      "belasting": 4569.59,
@@ -435,7 +435,157 @@
    }
   },
   {
-   "id": "p20",
+   "id": "bijstand-eenouder",
+   "scenarios": {
+    "huidig": {
+     "belasting": 4569.59,
+     "toeslagen": 15942.79,
+     "besteedbaar": 35496.79
+    },
+    "vlaktaks-35": {
+     "belasting": 0,
+     "toeslagen": 0,
+     "besteedbaar": 19554
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 0,
+     "toeslagen": 0,
+     "besteedbaar": 19554
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 4569.59,
+     "toeslagen": 10126.45,
+     "besteedbaar": 29680.45
+    },
+    "zonder-hra": {
+     "belasting": 4569.59,
+     "toeslagen": 15942.79,
+     "besteedbaar": 35496.79
+    },
+    "hypotheekrenteaftrek-30": {
+     "belasting": 4569.59,
+     "toeslagen": 15942.79,
+     "besteedbaar": 35496.79
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 4569.59,
+     "toeslagen": 15942.79,
+     "besteedbaar": 35496.79
+    },
+    "toeslagen-afschaffen": {
+     "belasting": 4569.59,
+     "toeslagen": 0,
+     "besteedbaar": 19554
+    },
+    "hogere-algemene-heffingskorting": {
+     "belasting": 3791.38,
+     "toeslagen": 15942.79,
+     "besteedbaar": 35496.79
+    }
+   }
+  },
+  {
+   "id": "bijstand-gezin",
+   "scenarios": {
+    "huidig": {
+     "belasting": 3757.48,
+     "toeslagen": 14418.96,
+     "besteedbaar": 41226.72
+    },
+    "vlaktaks-35": {
+     "belasting": 0,
+     "toeslagen": 0,
+     "besteedbaar": 26807.76
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 0,
+     "toeslagen": 0,
+     "besteedbaar": 26807.76
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 3757.48,
+     "toeslagen": 8122.62,
+     "besteedbaar": 34930.38
+    },
+    "zonder-hra": {
+     "belasting": 3757.48,
+     "toeslagen": 14418.96,
+     "besteedbaar": 41226.72
+    },
+    "hypotheekrenteaftrek-30": {
+     "belasting": 3757.48,
+     "toeslagen": 14418.96,
+     "besteedbaar": 41226.72
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 3757.48,
+     "toeslagen": 14418.96,
+     "besteedbaar": 41226.72
+    },
+    "toeslagen-afschaffen": {
+     "belasting": 3757.48,
+     "toeslagen": 0,
+     "besteedbaar": 26807.76
+    },
+    "hogere-algemene-heffingskorting": {
+     "belasting": 2201.06,
+     "toeslagen": 14418.96,
+     "besteedbaar": 41226.72
+    }
+   }
+  },
+  {
+   "id": "ww",
+   "scenarios": {
+    "huidig": {
+     "belasting": 5465,
+     "toeslagen": 7276.46,
+     "besteedbaar": 25811.46
+    },
+    "vlaktaks-35": {
+     "belasting": 0,
+     "toeslagen": 0,
+     "besteedbaar": 24000
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 2100,
+     "toeslagen": 0,
+     "besteedbaar": 21900
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 5465,
+     "toeslagen": 1550.45,
+     "besteedbaar": 20085.45
+    },
+    "zonder-hra": {
+     "belasting": 5465,
+     "toeslagen": 7276.46,
+     "besteedbaar": 25811.46
+    },
+    "hypotheekrenteaftrek-30": {
+     "belasting": 5465,
+     "toeslagen": 7276.46,
+     "besteedbaar": 25811.46
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 5465,
+     "toeslagen": 7276.46,
+     "besteedbaar": 25811.46
+    },
+    "toeslagen-afschaffen": {
+     "belasting": 5465,
+     "toeslagen": 0,
+     "besteedbaar": 18535
+    },
+    "hogere-algemene-heffingskorting": {
+     "belasting": 4965,
+     "toeslagen": 7276.46,
+     "besteedbaar": 26311.46
+    }
+   }
+  },
+  {
+   "id": "aow-alleenstaand",
    "scenarios": {
     "huidig": {
      "belasting": 299.5,
@@ -485,57 +635,257 @@
    }
   },
   {
-   "id": "p30",
+   "id": "aow-stel",
    "scenarios": {
     "huidig": {
-     "belasting": 2631.51,
-     "toeslagen": 5229.46,
-     "besteedbaar": 33557.31
+     "belasting": 2548.22,
+     "toeslagen": 0,
+     "besteedbaar": 48688.61
     },
     "vlaktaks-35": {
-     "belasting": 2435.78,
+     "belasting": 2800,
      "toeslagen": 0,
-     "besteedbaar": 28523.58
+     "besteedbaar": 48436.83
     },
     "drie-schijven-35-40-45": {
-     "belasting": 4535.78,
+     "belasting": 6300,
      "toeslagen": 0,
-     "besteedbaar": 26423.58
+     "besteedbaar": 44936.83
     },
     "zonder-huurtoeslag": {
-     "belasting": 2631.51,
-     "toeslagen": 1382.48,
-     "besteedbaar": 29710.33
+     "belasting": 2548.22,
+     "toeslagen": 0,
+     "besteedbaar": 48688.61
     },
     "zonder-hra": {
-     "belasting": 2631.51,
-     "toeslagen": 5229.46,
-     "besteedbaar": 33557.31
+     "belasting": 2548.22,
+     "toeslagen": 0,
+     "besteedbaar": 48688.61
     },
     "hypotheekrenteaftrek-30": {
-     "belasting": 2631.51,
-     "toeslagen": 5229.46,
-     "besteedbaar": 33557.31
+     "belasting": 2548.22,
+     "toeslagen": 0,
+     "besteedbaar": 48688.61
     },
     "zonder-hra-en-forfait": {
-     "belasting": 2631.51,
-     "toeslagen": 5229.46,
-     "besteedbaar": 33557.31
+     "belasting": 2465.33,
+     "toeslagen": 0,
+     "besteedbaar": 48771.5
     },
     "toeslagen-afschaffen": {
-     "belasting": 2631.51,
+     "belasting": 2548.22,
      "toeslagen": 0,
-     "besteedbaar": 28327.85
+     "besteedbaar": 48688.61
     },
     "hogere-algemene-heffingskorting": {
-     "belasting": 2131.51,
-     "toeslagen": 5229.46,
-     "besteedbaar": 34057.31
+     "belasting": 2048.22,
+     "toeslagen": 0,
+     "besteedbaar": 49188.61
     }
    }
   },
   {
-   "id": "p50",
+   "id": "laag-loon",
+   "scenarios": {
+    "huidig": {
+     "belasting": 1311.16,
+     "toeslagen": 6149.63,
+     "besteedbaar": 32123.03
+    },
+    "vlaktaks-35": {
+     "belasting": 1149.6,
+     "toeslagen": 0,
+     "besteedbaar": 26134.96
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 3249.6,
+     "toeslagen": 0,
+     "besteedbaar": 24034.96
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 1311.16,
+     "toeslagen": 1550.45,
+     "besteedbaar": 27523.85
+    },
+    "zonder-hra": {
+     "belasting": 1311.16,
+     "toeslagen": 6149.63,
+     "besteedbaar": 32123.03
+    },
+    "hypotheekrenteaftrek-30": {
+     "belasting": 1311.16,
+     "toeslagen": 6149.63,
+     "besteedbaar": 32123.03
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 1311.16,
+     "toeslagen": 6149.63,
+     "besteedbaar": 32123.03
+    },
+    "toeslagen-afschaffen": {
+     "belasting": 1311.16,
+     "toeslagen": 0,
+     "besteedbaar": 25973.4
+    },
+    "hogere-algemene-heffingskorting": {
+     "belasting": 811.16,
+     "toeslagen": 6149.63,
+     "besteedbaar": 32623.03
+    }
+   }
+  },
+  {
+   "id": "eenouder-werkend",
+   "scenarios": {
+    "huidig": {
+     "belasting": 0,
+     "toeslagen": 13188.48,
+     "besteedbaar": 45589.14
+    },
+    "vlaktaks-35": {
+     "belasting": 2435.78,
+     "toeslagen": 0,
+     "besteedbaar": 29964.88
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 4535.78,
+     "toeslagen": 0,
+     "besteedbaar": 27864.88
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 0,
+     "toeslagen": 7285.5,
+     "besteedbaar": 39686.16
+    },
+    "zonder-hra": {
+     "belasting": 0,
+     "toeslagen": 13188.48,
+     "besteedbaar": 45589.14
+    },
+    "hypotheekrenteaftrek-30": {
+     "belasting": 0,
+     "toeslagen": 13188.48,
+     "besteedbaar": 45589.14
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 0,
+     "toeslagen": 13188.48,
+     "besteedbaar": 45589.14
+    },
+    "toeslagen-afschaffen": {
+     "belasting": 0,
+     "toeslagen": 0,
+     "besteedbaar": 32400.66
+    },
+    "hogere-algemene-heffingskorting": {
+     "belasting": 0,
+     "toeslagen": 13188.48,
+     "besteedbaar": 45589.14
+    }
+   }
+  },
+  {
+   "id": "modaal-alleenstaand",
+   "scenarios": {
+    "huidig": {
+     "belasting": 8668.63,
+     "toeslagen": 276.26,
+     "besteedbaar": 37266.19
+    },
+    "vlaktaks-35": {
+     "belasting": 7580.5,
+     "toeslagen": 0,
+     "besteedbaar": 38078.06
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 9680.5,
+     "toeslagen": 0,
+     "besteedbaar": 35978.06
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 8668.63,
+     "toeslagen": 0,
+     "besteedbaar": 36989.93
+    },
+    "zonder-hra": {
+     "belasting": 8668.63,
+     "toeslagen": 276.26,
+     "besteedbaar": 37266.19
+    },
+    "hypotheekrenteaftrek-30": {
+     "belasting": 8668.63,
+     "toeslagen": 276.26,
+     "besteedbaar": 37266.19
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 8668.63,
+     "toeslagen": 276.26,
+     "besteedbaar": 37266.19
+    },
+    "toeslagen-afschaffen": {
+     "belasting": 8668.63,
+     "toeslagen": 0,
+     "besteedbaar": 36989.93
+    },
+    "hogere-algemene-heffingskorting": {
+     "belasting": 8168.63,
+     "toeslagen": 276.26,
+     "besteedbaar": 37766.19
+    }
+   }
+  },
+  {
+   "id": "alleenverdiener",
+   "scenarios": {
+    "huidig": {
+     "belasting": 8668.63,
+     "toeslagen": 8780.64,
+     "besteedbaar": 48398.81
+    },
+    "vlaktaks-35": {
+     "belasting": 7580.5,
+     "toeslagen": 0,
+     "besteedbaar": 40706.3
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 9680.5,
+     "toeslagen": 0,
+     "besteedbaar": 38606.3
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 8668.63,
+     "toeslagen": 5441.12,
+     "besteedbaar": 45059.29
+    },
+    "zonder-hra": {
+     "belasting": 8668.63,
+     "toeslagen": 8780.64,
+     "besteedbaar": 48398.81
+    },
+    "hypotheekrenteaftrek-30": {
+     "belasting": 8668.63,
+     "toeslagen": 8780.64,
+     "besteedbaar": 48398.81
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 8668.63,
+     "toeslagen": 8780.64,
+     "besteedbaar": 48398.81
+    },
+    "toeslagen-afschaffen": {
+     "belasting": 8668.63,
+     "toeslagen": 0,
+     "besteedbaar": 39618.17
+    },
+    "hogere-algemene-heffingskorting": {
+     "belasting": 8168.63,
+     "toeslagen": 8780.64,
+     "besteedbaar": 48898.81
+    }
+   }
+  },
+  {
+   "id": "gezin-koop",
    "scenarios": {
     "huidig": {
      "belasting": 5342.75,
@@ -585,7 +935,57 @@
    }
   },
   {
-   "id": "p75",
+   "id": "kinderopvang",
+   "scenarios": {
+    "huidig": {
+     "belasting": 8212.56,
+     "toeslagen": 18187.75,
+     "besteedbaar": 88966.99
+    },
+    "vlaktaks-35": {
+     "belasting": 10016.27,
+     "toeslagen": 0,
+     "besteedbaar": 68975.53
+    },
+    "drie-schijven-35-40-45": {
+     "belasting": 14216.27,
+     "toeslagen": 0,
+     "besteedbaar": 64775.53
+    },
+    "zonder-huurtoeslag": {
+     "belasting": 8212.56,
+     "toeslagen": 18187.75,
+     "besteedbaar": 88966.99
+    },
+    "zonder-hra": {
+     "belasting": 8212.56,
+     "toeslagen": 18187.75,
+     "besteedbaar": 88966.99
+    },
+    "hypotheekrenteaftrek-30": {
+     "belasting": 8212.56,
+     "toeslagen": 18187.75,
+     "besteedbaar": 88966.99
+    },
+    "zonder-hra-en-forfait": {
+     "belasting": 8212.56,
+     "toeslagen": 18187.75,
+     "besteedbaar": 88966.99
+    },
+    "toeslagen-afschaffen": {
+     "belasting": 8212.56,
+     "toeslagen": 0,
+     "besteedbaar": 70779.24
+    },
+    "hogere-algemene-heffingskorting": {
+     "belasting": 7212.56,
+     "toeslagen": 18187.75,
+     "besteedbaar": 89966.99
+    }
+   }
+  },
+  {
+   "id": "gezin-tweeverdieners",
    "scenarios": {
     "huidig": {
      "belasting": 13207.93,
@@ -635,7 +1035,7 @@
    }
   },
   {
-   "id": "p90",
+   "id": "tweeverdieners-hoog",
    "scenarios": {
     "huidig": {
      "belasting": 48479.98,
@@ -685,102 +1085,52 @@
    }
   },
   {
-   "id": "p99",
+   "id": "topinkomen",
    "scenarios": {
     "huidig": {
      "belasting": 162572.2,
      "toeslagen": 0,
-     "besteedbaar": 225281.58
+     "besteedbaar": 223524.61
     },
     "vlaktaks-35": {
      "belasting": 118948.82,
      "toeslagen": 0,
-     "besteedbaar": 268904.96
+     "besteedbaar": 267147.99
     },
     "drie-schijven-35-40-45": {
      "belasting": 147184.61,
      "toeslagen": 0,
-     "besteedbaar": 240669.18
+     "besteedbaar": 238912.21
     },
     "zonder-huurtoeslag": {
      "belasting": 162572.2,
      "toeslagen": 0,
-     "besteedbaar": 225281.58
+     "besteedbaar": 223524.61
     },
     "zonder-hra": {
      "belasting": 168590.09,
      "toeslagen": 0,
-     "besteedbaar": 219263.69
+     "besteedbaar": 217506.72
     },
     "hypotheekrenteaftrek-30": {
      "belasting": 164084.2,
      "toeslagen": 0,
-     "besteedbaar": 223769.58
+     "besteedbaar": 222012.61
     },
     "zonder-hra-en-forfait": {
      "belasting": 168005.2,
      "toeslagen": 0,
-     "besteedbaar": 219848.58
+     "besteedbaar": 218091.61
     },
     "toeslagen-afschaffen": {
      "belasting": 162572.2,
      "toeslagen": 0,
-     "besteedbaar": 225281.58
+     "besteedbaar": 223524.61
     },
     "hogere-algemene-heffingskorting": {
      "belasting": 162072.2,
      "toeslagen": 0,
-     "besteedbaar": 225781.58
-    }
-   }
-  },
-  {
-   "id": "jij",
-   "scenarios": {
-    "huidig": {
-     "belasting": 7505.15,
-     "toeslagen": 7320.86,
-     "besteedbaar": 73027.07
-    },
-    "vlaktaks-35": {
-     "belasting": 8408.55,
-     "toeslagen": 0,
-     "besteedbaar": 64802.81
-    },
-    "drie-schijven-35-40-45": {
-     "belasting": 12608.55,
-     "toeslagen": 0,
-     "besteedbaar": 60602.81
-    },
-    "zonder-huurtoeslag": {
-     "belasting": 7505.15,
-     "toeslagen": 7320.86,
-     "besteedbaar": 73027.07
-    },
-    "zonder-hra": {
-     "belasting": 7505.15,
-     "toeslagen": 7320.86,
-     "besteedbaar": 73027.07
-    },
-    "hypotheekrenteaftrek-30": {
-     "belasting": 7505.15,
-     "toeslagen": 7320.86,
-     "besteedbaar": 73027.07
-    },
-    "zonder-hra-en-forfait": {
-     "belasting": 7505.15,
-     "toeslagen": 7320.86,
-     "besteedbaar": 73027.07
-    },
-    "toeslagen-afschaffen": {
-     "belasting": 7505.15,
-     "toeslagen": 0,
-     "besteedbaar": 65706.21
-    },
-    "hogere-algemene-heffingskorting": {
-     "belasting": 7005.15,
-     "toeslagen": 7320.86,
-     "besteedbaar": 73527.07
+     "besteedbaar": 224024.61
     }
    }
   }

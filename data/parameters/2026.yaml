@@ -348,3 +348,6 @@ methodiek:
   # Grenzen (in procent verandering van het besteedbaar inkomen) voor de vijf klassen winnaars en verliezers:
   # verlies > 5%, verlies 1–5%, minder dan 1%, winst 1–5%, winst > 5%.
   winnaarsGrenzen: [-5, -1, 1, 5]
+  # Leeftijdsgrenzen voor de groepen in het scenariolab: jonger dan de eerste, tot de tweede, tot de AOW-leeftijd
+  # en vanaf de AOW-leeftijd. Leeftijd van de hoofdbewoner.
+  leeftijdsgroepen: [30, 50]

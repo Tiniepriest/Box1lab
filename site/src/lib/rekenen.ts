@@ -19,6 +19,8 @@ export interface UitkomstSamenvatting {
   armoede: Armoede;
   gini: number;
   decielen: DecielEffect[];
+  /** Per indeling uit `indelingen(params)` het effect per groep (D-094). */
+  groepen: DecielEffect[][];
   winnaars: number[];
   /** Box 1 en box 3 per inkomensgroep in het scenario (D-080). */
   belasting: BelastingPerDeciel;
@@ -94,14 +96,4 @@ export async function maakBudgetneutraal(
 ): Promise<Oplossing> {
   await klaar;
   return vraag<Oplossing>({ soort: "neutraal", params: kopie(params), via });
-}
-
-let laatsteVergelijking = 0;
-
-/** Rekent een tweede scenario door om mee te vergelijken; los van simuleerScenario, zodat ze elkaar niet afbreken. */
-export async function simuleerVergelijking(params: Parameters): Promise<UitkomstSamenvatting | null> {
-  await klaar;
-  const mijn = ++laatsteVergelijking;
-  const u = await vraag<UitkomstSamenvatting>({ soort: "simuleer", params: kopie(params) });
-  return mijn === laatsteVergelijking ? u : null;
 }

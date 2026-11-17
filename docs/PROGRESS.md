@@ -241,6 +241,12 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] Lab: jouw situatie en de voorbeeldhuishoudens zonder gedragseffect (`statisch`)
 - [x] "Wat betekent dit voor jou?": alle regels, zodat ze optellen tot "Te besteden"
 
+## Lab: brede groepen en voorbeeldhuishoudens — klaar
+
+- [x] Effect per inkomensbron, huishouden, leeftijd, wonen, toeslagen en vermogen, via knoppen in het blok "Wie gaat erop vooruit of achteruit?" (D-094)
+- [x] Voorbeeldhuishoudens met een naam in plaats van P10–P99; vijftien soorten
+- [x] "Vergelijk met een voorstel" weg
+
 ## Open vragen voor de eigenaar
 
 - Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?

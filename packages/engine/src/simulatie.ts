@@ -3,6 +3,7 @@ import { armoederisico, type Armoede } from "./metrics/armoede.ts";
 import { deelInDecielen } from "./metrics/decielen.ts";
 import { gewogenMediaan } from "./metrics/gewogen.ts";
 import { gini } from "./metrics/gini.ts";
+import { deelInGroepen, indelingen } from "./metrics/groepen.ts";
 import { winnaarsKlasse } from "./metrics/winnaars.ts";
 import type { Kalibratie, Parameters } from "./parameters/schema.ts";
 import type { PopulatieHuishouden } from "./populatie.ts";
@@ -122,6 +123,8 @@ export interface Basis {
   persoonsgewichten: number[];
   /** Deciel (0–9) per huishouden, naar gestandaardiseerd besteedbaar inkomen onder het huidige beleid. */
   decielen: number[];
+  /** Per indeling uit `indelingen(params)` de groep van elk huishouden, onder het huidige beleid (D-094). */
+  groepen: number[][];
   armoedegrens: number;
   armoede: Armoede;
   gini: number;
@@ -160,6 +163,7 @@ export function maakBasis(
     schaal,
     persoonsgewichten,
     decielen: deelInDecielen(gestandaardiseerd, persoonsgewichten),
+    groepen: deelInGroepen(params, populatie, resultaten),
     armoedegrens,
     armoede: armoederisico(resultaten, huishoudgewichten, armoedegrens),
     gini: gini(gestandaardiseerd, persoonsgewichten),
@@ -173,6 +177,8 @@ export interface DecielEffect {
   relatief: number;
   /** Aandeel personen (%) per winnaars-klasse: [verlies groot, verlies, ~0, winst, winst groot]. */
   aandelen: number[];
+  /** Aandeel van alle personen (%) dat in deze groep valt. */
+  omvang: number;
 }
 
 export interface Uitkomst {
@@ -185,8 +191,35 @@ export interface Uitkomst {
   armoede: Armoede;
   gini: number;
   decielen: DecielEffect[];
+  /** Per indeling uit `indelingen(params)` het effect per groep, zoals bij de decielen (D-094). */
+  groepen: DecielEffect[][];
   /** Aandeel personen (%) per winnaars-klasse over de hele bevolking. */
   winnaars: number[];
+}
+
+/** Telt per groep de verandering op; `effecten` maakt er gemiddelden en aandelen van. */
+class Teller {
+  private g: { d: number; b: number; w: number; pw: number; sh: number[] }[];
+  constructor(n: number) {
+    this.g = Array.from({ length: n }, () => ({ d: 0, b: 0, w: 0, pw: 0, sh: [0, 0, 0, 0, 0] }));
+  }
+  tel(groep: number, delta: number, besteedbaar: number, w: number, pw: number, klasse: number) {
+    const g = this.g[groep]!;
+    g.d += delta * w;
+    g.b += besteedbaar * w;
+    g.w += w;
+    g.pw += pw;
+    g.sh[klasse]! += pw;
+  }
+  /** Een lege groep krijgt nullen. */
+  effecten(totaalPw: number): DecielEffect[] {
+    return this.g.map((g) => ({
+      gemiddeld: g.w ? g.d / g.w : 0,
+      relatief: g.b ? (g.d / g.b) * 100 : 0,
+      aandelen: g.sh.map((v) => (g.pw ? (v / g.pw) * 100 : 0)),
+      omvang: (g.pw / totaalPw) * 100,
+    }));
+  }
 }
 
 function totaalOverig(posten: Record<string, number>): number {
@@ -217,21 +250,18 @@ export function simuleer(basis: Basis, scenario: Parameters): Uitkomst {
   };
 
   const grenzen = basis.params.methodiek.winnaarsGrenzen;
-  const dec = Array.from({ length: 10 }, () => ({ d: 0, b: 0, w: 0, pw: 0, sh: [0, 0, 0, 0, 0] }));
+  const dec = new Teller(10);
+  const groepen = indelingen(basis.params).map((ind) => new Teller(ind.groepen.length));
   const alle = [0, 0, 0, 0, 0];
   let alleW = 0;
   resultaten.forEach((r, i) => {
     const a = basis.resultaten[i]!;
-    const g = dec[basis.decielen[i]!]!;
     const w = populatie[i]!.gewicht;
     const pw = basis.persoonsgewichten[i]!;
     const delta = r.besteedbaar - a.besteedbaar;
     const klasse = winnaarsKlasse((delta / Math.max(1, a.besteedbaar)) * 100, grenzen);
-    g.d += delta * w;
-    g.b += a.besteedbaar * w;
-    g.w += w;
-    g.pw += pw;
-    g.sh[klasse]! += pw;
+    dec.tel(basis.decielen[i]!, delta, a.besteedbaar, w, pw, klasse);
+    basis.groepen.forEach((ind, j) => groepen[j]!.tel(ind[i]!, delta, a.besteedbaar, w, pw, klasse));
     alle[klasse]! += pw;
     alleW += pw;
   });
@@ -251,11 +281,8 @@ export function simuleer(basis: Basis, scenario: Parameters): Uitkomst {
       resultaten.map((r) => r.besteedbaar / r.equivalentie),
       basis.persoonsgewichten,
     ),
-    decielen: dec.map((g) => ({
-      gemiddeld: g.d / g.w,
-      relatief: (g.d / g.b) * 100,
-      aandelen: g.sh.map((v) => (v / g.pw) * 100),
-    })),
+    decielen: dec.effecten(alleW),
+    groepen: groepen.map((t) => t.effecten(alleW)),
     winnaars: alle.map((v) => (v / alleW) * 100),
   };
 }

@@ -5,6 +5,7 @@
     codeerScenario,
     decodeerScenario,
     huishoudenUitInvoer,
+    indelingen,
     inkomenscurve,
     invoerSchema,
     leesParameter,
@@ -25,7 +26,6 @@
   import {
     maakBudgetneutraal,
     simuleerScenario,
-    simuleerVergelijking,
     startRekenen,
     type BasisSamenvatting,
     type UitkomstSamenvatting,
@@ -220,50 +220,23 @@
     return `Met dit scenario gaat ${getal(achteruit)}% van de mensen erop achteruit en ${getal(vooruit)}% erop vooruit; ${overheid}.`;
   });
 
-  // Vergelijken met een voorstel
-  let vergelijkId = $state("");
-  let vergelijking = $state<UitkomstSamenvatting | null>(null);
-  $effect(() => {
-    const pr = presets.find((x) => x.id === vergelijkId);
-    if (!pr || !basis) {
-      vergelijking = null;
-      return;
-    }
-    simuleerVergelijking(pasToe(params, pr.wijzigingen)).then((u) => {
-      if (u) vergelijking = u;
-    });
-  });
-  const vergelijkNaam = $derived(presets.find((x) => x.id === vergelijkId)?.naam ?? "");
-  const rijenVergelijking = $derived.by(() => {
-    if (!uitkomst || !vergelijking) return [];
-    const ach = (u: UitkomstSamenvatting) => u.winnaars[0]! + u.winnaars[1]!;
-    const voor = (u: UitkomstSamenvatting) => u.winnaars[3]! + u.winnaars[4]!;
-    return [
-      { label: "Overheid per saldo", a: miljard(uitkomst.saldoMld), b: miljard(vergelijking.saldoMld) },
-      {
-        label: "Armoederisico",
-        a: procent(uitkomst.armoede.personen),
-        b: procent(vergelijking.armoede.personen),
-      },
-      {
-        label: "Armoede onder kinderen",
-        a: procent(uitkomst.armoede.kinderen),
-        b: procent(vergelijking.armoede.kinderen),
-      },
-      { label: "Gini", a: getal(uitkomst.gini, 3), b: getal(vergelijking.gini, 3) },
-      { label: "Erop achteruit", a: `${getal(ach(uitkomst))}%`, b: `${getal(ach(vergelijking))}%` },
-      {
-        label: "Ongeveer gelijk",
-        a: `${getal(uitkomst.winnaars[2]!)}%`,
-        b: `${getal(vergelijking.winnaars[2]!)}%`,
-      },
-      { label: "Erop vooruit", a: `${getal(voor(uitkomst))}%`, b: `${getal(voor(vergelijking))}%` },
-      ...uitkomst.decielen.map((d, i) => ({
-        label: `Groep ${i + 1}${i === 0 ? " (laagste inkomens)" : i === 9 ? " (hoogste inkomens)" : ""}`,
-        a: procentVerschil(d.relatief),
-        b: procentVerschil(vergelijking!.decielen[i]!.relatief),
-      })),
-    ];
+  // Per groep: de tien inkomensgroepen of een van de brede indelingen (D-094).
+  const INDELINGEN = indelingen(params);
+  let indelingId = $state("inkomen");
+  const indeling = $derived(INDELINGEN.find((x) => x.id === indelingId) ?? null);
+  const groepRijen = $derived.by(() => {
+    if (!uitkomst) return [];
+    if (!indeling)
+      return uitkomst.decielen.map((e, i) => ({
+        label: `Groep ${i + 1}`,
+        kort: `Groep ${i + 1}`,
+        sub: i === 0 ? "laagste inkomens" : i === 9 ? "hoogste inkomens" : undefined,
+        e,
+      }));
+    const effecten = uitkomst.groepen[INDELINGEN.indexOf(indeling)]!;
+    return indeling.groepen
+      .map((g, i) => ({ ...g, sub: `${getal(effecten[i]!.omvang, 0)}% van de mensen`, e: effecten[i]! }))
+      .filter((r) => r.e.omvang > 0);
   });
 
   // Curves
@@ -291,14 +264,12 @@
     return geldig.success ? huishoudenUitInvoer(geldig.data, params) : null;
   });
   const huishoudens = $derived.by(() => {
-    // Als je je eigen situatie hebt opgeslagen, vervangt die het voorbeeld "jij".
-    const lijst = voorbeelden.huishoudens
-      .filter((v) => !(jij && v.id === "jij"))
-      .map((v) => ({
-        label: v.label,
-        sub: v.omschrijving,
-        h: maakHuishouden(v.invoer, params),
-      }));
+    // Je eigen situatie komt onderaan, als je die hebt ingevuld.
+    const lijst = voorbeelden.huishoudens.map((v) => ({
+      label: v.label,
+      sub: v.omschrijving,
+      h: maakHuishouden(v.invoer, params),
+    }));
     if (jij) lijst.push({ label: "Jij", sub: "Jouw situatie", h: jij });
     return lijst.map((x) => {
       const a = berekenHuishouden(x.h, params);
@@ -552,89 +523,110 @@
 
         <JouwEffect {params} scenario={toestand.p} situatie={{ invoer, eigen }} />
 
-        <div class="kaart twee">
-          <Figuur
-            titel="Wie gaat erop vooruit of achteruit?"
-            uitleg="Gemiddelde verandering van het besteedbaar inkomen per groep. De groepen zijn tien even grote delen van de bevolking, van laag naar hoog inkomen (gecorrigeerd voor de grootte van het huishouden)."
-          >
-            {#snippet legenda()}
-              <span><i class="legenda-blok" style="background: var(--gain)"></i>erop vooruit</span>
-              <span><i class="legenda-blok" style="background: var(--loss)"></i>erop achteruit</span>
-            {/snippet}
-            {#snippet grafiek()}
-              <StavenDivergent
-                rijen={uitkomst.decielen.map((d, i) => ({
-                  label: `Groep ${i + 1}`,
-                  sub: i === 0 ? "laagste inkomens" : i === 9 ? "hoogste inkomens" : undefined,
-                  waarde: d.relatief,
-                  tekst: `${procentVerschil(d.relatief)} · ${euroVerschil(d.gemiddeld)}`,
-                  tip: [
-                    `Groep ${i + 1}`,
-                    `${euroVerschil(d.gemiddeld)} per huishouden per jaar`,
-                    `${procentVerschil(d.relatief)} van het besteedbaar inkomen`,
-                  ],
-                }))}
-                asLabel={(v) => procentVerschil(v, Math.abs(v) < 1 && v !== 0 ? 1 : 0)}
-                drempel={0.05}
-                labelBreedte={120}
-                beschrijving="Verandering van het besteedbaar inkomen per inkomensgroep"
-              />
-            {/snippet}
-            {#snippet tabel()}
-              <table class="data">
-                <thead><tr><th>Groep</th><th>Per huishouden</th><th>In %</th></tr></thead>
-                <tbody>
-                  {#each uitkomst.decielen as d, i (i)}
+        <div class="kaart">
+          <div class="indeling" role="group" aria-label="Groepen">
+            <span class="notitie">Bekijk per</span>
+            <button
+              type="button"
+              aria-pressed={indelingId === "inkomen"}
+              onclick={() => (indelingId = "inkomen")}>Inkomen</button
+            >
+            {#each INDELINGEN as ind (ind.id)}
+              <button type="button" aria-pressed={indelingId === ind.id} onclick={() => (indelingId = ind.id)}
+                >{ind.label}</button
+              >
+            {/each}
+          </div>
+          <div class="twee">
+            <Figuur
+              titel="Wie gaat erop vooruit of achteruit?"
+              uitleg={indeling
+                ? `Gemiddelde verandering van het besteedbaar inkomen per groep. ${indeling.uitleg}`
+                : "Gemiddelde verandering van het besteedbaar inkomen per groep. De groepen zijn tien even grote delen van de bevolking, van laag naar hoog inkomen (gecorrigeerd voor de grootte van het huishouden)."}
+            >
+              {#snippet legenda()}
+                <span><i class="legenda-blok" style="background: var(--gain)"></i>erop vooruit</span>
+                <span><i class="legenda-blok" style="background: var(--loss)"></i>erop achteruit</span>
+              {/snippet}
+              {#snippet grafiek()}
+                <StavenDivergent
+                  rijen={groepRijen.map((r) => ({
+                    label: r.label,
+                    sub: r.sub,
+                    waarde: r.e.relatief,
+                    tekst: `${procentVerschil(r.e.relatief)} · ${euroVerschil(r.e.gemiddeld)}`,
+                    tip: [
+                      r.sub ? `${r.label} (${r.sub})` : r.label,
+                      `${euroVerschil(r.e.gemiddeld)} per huishouden per jaar`,
+                      `${procentVerschil(r.e.relatief)} van het besteedbaar inkomen`,
+                    ],
+                  }))}
+                  asLabel={(v) => procentVerschil(v, Math.abs(v) < 1 && v !== 0 ? 1 : 0)}
+                  drempel={0.05}
+                  labelBreedte={indeling ? 240 : 120}
+                  subAltijd={!!indeling}
+                  beschrijving={`Verandering van het besteedbaar inkomen per groep: ${indeling?.label.toLowerCase() ?? "inkomen"}`}
+                />
+              {/snippet}
+              {#snippet tabel()}
+                <table class="data">
+                  <thead><tr><th>Groep</th><th>Per huishouden</th><th>In %</th></tr></thead>
+                  <tbody>
+                    {#each groepRijen as r (r.label)}
+                      <tr
+                        ><td
+                          >{r.label}{#if r.sub}&nbsp;<span class="notitie">{r.sub}</span>{/if}</td
+                        ><td class="num">{euroVerschil(r.e.gemiddeld)}</td><td class="num"
+                          >{procentVerschil(r.e.relatief)}</td
+                        ></tr
+                      >
+                    {/each}
+                  </tbody>
+                </table>
+              {/snippet}
+            </Figuur>
+            <Figuur
+              titel="Hoeveel mensen winnen en verliezen?"
+              uitleg="Aandeel personen per groep naar de grootte van hun verandering."
+            >
+              {#snippet legenda()}
+                {#each KLASSEN as k (k.naam)}<span
+                    ><i class="legenda-blok" style="background: {k.kleur}"></i>{k.naam}</span
+                  >{/each}
+              {/snippet}
+              {#snippet grafiek()}
+                <Gestapeld
+                  rijen={[
+                    ...groepRijen.map((r) => ({ label: r.kort, aandelen: r.e.aandelen })),
+                    { label: "Iedereen", aandelen: uitkomst.winnaars, vet: true },
+                  ]}
+                  labelBreedte={indeling ? 124 : 76}
+                  beschrijving={`Aandeel winnaars en verliezers per groep: ${indeling?.label.toLowerCase() ?? "inkomen"}`}
+                />
+              {/snippet}
+              {#snippet tabel()}
+                <table class="data">
+                  <thead
+                    ><tr
+                      ><th>Groep</th>{#each KLASSEN as k (k.naam)}<th>{k.naam}</th>{/each}</tr
+                    ></thead
+                  >
+                  <tbody>
+                    {#each groepRijen as r (r.label)}
+                      <tr
+                        ><td>{r.label}</td>{#each r.e.aandelen as a, j (j)}<td class="num">{getal(a)}%</td
+                          >{/each}</tr
+                      >
+                    {/each}
                     <tr
-                      ><td>{i + 1}</td><td class="num">{euroVerschil(d.gemiddeld)}</td><td class="num"
-                        >{procentVerschil(d.relatief)}</td
-                      ></tr
-                    >
-                  {/each}
-                </tbody>
-              </table>
-            {/snippet}
-          </Figuur>
-          <Figuur
-            titel="Hoeveel mensen winnen en verliezen?"
-            uitleg="Aandeel personen per groep naar de grootte van hun verandering."
-          >
-            {#snippet legenda()}
-              {#each KLASSEN as k (k.naam)}<span
-                  ><i class="legenda-blok" style="background: {k.kleur}"></i>{k.naam}</span
-                >{/each}
-            {/snippet}
-            {#snippet grafiek()}
-              <Gestapeld
-                rijen={[
-                  ...uitkomst.decielen.map((d, i) => ({ label: `Groep ${i + 1}`, aandelen: d.aandelen })),
-                  { label: "Iedereen", aandelen: uitkomst.winnaars, vet: true },
-                ]}
-                beschrijving="Aandeel winnaars en verliezers per inkomensgroep"
-              />
-            {/snippet}
-            {#snippet tabel()}
-              <table class="data">
-                <thead
-                  ><tr
-                    ><th>Groep</th>{#each KLASSEN as k (k.naam)}<th>{k.naam}</th>{/each}</tr
-                  ></thead
-                >
-                <tbody>
-                  {#each uitkomst.decielen as d, i (i)}
-                    <tr
-                      ><td>{i + 1}</td>{#each d.aandelen as a, j (j)}<td class="num">{getal(a)}%</td
+                      ><td>Iedereen</td>{#each uitkomst.winnaars as a, j (j)}<td class="num">{getal(a)}%</td
                         >{/each}</tr
                     >
-                  {/each}
-                  <tr
-                    ><td>Iedereen</td>{#each uitkomst.winnaars as a, j (j)}<td class="num">{getal(a)}%</td
-                      >{/each}</tr
-                  >
-                </tbody>
-              </table>
-            {/snippet}
-          </Figuur>
+                  </tbody>
+                </table>
+              {/snippet}
+            </Figuur>
+          </div>
         </div>
       {/if}
 
@@ -757,39 +749,6 @@
               </table>
             {/snippet}
           </Figuur>
-        </div>
-
-        <div class="kaart">
-          <div class="kop-met-keuze">
-            <h2>Vergelijk met een voorstel</h2>
-            <label>
-              <span class="visueel-verborgen">Voorstel om mee te vergelijken</span>
-              <select bind:value={vergelijkId}>
-                <option value="">Kies een voorstel…</option>
-                {#each presets.filter((p) => p.wijzigingen.length) as pr (pr.id)}<option value={pr.id}
-                    >{pr.naam}</option
-                  >{/each}
-              </select>
-            </label>
-          </div>
-          {#if vergelijking && rijenVergelijking.length}
-            <div class="tabel-wrap">
-              <table class="data">
-                <thead><tr><th></th><th>Jouw scenario</th><th>{vergelijkNaam}</th></tr></thead>
-                <tbody>
-                  {#each rijenVergelijking as rij (rij.label)}
-                    <tr><td>{rij.label}</td><td class="num">{rij.a}</td><td class="num">{rij.b}</td></tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
-            <p class="notitie">
-              Groepen: gemiddelde verandering van het besteedbaar inkomen ten opzichte van het huidige
-              stelsel.
-            </p>
-          {:else}
-            <p class="notitie">Zet je eigen scenario naast een bekend voorstel.</p>
-          {/if}
         </div>
 
         <div class="kaart">
@@ -1005,6 +964,17 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
+  }
+  .indeling {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .indeling button {
+    font-size: 13px;
+    padding: 5px 10px;
   }
   .kop-met-keuze {
     display: flex;

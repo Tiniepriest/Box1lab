@@ -884,3 +884,37 @@ Drie meldingen van de eigenaar (17 november 2026), nagerekend met de engine. (In
 - **Lab: gedragseffect niet voor één huishouden.** "Wat betekent dit voor jou?" en de voorbeeldhuishoudens rekenden met het gedragseffect, zodat je eigen bruto inkomen veranderde (€ 36.000 met ETI 0,25 werd € 35.389). Nieuw: `statisch(p)` zet `gedrag.eti` op 0; de inkomenscurves gebruikten dat al. Eén huishouden rekent statisch, het gedragseffect hoort bij de bevolkingscijfers.
 - **Lab: het overzicht telt op.** "Wat betekent dit voor jou?" toont bruto inkomen, pensioenpremie, belasting en premies (inclusief Zvw-bijdrage), belasting box 3, toeslagen, kinderbijslag en basisinkomen, tot "Te besteden". Een regel die nu en hiermee 0 is, valt weg, behalve bruto, belasting en toeslagen. Voorbeeld van de melding: vlaktaks 40% zonder vrijstelling en kortingen, basisinkomen € 1.000 per maand, € 36.000 bruto: 36.000 − 14.400 + 12.000 = 33.600 (test in `basisinkomen.test.ts`).
 - **Niet veranderd.** Huurtoeslag bij een huur boven € 932,93 is geen fout: sinds 2026 is er geen harde huurgrens meer, alleen een maximum huur waarover je toeslag krijgt.
+
+## Lab: brede groepen en voorbeeldhuishoudens
+
+### D-094 Effect per brede groep; voorbeeldhuishoudens zonder percentiel
+
+Wens van de eigenaar (17 november 2026). Het lab laat zien wat een scenario doet voor werkenden, AOW'ers, mensen in de bijstand enzovoort. De P10–P99-indeling van de voorbeeldhuishoudens mag weg, want juist de soorten huishoudens zijn interessant. "Vergelijk met een voorstel" mag weg.
+
+- **Indelingen (`metrics/groepen.ts`).** Naast de tien inkomensgroepen zijn er zes indelingen:
+  - inkomensbron: werknemers, zelfstandigen, AOW'ers, bijstand, WW en arbeidsongeschiktheid, zonder eigen inkomen
+  - huishouden: alleenstaanden, paren zonder kinderen, paren met kinderen (allebei werkend of niet), eenoudergezinnen
+  - leeftijd van de hoofdbewoner
+  - wonen: corporatie, andere huur, koop
+  - toeslagen: krijgt nu wel of geen toeslagen
+  - vermogen: betaalt nu wel of geen box 3-belasting
+
+  Elk huishouden valt in precies één groep per indeling, zodat de groepen samen de hele bevolking zijn. Voor de inkomensbron telt de grootste bron in het huishouden. Een paar met één AOW'er en één werkende valt dus in de groep van de grootste bron. Net als de decielen volgt de indeling het huidige beleid (`Basis.groepen`), zodat je in elk scenario dezelfde mensen vergelijkt.
+
+- **Leeftijdsgrenzen in de parameters.** `methodiek.leeftijdsgroepen: [30, 50]`, plus `uitkeringen.aowLeeftijd`. Er staan geen grenzen in de code.
+- **Uitkomst.** `simuleer` geeft per indeling per groep hetzelfde als per deciel: het gemiddelde, het relatieve effect en de aandelen winnaars en verliezers. Daarbij komt `omvang`: het aandeel van alle personen in die groep. Een lege groep krijgt nullen en het lab verbergt hem; "zonder eigen inkomen" is in 2026 leeg. De test controleert dat de groepen per indeling optellen tot 100% en tot het landelijke effect.
+- **Waar in het lab.** In de bestaande blokken "Wie gaat erop vooruit of achteruit?" en "Hoeveel mensen winnen en verliezen?". Daarboven staan knoppen "Bekijk per": Inkomen, Inkomensbron, Huishouden, Leeftijd, Wonen, Toeslagen, Vermogen. Een apart blok zou dezelfde twee grafieken herhalen; zo blijft er één plek die laat zien wie het merkt. Bij elke groep staat welk deel van de mensen erin valt. Kleine groepen zijn minder precies; de bijstand telt 114 modelhuishoudens, samen 2% van de mensen. Dat staat op de methodiekpagina.
+- **Voorbeeldhuishoudens.** Het zijn er vijftien in plaats van acht, en elk heet naar wie het is:
+  - bijstand: alleenstaand, eenoudergezin, paar met kinderen
+  - WW
+  - AOW'er alleenstaand, en een AOW-paar met spaargeld
+  - laag loon, en een eenoudergezin dat werkt
+  - alleenstaand modaal (`loon.modaal`, CPB)
+  - alleenverdiener, en tweeverdieners met kinderopvang
+  - anderhalfverdieners, tweeverdieners met kinderen, tweeverdieners zonder kinderen
+  - topinkomen
+
+  Het voorbeeld "Jij" is weg: jouw situatie staat er alleen bij als je die hebt ingevuld. Er is geen zzp'er bij, omdat de eenvoudige invoer geen ondernemers kent.
+
+- **Golden.** Alleen het blok `voorbeelden` verandert, omdat de id's nieuw zijn. Alle landelijke cijfers en scenario's blijven gelijk. De vijf overgenomen huishoudens (oud P10, P20, P50, P75 en P90) geven precies dezelfde uitkomsten. P99 heet nu "Topinkomen" en heeft € 500.000 vermogen, zodat box 3 meetelt.
+- **Weg: "Vergelijk met een voorstel".** Daarmee verdwijnt ook `simuleerVergelijking` uit `site/src/lib/rekenen.ts`.

@@ -222,15 +222,19 @@ try {
     /Vrijstelling op/.test((await pg.textContent("body")) ?? ""),
     "lab: budgetneutraal via vrijstelling",
   );
-  await pg.locator("select").filter({ hasText: "Kies een voorstel" }).selectOption("toeslagen-afschaffen");
-  await pg.waitForFunction(
-    () =>
-      /Toeslagen afschaffen/.test(document.querySelector("thead")?.textContent ?? "") ||
-      [...document.querySelectorAll("thead")].some((t) => /Toeslagen afschaffen/.test(t.textContent ?? "")),
-    null,
-    { timeout: 30000 },
+  const bekijkPer = pg.getByRole("group", { name: "Groepen" });
+  await bekijkPer.getByRole("button", { name: "Inkomensbron" }).click();
+  const groepTekst = (await pg.locator(".twee").first().textContent()) ?? "";
+  controleer(
+    /AOW'ers/.test(groepTekst) && /Bijstand/.test(groepTekst) && /% van de mensen/.test(groepTekst),
+    "lab: effect per inkomensbron, met de omvang van elke groep (D-094)",
   );
-  controleer(true, "lab: vergelijken met een voorstel");
+  await bekijkPer.getByRole("button", { name: "Inkomen", exact: true }).click();
+  const lab = (await pg.textContent("body")) ?? "";
+  controleer(
+    /Bijstand, eenoudergezin/.test(lab) && !/P10 ·/.test(lab) && !/Vergelijk met een voorstel/.test(lab),
+    "lab: voorbeeldhuishoudens met een naam, geen P10; geen vergelijk-blok (D-094)",
+  );
   await pg.goto(`${BASIS}/uitleg/armoedeval`, { waitUntil: "networkidle" });
   const mini = pg.locator(".mini input[type=range]").first();
   await mini.scrollIntoViewIfNeeded();

@@ -30,6 +30,7 @@ export * from "./metrics/armoede.ts";
 export * from "./metrics/decielen.ts";
 export * from "./metrics/gewogen.ts";
 export * from "./metrics/gini.ts";
+export * from "./metrics/groepen.ts";
 export * from "./metrics/marginaal.ts";
 export * from "./metrics/winnaars.ts";
 export * from "./simulatie.ts";
