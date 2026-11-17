@@ -1,4 +1,4 @@
-import { berekenHuishouden, overVanInkomen, type Huishouden } from "../huishouden.ts";
+import { berekenHuishouden, overVanInkomen, statisch, type Huishouden } from "../huishouden.ts";
 import type { Parameters } from "../parameters/schema.ts";
 
 export interface Curve {
@@ -29,7 +29,7 @@ export function inkomenscurve(
   bruto: readonly number[],
   stap = 1000,
 ): Curve {
-  const params = p.gedrag.eti ? { ...p, gedrag: { ...p.gedrag, eti: 0 } } : p;
+  const params = statisch(p);
   const r = (x: number) => berekenHuishouden(maak(x), params, basis);
   const nu = bruto.map(r);
   const marginaleDruk = bruto.map((x, i) => (1 - (voorDruk(r(x + stap)) - voorDruk(nu[i]!)) / stap) * 100);

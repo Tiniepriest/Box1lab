@@ -17,9 +17,9 @@
    "kgb": 1,
    "kot": 1
   },
-  "armoedegrens": 22329.65,
-  "armoede": 10.4223,
-  "gini": 0.23173
+  "armoedegrens": 23724.86,
+  "armoede": 9.3767,
+  "gini": 0.22174
  },
  "scenarios": [
   {
@@ -39,9 +39,9 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 10.4223,
-   "armoedeKinderen": 10.4916,
-   "gini": 0.23173,
+   "armoede": 9.3767,
+   "armoedeKinderen": 9.5949,
+   "gini": 0.22174,
    "decielenRelatief": [
     0,
     0,
@@ -79,27 +79,27 @@
     "uitkeringen": 0.9509,
     "basisinkomen": 0
    },
-   "armoede": 16.0393,
-   "armoedeKinderen": 17.3962,
-   "gini": 0.28327,
+   "armoede": 14.7327,
+   "armoedeKinderen": 16.5418,
+   "gini": 0.27124,
    "decielenRelatief": [
-    -14.459,
-    -10.162,
-    -7.255,
-    -5.669,
-    -4.715,
-    -2.308,
-    -0.01,
-    2.774,
-    7.058,
-    14.872
+    -13.518,
+    -9.626,
+    -6.644,
+    -5.162,
+    -4.52,
+    -2.64,
+    0.525,
+    2.729,
+    6.864,
+    14.422
    ],
    "winnaars": [
-    32.394,
-    16.035,
-    10.546,
-    15.338,
-    25.688
+    31.465,
+    16.517,
+    11.214,
+    16.112,
+    24.692
    ]
   },
   {
@@ -119,27 +119,27 @@
     "uitkeringen": -0.9046,
     "basisinkomen": 0
    },
-   "armoede": 19.4799,
-   "armoedeKinderen": 20.3375,
-   "gini": 0.27977,
+   "armoede": 17.8147,
+   "armoedeKinderen": 19.2578,
+   "gini": 0.26713,
    "decielenRelatief": [
-    -18.091,
-    -15.067,
-    -13.149,
-    -11.737,
-    -10.474,
-    -8.217,
-    -6.088,
-    -3.571,
-    0.329,
-    6.18
+    -16.776,
+    -14.089,
+    -12.14,
+    -10.829,
+    -9.941,
+    -8.2,
+    -5.303,
+    -3.339,
+    0.42,
+    5.981
    ],
    "winnaars": [
-    60.209,
-    14.954,
-    6.862,
-    8.304,
-    9.67
+    58.679,
+    16.334,
+    7.049,
+    8.669,
+    9.268
    ]
   },
   {
@@ -159,25 +159,25 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 12.3022,
-   "armoedeKinderen": 11.2947,
-   "gini": 0.24013,
+   "armoede": 11.2608,
+   "armoedeKinderen": 10.5686,
+   "gini": 0.22967,
    "decielenRelatief": [
-    -7.38,
-    -4.608,
-    -3.232,
-    -2.072,
-    -0.537,
-    -0.184,
-    -0.048,
+    -6.784,
+    -4.326,
+    -3.064,
+    -1.774,
+    -0.496,
+    -0.179,
+    0,
     0,
     0,
     0
    ],
    "winnaars": [
-    10.288,
-    3.868,
-    85.844,
+    9.821,
+    4.292,
+    85.887,
     0,
     0
    ]
@@ -199,25 +199,25 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 10.8657,
-   "armoedeKinderen": 11.1716,
-   "gini": 0.23023,
+   "armoede": 9.7695,
+   "armoedeKinderen": 10.1607,
+   "gini": 0.22027,
    "decielenRelatief": [
-    -1.11,
-    -0.71,
-    -0.814,
-    -0.986,
-    -1.338,
-    -1.455,
-    -1.725,
-    -1.883,
-    -1.914,
-    -1.804
+    -1.066,
+    -0.684,
+    -0.72,
+    -0.954,
+    -1.259,
+    -1.427,
+    -1.615,
+    -1.801,
+    -1.799,
+    -1.737
    ],
    "winnaars": [
-    8.93,
-    29.644,
-    61.426,
+    8.123,
+    29.774,
+    62.103,
     0,
     0
    ]
@@ -239,25 +239,25 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 10.5161,
-   "armoedeKinderen": 10.6518,
-   "gini": 0.23104,
+   "armoede": 9.4977,
+   "armoedeKinderen": 9.8414,
+   "gini": 0.22107,
    "decielenRelatief": [
-    -0.205,
-    -0.108,
-    -0.141,
-    -0.167,
-    -0.237,
-    -0.278,
-    -0.353,
-    -0.401,
-    -0.457,
-    -0.509
+    -0.196,
+    -0.101,
+    -0.125,
+    -0.161,
+    -0.224,
+    -0.271,
+    -0.333,
+    -0.384,
+    -0.43,
+    -0.492
    ],
    "winnaars": [
     0.105,
-    7.99,
-    91.905,
+    7.171,
+    92.724,
     0,
     0
    ]
@@ -279,26 +279,26 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 10.8488,
-   "armoedeKinderen": 11.1716,
-   "gini": 0.23067,
+   "armoede": 9.7695,
+   "armoedeKinderen": 10.1607,
+   "gini": 0.2207,
    "decielenRelatief": [
-    -0.951,
-    -0.606,
-    -0.699,
-    -0.865,
-    -1.196,
-    -1.284,
-    -1.523,
-    -1.666,
-    -1.661,
-    -1.426
+    -0.919,
+    -0.587,
+    -0.612,
+    -0.843,
+    -1.121,
+    -1.272,
+    -1.414,
+    -1.594,
+    -1.561,
+    -1.37
    ],
    "winnaars": [
-    7.824,
-    28.033,
-    63.929,
-    0.213,
+    7.336,
+    27.917,
+    64.574,
+    0.173,
     0
    ]
   },
@@ -319,25 +319,25 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 16.4475,
-   "armoedeKinderen": 17.0789,
-   "gini": 0.25962,
+   "armoede": 15.1822,
+   "armoedeKinderen": 16.3959,
+   "gini": 0.24819,
    "decielenRelatief": [
-    -19.746,
-    -11.833,
-    -7.778,
-    -6.463,
-    -5.2,
-    -3.895,
-    -3.307,
-    -2.268,
-    -1.062,
-    -0.537
+    -18.275,
+    -11.084,
+    -7.118,
+    -5.96,
+    -4.885,
+    -4.09,
+    -2.807,
+    -2.027,
+    -0.993,
+    -0.49
    ],
    "winnaars": [
-    35.962,
-    27.249,
-    36.788,
+    34.449,
+    28.295,
+    37.256,
     0,
     0
    ]
@@ -359,27 +359,27 @@
     "uitkeringen": 0.1836,
     "basisinkomen": 0
    },
-   "armoede": 9.814,
-   "armoedeKinderen": 9.5702,
-   "gini": 0.23041,
+   "armoede": 9.1036,
+   "armoedeKinderen": 9.1741,
+   "gini": 0.2206,
    "decielenRelatief": [
-    1.243,
-    1.018,
-    1.145,
-    1.224,
-    1.136,
-    1.111,
-    1.052,
-    0.995,
-    0.762,
-    0.337
+    1.133,
+    0.908,
+    1.077,
+    1.133,
+    1.058,
+    1.061,
+    0.99,
+    0.953,
+    0.733,
+    0.334
    ],
    "winnaars": [
     0,
     0.007,
-    50.322,
-    49.471,
-    0.2
+    55.345,
+    44.5,
+    0.149
    ]
   }
  ],
@@ -390,47 +390,47 @@
     "huidig": {
      "belasting": 4569.59,
      "toeslagen": 6951.71,
-     "besteedbaar": 21993.47
+     "besteedbaar": 23877.47
     },
     "vlaktaks-35": {
      "belasting": 0,
      "toeslagen": 0,
-     "besteedbaar": 15041.76
+     "besteedbaar": 16925.76
     },
     "drie-schijven-35-40-45": {
      "belasting": 0,
      "toeslagen": 0,
-     "besteedbaar": 15041.76
+     "besteedbaar": 16925.76
     },
     "zonder-huurtoeslag": {
      "belasting": 4569.59,
      "toeslagen": 1550.45,
-     "besteedbaar": 16592.21
+     "besteedbaar": 18476.21
     },
     "zonder-hra": {
      "belasting": 4569.59,
      "toeslagen": 6951.71,
-     "besteedbaar": 21993.47
+     "besteedbaar": 23877.47
     },
     "hypotheekrenteaftrek-30": {
      "belasting": 4569.59,
      "toeslagen": 6951.71,
-     "besteedbaar": 21993.47
+     "besteedbaar": 23877.47
     },
     "zonder-hra-en-forfait": {
      "belasting": 4569.59,
      "toeslagen": 6951.71,
-     "besteedbaar": 21993.47
+     "besteedbaar": 23877.47
     },
     "toeslagen-afschaffen": {
      "belasting": 4569.59,
      "toeslagen": 0,
-     "besteedbaar": 15041.76
+     "besteedbaar": 16925.76
     },
     "hogere-algemene-heffingskorting": {
      "belasting": 3791.38,
      "toeslagen": 6951.71,
-     "besteedbaar": 21993.47
+     "besteedbaar": 23877.47
     }
    }
   },
@@ -440,47 +440,47 @@
     "huidig": {
      "belasting": 299.5,
      "toeslagen": 5857.4,
-     "besteedbaar": 27461.4
+     "besteedbaar": 29345.4
     },
     "vlaktaks-35": {
      "belasting": 350,
      "toeslagen": 0,
-     "besteedbaar": 21553.5
+     "besteedbaar": 23437.5
     },
     "drie-schijven-35-40-45": {
      "belasting": 3027.89,
      "toeslagen": 0,
-     "besteedbaar": 20446.65
+     "besteedbaar": 22330.65
     },
     "zonder-huurtoeslag": {
      "belasting": 299.5,
      "toeslagen": 1550.45,
-     "besteedbaar": 23154.45
+     "besteedbaar": 25038.45
     },
     "zonder-hra": {
      "belasting": 299.5,
      "toeslagen": 5857.4,
-     "besteedbaar": 27461.4
+     "besteedbaar": 29345.4
     },
     "hypotheekrenteaftrek-30": {
      "belasting": 299.5,
      "toeslagen": 5857.4,
-     "besteedbaar": 27461.4
+     "besteedbaar": 29345.4
     },
     "zonder-hra-en-forfait": {
      "belasting": 299.5,
      "toeslagen": 5857.4,
-     "besteedbaar": 27461.4
+     "besteedbaar": 29345.4
     },
     "toeslagen-afschaffen": {
      "belasting": 299.5,
      "toeslagen": 0,
-     "besteedbaar": 21604
+     "besteedbaar": 23488
     },
     "hogere-algemene-heffingskorting": {
      "belasting": 49.5,
      "toeslagen": 5857.4,
-     "besteedbaar": 27711.4
+     "besteedbaar": 29595.4
     }
    }
   },
@@ -490,47 +490,47 @@
     "huidig": {
      "belasting": 2631.51,
      "toeslagen": 5229.46,
-     "besteedbaar": 31673.31
+     "besteedbaar": 33557.31
     },
     "vlaktaks-35": {
      "belasting": 2435.78,
      "toeslagen": 0,
-     "besteedbaar": 26639.58
+     "besteedbaar": 28523.58
     },
     "drie-schijven-35-40-45": {
      "belasting": 4535.78,
      "toeslagen": 0,
-     "besteedbaar": 24539.58
+     "besteedbaar": 26423.58
     },
     "zonder-huurtoeslag": {
      "belasting": 2631.51,
      "toeslagen": 1382.48,
-     "besteedbaar": 27826.33
+     "besteedbaar": 29710.33
     },
     "zonder-hra": {
      "belasting": 2631.51,
      "toeslagen": 5229.46,
-     "besteedbaar": 31673.31
+     "besteedbaar": 33557.31
     },
     "hypotheekrenteaftrek-30": {
      "belasting": 2631.51,
      "toeslagen": 5229.46,
-     "besteedbaar": 31673.31
+     "besteedbaar": 33557.31
     },
     "zonder-hra-en-forfait": {
      "belasting": 2631.51,
      "toeslagen": 5229.46,
-     "besteedbaar": 31673.31
+     "besteedbaar": 33557.31
     },
     "toeslagen-afschaffen": {
      "belasting": 2631.51,
      "toeslagen": 0,
-     "besteedbaar": 26443.85
+     "besteedbaar": 28327.85
     },
     "hogere-algemene-heffingskorting": {
      "belasting": 2131.51,
      "toeslagen": 5229.46,
-     "besteedbaar": 32173.31
+     "besteedbaar": 34057.31
     }
    }
   },
@@ -540,47 +540,47 @@
     "huidig": {
      "belasting": 5342.75,
      "toeslagen": 3587.57,
-     "besteedbaar": 64535.98
+     "besteedbaar": 68303.98
     },
     "vlaktaks-35": {
      "belasting": 7580.5,
      "toeslagen": 0,
-     "besteedbaar": 58710.66
+     "besteedbaar": 62478.66
     },
     "drie-schijven-35-40-45": {
      "belasting": 11000.82,
      "toeslagen": 0,
-     "besteedbaar": 55290.34
+     "besteedbaar": 59058.34
     },
     "zonder-huurtoeslag": {
      "belasting": 5342.75,
      "toeslagen": 3587.57,
-     "besteedbaar": 64535.98
+     "besteedbaar": 68303.98
     },
     "zonder-hra": {
      "belasting": 8841.77,
      "toeslagen": 2980.03,
-     "besteedbaar": 60429.43
+     "besteedbaar": 64197.43
     },
     "hypotheekrenteaftrek-30": {
      "belasting": 6008.22,
      "toeslagen": 3587.57,
-     "besteedbaar": 63870.5
+     "besteedbaar": 67638.5
     },
     "zonder-hra-en-forfait": {
      "belasting": 8668.63,
      "toeslagen": 3009.97,
-     "besteedbaar": 60632.49
+     "besteedbaar": 64400.49
     },
     "toeslagen-afschaffen": {
      "belasting": 5342.75,
      "toeslagen": 0,
-     "besteedbaar": 60948.41
+     "besteedbaar": 64716.41
     },
     "hogere-algemene-heffingskorting": {
      "belasting": 4842.75,
      "toeslagen": 3587.57,
-     "besteedbaar": 65035.98
+     "besteedbaar": 68803.98
     }
    }
   },
@@ -590,47 +590,47 @@
     "huidig": {
      "belasting": 13207.93,
      "toeslagen": 1554.69,
-     "besteedbaar": 84036.31
+     "besteedbaar": 87804.31
     },
     "vlaktaks-35": {
      "belasting": 17090.26,
      "toeslagen": 0,
-     "besteedbaar": 78599.3
+     "besteedbaar": 82367.3
     },
     "drie-schijven-35-40-45": {
      "belasting": 21716.28,
      "toeslagen": 0,
-     "besteedbaar": 73973.28
+     "besteedbaar": 77741.28
     },
     "zonder-huurtoeslag": {
      "belasting": 13207.93,
      "toeslagen": 1554.69,
-     "besteedbaar": 84036.31
+     "besteedbaar": 87804.31
     },
     "zonder-hra": {
      "belasting": 17930.05,
      "toeslagen": 738.27,
-     "besteedbaar": 78497.79
+     "besteedbaar": 82265.79
     },
     "hypotheekrenteaftrek-30": {
      "belasting": 14115.13,
      "toeslagen": 1554.69,
-     "besteedbaar": 83129.11
+     "besteedbaar": 86897.11
     },
     "zonder-hra-en-forfait": {
      "belasting": 17713.63,
      "toeslagen": 775.69,
-     "besteedbaar": 78751.62
+     "besteedbaar": 82519.62
     },
     "toeslagen-afschaffen": {
      "belasting": 13207.93,
      "toeslagen": 0,
-     "besteedbaar": 82481.63
+     "besteedbaar": 86249.63
     },
     "hogere-algemene-heffingskorting": {
      "belasting": 12207.93,
      "toeslagen": 1554.69,
-     "besteedbaar": 85036.31
+     "besteedbaar": 88804.31
     }
    }
   },
@@ -640,47 +640,47 @@
     "huidig": {
      "belasting": 48479.98,
      "toeslagen": 0,
-     "besteedbaar": 107052.94
+     "besteedbaar": 110820.94
     },
     "vlaktaks-35": {
      "belasting": 38955.32,
      "toeslagen": 0,
-     "besteedbaar": 116577.6
+     "besteedbaar": 120345.6
     },
     "drie-schijven-35-40-45": {
      "belasting": 46120.37,
      "toeslagen": 0,
-     "besteedbaar": 109412.55
+     "besteedbaar": 113180.55
     },
     "zonder-huurtoeslag": {
      "belasting": 48479.98,
      "toeslagen": 0,
-     "besteedbaar": 107052.94
+     "besteedbaar": 110820.94
     },
     "zonder-hra": {
      "belasting": 53304.67,
      "toeslagen": 0,
-     "besteedbaar": 102228.25
+     "besteedbaar": 105996.25
     },
     "hypotheekrenteaftrek-30": {
      "belasting": 49613.98,
      "toeslagen": 0,
-     "besteedbaar": 105918.94
+     "besteedbaar": 109686.94
     },
     "zonder-hra-en-forfait": {
      "belasting": 52987.86,
      "toeslagen": 0,
-     "besteedbaar": 102545.06
+     "besteedbaar": 106313.06
     },
     "toeslagen-afschaffen": {
      "belasting": 48479.98,
      "toeslagen": 0,
-     "besteedbaar": 107052.94
+     "besteedbaar": 110820.94
     },
     "hogere-algemene-heffingskorting": {
      "belasting": 47979.98,
      "toeslagen": 0,
-     "besteedbaar": 107552.94
+     "besteedbaar": 111320.94
     }
    }
   },
@@ -690,47 +690,47 @@
     "huidig": {
      "belasting": 162572.2,
      "toeslagen": 0,
-     "besteedbaar": 221513.58
+     "besteedbaar": 225281.58
     },
     "vlaktaks-35": {
      "belasting": 118948.82,
      "toeslagen": 0,
-     "besteedbaar": 265136.96
+     "besteedbaar": 268904.96
     },
     "drie-schijven-35-40-45": {
      "belasting": 147184.61,
      "toeslagen": 0,
-     "besteedbaar": 236901.18
+     "besteedbaar": 240669.18
     },
     "zonder-huurtoeslag": {
      "belasting": 162572.2,
      "toeslagen": 0,
-     "besteedbaar": 221513.58
+     "besteedbaar": 225281.58
     },
     "zonder-hra": {
      "belasting": 168590.09,
      "toeslagen": 0,
-     "besteedbaar": 215495.69
+     "besteedbaar": 219263.69
     },
     "hypotheekrenteaftrek-30": {
      "belasting": 164084.2,
      "toeslagen": 0,
-     "besteedbaar": 220001.58
+     "besteedbaar": 223769.58
     },
     "zonder-hra-en-forfait": {
      "belasting": 168005.2,
      "toeslagen": 0,
-     "besteedbaar": 216080.58
+     "besteedbaar": 219848.58
     },
     "toeslagen-afschaffen": {
      "belasting": 162572.2,
      "toeslagen": 0,
-     "besteedbaar": 221513.58
+     "besteedbaar": 225281.58
     },
     "hogere-algemene-heffingskorting": {
      "belasting": 162072.2,
      "toeslagen": 0,
-     "besteedbaar": 222013.58
+     "besteedbaar": 225781.58
     }
    }
   },
@@ -740,47 +740,47 @@
     "huidig": {
      "belasting": 7505.15,
      "toeslagen": 7320.86,
-     "besteedbaar": 69259.07
+     "besteedbaar": 73027.07
     },
     "vlaktaks-35": {
      "belasting": 8408.55,
      "toeslagen": 0,
-     "besteedbaar": 61034.81
+     "besteedbaar": 64802.81
     },
     "drie-schijven-35-40-45": {
      "belasting": 12608.55,
      "toeslagen": 0,
-     "besteedbaar": 56834.81
+     "besteedbaar": 60602.81
     },
     "zonder-huurtoeslag": {
      "belasting": 7505.15,
      "toeslagen": 7320.86,
-     "besteedbaar": 69259.07
+     "besteedbaar": 73027.07
     },
     "zonder-hra": {
      "belasting": 7505.15,
      "toeslagen": 7320.86,
-     "besteedbaar": 69259.07
+     "besteedbaar": 73027.07
     },
     "hypotheekrenteaftrek-30": {
      "belasting": 7505.15,
      "toeslagen": 7320.86,
-     "besteedbaar": 69259.07
+     "besteedbaar": 73027.07
     },
     "zonder-hra-en-forfait": {
      "belasting": 7505.15,
      "toeslagen": 7320.86,
-     "besteedbaar": 69259.07
+     "besteedbaar": 73027.07
     },
     "toeslagen-afschaffen": {
      "belasting": 7505.15,
      "toeslagen": 0,
-     "besteedbaar": 61938.21
+     "besteedbaar": 65706.21
     },
     "hogere-algemene-heffingskorting": {
      "belasting": 7005.15,
      "toeslagen": 7320.86,
-     "besteedbaar": 69759.07
+     "besteedbaar": 73527.07
     }
    }
   }

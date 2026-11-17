@@ -18,7 +18,8 @@ export const ONDERDELEN: readonly { label: string; paden: readonly string[] }[] 
   { label: "Box 3", paden: ["box3"] },
   { label: "Zelfstandigenaftrek en startersaftrek", paden: ["ondernemers"] },
   { label: "Pensioenpremie", paden: ["pensioenpremie"] },
-  { label: "Zorgpremie", paden: ["zorg"] },
+  // Na de nominale premie (die niet meetelt, D-093) blijft van sectie `zorg` alleen de Zvw-bijdrage over.
+  { label: "Zvw-bijdrage", paden: ["zorg"] },
   { label: "Toeslagen", paden: ["toeslagen"] },
   { label: "Kinderbijslag", paden: ["kinderbijslag"] },
   { label: "AOW, bijstand en uitkeringen", paden: ["uitkeringen", "bijstand"] },

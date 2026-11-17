@@ -64,13 +64,15 @@ const t = kal.toeslagen;
 const grenzen = kal.inkomen.besteedbaarPercentielen.map((g) => g * kal.indexatie.factor);
 
 // CBS telt in het besteedbaar inkomen ook het voordeel van wonen in een eigen woning (huurwaarde) mee, minus de
-// betaalde hypotheekrente. Om de decielgrenzen te kunnen vergelijken, rekent de kalibratie met hetzelfde begrip.
+// betaalde hypotheekrente, en trekt de premie voor de basisverzekering af. Het model trekt die premie niet af (D-093).
+// Om de decielgrenzen te kunnen vergelijken, rekent de kalibratie met het CBS-begrip.
 // De huurwaarde is evenredig aan de WOZ-waarde; het totaal komt van CBS (geïndexeerd naar ${jaar}).
 const ib = kal.inkomensbestanddelen;
 const huurwaardeDoel = ib.inkomenEigenWoningMln * 1e6 * kal.indexatie.factor;
 const huurwaardeFactor = huurwaardeDoel / pop.reduce((s, x, i) => s + start[i]! * x.woz, 0);
 const huurwaarde = pop.map((x) => huurwaardeFactor * x.woz);
-const besteedbaarCbs = (r: Resultaat, i: number) => r.besteedbaar - pop[i]!.hypotheekrente + huurwaarde[i]!;
+const besteedbaarCbs = (r: Resultaat, i: number) =>
+  r.besteedbaar - r.zorgpremie - pop[i]!.hypotheekrente + huurwaarde[i]!;
 
 // Topinkomens (D-068): persoonlijk bruto inkomen zoals CBS het telt, in euro's van het CBS-jaar. Bij werknemers tellen
 // de premies van de werkgever mee (werknemersverzekeringen en Zvw tot het maximum premie-inkomen, en pensioen).
@@ -490,6 +492,8 @@ ${vermogenRijen.join("\n")}
 - Belasting box 3 in het model: € ${nl(bt.box3, 1)} mld, betaald door ${nl(box3Betalers)} huishoudens. Ter vergelijking: de raming voor ${jaar} is € ${nl(kal.controle.box3Mld, 1)} mld (zie de bron bij de controle). Het model kent de tegenbewijsregeling niet en heeft geen box 3-vermogen van mensen buiten particuliere huishoudens.
 
 ## Uitkomsten huidig beleid
+
+Begrip van het model, zonder de nominale zorgpremie (D-093); niet hetzelfde als het CBS-begrip hierboven.
 
 - Armoederisico (personen, 60% van de mediaan): ${nl(basis.armoede.personen, 1)}%; kinderen ${nl(basis.armoede.kinderen, 1)}%.
 - Gini (gestandaardiseerd besteedbaar inkomen): ${nl(basis.gini, 3)}.

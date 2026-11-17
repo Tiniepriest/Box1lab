@@ -94,6 +94,7 @@ export interface Resultaat {
   kgb: number;
   kot: number;
   kinderbijslag: number;
+  /** Nominale premie van de zorgverzekering. Alleen ter informatie: telt niet mee in `besteedbaar` (D-093). */
   zorgpremie: number;
   /**
    * Extra bruto uitkering die de overheid betaalt door de netto-koppeling; negatief als het basisinkomen een deel
@@ -110,6 +111,12 @@ export interface Resultaat {
   /** Gezamenlijk toetsingsinkomen voor de toeslagen. */
   toetsingsinkomen: number;
   toeslagen: number;
+  /**
+   * Besteedbaar inkomen per jaar: bruto min pensioenpremie, belasting (box 1 en box 3) en Zvw-bijdrage, plus
+   * toeslagen, kinderbijslag en basisinkomen. De nominale premie van de zorgverzekering gaat er niet af (D-093): geen
+   * belasting, maar een verplichte aankoop, zoals de huur. Het CBS-begrip (met die premie eraf) staat in
+   * `scripts/kalibreer.ts` (`besteedbaarCbs`).
+   */
   besteedbaar: number;
   volwassenen: number;
   kinderen: number;
@@ -168,6 +175,14 @@ function isGekoppeld(l: Lid, p: Parameters): boolean {
   if (l.soort === "aow" || l.aowLeeftijd) return k.aow;
   if (l.soort === "uitkering") return k[l.uitkeringSoort ?? "bijstand"];
   return false;
+}
+
+/**
+ * Dezelfde parameters zonder gedragseffect. Voor één huishouden (jouw situatie, de voorbeeldhuishoudens, de curves)
+ * rekenen we statisch: je bruto inkomen is wat je invult. Het gedragseffect hoort alleen bij de bevolkingscijfers.
+ */
+export function statisch(p: Parameters): Parameters {
+  return p.gedrag.eti ? { ...p, gedrag: { ...p.gedrag, eti: 0 } } : p;
 }
 
 /**
@@ -400,8 +415,7 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     uitkering: personen.reduce((a, ps) => a + ps.uitkering, 0),
     toetsingsinkomen,
     toeslagen,
-    besteedbaar:
-      bruto - pensioenpremie - belasting - box3Belasting - zvw + toeslagen + kb - zorgpremie + basisinkomen,
+    besteedbaar: bruto - pensioenpremie - belasting - box3Belasting - zvw + toeslagen + kb + basisinkomen,
     volwassenen,
     kinderen: h.kinderen.length,
     equivalentie: equivalentiefactor(volwassenen, h.kinderen, p),
@@ -467,15 +481,13 @@ function verdeelBox3<T extends { totaal: number; ruimte: number[] }>(
 
 /**
  * Wat een huishouden per jaar overhoudt van het inkomen, zoals de calculator het bovenaan toont: wat er op de
- * rekening komt (netto inkomen, toeslagen en kinderbijslag). Twee dingen gaan er niet af, anders dan bij
- * `besteedbaar`:
- * - de box 3-belasting (D-076): het rendement op sparen en beleggen telt niet als inkomen, dus de belasting
- *   daarover ook niet;
- * - de nominale premie van de zorgverzekering (D-079): geen belasting, maar een vaste uitgave zoals de huur.
+ * rekening komt (netto inkomen, toeslagen en kinderbijslag). Anders dan bij `besteedbaar` gaat de box 3-belasting er
+ * niet af (D-076): het rendement op sparen en beleggen telt niet als inkomen, dus de belasting daarover ook niet. De
+ * nominale premie van de zorgverzekering zit al nergens in (D-079, D-093).
  * De verschillen tussen scenario's, de bevolkingscijfers en "je plek in Nederland" rekenen met `besteedbaar`.
  */
 export function overVanInkomen(r: Resultaat): number {
-  return r.besteedbaar + r.box3 + r.zorgpremie;
+  return r.besteedbaar + r.box3;
 }
 
 /**

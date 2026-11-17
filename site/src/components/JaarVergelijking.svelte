@@ -82,14 +82,9 @@
             >
           </tr>
         {/if}
-        <tr>
-          <td>Premie zorgverzekering</td><td class="num">{euro(r.zorgpremie)}</td><td class="num"
-            >{euro(r2.zorgpremie)}</td
-          >
-        </tr>
         <tr class="totaal">
-          <!-- Na zorgpremie en box 3: anders dan het bedrag bovenaan Jouw situatie, en dat zeggen we (review E10). -->
-          <td>Te besteden na zorgpremie</td><td class="num">{euro(r.besteedbaar)}</td><td class="num"
+          <!-- Na box 3: anders dan het bedrag bovenaan Jouw situatie, en dat zeggen we (review E10). Zonder zorgpremie (D-093). -->
+          <td>Te besteden</td><td class="num">{euro(r.besteedbaar)}</td><td class="num"
             >{euro(r2.besteedbaar)}</td
           >
         </tr>
@@ -113,8 +108,10 @@
     <p class="notitie">
       Je bruto loon, pensioen en WW houden we gelijk, zodat je ziet wat de nieuwe regels doen. AOW, bijstand,
       kinderbijslag en toeslagen gaan wel mee met de gewone jaarlijkse verhoging. Prijzen stijgen ook; dit is
-      dus geen koopkrachtcijfer. "Te besteden na zorgpremie" is lager dan het bedrag bovenaan Jouw situatie:
-      daar gaan de premie van je zorgverzekering en de box 3-belasting er niet af.
+      dus geen koopkrachtcijfer. Ook de premie van je zorgverzekering is een prijs: die betaal je van wat je
+      te besteden hebt, net als de huur, en zit er hier dus niet in. Heb je spaargeld of beleggingen boven het
+      heffingsvrij vermogen, dan is "Te besteden" hier lager dan het bedrag bovenaan Jouw situatie: hier gaat
+      de box 3-belasting er wel af.
     </p>
   {/if}
   {#if volgend.params.status === "voorlopig"}

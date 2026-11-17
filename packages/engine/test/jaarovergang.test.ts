@@ -3,6 +3,7 @@ import {
   berekenHuishouden,
   huishoudenUitInvoer,
   jaarovergangPerOnderdeel,
+  pasToe,
   type Invoer,
 } from "../src/index.ts";
 import { laadParameters } from "../src/node/index.ts";
@@ -44,6 +45,13 @@ describe("jaarovergang per onderdeel", () => {
     const som = perOnderdeel.reduce((s, o) => s + o.effect, 0);
     expect(Math.abs(som - totaal)).toBeLessThan(0.5 * 14);
     expect(perOnderdeel.map((o) => o.label)).toContain("Tarieven en schijven");
+  });
+
+  it("een hogere nominale zorgpremie telt niet mee (D-093)", () => {
+    const premie = volgend.zorg.nominalePremiePerVolwassene;
+    expect(premie).not.toBe(nu.zorg.nominalePremiePerVolwassene);
+    const alleenPremie = pasToe(nu, [{ parameter: "zorg.nominalePremiePerVolwassene", zet: premie }]);
+    expect(jaarovergangPerOnderdeel(invoer, nu, alleenPremie).totaal).toBe(0);
   });
 
   it("zonder verschil tussen de jaren is er niets uit te splitsen", () => {

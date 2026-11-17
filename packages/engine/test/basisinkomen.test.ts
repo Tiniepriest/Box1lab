@@ -3,10 +3,13 @@ import {
   belastingBox1,
   berekenHuishouden,
   heffingskortingen,
+  huishoudenUitInvoer,
   maakBasis,
   maakHuishouden,
+  overVanInkomen,
   pasToe,
   simuleer,
+  statisch,
   type PersoonKenmerken,
 } from "../src/index.ts";
 import { laadKalibratie, laadParameters, laadPopulatie, laadPresets } from "../src/node/index.ts";
@@ -100,5 +103,72 @@ describe("basisinkomen", () => {
     const u = simuleer(basis, basisinkomen(100));
     expect(u.posten.basisinkomen).toBeLessThan(-1);
     expect(u.posten.uitkeringen).toBeGreaterThan(0);
+  });
+});
+
+describe("melding 17 november: vlaktaks 40% met basisinkomen, en geen gedragseffect voor één huishouden", () => {
+  // Niet `maakHuishouden`: die kent een standaard pensioenpremie toe.
+  const h = huishoudenUitInvoer(
+    {
+      personen: [
+        {
+          leeftijd: 35,
+          soort: "loondienst",
+          bedrag: 36000,
+          periode: "jaar",
+          inclusiefVakantiegeld: false,
+          dertiendeMaand: false,
+          extraPerJaar: 0,
+          pensioenpremiePerMaand: 0,
+          urencriterium: true,
+          starter: false,
+        },
+      ],
+      kinderen: [],
+      wonen: "huur",
+      huurPerMaand: 0,
+      zelfstandigeWoning: true,
+      woz: 0,
+      hypotheekrente: 0,
+      vermogen: 0,
+      beleggingen: 0,
+      schulden: 0,
+    },
+    p,
+  );
+  const scenario = pasToe(p, [
+    { parameter: "box1.vrijstelling", zet: 0 },
+    { parameter: "box1.schijven", zet: [{ tot: null, tarief: 40 }] },
+    { parameter: "box1.aowVerlagingEersteSchijf", zet: 0 },
+    { parameter: "heffingskortingen.algemeen.niveau", zet: 0 },
+    { parameter: "heffingskortingen.arbeid.niveau", zet: 0 },
+    { parameter: "heffingskortingen.ouderen.niveau", zet: 0 },
+    { parameter: "heffingskortingen.alleenstaandeOuderen.niveau", zet: 0 },
+    { parameter: "heffingskortingen.combinatie.niveau", zet: 0 },
+    { parameter: "toeslagen.zorgtoeslag.niveau", zet: 0 },
+    { parameter: "toeslagen.huurtoeslag.niveau", zet: 0 },
+    { parameter: "toeslagen.kindgebondenBudget.niveau", zet: 0 },
+    { parameter: "toeslagen.kinderopvangtoeslag.niveau", zet: 0 },
+    { parameter: "basisinkomen.perVolwassenePerMaand", zet: 1000 },
+  ]);
+
+  it("36.000 − 40% belasting + 12.000 basisinkomen = 33.600, zonder zorgpremie eraf (D-093)", () => {
+    const r = berekenHuishouden(h, scenario, p);
+    expect(r.bruto).toBeCloseTo(36000, 6);
+    expect(r.pensioenpremie).toBe(0);
+    expect(r.belasting + r.zvw).toBeCloseTo(14400, 0);
+    expect(r.basisinkomen).toBeCloseTo(12000, 6);
+    expect(r.zorgpremie).toBeGreaterThan(0);
+    expect(r.besteedbaar).toBeCloseTo(33600, 0);
+    expect(overVanInkomen(r)).toBeCloseTo(33600, 0);
+  });
+
+  it("met gedragseffect: `statisch` houdt het bruto inkomen gelijk aan wat je invult", () => {
+    const zonder = berekenHuishouden(h, scenario, p);
+    const metGedrag = pasToe(scenario, [{ parameter: "gedrag.eti", zet: 0.25 }]);
+    expect(berekenHuishouden(h, metGedrag, p).bruto).toBeLessThan(36000);
+    const r = berekenHuishouden(h, statisch(metGedrag), p);
+    expect(r.bruto).toBe(36000);
+    expect(r.besteedbaar).toBe(zonder.besteedbaar);
   });
 });
