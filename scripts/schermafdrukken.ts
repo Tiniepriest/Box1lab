@@ -484,14 +484,14 @@ try {
   await pg.waitForFunction(() => /Jij · €/.test(document.body.textContent ?? ""), null, { timeout: 30000 });
   controleer(true, "lab: jouw situatie gaat mee naar het lab");
   await pg.waitForFunction(
-    () => /per maand\s+meer over/.test(document.querySelector(".jouw")?.textContent ?? ""),
+    () => /per maand\s+meer\s+over/.test(document.querySelector(".jouw")?.textContent ?? ""),
     null,
     { timeout: 30000 },
   );
   controleer(true, "lab: 'Wat betekent dit voor jou?' rekent mee met het scenario");
   await pg.goto(`${BASIS}/voorstellen/hogere-algemene-heffingskorting`, { waitUntil: "networkidle" });
   await pg.waitForFunction(
-    () => /per maand\s+meer over/.test(document.querySelector(".jouw")?.textContent ?? ""),
+    () => /per maand\s+meer\s+over/.test(document.querySelector(".jouw")?.textContent ?? ""),
     null,
     { timeout: 30000 },
   );

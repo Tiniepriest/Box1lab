@@ -9,7 +9,7 @@
     type Parameters,
     type Wijziging,
   } from "@box1lab/engine";
-  import { euro, euroVerschil } from "../lib/format.ts";
+  import { euro } from "../lib/format.ts";
   import { SITUATIE_GEWIJZIGD, leesInvoer } from "../lib/opslag.ts";
   import { openSituatie } from "../lib/situatie.ts";
 
@@ -96,9 +96,9 @@
       {:else}
         {samen ? "Jullie houden" : "Je houdt"}
         <strong class={uitkomst.d > 0 ? "vooruit" : "achteruit"}
-          >{euroVerschil(uitkomst.d / 12)} per maand</strong
+          >{euro(Math.abs(uitkomst.d / 12))} per maand {uitkomst.d > 0 ? "meer" : "minder"}</strong
         >
-        {uitkomst.d > 0 ? "meer" : "minder"} over ({euroVerschil(uitkomst.d)} per jaar).
+        over ({euro(Math.abs(uitkomst.d))} per jaar).
       {/if}
     </p>
     <table class="data">

@@ -53,8 +53,10 @@
         Bij hetzelfde bruto inkomen {samen ? "houden jullie" : "houd je"} in {j} evenveel over als in {params.jaar}.
       {:else}
         Bij hetzelfde bruto inkomen {samen ? "houden jullie" : "houd je"} in {j}
-        <strong class={d > 0 ? "vooruit" : "achteruit"}>{euroVerschil(d / 12)} per maand</strong>
-        {d > 0 ? "meer" : "minder"} over dan in {params.jaar} ({euroVerschil(d)} per jaar).
+        <strong class={d > 0 ? "vooruit" : "achteruit"}
+          >{euro(Math.abs(d / 12))} per maand {d > 0 ? "meer" : "minder"}</strong
+        >
+        over dan in {params.jaar} ({euro(Math.abs(d))} per jaar).
       {/if}
     </p>
     <table class="data">
