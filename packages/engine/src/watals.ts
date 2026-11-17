@@ -38,7 +38,7 @@ function vervang(invoer: Invoer, i: number, persoon: PersoonInvoer): Invoer {
 function vergelijk(a: Resultaat, b: Resultaat) {
   return {
     verschil: b.besteedbaar - a.besteedbaar,
-    belasting: b.belasting + b.zvw + b.zorgpremie - (a.belasting + a.zvw + a.zorgpremie),
+    belasting: b.belasting + b.zvw - (a.belasting + a.zvw),
     toeslagen: b.toeslagen + b.kinderbijslag - (a.toeslagen + a.kinderbijslag),
   };
 }

@@ -3,13 +3,13 @@
     berekenHuishouden,
     huishoudenUitInvoer,
     invoerSchema,
-    overVanInkomen,
     pasToe,
+    statisch,
     type Invoer,
     type Parameters,
     type Wijziging,
   } from "@box1lab/engine";
-  import { euro, euroVerschil } from "../lib/format.ts";
+  import { euro } from "../lib/format.ts";
   import { SITUATIE_GEWIJZIGD, leesInvoer } from "../lib/opslag.ts";
   import { openSituatie } from "../lib/situatie.ts";
 
@@ -52,8 +52,33 @@
     if (!geldig.success) return null;
     const h = huishoudenUitInvoer(geldig.data, params);
     const a = berekenHuishouden(h, params);
-    const b = nieuw === params ? a : berekenHuishouden(h, nieuw, params);
+    // Statisch: je bruto inkomen is wat je invult; het gedragseffect hoort bij de bevolkingscijfers.
+    const b = nieuw === params ? a : berekenHuishouden(h, statisch(nieuw), params);
     return { a, b, d: b.besteedbaar - a.besteedbaar };
+  });
+  /*
+   * De regels van het overzicht, zo dat ze optellen tot "Te besteden". Een regel die nu en hiermee 0 is, valt weg,
+   * behalve bruto, belasting en toeslagen. De premie van de zorgverzekering gaat er niet af (D-093).
+   */
+  const regels = $derived.by(() => {
+    if (!uitkomst) return [];
+    const { a, b } = uitkomst;
+    const alle: { label: string; teken: "" | "−" | "+"; nu: number; hiermee: number; altijd?: boolean }[] = [
+      { label: "Bruto inkomen", teken: "", nu: a.bruto, hiermee: b.bruto, altijd: true },
+      { label: "Pensioenpremie", teken: "−", nu: a.pensioenpremie, hiermee: b.pensioenpremie },
+      {
+        label: "Belasting en premies",
+        teken: "−",
+        nu: a.belasting + a.zvw,
+        hiermee: b.belasting + b.zvw,
+        altijd: true,
+      },
+      { label: "Belasting box 3", teken: "−", nu: a.box3, hiermee: b.box3 },
+      { label: "Toeslagen", teken: "+", nu: a.toeslagen, hiermee: b.toeslagen, altijd: true },
+      { label: "Kinderbijslag", teken: "+", nu: a.kinderbijslag, hiermee: b.kinderbijslag },
+      { label: "Basisinkomen", teken: "+", nu: a.basisinkomen, hiermee: b.basisinkomen },
+    ];
+    return alle.filter((r) => r.altijd || Math.abs(r.nu) >= 0.5 || Math.abs(r.hiermee) >= 0.5);
   });
   const samen = $derived(!!invoer && (invoer.personen.length > 1 || invoer.kinderen.length > 0));
 </script>
@@ -67,35 +92,25 @@
   {:else}
     <p class="kern">
       {#if Math.abs(uitkomst.d) < 1}
-        {samen ? "Jullie houden" : "Je houdt"} evenveel over: {euro(overVanInkomen(uitkomst.a) / 12)} per maand.
+        {samen ? "Jullie houden" : "Je houdt"} evenveel over: {euro(uitkomst.a.besteedbaar / 12)} per maand.
       {:else}
         {samen ? "Jullie houden" : "Je houdt"}
         <strong class={uitkomst.d > 0 ? "vooruit" : "achteruit"}
-          >{euroVerschil(uitkomst.d / 12)} per maand</strong
+          >{euro(Math.abs(uitkomst.d / 12))} per maand {uitkomst.d > 0 ? "meer" : "minder"}</strong
         >
-        {uitkomst.d > 0 ? "meer" : "minder"} over ({euroVerschil(uitkomst.d)} per jaar).
+        over ({euro(Math.abs(uitkomst.d))} per jaar).
       {/if}
     </p>
     <table class="data">
       <thead><tr><th>Per jaar</th><th>Nu</th><th>Hiermee</th></tr></thead>
       <tbody>
-        <tr
-          ><td>Belasting en premies</td><td class="num">{euro(uitkomst.a.belasting)}</td><td class="num"
-            >{euro(uitkomst.b.belasting)}</td
-          ></tr
-        >
-        <tr
-          ><td>Toeslagen</td><td class="num">{euro(uitkomst.a.toeslagen)}</td><td class="num"
-            >{euro(uitkomst.b.toeslagen)}</td
-          ></tr
-        >
-        {#if uitkomst.a.kinderbijslag > 0 || uitkomst.b.kinderbijslag > 0}
+        {#each regels as r (r.label)}
           <tr
-            ><td>Kinderbijslag</td><td class="num">{euro(uitkomst.a.kinderbijslag)}</td><td class="num"
-              >{euro(uitkomst.b.kinderbijslag)}</td
+            ><td>{r.teken ? `${r.teken} ` : ""}{r.label}</td><td class="num">{euro(r.nu)}</td><td class="num"
+              >{euro(r.hiermee)}</td
             ></tr
           >
-        {/if}
+        {/each}
         <tr class="totaal"
           ><td>Te besteden</td><td class="num">{euro(uitkomst.a.besteedbaar)}</td><td class="num"
             >{euro(uitkomst.b.besteedbaar)}</td

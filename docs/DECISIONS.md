@@ -869,3 +869,18 @@ Wens van de eigenaar. De kleuren kenden al `data-theme` op `<html>` (fase 14); e
 - `npm run schermafdrukken` controleert dat de knop wisselt en dat de keuze na herladen blijft.
 
 Geen andere rekenregels.
+
+## Fix: zorgpremie en scenariolab (model 0.7.0)
+
+### D-093 Zorgpremie nergens van het besteedbaar inkomen
+
+Drie meldingen van de eigenaar (17 november 2026), nagerekend met de engine. (In het plan heette dit besluit D-092; dat nummer is al in gebruik in de open PR van fase 41.)
+
+- **Besluit van de eigenaar.** De nominale premie van de zorgverzekering is geen belasting, maar een verplichte aankoop bij een derde partij, net als de huur. Dat gold al voor het bedrag bovenaan Jouw situatie (D-079); nu overal.
+- **Engine.** `besteedbaar` is bruto min pensioenpremie, belasting (box 1 en box 3) en Zvw-bijdrage, plus toeslagen, kinderbijslag en basisinkomen; de premie gaat er niet meer af. `overVanInkomen` is `besteedbaar + box3`. `Resultaat.zorgpremie` blijft, alleen ter informatie. "Wat als" (`watals.ts`) telt de premie niet meer bij de belasting. Dit raakt het lab, de voorstellen, de jaarvergelijking en de bevolkingscijfers (inkomensgroepen, armoede, Gini, je plek in Nederland).
+- **Kalibratie.** Het CBS trekt de premie voor de basisverzekering wél af. `scripts/kalibreer.ts` vergelijkt de decielgrenzen daarom met `besteedbaarCbs` (model min zorgpremie min hypotheekrente plus huurwaarde). De nagebootste bevolking is gelijk gebleven: in `data/populatie/2026.json` veranderde alleen het versielabel. Het rapport zegt bij de uitkomsten dat die het modelbegrip gebruiken.
+- **Nieuwe cijfers 2026 (golden).** Armoedegrens € 22.330 → € 23.725. Armoede personen 10,42% → 9,38%, kinderen 10,49% → 9,59%. Gini 0,2317 → 0,2217. Vlaktaks 35%: armoede 16,04% → 14,73%. Toeslagen afschaffen: 16,45% → 15,18%. Het saldo van elk voorstel en de oplosser blijven gelijk. Het besteedbaar inkomen van elk voorbeeldhuishouden stijgt met precies € 1.884 per volwassene, in elk scenario; belasting en toeslagen blijven gelijk. De effecten per inkomensgroep (in procenten) en de aandelen winnaars en verliezers verschuiven, omdat de noemer groter is en de rangorde iets anders. Ons armoedecijfer is daardoor ongeveer 1 procentpunt lager dan met het CBS-begrip en niet één op één te vergelijken met CBS of SCP; dat staat op de methodiekpagina.
+- **Jaarvergelijking.** Een hogere premie in 2027 telt niet meer mee in het verschil, een hogere zorgtoeslag wel. Het onderdeel heet "Zvw-bijdrage" (na de premie blijft van sectie `zorg` alleen die over). De rij "Premie zorgverzekering" is weg en het totaal heet "Te besteden"; de toelichting zegt waarom de premie er niet in zit (wijzigt E10 in D-089).
+- **Lab: gedragseffect niet voor één huishouden.** "Wat betekent dit voor jou?" en de voorbeeldhuishoudens rekenden met het gedragseffect, zodat je eigen bruto inkomen veranderde (€ 36.000 met ETI 0,25 werd € 35.389). Nieuw: `statisch(p)` zet `gedrag.eti` op 0; de inkomenscurves gebruikten dat al. Eén huishouden rekent statisch, het gedragseffect hoort bij de bevolkingscijfers.
+- **Lab: het overzicht telt op.** "Wat betekent dit voor jou?" toont bruto inkomen, pensioenpremie, belasting en premies (inclusief Zvw-bijdrage), belasting box 3, toeslagen, kinderbijslag en basisinkomen, tot "Te besteden". Een regel die nu en hiermee 0 is, valt weg, behalve bruto, belasting en toeslagen. Voorbeeld van de melding: vlaktaks 40% zonder vrijstelling en kortingen, basisinkomen € 1.000 per maand, € 36.000 bruto: 36.000 − 14.400 + 12.000 = 33.600 (test in `basisinkomen.test.ts`).
+- **Niet veranderd.** Huurtoeslag bij een huur boven € 932,93 is geen fout: sinds 2026 is er geen harde huurgrens meer, alleen een maximum huur waarover je toeslag krijgt.

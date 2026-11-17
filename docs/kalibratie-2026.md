@@ -1,6 +1,6 @@
 # Kalibratierapport 2026
 
-Gegenereerd door `npm run kalibreer` op 2026-11-13 (model 0.6.0). Niet met de hand bewerken.
+Gegenereerd door `npm run kalibreer` op 2026-11-17 (model 0.7.0). Niet met de hand bewerken.
 
 ## Samenvatting
 
@@ -137,9 +137,11 @@ Vermogen in box 3 op 1 januari 2025 volgens CBS, toegekend naar 10%-groep gestan
 
 ## Uitkomsten huidig beleid
 
-- Armoederisico (personen, 60% van de mediaan): 10,4%; kinderen 10,5%.
-- Gini (gestandaardiseerd besteedbaar inkomen): 0,232.
-- Mediaan gestandaardiseerd besteedbaar inkomen: € 37.216.
+Begrip van het model, zonder de nominale zorgpremie (D-093); niet hetzelfde als het CBS-begrip hierboven.
+
+- Armoederisico (personen, 60% van de mediaan): 9,4%; kinderen 9,6%.
+- Gini (gestandaardiseerd besteedbaar inkomen): 0,222.
+- Mediaan gestandaardiseerd besteedbaar inkomen: € 39.541.
 
 ## Bronnen
 

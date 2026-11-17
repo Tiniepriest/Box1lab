@@ -10,6 +10,7 @@
     leesParameter,
     maakHuishouden,
     pasToe,
+    statisch,
     verschil,
     type Huishouden,
     type Kalibratie,
@@ -301,7 +302,8 @@
     if (jij) lijst.push({ label: "Jij", sub: "Jouw situatie", h: jij });
     return lijst.map((x) => {
       const a = berekenHuishouden(x.h, params);
-      const b = toestand.p === params ? a : berekenHuishouden(x.h, toestand.p, params);
+      // Statisch: het gedragseffect hoort bij de bevolkingscijfers, niet bij één huishouden.
+      const b = toestand.p === params ? a : berekenHuishouden(x.h, statisch(toestand.p), params);
       return { ...x, a, b, d: b.besteedbaar - a.besteedbaar };
     });
   });

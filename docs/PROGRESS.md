@@ -235,6 +235,12 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 
 - [x] Knop rechtsboven; keuze in localStorage, anders de instelling van het apparaat (D-091)
 
+## Fix: zorgpremie en scenariolab (model 0.7.0) — klaar
+
+- [x] Zorgpremie nergens meer van `besteedbaar`; kalibratie rekent met het CBS-begrip, bevolking ongewijzigd (D-093)
+- [x] Lab: jouw situatie en de voorbeeldhuishoudens zonder gedragseffect (`statisch`)
+- [x] "Wat betekent dit voor jou?": alle regels, zodat ze optellen tot "Te besteden"
+
 ## Open vragen voor de eigenaar
 
 - Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?
