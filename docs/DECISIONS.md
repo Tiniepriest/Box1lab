@@ -918,3 +918,14 @@ Wens van de eigenaar (17 november 2026). Het lab laat zien wat een scenario doet
 
 - **Golden.** Alleen het blok `voorbeelden` verandert, omdat de id's nieuw zijn. Alle landelijke cijfers en scenario's blijven gelijk. De vijf overgenomen huishoudens (oud P10, P20, P50, P75 en P90) geven precies dezelfde uitkomsten. P99 heet nu "Topinkomen" en heeft € 500.000 vermogen, zodat box 3 meetelt.
 - **Weg: "Vergelijk met een voorstel".** Daarmee verdwijnt ook `simuleerVergelijking` uit `site/src/lib/rekenen.ts`.
+
+### D-095 Staafgrafieken: waarden in een kolom, figuren op gelijke hoogte
+
+Melding van de eigenaar (17 november 2026): in het lab lopen dingen door elkaar; de voorbeeldhuishoudens moeten op volgorde van het effect; twee figuren naast elkaar moeten op dezelfde hoogte beginnen.
+
+- **Waarden in een kolom (`StavenDivergent`).** De waarde stond naast de staaf, en sprong naar de andere kant van de nullijn als er geen ruimte was. Daardoor stonden de waarden afwisselend links en rechts, soms over de nullijn heen. Nu staan alle waarden rechts in een eigen kolom, rechts uitgelijnd en in de tekstkleur van vooruit of achteruit (neutraal bij `neutraal` en bij bijna nul). Geprobeerd en afgewezen: ruimte reserveren naast de langste staaf. Met labels naast de staven en lange waarden ("−13,5% · −€ 3.283") werden de staven te klein en sprongen de waarden toch.
+- **Tekst boven lijnen.** Labels, toelichtingen en waarden krijgen een rand in de kaartkleur (`paint-order: stroke`), zodat raster- en nullijn er niet doorheen lopen.
+- **Labels boven de staven.** Er is meer ruimte boven een label dan tussen label en staaf (rij 54 in plaats van 50 px, staaf 18 px), zodat duidelijk is welk label bij welke staaf hoort.
+- **Figuren naast elkaar.** `Figuur` heeft altijd drie delen (kop, legenda, inhoud). De nieuwe klasse `.figuren-naast` (global.css) zet ze in een subgrid, zodat kop, legenda en grafiek links en rechts op dezelfde hoogte beginnen. Onder elkaar (container smaller dan 620 px) komt er ruimte tussen. Gebruikt in het lab bij de groepen en bij netto inkomen en marginale druk.
+- **Voorbeeldhuishoudens op volgorde.** Van meeste achteruit naar meeste vooruit; zonder scenario in de volgorde van het bestand. "Jij" staat daartussen, in de accentkleur (`nadruk`).
+- Dit raakt ook de staafgrafieken op Jouw situatie (wat doen de voorstellen met jou) en bij de verkiezingen.

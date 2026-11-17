@@ -246,6 +246,7 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] Effect per inkomensbron, huishouden, leeftijd, wonen, toeslagen en vermogen, via knoppen in het blok "Wie gaat erop vooruit of achteruit?" (D-094)
 - [x] Voorbeeldhuishoudens met een naam in plaats van P10–P99; vijftien soorten
 - [x] "Vergelijk met een voorstel" weg
+- [x] Staafgrafieken: waarden in een kolom, tekst boven de lijnen, figuren naast elkaar op gelijke hoogte, voorbeelden op volgorde (D-095)
 
 ## Open vragen voor de eigenaar
 

@@ -224,7 +224,7 @@ try {
   );
   const bekijkPer = pg.getByRole("group", { name: "Groepen" });
   await bekijkPer.getByRole("button", { name: "Inkomensbron" }).click();
-  const groepTekst = (await pg.locator(".twee").first().textContent()) ?? "";
+  const groepTekst = (await pg.locator(".figuren-naast").first().textContent()) ?? "";
   controleer(
     /AOW'ers/.test(groepTekst) && /Bijstand/.test(groepTekst) && /% van de mensen/.test(groepTekst),
     "lab: effect per inkomensbron, met de omvang van elke groep (D-094)",

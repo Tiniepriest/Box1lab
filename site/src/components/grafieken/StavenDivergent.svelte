@@ -5,6 +5,8 @@
     waarde: number;
     tekst: string;
     tip: string[];
+    /** Deze rij valt op (bijvoorbeeld jouw eigen situatie tussen voorbeelden). */
+    nadruk?: boolean;
   }
 </script>
 
@@ -14,7 +16,8 @@
 
   /*
    * Horizontale staven vanaf een nullijn: rechts (groen) is erop vooruit, links (rood) erop achteruit.
-   * Waarden dicht bij nul worden grijs. De waarde staat naast de staaf; meer details in de tooltip.
+   * Waarden dicht bij nul worden grijs. De waarden staan rechts in een eigen kolom, zoals in een tabel, zodat ze
+   * nooit over een staaf, een label of de nullijn lopen. Meer details in de tooltip.
    */
   let {
     rijen,
@@ -49,14 +52,21 @@
   const past = (r: Rij) => r.label.length * 7.2 + ((r.sub ?? "").length + 3) * 6.2 <= B;
   // Labels boven de staven en een toelichting die moet blijven staan maar niet naast het label past: twee regels.
   const tweeRegels = $derived(boven && subAltijd && rijen.some((r) => r.sub && !past(r)));
-  const RIJ = $derived(boven ? (tweeRegels ? 64 : 50) : 34);
+  // Labels boven de staven: meer ruimte boven het label dan tussen label en staaf, zodat ze bij elkaar horen.
+  const RIJ = $derived(boven ? (tweeRegels ? 68 : 54) : 34);
   const LABELRUIMTE = $derived(boven ? (tweeRegels ? 31 : 17) : 0);
+  const STAAF = $derived(boven ? 18 : RIJ - 14);
   const RAND = 12;
   const H = $derived(rijen.length * RIJ + 28);
-  // Zonder verschillen (huidig beleid) toch een leesbare as van −1 tot +1.
-  const max = $derived(Math.max(1, ...rijen.map((r) => Math.abs(r.waarde))) * 1.3);
-  const midden = $derived(LB + (B - LB - RAND) / 2);
-  const schaal = $derived((B - LB - RAND) / 2 / max);
+  const TEKEN = 6.4;
+  /** Kolom rechts voor de waarden. */
+  const KOLOM = $derived(Math.max(0, ...rijen.map((r) => r.tekst.length * TEKEN)) + 14);
+  const half = $derived((B - LB - RAND - KOLOM) / 2);
+  // Zonder verschillen (huidig beleid) toch een leesbare as van −1 tot +1. Een beetje lucht aan de buitenkant.
+  const grootste = $derived(Math.max(1, ...rijen.map((r) => Math.abs(r.waarde))));
+  const schaal = $derived(half / (grootste * 1.08));
+  const max = $derived(half / schaal);
+  const midden = $derived(LB + half);
   const stap = $derived(mooieStap(max, 2));
   const ticks = $derived.by(() => {
     const t: number[] = [];
@@ -66,21 +76,16 @@
 
   let tip = $state<{ x: number; y: number; regels: string[] } | null>(null);
 
-  /** Waar komt de waarde: naast de staaf, of (als die daar niet past) aan de andere kant van de nullijn? */
-  function tekstPlek(r: Rij, x: number, w: number): { x: number; anker: "start" | "end" } {
-    const tekstBreedte = r.tekst.length * 6.6;
-    if (r.waarde >= 0) {
-      return x + w + 5 + tekstBreedte <= B
-        ? { x: x + w + 5, anker: "start" }
-        : { x: midden - 5, anker: "end" };
-    }
-    return x - 5 - tekstBreedte >= LB + 4 ? { x: x - 5, anker: "end" } : { x: midden + 5, anker: "start" };
-  }
-
   function kleur(v: number): string {
     if (Math.abs(v) <= drempel) return "var(--zero)";
     if (neutraal) return "var(--accent)";
     return v > 0 ? "var(--gain)" : "var(--loss)";
+  }
+
+  /** De waarde in de kleur van de staaf (in de tekstvariant, voor genoeg contrast). */
+  function tekstKleur(v: number): string {
+    if (neutraal || Math.abs(v) <= drempel) return "";
+    return v > 0 ? "plus" : "min";
   }
 
   function beweeg(e: PointerEvent, r: Rij) {
@@ -98,10 +103,9 @@
     <line x1={midden} x2={midden} y1="0" y2={H - 22} class="nul" />
     {#each rijen as r, i (r.label)}
       {@const y = i * RIJ + 6 + LABELRUIMTE}
-      {@const h = RIJ - 14 - LABELRUIMTE}
+      {@const h = STAAF}
       {@const w = Math.max(1, Math.abs(r.waarde) * schaal)}
       {@const x = r.waarde >= 0 ? midden : midden - w}
-      {@const plek = tekstPlek(r, x, w)}
       <g
         class="rij"
         role="presentation"
@@ -110,21 +114,29 @@
       >
         <rect x="0" y={y - 4 - LABELRUIMTE} width={B} height={RIJ} fill="transparent" />
         {#if boven && tweeRegels}
-          <text x="0" y={y - 21} class="label">{r.label}</text>
+          <text x="0" y={y - 21} class="label" class:nadruk={r.nadruk}>{r.label}</text>
           {#if r.sub}<text x="0" y={y - 7} class="sub">{r.sub}</text>{/if}
         {:else if boven}
-          <text x="0" y={y - 7} class="label"
+          <text x="0" y={y - 7} class="label" class:nadruk={r.nadruk}
             >{r.label}{#if r.sub && past(r)}<tspan class="sub">&nbsp;· {r.sub}</tspan>{/if}</text
           >
         {:else}
-          <text x="0" y={y + (r.sub ? h / 2 - 3 : h / 2)} dominant-baseline="middle" class="label"
-            >{r.label}</text
+          <text
+            x="0"
+            y={y + (r.sub ? h / 2 - 3 : h / 2)}
+            dominant-baseline="middle"
+            class="label"
+            class:nadruk={r.nadruk}>{r.label}</text
           >
           {#if r.sub}<text x="0" y={y + h / 2 + 11} dominant-baseline="middle" class="sub">{r.sub}</text>{/if}
         {/if}
         <rect {x} {y} width={w} height={h} rx="4" fill={kleur(r.waarde)} />
-        <text x={plek.x} y={y + h / 2} dominant-baseline="middle" text-anchor={plek.anker} class="waarde"
-          >{r.tekst}</text
+        <text
+          x={B}
+          y={y + h / 2}
+          dominant-baseline="middle"
+          text-anchor="end"
+          class="waarde {tekstKleur(r.waarde)}">{r.tekst}</text
         >
       </g>
     {/each}
@@ -151,10 +163,22 @@
     fill: var(--muted);
     font-size: 11px;
   }
+  /* Een rand in de kleur van de kaart, zodat raster- en nullijn niet door de tekst lopen. */
+  .label,
+  .sub,
+  .waarde {
+    paint-order: stroke;
+    stroke: var(--panel);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+  }
   .label {
     fill: var(--fg);
     font-size: 12.5px;
     font-weight: 600;
+  }
+  .nadruk {
+    fill: var(--accent);
   }
   .sub {
     fill: var(--muted);
@@ -164,6 +188,12 @@
     fill: var(--fg);
     font-family: var(--f-num);
     font-size: 11px;
+  }
+  .waarde.plus {
+    fill: var(--gain-tekst);
+  }
+  .waarde.min {
+    fill: var(--loss-tekst);
   }
   .rij:hover rect[rx] {
     opacity: 0.85;
