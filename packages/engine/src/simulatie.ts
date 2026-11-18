@@ -1,7 +1,6 @@
 import { berekenHuishouden, type Resultaat } from "./huishouden.ts";
-import { armoederisico, type Armoede } from "./metrics/armoede.ts";
+import { eigenRisicoPerVolwassene, onderArmoedegrens, type Armoede } from "./metrics/armoede.ts";
 import { deelInDecielen } from "./metrics/decielen.ts";
-import { gewogenMediaan } from "./metrics/gewogen.ts";
 import { gini } from "./metrics/gini.ts";
 import { deelInGroepen, indelingen } from "./metrics/groepen.ts";
 import { winnaarsKlasse } from "./metrics/winnaars.ts";
@@ -125,7 +124,9 @@ export interface Basis {
   decielen: number[];
   /** Per indeling uit `indelingen(params)` de groep van elk huishouden, onder het huidige beleid (D-094). */
   groepen: number[][];
-  armoedegrens: number;
+  /** Gemiddeld verbruik van het verplicht eigen risico per volwassene, euro per jaar (voor de armoedetoets). */
+  eigenRisico: number;
+  /** Personen en kinderen onder de armoedegrens van CBS, Nibud en SCP (D-098). */
   armoede: Armoede;
   gini: number;
 }
@@ -151,9 +152,8 @@ export function maakBasis(
     (h, i) => h.gewicht * (resultaten[i]!.volwassenen + resultaten[i]!.kinderen),
   );
   const gestandaardiseerd = resultaten.map((r) => r.besteedbaar / r.equivalentie);
-  const armoedegrens =
-    (params.methodiek.armoedegrens / 100) * gewogenMediaan(gestandaardiseerd, persoonsgewichten);
   const huishoudgewichten = populatie.map((h) => h.gewicht);
+  const eigenRisico = eigenRisicoPerVolwassene(populatie, huishoudgewichten, params);
   return {
     params,
     populatie,
@@ -164,8 +164,8 @@ export function maakBasis(
     persoonsgewichten,
     decielen: deelInDecielen(gestandaardiseerd, persoonsgewichten),
     groepen: deelInGroepen(params, populatie, resultaten),
-    armoedegrens,
-    armoede: armoederisico(resultaten, huishoudgewichten, armoedegrens),
+    eigenRisico,
+    armoede: onderArmoedegrens(populatie, resultaten, huishoudgewichten, params, eigenRisico),
     gini: gini(gestandaardiseerd, persoonsgewichten),
   };
 }
@@ -272,10 +272,13 @@ export function simuleer(basis: Basis, scenario: Parameters): Uitkomst {
     totalen: t,
     posten,
     saldoMld: Object.values(posten).reduce((a, b) => a + b, 0),
-    armoede: armoederisico(
+    // De armoedegrens zelf blijft die van het huidige beleid; alleen inkomens en lasten veranderen.
+    armoede: onderArmoedegrens(
+      populatie,
       resultaten,
       populatie.map((h) => h.gewicht),
-      basis.armoedegrens,
+      basis.params,
+      basis.eigenRisico,
     ),
     gini: gini(
       resultaten.map((r) => r.besteedbaar / r.equivalentie),

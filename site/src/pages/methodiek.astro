@@ -78,11 +78,19 @@ const metLinks = (t: string) =>
         de inkomensgroepen gaat de indeling uit van het huidige stelsel. Kleine groepen, zoals de bijstand,
         rusten op minder voorbeeldhuishoudens en zijn daarom minder precies.
       </dd>
-      <dt>% in armoede</dt>
+      <dt>Onder de armoedegrens</dt>
       <dd>
-        Het aandeel mensen in een huishouden met minder dan {params.methodiek.armoedegrens}% van het middelste
-        (mediane) gecorrigeerde inkomen. De grens blijft in elk scenario gelijk aan die van het huidige
-        stelsel.
+        Het aandeel mensen (en kinderen) in een huishouden onder de armoedegrens van CBS, Nibud en SCP. Een
+        huishouden is arm als er na de huur, energie en zorgverzekering te weinig overblijft voor de andere
+        basisbehoeften, zoals eten, kleding en meedoen, én als het minder spaargeld en beleggingen heeft dan
+        de armoedegrens over een jaar. De grens hangt af van het aantal volwassenen en kinderen (tot 13 jaar
+        en van 13 tot 18 jaar). We gebruiken de bedragen van het CBS voor {params.armoede.peiljaar}, verhoogd
+        met de inflatie tot {params.jaar}. Voor huurders telt hun eigen huur. Van eigenaren kent het model
+        alleen de hypotheekrente, niet het onderhoud, de verzekering en de OZB; dan rekenen we, zoals het CBS
+        doet als de woonlasten onbekend zijn, met het normbedrag voor de huur. Ook voor energie gebruiken we
+        het normbedrag. Kinderopvang telt niet mee, net als bij het CBS. De grens zelf blijft in elk scenario
+        gelijk. Het CPB raamt voor {params.jaar} dat {getal(kalibratie.armoede.personen, 1)}% van de mensen
+        onder de armoedegrens leeft; ons model komt hoger uit, vooral bij eigenaren met een laag inkomen.
       </dd>
       <dt>Gini</dt>
       <dd>

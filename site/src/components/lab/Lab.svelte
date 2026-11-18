@@ -512,7 +512,7 @@
             <div class="t">per jaar; plus = meer inkomsten of minder uitgaven</div>
           </div>
           <div class="kerngetal">
-            <div class="l">% in armoede</div>
+            <div class="l">Onder de armoedegrens</div>
             <div class="w">{procent(basis!.armoede.personen)} → {procent(uitkomst.armoede.personen)}</div>
             <div class="t">
               kinderen {procent(basis!.armoede.kinderen)} → {procent(uitkomst.armoede.kinderen)}

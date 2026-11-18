@@ -269,6 +269,38 @@ export const parametersSchema = z.strictObject({
 
   gedrag: z.strictObject({ bron, eti: z.number().min(0).max(2) }),
 
+  /** Armoedegrens van CBS, Nibud en SCP (D-098): per huishoudtype, met werkelijke woonlasten. */
+  armoede: z.strictObject({
+    bron,
+    /** Jaar van de bedragen in `typen`. */
+    peiljaar: z.number().int(),
+    /** Prijsstijging (%) per jaar na het peiljaar, tot en met het jaar van dit bestand. */
+    indexatie: z.array(pct),
+    /** Kinderen jonger dan deze leeftijd tellen als kind, ouder (tot de volwassenleeftijd) als tiener. */
+    tienerVanaf: z.number().int().positive(),
+    /** Opbrengst van het verplicht eigen risico, miljard euro per jaar. */
+    eigenRisicoMld: nietNegatief,
+    typen: z
+      .array(
+        z
+          .strictObject({
+            volwassenen: z.number().int().positive(),
+            tieners: z.number().int().nonnegative(),
+            kinderen: z.number().int().nonnegative(),
+            /** Armoedegrens per maand, met de normbedragen voor huur en energie erin. */
+            grens: nietNegatief,
+            huur: nietNegatief,
+            energie: nietNegatief,
+          })
+          .refine((t) => t.huur + t.energie < t.grens, "Huur en energie samen zijn lager dan de grens."),
+      )
+      .min(1)
+      .refine(
+        (ts) => new Set(ts.map((t) => `${t.volwassenen}-${t.tieners}-${t.kinderen}`)).size === ts.length,
+        "Elk huishoudtype staat er één keer in.",
+      ),
+  }),
+
   methodiek: z.strictObject({
     bron,
     equivalentie: z.strictObject({
@@ -276,7 +308,6 @@ export const parametersSchema = z.strictObject({
       kind: nietNegatief,
       kindVanafLeeftijd: z.number().int().nonnegative(),
     }),
-    armoedegrens: pct,
     winnaarsGrenzen: z.tuple([pct, pct, pct, pct]),
     /** Leeftijdsgrenzen voor de groepen in het lab, oplopend en onder de AOW-leeftijd. */
     leeftijdsgroepen: z
@@ -417,6 +448,8 @@ export const kalibratieSchema = z.strictObject({
     kinderopvangtoeslag: toeslagDoel,
   }),
   controle: z.strictObject({ bron, loonEnInkomensheffingMld: z.number().positive(), box3Mld: z.number() }),
+  /** Personen en kinderen onder de armoedegrens (%), ter vergelijking in het kalibratierapport (D-098). */
+  armoede: z.strictObject({ bron, personen: z.number().nonnegative(), kinderen: z.number().nonnegative() }),
 });
 
 export type Kalibratie = z.infer<typeof kalibratieSchema>;
@@ -431,6 +464,11 @@ export function formatteerFouten(error: z.ZodError, bestand = "parameters"): str
 export function valideerParameters(data: unknown, bestand?: string): Parameters {
   const r = parametersSchema.safeParse(data);
   if (!r.success) throw new Error(formatteerFouten(r.error, bestand));
+  const a = r.data.armoede;
+  if (a.indexatie.length !== r.data.jaar - a.peiljaar)
+    throw new Error(
+      `${bestand ?? "parameters"}: armoede.indexatie — één percentage per jaar van ${a.peiljaar + 1} tot en met ${r.data.jaar}.`,
+    );
   return r.data;
 }
 

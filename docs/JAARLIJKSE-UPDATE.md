@@ -33,6 +33,8 @@ data/parameters/2026.yaml  →  data/parameters/2027.yaml
 
 Pas bovenaan `jaar: 2027` aan. Loop daarna elke sectie langs en vul de nieuwe bedragen in. Werk bij elke sectie ook de `bron` bij (een link naar de Belastingdienst, rijksoverheid.nl, CBS of CPB). Vergeet `loon.modaal` niet: het bruto modaal inkomen uit de kerngegevens van de nieuwste MEV of het CEP van het CPB; het voorbeeldhuishouden op de site verdient dat. Zet hetzelfde bedrag bij "Alleenstaand, modaal" in `data/voorbeelden/huishoudens.yaml`. Ook makkelijk te vergeten (D-088): `box1.premieVolksverzekeringen` (de premies in het tarief van de eerste schijf), `ondernemers.aftrekMaxTarief` en `eigenWoning.aftrekMaxTarief` (allebei het tarief van de tweede schijf), het AOW-vakantiegeld per halfjaar, `bijstand.vermogensgrens` en `toeslagen.huurtoeslag.jongeren`.
 
+De armoedegrens (`armoede`, D-098): neem de nieuwste tabellen A1 en A2 uit de publicatie "Leven in armoede" van het CBS (bijlage A) over in `typen`, en zet `peiljaar` op het jaar van die tabellen. Zet in `indexatie` één prijsstijging per jaar daarna, tot en met het nieuwe jaar: de alternatieve cpi voor koopkracht- en armoedecijfers uit de kerngegevens van de nieuwste MEV of het CEP. `eigenRisicoMld` is de opbrengst van het verplicht eigen risico uit de begroting van VWS (ontvangsten Zvw).
+
 Let op de schrijfwijze, die bovenaan het bestand staat:
 
 | Officieel                    | In het bestand                                   |
@@ -57,6 +59,7 @@ Kopieer `data/kalibratie/<jaar>.yaml` en `data/populatie/spec-<jaar>.yaml` naar 
 | Indexatie naar het modeljaar                       | CPB, kerngegevenstabel van de nieuwste MEV (cao-loon marktsector) |
 | Ontvangers en uitgaven per toeslag                 | Dienst Toeslagen, Aantallen en bedragen (overtoeslagen.nl)        |
 | Controle belastingopbrengst                        | Miljoenennota, bijlage belasting- en premieontvangsten            |
+| Armoede ter vergelijking (`armoede`)               | CPB, kerngegevenstabel van de nieuwste MEV (personen, kinderen)   |
 
 ### 3. Controleren
 

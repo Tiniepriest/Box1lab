@@ -17,8 +17,9 @@
    "kgb": 1,
    "kot": 1
   },
-  "armoedegrens": 23724.86,
-  "armoede": 9.3767,
+  "eigenRisico": 232.78,
+  "armoede": 4.1457,
+  "armoedeKinderen": 2.9679,
   "gini": 0.22174
  },
  "scenarios": [
@@ -39,8 +40,8 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 9.3767,
-   "armoedeKinderen": 9.5949,
+   "armoede": 4.1457,
+   "armoedeKinderen": 2.9679,
    "gini": 0.22174,
    "decielenRelatief": [
     0,
@@ -79,8 +80,8 @@
     "uitkeringen": 0.9509,
     "basisinkomen": 0
    },
-   "armoede": 14.7327,
-   "armoedeKinderen": 16.5418,
+   "armoede": 8.1457,
+   "armoedeKinderen": 11.7479,
    "gini": 0.27124,
    "decielenRelatief": [
     -13.518,
@@ -119,8 +120,8 @@
     "uitkeringen": -0.9046,
     "basisinkomen": 0
    },
-   "armoede": 17.8147,
-   "armoedeKinderen": 19.2578,
+   "armoede": 9.6121,
+   "armoedeKinderen": 13.5874,
    "gini": 0.26713,
    "decielenRelatief": [
     -16.776,
@@ -159,8 +160,8 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 11.2608,
-   "armoedeKinderen": 10.5686,
+   "armoede": 6.1438,
+   "armoedeKinderen": 5.5581,
    "gini": 0.22967,
    "decielenRelatief": [
     -6.784,
@@ -199,8 +200,8 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 9.7695,
-   "armoedeKinderen": 10.1607,
+   "armoede": 4.2695,
+   "armoedeKinderen": 3.0407,
    "gini": 0.22027,
    "decielenRelatief": [
     -1.066,
@@ -239,8 +240,8 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 9.4977,
-   "armoedeKinderen": 9.8414,
+   "armoede": 4.1457,
+   "armoedeKinderen": 2.9679,
    "gini": 0.22107,
    "decielenRelatief": [
     -0.196,
@@ -279,8 +280,8 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 9.7695,
-   "armoedeKinderen": 10.1607,
+   "armoede": 4.2382,
+   "armoedeKinderen": 3.0407,
    "gini": 0.2207,
    "decielenRelatief": [
     -0.919,
@@ -319,8 +320,8 @@
     "uitkeringen": 0,
     "basisinkomen": 0
    },
-   "armoede": 15.1822,
-   "armoedeKinderen": 16.3959,
+   "armoede": 8.8511,
+   "armoedeKinderen": 12.1295,
    "gini": 0.24819,
    "decielenRelatief": [
     -18.275,
@@ -359,8 +360,8 @@
     "uitkeringen": 0.1836,
     "basisinkomen": 0
    },
-   "armoede": 9.1036,
-   "armoedeKinderen": 9.1741,
+   "armoede": 3.9759,
+   "armoedeKinderen": 2.7507,
    "gini": 0.2206,
    "decielenRelatief": [
     1.133,
