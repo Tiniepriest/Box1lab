@@ -4,7 +4,8 @@ import { join } from "node:path";
 import { DATA_MAP } from "@box1lab/engine/node";
 import { marked } from "marked";
 import Base from "../layouts/Base.astro";
-import { MODEL_VERSIE, kalibratie, pad, params } from "../lib/data.ts";
+import { MODEL_VERSIE, giniLanden, kalibratie, pad, params } from "../lib/data.ts";
+import { getal } from "../lib/format.ts";
 import { REPO, meldFoutUrl } from "../lib/project.ts";
 import { bronnen } from "../lib/secties.ts";
 
@@ -77,7 +78,7 @@ const metLinks = (t: string) =>
         de inkomensgroepen gaat de indeling uit van het huidige stelsel. Kleine groepen, zoals de bijstand,
         rusten op minder voorbeeldhuishoudens en zijn daarom minder precies.
       </dd>
-      <dt>Armoederisico</dt>
+      <dt>% in armoede</dt>
       <dd>
         Het aandeel mensen in een huishouden met minder dan {params.methodiek.armoedegrens}% van het middelste
         (mediane) gecorrigeerde inkomen. De grens blijft in elk scenario gelijk aan die van het huidige
@@ -86,6 +87,17 @@ const metLinks = (t: string) =>
       <dt>Gini</dt>
       <dd>
         Een maat voor ongelijkheid: 0 betekent dat iedereen evenveel heeft, 1 dat één persoon alles heeft.
+      </dd>
+      <dt>Gini: plek in de wereld</dt>
+      <dd>
+        Waar Nederland staat op de lijst van {giniLanden.landen.length + 1} landen van de Wereldbank, van
+        gelijk (plek 1) naar ongelijk. Per land telt het nieuwste cijfer vanaf {giniLanden.vanafJaar}; voor
+        Nederland is dat {getal(giniLanden.nederland.waarde, 1)} in {giniLanden.nederland.jaar} (de Wereldbank
+        rekent van 0 tot 100). Onze eigen Gini ligt lager, omdat we niet hetzelfde inkomen meten. Daarom
+        zetten we het cijfer van de Wereldbank voor Nederland op de lijst, plus de verandering die het model
+        berekent. Zonder wijziging staat Nederland dus op dezelfde plek als bij de Wereldbank. Landen meten
+        ongelijkheid niet allemaal op dezelfde manier (inkomen of uitgaven) en niet in hetzelfde jaar: zie de
+        plek als een ruwe indicatie.
       </dd>
       <dt>Marginale druk</dt>
       <dd>

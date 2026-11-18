@@ -249,6 +249,11 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] Tooltips en hover: binnen de grafiek, naast de rij, blijven staan bij tikken; banden per rij; percentages in de gestapelde balk; punten en verschil bij de lijnen (D-096)
 - [x] Staafgrafieken: waarden in een kolom, tekst boven de lijnen, figuren naast elkaar op gelijke hoogte, voorbeelden op volgorde (D-095)
 
+## "% in armoede" en Gini in de wereld — klaar
+
+- [x] "Armoederisico" heet "% in armoede"
+- [x] Bij de Gini de plek van Nederland in de wereld (Wereldbank, 155 landen), verankerd aan het cijfer van de Wereldbank (D-097)
+
 ## Open vragen voor de eigenaar
 
 - Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?

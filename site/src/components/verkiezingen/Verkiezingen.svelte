@@ -25,6 +25,10 @@
     armoedeNu: number;
     gini: number;
     giniNu: number;
+    /** Plek van Nederland in de wereld op de Gini (1 = gelijkst), nu en met het plan, van `landen` landen. */
+    giniPlek: number;
+    giniPlekNu: number;
+    landen: number;
     decielen: number[];
   }
 
@@ -267,12 +271,15 @@
               <div class="w">{miljard(m.saldoMld)}</div>
             </div>
             <div class="kerngetal">
-              <div class="l">Armoederisico</div>
+              <div class="l">% in armoede</div>
               <div class="w">{procent(m.armoedeNu)} → {procent(m.armoede)}</div>
             </div>
             <div class="kerngetal">
               <div class="l">Gini</div>
               <div class="w">{getal(m.giniNu, 3)} → {getal(m.gini, 3)}</div>
+              <div class="t">
+                In de wereld: plek {m.giniPlekNu} → {m.giniPlek} van {m.landen} landen (1 = gelijkst)
+              </div>
             </div>
           </div>
           <table class="data decielen">
@@ -340,13 +347,18 @@
                   ></tr
                 >
                 <tr
-                  ><td>Armoederisico</td><td class="num">{procent(ma.armoede)}</td><td class="num"
+                  ><td>% in armoede</td><td class="num">{procent(ma.armoede)}</td><td class="num"
                     >{procent(mb.armoede)}</td
                   ></tr
                 >
                 <tr
                   ><td>Gini</td><td class="num">{getal(ma.gini, 3)}</td><td class="num"
                     >{getal(mb.gini, 3)}</td
+                  ></tr
+                >
+                <tr
+                  ><td>Gini: plek in de wereld</td><td class="num">{ma.giniPlek} van {ma.landen}</td><td
+                    class="num">{mb.giniPlek} van {mb.landen}</td
                   ></tr
                 >
                 {#each ma.decielen as d, i (i)}

@@ -33,6 +33,7 @@ export * from "./metrics/gini.ts";
 export * from "./metrics/groepen.ts";
 export * from "./metrics/marginaal.ts";
 export * from "./metrics/winnaars.ts";
+export * from "./metrics/wereldrang.ts";
 export * from "./simulatie.ts";
 export * from "./oplosser.ts";
 export * from "./scenario/preset.ts";

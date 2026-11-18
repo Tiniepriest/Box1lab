@@ -979,3 +979,14 @@ Niet gedaan, mogelijk later:
 - de twee lijngrafieken tegelijk laten meebewegen
 - de rijen met het toetsenbord bereikbaar maken
 - de staafgrafiek in HTML in plaats van SVG, zodat de browser de tekst meet in plaats van een schatting per teken
+
+### D-097 "% in armoede" en de Gini op een wereldranglijst
+
+Op verzoek van de eigenaar heet "Armoederisico" in de site nu "% in armoede" (lab, voorstellen, verkiezingen, methodiek); de berekening is niet veranderd. Bij de Gini staat de plek van Nederland in de wereld.
+
+- **Bron.** Gini-index van de Wereldbank (World Development Indicators, `SI.POV.GINI`), per land het nieuwste cijfer vanaf 2014, alleen landen (geen regio's). Opgehaald op 18 november 2026: 155 landen, Nederland 25,7 (2021), plek 7. `npm run gini:landen` schrijft `data/vergelijking/gini-landen.yaml` opnieuw; het schema controleert dat Nederland apart staat, dat geen land dubbel staat en dat elk cijfer van na `vanafJaar` is.
+- **Verankerd aan de Wereldbank.** Onze Gini (0,222) is lager dan die van de Wereldbank, omdat we een ander inkomen meten (gestandaardiseerd besteedbaar inkomen uit de nagebootste bevolking; inkomen uit vermogen zit er maar deels in). Zouden we die direct op de lijst zetten, dan stond Nederland op plek 1, terwijl dat volgens de Wereldbank plek 7 is. Daarom: index = Wereldbank-cijfer voor Nederland + 100 × (Gini scenario − Gini huidig), afgerond op één decimaal zoals de Wereldbank publiceert. Plek = 1 + het aantal landen met een lagere index; een gelijke index deelt de plek.
+- **Beperking, op de methodiekpagina.** Landen meten met inkomen of met consumptie, en niet in hetzelfde jaar; de plek is een ruwe indicatie.
+- `giniWereldPlek` staat in de engine (`metrics/wereldrang.ts`), zodat de UI zelf niet rekent. Het lab rekent in de browser, verkiezingen en Belastingplan tijdens de build.
+
+Golden: geen verschil. De berekening van armoede en Gini blijft gelijk, en de wereldplek staat niet in het golden-bestand. `MODEL_VERSIE` blijft daarom ook gelijk.
