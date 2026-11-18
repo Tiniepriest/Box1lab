@@ -495,7 +495,7 @@ ${vermogenRijen.join("\n")}
 
 Begrip van het model, zonder de nominale zorgpremie (D-093); niet hetzelfde als het CBS-begrip hierboven.
 
-- Armoederisico (personen, 60% van de mediaan): ${nl(basis.armoede.personen, 1)}%; kinderen ${nl(basis.armoede.kinderen, 1)}%.
+- Onder de armoedegrens van CBS, Nibud en SCP (D-098): ${nl(basis.armoede.personen, 1)}% van de personen; kinderen ${nl(basis.armoede.kinderen, 1)}%. Ter vergelijking: ${nl(kal.armoede.personen, 1)}% en ${nl(kal.armoede.kinderen, 1)}% (zie de bron bij \`armoede\` in de kalibratiedoelen).
 - Gini (gestandaardiseerd besteedbaar inkomen): ${nl(basis.gini, 3)}.
 - Mediaan gestandaardiseerd besteedbaar inkomen: € ${nl(
   gewogenMediaan(

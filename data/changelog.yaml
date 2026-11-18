@@ -7,6 +7,17 @@
 # soort: nieuw | cijfers | model | correctie
 
 - datum: 2026-11-18
+  soort: model
+  modelversie: 0.8.0
+  titel: "Armoede: wie leeft onder de armoedegrens"
+  tekst: >-
+    In plaats van het armoederisico (een inkomen onder 60% van het middelste inkomen) tonen we nu hoeveel mensen
+    onder de armoedegrens leven, zoals het CBS, het Nibud en het SCP die samen meten. Een huishouden is arm als er
+    na huur, energie en zorgverzekering te weinig overblijft voor eten, kleding en meedoen, en als het niet genoeg
+    spaargeld heeft om een jaar van te leven. Voor 2026 komt het model uit op 4,1% van de mensen en 3,0% van de
+    kinderen (eerder: armoederisico 9,4%). De huur telt nu echt mee, dus je ziet beter wat de huurtoeslag doet. Op
+    de pagina Methodiek staat hoe we rekenen en waar het model afwijkt.
+- datum: 2026-11-18
   soort: nieuw
   titel: "Gini: de plek van Nederland in de wereld"
   tekst: >-

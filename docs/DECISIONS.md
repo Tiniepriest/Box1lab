@@ -990,3 +990,44 @@ Op verzoek van de eigenaar heet "Armoederisico" in de site nu "% in armoede" (la
 - `giniWereldPlek` staat in de engine (`metrics/wereldrang.ts`), zodat de UI zelf niet rekent. Het lab rekent in de browser, verkiezingen en Belastingplan tijdens de build.
 
 Golden: geen verschil. De berekening van armoede en Gini blijft gelijk, en de wereldplek staat niet in het golden-bestand. `MODEL_VERSIE` blijft daarom ook gelijk.
+
+### D-098 Onder de armoedegrens (CBS, Nibud en SCP) in plaats van het armoederisico
+
+De eigenaar wil het aantal mensen onder de armoedegrens tonen, niet het armoederisico, en daarbij de definitie van het CBS aanhouden. Het armoederisico (60% van het mediane gestandaardiseerde inkomen, `methodiek.armoedegrens`) is weg; `MODEL_VERSIE` 0.7.0 → 0.8.0.
+
+**Definitie** (CBS, Nibud en SCP, _De nieuwe methode om armoede in Nederland te meten_, 2024, paragraaf 2 en 3.2; CBS, _Leven in armoede 2025_, bijlage A). Een huishouden is arm als
+
+- het inkomen lager is dan zijn eigen armoedegrens, én
+- het vrij opneembaar vermogen niet groter is dan die grens over een jaar.
+
+**Hoe het model rekent** (`metrics/armoede.ts`):
+
+- **Grens per maand** = normbedrag van het huishoudtype zonder de normhuur (tabel A1 min A2; energie blijft het normbedrag), plus de werkelijke huur. Huishoudtype: volwassenen (ook kinderen van 18 of ouder), tieners van 13 tot 18 en kinderen tot 13; 35 typen tot vijf personen. Daarbuiten geeft de engine een fout; de bevolking heeft geen grotere huishoudens.
+- **Indexatie**: bedragen 2024, verhoogd met de alternatieve cpi voor koopkracht- en armoedecijfers van het CPB (MEV 2027: 3,3% in 2025 en 3,3% in 2026). Het CBS gebruikt elk jaar de nieuwe minimumvoorbeeldbegroting van het Nibud; die tabel is er voor 2025 en 2026 nog niet. Daarom staat er "Raming:" in de bron.
+- **Inkomen** = besteedbaar − kinderopvangtoeslag − nominale premie − gemiddeld eigen risico per volwassene. Het CBS telt de kinderopvangtoeslag niet mee, en de opvangkosten zitten ook niet in ons `besteedbaar`. Het eigen risico is de opbrengst uit de VWS-begroting (€ 3,44 mld in 2026) gedeeld door de volwassenen in de bevolking: € 233 per jaar. Het CBS maakt dat bedrag nog per leeftijd verschillend.
+- **Vermogen** = banktegoeden + overige bezittingen in box 3, zonder schulden en zonder de eigen woning. Ondernemingsvermogen en aanmerkelijk belang zitten niet in het model.
+- **Scenario's**: de grens blijft die van het huidige beleid (`basis.params`); inkomen, premie en toeslagen veranderen wel.
+
+**Afwijkingen van het CBS**
+
+1. **Woonlasten van eigenaren.** Het CBS telt hypotheekrente plus exploitatielasten (groot onderhoud, erfpacht, opstalverzekering, OZB). Het model kent alleen de hypotheekrente. Daarom krijgen eigenaren de normhuur, zoals het CBS doet als de woonlasten onbekend zijn. Een gemiddelde van de exploitatielasten met bron is niet gevonden: CBS 85949NED geeft alleen netto woonlasten in totaal. Dit is de grootste onzekerheid: met alleen de hypotheekrente als woonlast zou armoede 2,4% zijn; met de normhuur is het 4,1%.
+2. **Energie** is altijd het normbedrag: het verbruik zit niet in het model. Het CBS doet dit ook, maar alleen als het verbruik onbekend is.
+3. Geen studentenhuishoudens en geen niet-gebruik van toeslagen.
+
+**Uitkomst 2026:** 4,15% personen en 2,97% kinderen. Ter vergelijking (`data/kalibratie/2026.yaml`): de CPB-raming voor 2026 is 2,6% en 2,4% (MEV 2027), de CBS-realisatie 2024 3,1% en 2,8%.
+
+Golden: alleen de armoedecijfers veranderen. `kalibratie.armoedegrens` (€ 23.725) maakt plaats voor `eigenRisico` (232,78) en `armoedeKinderen`.
+
+| Scenario                        | Armoede oud | Armoede nieuw | Kinderen oud | Kinderen nieuw |
+| ------------------------------- | ----------- | ------------- | ------------ | -------------- |
+| huidig                          | 9,38%       | 4,15%         | 9,59%        | 2,97%          |
+| vlaktaks 35%                    | 14,73%      | 8,15%         | 16,54%       | 11,75%         |
+| drie schijven                   | 17,81%      | 9,61%         | 19,26%       | 13,59%         |
+| zonder huurtoeslag              | 11,26%      | 6,14%         | 10,57%       | 5,56%          |
+| zonder HRA                      | 9,77%       | 4,27%         | 10,16%       | 3,04%          |
+| HRA 30%                         | 9,50%       | 4,15%         | 9,84%        | 2,97%          |
+| zonder HRA en forfait           | 9,77%       | 4,24%         | 10,16%       | 3,04%          |
+| toeslagen afschaffen            | 15,18%      | 8,85%         | 16,40%       | 12,13%         |
+| hogere algemene heffingskorting | 9,10%       | 3,98%         | 9,17%        | 2,75%          |
+
+Saldi, Gini en de effecten per groep zijn ongewijzigd. Het kalibratierapport is opnieuw gemaakt; de bevolking zelf niet, alleen de modelversie in de toelichting.

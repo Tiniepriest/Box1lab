@@ -507,3 +507,9 @@ controle:
   bron: "Miljoenennota 2026, bijlage 3.1: loonbelasting 95.498, inkomstenbelasting 14.792 en premie volksverzekeringen 44.925 miljoen (https://www.rijksfinancien.nl/miljoenennota/2026/bijlage/9926796); box 3 2026: antwoorden Voorjaarsnota 2026 (10,5 miljard)"
   loonEnInkomensheffingMld: 155.215
   box3Mld: 10.5
+
+# Ter vergelijking, niet om op te wegen: personen en kinderen onder de armoedegrens van CBS, Nibud en SCP (D-098).
+armoede:
+  bron: "Raming voor 2026 van het CPB, kerngegevenstabel MEV 2027 (september 2026; https://www.cpb.nl/system/files/cpbmedia/CPB-kerngegevens-MEV-2027.pdf). Het CPB telt, anders dan het CBS, de kinderopvang mee. Laatste realisatie: 3,1% personen en 2,8% kinderen in 2024 (CBS, Leven in armoede 2025; https://www.cbs.nl/nl-nl/publicatie/2025/51/leven-in-armoede-2025)."
+  personen: 2.6
+  kinderen: 2.4

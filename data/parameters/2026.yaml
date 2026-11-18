@@ -338,13 +338,60 @@ gedrag:
   # Elasticiteit van het belastbaar inkomen voor werkenden.
   eti: 0
 
+armoede:
+  bron: "Raming: CBS, Leven in armoede 2025, bijlage A (https://longreads.cbs.nl/leven-in-armoede-2025/bijlage-a-armoedegrenzen/): tabel A1 (armoedegrens per huishoudtype, gemiddeld maandbedrag 2024, inclusief de normbedragen voor huur en energie) en tabel A2 (normbedragen huur en energie 2024). Methode: CBS, Nibud en SCP, De nieuwe methode om armoede in Nederland te meten (oktober 2024; https://www.cbs.nl/-/media/_pdf/2024/42/rapport-nieuwe-methode-armoede.pdf), paragraaf 2 en 3.2. Naar 2026 geïndexeerd met de alternatieve cpi voor koopkracht- en armoedecijfers uit de CPB-kerngegevenstabel MEV 2027 (2025: 3,3%, 2026: 3,3%; https://www.cpb.nl/system/files/cpbmedia/CPB-kerngegevens-MEV-2027.pdf); het CBS gebruikt de nieuwe minimumvoorbeeldbegrotingen van het Nibud zodra die verschijnen. Eigen risico: begroting VWS 2027, tabel 69, ontvangsten Zvw 2026: € 3.442,7 mln (Kamerstukken II 2026/27, 37 020-XVI, nr. 2; https://zoek.officielebekendmakingen.nl/kst-37020-XVI-2.html)."
+  # Het jaar van de bedragen in `typen`, en de prijsstijging (%) per jaar daarna tot en met dit jaar.
+  peiljaar: 2024
+  indexatie: [3.3, 3.3]
+  # Leeftijdsgrenzen van het CBS: kinderen tot deze leeftijd, tieners tot de volwassenleeftijd (zorg.volwassenVanaf).
+  tienerVanaf: 13
+  # Opbrengst van het verplicht eigen risico (mld euro), voor het gemiddelde verbruik per volwassene. Het CBS trekt
+  # dat gemiddelde af van het inkomen, net als de nominale premie.
+  eigenRisicoMld: 3.443
+  # Per huishoudtype (volwassenen, tieners van 13 tot 18, kinderen tot 13): armoedegrens per maand met de
+  # normbedragen voor huur en energie erin, en die normbedragen apart.
+  typen:
+    - { volwassenen: 1, tieners: 0, kinderen: 0, grens: 1600, huur: 610, energie: 145 }
+    - { volwassenen: 1, tieners: 0, kinderen: 1, grens: 1980, huur: 615, energie: 205 }
+    - { volwassenen: 1, tieners: 1, kinderen: 0, grens: 2190, huur: 615, energie: 205 }
+    - { volwassenen: 2, tieners: 0, kinderen: 0, grens: 2145, huur: 615, energie: 175 }
+    - { volwassenen: 1, tieners: 0, kinderen: 2, grens: 2215, huur: 615, energie: 220 }
+    - { volwassenen: 1, tieners: 1, kinderen: 1, grens: 2410, huur: 615, energie: 220 }
+    - { volwassenen: 1, tieners: 2, kinderen: 0, grens: 2605, huur: 615, energie: 220 }
+    - { volwassenen: 2, tieners: 0, kinderen: 1, grens: 2405, huur: 615, energie: 220 }
+    - { volwassenen: 2, tieners: 1, kinderen: 0, grens: 2605, huur: 615, energie: 220 }
+    - { volwassenen: 3, tieners: 0, kinderen: 0, grens: 2585, huur: 615, energie: 220 }
+    - { volwassenen: 1, tieners: 0, kinderen: 3, grens: 2440, huur: 615, energie: 235 }
+    - { volwassenen: 1, tieners: 1, kinderen: 2, grens: 2620, huur: 615, energie: 235 }
+    - { volwassenen: 1, tieners: 2, kinderen: 1, grens: 2805, huur: 615, energie: 235 }
+    - { volwassenen: 1, tieners: 3, kinderen: 0, grens: 2985, huur: 615, energie: 235 }
+    - { volwassenen: 2, tieners: 0, kinderen: 2, grens: 2625, huur: 615, energie: 235 }
+    - { volwassenen: 2, tieners: 1, kinderen: 1, grens: 2810, huur: 615, energie: 235 }
+    - { volwassenen: 2, tieners: 2, kinderen: 0, grens: 3000, huur: 615, energie: 235 }
+    - { volwassenen: 3, tieners: 0, kinderen: 1, grens: 2800, huur: 615, energie: 235 }
+    - { volwassenen: 3, tieners: 1, kinderen: 0, grens: 2990, huur: 615, energie: 235 }
+    - { volwassenen: 4, tieners: 0, kinderen: 0, grens: 2970, huur: 615, energie: 235 }
+    - { volwassenen: 1, tieners: 0, kinderen: 4, grens: 2670, huur: 620, energie: 245 }
+    - { volwassenen: 1, tieners: 1, kinderen: 3, grens: 2850, huur: 620, energie: 245 }
+    - { volwassenen: 1, tieners: 2, kinderen: 2, grens: 3025, huur: 620, energie: 245 }
+    - { volwassenen: 1, tieners: 3, kinderen: 1, grens: 3205, huur: 620, energie: 245 }
+    - { volwassenen: 1, tieners: 4, kinderen: 0, grens: 3380, huur: 620, energie: 245 }
+    - { volwassenen: 2, tieners: 0, kinderen: 3, grens: 2845, huur: 620, energie: 245 }
+    - { volwassenen: 2, tieners: 1, kinderen: 2, grens: 3025, huur: 620, energie: 245 }
+    - { volwassenen: 2, tieners: 2, kinderen: 1, grens: 3200, huur: 620, energie: 245 }
+    - { volwassenen: 2, tieners: 3, kinderen: 0, grens: 3380, huur: 620, energie: 245 }
+    - { volwassenen: 3, tieners: 0, kinderen: 2, grens: 3025, huur: 620, energie: 245 }
+    - { volwassenen: 3, tieners: 1, kinderen: 1, grens: 3205, huur: 620, energie: 245 }
+    - { volwassenen: 3, tieners: 2, kinderen: 0, grens: 3385, huur: 620, energie: 245 }
+    - { volwassenen: 4, tieners: 0, kinderen: 1, grens: 3195, huur: 620, energie: 245 }
+    - { volwassenen: 4, tieners: 1, kinderen: 0, grens: 3380, huur: 620, energie: 245 }
+    - { volwassenen: 5, tieners: 0, kinderen: 0, grens: 3355, huur: 620, energie: 245 }
+
 methodiek:
   bron: "Modelkeuze, zoals in het prototype."
   # Equivalentieschaal (OECD-gemodificeerd): eerste volwassene telt als 1, elke volgende persoon vanaf
   # "kindVanafLeeftijd" als extraVolwassene, jongere kinderen als kind.
   equivalentie: { extraVolwassene: 0.5, kind: 0.3, kindVanafLeeftijd: 14 }
-  # Armoederisicogrens als percentage van het mediane gestandaardiseerde besteedbaar inkomen.
-  armoedegrens: 60
   # Grenzen (in procent verandering van het besteedbaar inkomen) voor de vijf klassen winnaars en verliezers:
   # verlies > 5%, verlies 1–5%, minder dan 1%, winst 1–5%, winst > 5%.
   winnaarsGrenzen: [-5, -1, 1, 5]

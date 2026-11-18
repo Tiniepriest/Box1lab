@@ -271,7 +271,7 @@
               <div class="w">{miljard(m.saldoMld)}</div>
             </div>
             <div class="kerngetal">
-              <div class="l">% in armoede</div>
+              <div class="l">Onder de armoedegrens</div>
               <div class="w">{procent(m.armoedeNu)} → {procent(m.armoede)}</div>
             </div>
             <div class="kerngetal">
@@ -347,7 +347,7 @@
                   ></tr
                 >
                 <tr
-                  ><td>% in armoede</td><td class="num">{procent(ma.armoede)}</td><td class="num"
+                  ><td>Onder de armoedegrens</td><td class="num">{procent(ma.armoede)}</td><td class="num"
                     >{procent(mb.armoede)}</td
                   ></tr
                 >

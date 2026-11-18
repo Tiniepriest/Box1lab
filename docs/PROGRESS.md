@@ -254,6 +254,12 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] "Armoederisico" heet "% in armoede"
 - [x] Bij de Gini de plek van Nederland in de wereld (Wereldbank, 155 landen), verankerd aan het cijfer van de Wereldbank (D-097)
 
+## Onder de armoedegrens (model 0.8.0) — klaar
+
+- [x] Armoede volgens CBS, Nibud en SCP in plaats van het armoederisico (60% van de mediaan) (D-098)
+- [x] Grensbedragen per huishoudtype (CBS, bijlage A), geïndexeerd met de alternatieve cpi van het CPB; vergelijking met de CPB-raming in het kalibratierapport
+- [ ] Werkelijke woonlasten van eigenaren (onderhoud, opstalverzekering, OZB, erfpacht): nu het normbedrag. TODO: bron nodig voor gemiddelde exploitatielasten.
+
 ## Open vragen voor de eigenaar
 
 - Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?
