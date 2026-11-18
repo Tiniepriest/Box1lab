@@ -5,6 +5,7 @@
 import { MODEL_VERSIE } from "@box1lab/engine";
 import {
   laadChangelog,
+  laadGiniLanden,
   laadKalibratie,
   laadVerkiezing,
   laadVerkiezingen,
@@ -22,6 +23,7 @@ export const voorbeelden = laadVoorbeelden();
 export const labKnoppen = laadLabKnoppen(params);
 export const kalibratie = laadKalibratie(JAAR);
 export const changelog = laadChangelog();
+export const giniLanden = laadGiniLanden();
 /** De nieuwste echte (niet fictieve) verkiezing of vergelijking van routes; voor het menu en de home. */
 export const actueel =
   laadVerkiezingen()

@@ -27,7 +27,8 @@
     "vergelijk": "tsx scripts/vergelijk-prototype.ts",
     "kalibreer": "tsx scripts/kalibreer.ts",
     "kalibreer:controle": "tsx scripts/kalibreer.ts --controle",
-    "schermafdrukken": "tsx scripts/schermafdrukken.ts"
+    "schermafdrukken": "tsx scripts/schermafdrukken.ts",
+    "gini:landen": "tsx scripts/gini-landen.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

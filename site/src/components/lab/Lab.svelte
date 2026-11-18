@@ -4,6 +4,7 @@
     berekenHuishouden,
     codeerScenario,
     decodeerScenario,
+    giniWereldPlek,
     huishoudenUitInvoer,
     indelingen,
     inkomenscurve,
@@ -13,6 +14,7 @@
     pasToe,
     statisch,
     verschil,
+    type GiniLanden,
     type Huishouden,
     type Kalibratie,
     type Knop,
@@ -47,6 +49,7 @@
     presets,
     knoppen,
     voorbeelden,
+    giniLanden,
   }: {
     params: Parameters;
     kalibratie: Kalibratie;
@@ -54,6 +57,8 @@
     presets: Preset[];
     knoppen: LabKnoppen;
     voorbeelden: Voorbeelden;
+    /** Gini-index per land (Wereldbank), voor de plek van Nederland in de wereld. */
+    giniLanden: GiniLanden;
   } = $props();
 
   // ---------- Scenario ----------
@@ -63,6 +68,15 @@
   let scenario = $state<Parameters>(kloon(params));
   let basis = $state<BasisSamenvatting | null>(null);
   let uitkomst = $state<UitkomstSamenvatting | null>(null);
+  /** Plek van Nederland in de wereld op de Gini, nu en met het scenario (D-097). */
+  const giniPlek = $derived(
+    basis && uitkomst
+      ? {
+          nu: giniWereldPlek(giniLanden, basis.gini, basis.gini),
+          scenario: giniWereldPlek(giniLanden, uitkomst.gini, basis.gini),
+        }
+      : null,
+  );
   let laadFout = $state("");
   let melding = $state("");
   let deelMelding = $state("");
@@ -498,7 +512,7 @@
             <div class="t">per jaar; plus = meer inkomsten of minder uitgaven</div>
           </div>
           <div class="kerngetal">
-            <div class="l">Armoederisico</div>
+            <div class="l">% in armoede</div>
             <div class="w">{procent(basis!.armoede.personen)} → {procent(uitkomst.armoede.personen)}</div>
             <div class="t">
               kinderen {procent(basis!.armoede.kinderen)} → {procent(uitkomst.armoede.kinderen)}
@@ -508,6 +522,10 @@
             <div class="l">Ongelijkheid (Gini)</div>
             <div class="w">{getal(basis!.gini, 3)} → {getal(uitkomst.gini, 3)}</div>
             <div class="t">0 = iedereen evenveel, 1 = één persoon alles</div>
+            <div class="t">
+              In de wereld: plek {giniPlek!.nu.plek} → {giniPlek!.scenario.plek} van {giniPlek!.nu.van} landen (1
+              = gelijkst)
+            </div>
           </div>
           <div class="kerngetal">
             <div class="l">Achteruit / gelijk / vooruit</div>

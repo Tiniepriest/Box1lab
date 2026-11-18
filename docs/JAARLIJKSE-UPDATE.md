@@ -84,6 +84,8 @@ Golden tests die wijzigen door de nieuwe cijfers zijn verwacht. Leg in de pull r
 
 ### 5. Afronden
 
+Haal de nieuwste Gini-index per land op bij de Wereldbank met `npm run gini:landen` (houdt het eerste jaar uit het bestand aan; geef een ander jaar mee, bijvoorbeeld `npm run gini:landen -- 2015`, zodat de lijst ongeveer tien jaar beslaat). Dat zet de plek van Nederland in de wereld bij de Gini op de nieuwste cijfers (D-097).
+
 Voeg bovenaan `data/changelog.yaml` een regel toe met `soort: cijfers`, bijvoorbeeld:
 
 ```yaml

@@ -3,6 +3,7 @@
  * macrobeeld per partij uitrekenen op de volledige populatie.
  */
 import {
+  giniWereldPlek,
   maakBasis,
   pasToe,
   partijWijzigingen,
@@ -14,7 +15,7 @@ import {
 } from "@box1lab/engine";
 import { laadParameters, laadPopulatie, laadVerkiezing, laadVerkiezingen } from "@box1lab/engine/node";
 import { basis } from "./basis.ts";
-import { JAAR, kalibratie, params } from "./data.ts";
+import { JAAR, giniLanden, kalibratie, params } from "./data.ts";
 
 export const PREVIEW = import.meta.env.PUBLIC_VERKIEZINGEN_PREVIEW === "1";
 
@@ -24,6 +25,10 @@ export interface Macro {
   armoedeNu: number;
   gini: number;
   giniNu: number;
+  /** Plek van Nederland in de wereld op de Gini (1 = gelijkst), nu en met het plan, van `landen` landen. */
+  giniPlek: number;
+  giniPlekNu: number;
+  landen: number;
   decielen: number[];
 }
 
@@ -51,6 +56,7 @@ export function verkiezingData(id: string): VerkiezingData {
   const macro = Object.fromEntries(
     partijen.map((p) => {
       const u = simuleer(b, pasToe(basisParams, partijWijzigingen(p)));
+      const plek = giniWereldPlek(giniLanden, u.gini, b.gini);
       return [
         p.id,
         {
@@ -59,6 +65,9 @@ export function verkiezingData(id: string): VerkiezingData {
           armoedeNu: b.armoede.personen,
           gini: u.gini,
           giniNu: b.gini,
+          giniPlek: plek.plek,
+          giniPlekNu: giniWereldPlek(giniLanden, b.gini, b.gini).plek,
+          landen: plek.van,
           decielen: u.decielen.map((d) => d.relatief),
         },
       ];

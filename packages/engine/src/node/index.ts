@@ -13,6 +13,7 @@ import {
   valideerVerkiezing,
   valideerChangelog,
   valideerBox3Werkelijk,
+  valideerGiniLanden,
   type Kalibratie,
   type Parameters,
   type Populatie,
@@ -23,6 +24,7 @@ import {
   type Verkiezing,
   type Changelog,
   type Box3Werkelijk,
+  type GiniLanden,
 } from "../index.ts";
 
 /*
@@ -124,6 +126,11 @@ export function laadBox3Werkelijk(jaar: number): Box3Werkelijk {
   if (w.jaar !== jaar)
     throw new Error(`data/vooruitblik/box3-${jaar}.yaml: jaar ${w.jaar} hoort ${jaar} te zijn.`);
   return w;
+}
+
+/** Gini-index per land van de Wereldbank, voor de wereldranglijst (data/vergelijking/gini-landen.yaml). */
+export function laadGiniLanden(): GiniLanden {
+  return valideerGiniLanden(lees("vergelijking/gini-landen.yaml"), "data/vergelijking/gini-landen.yaml");
 }
 
 export function laadChangelog(): Changelog {

@@ -1,5 +1,5 @@
 /*
- * Controleert alle databestanden: parameters, kalibratie, populatie, presets, voorbeelden, lab, verkiezingen en de changelog.
+ * Controleert alle databestanden: parameters, kalibratie, populatie, presets, voorbeelden, lab, verkiezingen, de Gini per land en de changelog.
  * Faalt (exit 1) bij een fout; meldt waarden zonder bron en ramingen als waarschuwing.
  *
  * Gebruik: npm run valideer
@@ -19,6 +19,7 @@ import {
   laadVerkiezingen,
   laadChangelog,
   laadBox3Werkelijk,
+  laadGiniLanden,
 } from "@box1lab/engine/node";
 import { staffelSprongen, type Parameters } from "@box1lab/engine";
 
@@ -92,6 +93,7 @@ for (const v of laadVerkiezingen()) {
   controleer(`data/verkiezingen/${v}/ (alle partijen, ook concepten)`, () => laadVerkiezing(v, true));
 }
 controleer("data/vooruitblik/box3-2029.yaml", () => laadBox3Werkelijk(2029));
+controleer("data/vergelijking/gini-landen.yaml", () => laadGiniLanden());
 controleer("data/changelog.yaml", () => laadChangelog());
 
 if (todo.length) {

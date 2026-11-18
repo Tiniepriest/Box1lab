@@ -1,0 +1,164 @@
+# Gini-index per land van de Wereldbank, om de Gini van het model op een wereldranglijst te zetten (D-097).
+# Gegenereerd door: npm run gini:landen -- 2014   (niet met de hand bewerken)
+#
+# Schaal 0-100, zoals de Wereldbank publiceert (de Gini van het model is 0-1). Laag is gelijk.
+# Per land het nieuwste cijfer vanaf vanafJaar. Nederland staat apart; de lijst bevat alleen de andere landen.
+bron: "Wereldbank, World Development Indicators, indicator SI.POV.GINI (Gini index), https://data.worldbank.org/indicator/SI.POV.GINI, opgehaald op 2026-11-18 (database bijgewerkt op 2026-11-11). Alleen landen, geen regio's. De Wereldbank gebruikt per land inkomen of consumptie, uit enquêtes."
+opgehaald: "2026-11-18"
+vanafJaar: 2014
+nederland: { waarde: 25.7, jaar: 2021 }
+landen:
+  - { code: IND, land: "India", waarde: 23, jaar: 2023 }
+  - { code: SVK, land: "Slovak Republic", waarde: 23.8, jaar: 2023 }
+  - { code: BLR, land: "Belarus", waarde: 24.4, jaar: 2020 }
+  - { code: KIR, land: "Kiribati", waarde: 24.7, jaar: 2023 }
+  - { code: SVN, land: "Slovenia", waarde: 24.7, jaar: 2023 }
+  - { code: UKR, land: "Ukraine", waarde: 25.6, jaar: 2020 }
+  - { code: CZE, land: "Czechia", waarde: 25.7, jaar: 2023 }
+  - { code: SYR, land: "Syrian Arab Republic", waarde: 26.4, jaar: 2022 }
+  - { code: ARE, land: "United Arab Emirates", waarde: 26.4, jaar: 2018 }
+  - { code: NOR, land: "Norway", waarde: 26.5, jaar: 2023 }
+  - { code: BEL, land: "Belgium", waarde: 26.8, jaar: 2023 }
+  - { code: ISL, land: "Iceland", waarde: 26.8, jaar: 2019 }
+  - { code: MDA, land: "Moldova", waarde: 26.8, jaar: 2024 }
+  - { code: TON, land: "Tonga", waarde: 27.1, jaar: 2021 }
+  - { code: ARM, land: "Armenia", waarde: 27.4, jaar: 2024 }
+  - { code: FIN, land: "Finland", waarde: 27.4, jaar: 2023 }
+  - { code: KGZ, land: "Kyrgyz Republic", waarde: 27.5, jaar: 2024 }
+  - { code: BTN, land: "Bhutan", waarde: 28.5, jaar: 2022 }
+  - { code: EGY, land: "Egypt, Arab Rep.", waarde: 28.5, jaar: 2021 }
+  - { code: POL, land: "Poland", waarde: 28.5, jaar: 2023 }
+  - { code: TLS, land: "Timor-Leste", waarde: 28.7, jaar: 2014 }
+  - { code: IRL, land: "Ireland", waarde: 29, jaar: 2023 }
+  - { code: KAZ, land: "Kazakhstan", waarde: 29.2, jaar: 2021 }
+  - { code: MDV, land: "Maldives", waarde: 29.3, jaar: 2019 }
+  - { code: SWE, land: "Sweden", waarde: 29.3, jaar: 2023 }
+  - { code: ALB, land: "Albania", waarde: 29.4, jaar: 2020 }
+  - { code: GIN, land: "Guinea", waarde: 29.6, jaar: 2018 }
+  - { code: IRQ, land: "Iraq", waarde: 29.8, jaar: 2023 }
+  - { code: ROU, land: "Romania", waarde: 29.8, jaar: 2023 }
+  - { code: DNK, land: "Denmark", waarde: 29.9, jaar: 2023 }
+  - { code: NPL, land: "Nepal", waarde: 30, jaar: 2022 }
+  - { code: HRV, land: "Croatia", waarde: 30.1, jaar: 2023 }
+  - { code: BIH, land: "Bosnia and Herzegovina", waarde: 30.3, jaar: 2021 }
+  - { code: COM, land: "Comoros", waarde: 30.3, jaar: 2024 }
+  - { code: HUN, land: "Hungary", waarde: 30.6, jaar: 2017 }
+  - { code: EST, land: "Estonia", waarde: 30.7, jaar: 2023 }
+  - { code: FJI, land: "Fiji", waarde: 30.7, jaar: 2019 }
+  - { code: MMR, land: "Myanmar", waarde: 30.7, jaar: 2017 }
+  - { code: BGD, land: "Bangladesh", waarde: 30.9, jaar: 2022 }
+  - { code: ETH, land: "Ethiopia", waarde: 31.1, jaar: 2021 }
+  - { code: AUT, land: "Austria", waarde: 31.2, jaar: 2023 }
+  - { code: MNG, land: "Mongolia", waarde: 31.4, jaar: 2022 }
+  - { code: CAN, land: "Canada", waarde: 31.5, jaar: 2022 }
+  - { code: CYP, land: "Cyprus", waarde: 31.8, jaar: 2023 }
+  - { code: FRA, land: "France", waarde: 31.8, jaar: 2023 }
+  - { code: MLT, land: "Malta", waarde: 31.8, jaar: 2023 }
+  - { code: MRT, land: "Mauritania", waarde: 32, jaar: 2019 }
+  - { code: SYC, land: "Seychelles", waarde: 32.1, jaar: 2018 }
+  - { code: JPN, land: "Japan", waarde: 32.3, jaar: 2020 }
+  - { code: VUT, land: "Vanuatu", waarde: 32.3, jaar: 2019 }
+  - { code: GBR, land: "United Kingdom", waarde: 32.4, jaar: 2021 }
+  - { code: UZB, land: "Uzbekistan", waarde: 32.7, jaar: 2025 }
+  - { code: SRB, land: "Serbia", waarde: 32.8, jaar: 2023 }
+  - { code: KOR, land: "Korea, Rep.", waarde: 32.9, jaar: 2021 }
+  - { code: NER, land: "Niger", waarde: 32.9, jaar: 2021 }
+  - { code: RUS, land: "Russian Federation", waarde: 33, jaar: 2023 }
+  - { code: THA, land: "Thailand", waarde: 33.3, jaar: 2024 }
+  - { code: GRC, land: "Greece", waarde: 33.4, jaar: 2023 }
+  - { code: GNB, land: "Guinea-Bissau", waarde: 33.4, jaar: 2021 }
+  - { code: ESP, land: "Spain", waarde: 33.4, jaar: 2023 }
+  - { code: MKD, land: "North Macedonia", waarde: 33.5, jaar: 2019 }
+  - { code: PAK, land: "Pakistan", waarde: 33.5, jaar: 2024 }
+  - { code: CHE, land: "Switzerland", waarde: 33.5, jaar: 2023 }
+  - { code: LUX, land: "Luxembourg", waarde: 33.6, jaar: 2023 }
+  - { code: DEU, land: "Germany", waarde: 33.7, jaar: 2022 }
+  - { code: TUN, land: "Tunisia", waarde: 33.7, jaar: 2021 }
+  - { code: AUS, land: "Australia", waarde: 33.8, jaar: 2020 }
+  - { code: GEO, land: "Georgia", waarde: 33.9, jaar: 2024 }
+  - { code: NGA, land: "Nigeria", waarde: 33.9, jaar: 2022 }
+  - { code: PRT, land: "Portugal", waarde: 33.9, jaar: 2023 }
+  - { code: LVA, land: "Latvia", waarde: 34, jaar: 2023 }
+  - { code: BRB, land: "Barbados", waarde: 34.1, jaar: 2016 }
+  - { code: SDN, land: "Sudan", waarde: 34.2, jaar: 2014 }
+  - { code: ITA, land: "Italy", waarde: 34.3, jaar: 2023 }
+  - { code: MNE, land: "Montenegro", waarde: 34.3, jaar: 2021 }
+  - { code: BEN, land: "Benin", waarde: 34.4, jaar: 2021 }
+  - { code: IDN, land: "Indonesia", waarde: 34.4, jaar: 2025 }
+  - { code: LAO, land: "Lao PDR", waarde: 34.7, jaar: 2024 }
+  - { code: QAT, land: "Qatar", waarde: 35.1, jaar: 2017 }
+  - { code: CIV, land: "Cote d'Ivoire", waarde: 35.3, jaar: 2021 }
+  - { code: LBR, land: "Liberia", waarde: 35.3, jaar: 2016 }
+  - { code: LBN, land: "Lebanon", waarde: 35.5, jaar: 2022 }
+  - { code: MHL, land: "Marshall Islands", waarde: 35.5, jaar: 2019 }
+  - { code: MLI, land: "Mali", waarde: 35.7, jaar: 2021 }
+  - { code: SLE, land: "Sierra Leone", waarde: 35.7, jaar: 2018 }
+  - { code: IRN, land: "Iran, Islamic Rep.", waarde: 35.9, jaar: 2023 }
+  - { code: CHN, land: "China", waarde: 36, jaar: 2022 }
+  - { code: LTU, land: "Lithuania", waarde: 36, jaar: 2023 }
+  - { code: TJK, land: "Tajikistan", waarde: 36.1, jaar: 2024 }
+  - { code: VNM, land: "Viet Nam", waarde: 36.1, jaar: 2022 }
+  - { code: SEN, land: "Senegal", waarde: 36.2, jaar: 2021 }
+  - { code: PSE, land: "West Bank and Gaza", waarde: 36.4, jaar: 2023 }
+  - { code: YEM, land: "Yemen, Rep.", waarde: 36.7, jaar: 2014 }
+  - { code: MDG, land: "Madagascar", waarde: 36.8, jaar: 2021 }
+  - { code: MUS, land: "Mauritius", waarde: 36.8, jaar: 2017 }
+  - { code: BFA, land: "Burkina Faso", waarde: 37.4, jaar: 2021 }
+  - { code: TCD, land: "Chad", waarde: 37.4, jaar: 2022 }
+  - { code: BDI, land: "Burundi", waarde: 37.5, jaar: 2020 }
+  - { code: LKA, land: "Sri Lanka", waarde: 37.7, jaar: 2019 }
+  - { code: TGO, land: "Togo", waarde: 37.9, jaar: 2021 }
+  - { code: GAB, land: "Gabon", waarde: 38, jaar: 2017 }
+  - { code: UGA, land: "Uganda", waarde: 38.2, jaar: 2023 }
+  - { code: ISR, land: "Israel", waarde: 38.3, jaar: 2022 }
+  - { code: XKX, land: "Kosovo", waarde: 38.3, jaar: 2022 }
+  - { code: GNQ, land: "Equatorial Guinea", waarde: 38.5, jaar: 2022 }
+  - { code: KEN, land: "Kenya", waarde: 38.5, jaar: 2022 }
+  - { code: MWI, land: "Malawi", waarde: 38.5, jaar: 2019 }
+  - { code: GMB, land: "Gambia, The", waarde: 38.8, jaar: 2020 }
+  - { code: DOM, land: "Dominican Republic", waarde: 39, jaar: 2024 }
+  - { code: SUR, land: "Suriname", waarde: 39.2, jaar: 2022 }
+  - { code: PHL, land: "Philippines", waarde: 39.3, jaar: 2023 }
+  - { code: RWA, land: "Rwanda", waarde: 39.4, jaar: 2023 }
+  - { code: BGR, land: "Bulgaria", waarde: 39.5, jaar: 2023 }
+  - { code: SLV, land: "El Salvador", waarde: 39.8, jaar: 2023 }
+  - { code: BLZ, land: "Belize", waarde: 39.9, jaar: 2018 }
+  - { code: JAM, land: "Jamaica", waarde: 39.9, jaar: 2021 }
+  - { code: URY, land: "Uruguay", waarde: 40, jaar: 2024 }
+  - { code: PER, land: "Peru", waarde: 40.1, jaar: 2024 }
+  - { code: TZA, land: "Tanzania", waarde: 40.5, jaar: 2018 }
+  - { code: MYS, land: "Malaysia", waarde: 40.7, jaar: 2021 }
+  - { code: STP, land: "Sao Tome and Principe", waarde: 40.7, jaar: 2017 }
+  - { code: BOL, land: "Bolivia", waarde: 40.9, jaar: 2024 }
+  - { code: DJI, land: "Djibouti", waarde: 41.6, jaar: 2017 }
+  - { code: USA, land: "United States", waarde: 41.8, jaar: 2024 }
+  - { code: CMR, land: "Cameroon", waarde: 42.2, jaar: 2021 }
+  - { code: ARG, land: "Argentina", waarde: 42.4, jaar: 2024 }
+  - { code: CPV, land: "Cabo Verde", waarde: 42.4, jaar: 2015 }
+  - { code: MEX, land: "Mexico", waarde: 42.6, jaar: 2024 }
+  - { code: CAF, land: "Central African Republic", waarde: 43, jaar: 2021 }
+  - { code: CHL, land: "Chile", waarde: 43, jaar: 2024 }
+  - { code: GHA, land: "Ghana", waarde: 43.5, jaar: 2016 }
+  - { code: LCA, land: "St. Lucia", waarde: 43.7, jaar: 2015 }
+  - { code: TUR, land: "Turkiye", waarde: 43.7, jaar: 2023 }
+  - { code: GRD, land: "Grenada", waarde: 43.8, jaar: 2018 }
+  - { code: SSD, land: "South Sudan", waarde: 44, jaar: 2016 }
+  - { code: PRY, land: "Paraguay", waarde: 44.2, jaar: 2024 }
+  - { code: COD, land: "Congo, Dem. Rep.", waarde: 44.7, jaar: 2020 }
+  - { code: LSO, land: "Lesotho", waarde: 44.9, jaar: 2017 }
+  - { code: GTM, land: "Guatemala", waarde: 45.2, jaar: 2023 }
+  - { code: CRI, land: "Costa Rica", waarde: 45.5, jaar: 2025 }
+  - { code: HND, land: "Honduras", waarde: 45.7, jaar: 2024 }
+  - { code: ECU, land: "Ecuador", waarde: 45.9, jaar: 2025 }
+  - { code: NIC, land: "Nicaragua", waarde: 46.2, jaar: 2014 }
+  - { code: MOZ, land: "Mozambique", waarde: 49.6, jaar: 2022 }
+  - { code: PAN, land: "Panama", waarde: 49.7, jaar: 2024 }
+  - { code: BRA, land: "Brazil", waarde: 50.3, jaar: 2024 }
+  - { code: ZWE, land: "Zimbabwe", waarde: 50.3, jaar: 2019 }
+  - { code: AGO, land: "Angola", waarde: 51.3, jaar: 2018 }
+  - { code: ZMB, land: "Zambia", waarde: 51.5, jaar: 2022 }
+  - { code: ZAF, land: "South Africa", waarde: 54.1, jaar: 2022 }
+  - { code: COL, land: "Colombia", waarde: 54.4, jaar: 2024 }
+  - { code: SWZ, land: "Eswatini", waarde: 54.6, jaar: 2016 }
+  - { code: BWA, land: "Botswana", waarde: 54.9, jaar: 2015 }
+  - { code: NAM, land: "Namibia", waarde: 59.1, jaar: 2015 }
