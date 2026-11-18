@@ -234,6 +234,17 @@ export const parametersSchema = z.strictObject({
     aftoppingsgrens: nietNegatief,
   }),
 
+  /** Aftrek van lijfrentepremie (pensioenrekening), artikel 3.127 Wet IB 2001. */
+  lijfrente: z.strictObject({
+    bron,
+    /** Jaarruimte zonder pensioenopbouw via het werk, in procent van de premiegrondslag. */
+    percentage: pct,
+    /** Arbeidsinkomen boven deze grens telt niet mee voor de premiegrondslag. */
+    aftoppingsgrens: nietNegatief,
+    /** In te bouwen AOW-franchise: gaat van het arbeidsinkomen af. */
+    franchise: nietNegatief,
+  }),
+
   zorg: z.strictObject({
     bron,
     nominalePremiePerVolwassene: nietNegatief,

@@ -260,6 +260,12 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [x] Grensbedragen per huishoudtype (CBS, bijlage A), geïndexeerd met de alternatieve cpi van het CPB; vergelijking met de CPB-raming in het kalibratierapport
 - [ ] Werkelijke woonlasten van eigenaren (onderhoud, opstalverzekering, OZB, erfpacht): nu het normbedrag. TODO: bron nodig voor gemiddelde exploitatielasten.
 
+## Inleggen voor je pensioen (model 0.9.0)
+
+- [x] Op Jouw situatie: wat je terugkrijgt als je inlegt op een pensioenrekening (lijfrentepremieaftrek), met de toeslagen, de netto kosten en de jaarruimte voor wie geen pensioen opbouwt via het werk (D-099)
+- [ ] Jaarruimte voor wie wel pensioen opbouwt via het werk (factor A of de pensioenpremie): nu alleen een verwijzing naar het hulpmiddel van de Belastingdienst
+- [ ] AOW-franchise 2027 voor de jaarruimte: TODO: bron nodig (nu die van 2026)
+
 ## Open vragen voor de eigenaar
 
 - Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?

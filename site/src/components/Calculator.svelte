@@ -28,6 +28,7 @@
   import InvoerFormulier from "./Invoer.svelte";
   import JaarVergelijking from "./JaarVergelijking.svelte";
   import Loonstrook from "./Loonstrook.svelte";
+  import Pensioenrekening from "./Pensioenrekening.svelte";
   import WatAls from "./WatAls.svelte";
 
   let {
@@ -432,6 +433,8 @@
       </div>
 
       <WatAls {params} invoer={data} {samen} />
+
+      <Pensioenrekening {params} invoer={data} />
 
       {#if curve}
         <div class="kaart">

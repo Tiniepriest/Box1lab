@@ -1031,3 +1031,19 @@ Golden: alleen de armoedecijfers veranderen. `kalibratie.armoedegrens` (€ 23.7
 | hogere algemene heffingskorting | 9,10%       | 3,98%         | 9,17%        | 2,75%          |
 
 Saldi, Gini en de effecten per groep zijn ongewijzigd. Het kalibratierapport is opnieuw gemaakt; de bevolking zelf niet, alleen de modelversie in de toelichting.
+
+## Inleggen voor je pensioen (model 0.9.0)
+
+### D-099 Wat je terugkrijgt als je inlegt op een pensioenrekening
+
+Op verzoek van de eigenaar staat op Jouw situatie een kopje "Inleggen voor je pensioen": als je € X inlegt op een pensioenrekening of lijfrenteverzekering, hoeveel krijg je dan terug van de Belastingdienst? De bezoeker kiest het bedrag (standaard € 5.000), en bij twee werkenden wie inlegt.
+
+- **Rekenregel** (`regels/lijfrente.ts`, `pensioenrekening.ts`). Een nieuw veld `Lid.lijfrentepremie` gaat af van het belastbaar inkomen en dus van het toetsingsinkomen, maar niet van het arbeidsinkomen (de arbeidskorting blijft gelijk) en niet van het bijdrage-inkomen Zvw; zo heeft de rechter het uitgelegd. De lijfrenteaftrek valt niet onder de tariefsaanpassing: boven de laatste schijfgrens krijg je het toptarief terug. De aftrek gaat niet verder dan inkomen nul.
+- **Uitkomst.** Teruggave = minder belasting in box 1 en box 3. De extra toeslagen staan apart, omdat ze niet als teruggave van de Belastingdienst komen. Netto kosten = inleg − teruggave − extra toeslagen.
+- **Jaarruimte.** Wie geen pensioen opbouwt via het werk: 30% van (arbeidsinkomen tot € 137.800 − € 19.172), artikel 3.127. Bij een werknemer het loon na de eigen pensioenpremie, bij een zzp'er de winst vóór ondernemersaftrek. De wet neemt het inkomen van vorig jaar; wij nemen dit jaar. Wie wel pensioen opbouwt via het werk, heeft minder ruimte (factor A of de pensioenpremie); dat staat niet in de invoer. Dan rekenen we met de hele inleg en verwijzen we naar het hulpmiddel van de Belastingdienst. Standaard: werknemers bouwen pensioen op via het werk, zzp'ers niet; de bezoeker kan dat aanzetten of uitzetten. De reserveringsruimte (niet gebruikte ruimte van eerdere jaren) zit er niet in.
+- **Niet voor** bijstand, uitkeringen en wie de AOW-leeftijd heeft.
+- **Neutraliteit.** De tekst noemt ook de keerzijde: het geld komt pas vrij bij je pensioen, en dan betaal je er belasting over. Geen aanbieders, geen links naar aanbieders. Advertenties naast dit kopje zijn een aparte beslissing van de eigenaar (D-049).
+
+Voorbeelden 2026, alleenstaande, € 5.000 inleg, geen pensioen via het werk: € 48.000 loon → € 2.198 terug (44%: 37,56% plus de afbouw van de algemene heffingskorting); € 150.000 → € 2.475 (49,5%); € 30.000 loon en € 900 huur → jaarruimte € 3.248, € 1.178 terug en € 913 meer toeslag.
+
+Golden: geen verschil. In de nagebootste bevolking legt niemand in (`lijfrentepremie` ontbreekt), en de lijfrentepremieaftrek in de begroting blijft een vaste post bij de overige aftrekposten. `MODEL_VERSIE` 0.8.0 → 0.9.0, omdat er een rekenregel bij komt.

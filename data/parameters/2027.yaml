@@ -341,6 +341,15 @@ pensioenpremie:
   franchise: 19200
   aftoppingsgrens: 137800
 
+lijfrente:
+  bron: "TODO: bron nodig. De AOW-franchise voor 2027 is nog niet gepubliceerd; tijdelijk die van 2026. Aftoppingsgrens: het Belastingplan 2027 bevriest de aftoppingsgrens voor pensioen en lijfrente van 2027 tot en met 2032 op € 137.800. Regels: Wet IB 2001, artikel 3.127 (https://wetten.overheid.nl/BWBR0011353)."
+  # Jaarruimte voor wie geen pensioen opbouwt via het werk (factor A = 0): percentage van de premiegrondslag, het
+  # arbeidsinkomen tot de aftoppingsgrens min de franchise. Wie wel pensioen opbouwt, heeft minder ruimte; dat
+  # rekent de site niet uit (de factor A staat op het pensioenoverzicht).
+  percentage: 30
+  aftoppingsgrens: 137800
+  franchise: 19172
+
 gedrag:
   bron: "Modelkeuze. 0 = geen gedragseffect (statische doorrekening)."
   # Elasticiteit van het belastbaar inkomen voor werkenden.
