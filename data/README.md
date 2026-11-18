@@ -10,5 +10,6 @@ Alle cijfers van het model staan hier, los van de code. Je hoeft niet te kunnen 
 | `presets/*.yaml`                          | Bekende voorstellen ("flat tax", "zonder huurtoeslag") als wijziging op de parameters.             |
 | `verkiezingen/<verkiezing>/<partij>.yaml` | Partijplannen als wijziging op het basispad.                                                       |
 | `vooruitblik/box3-<jaar>.yaml`            | Regels voor box 3 op basis van werkelijk rendement, voor het rekenvoorbeeld bij het Belastingplan. |
+| `vergelijking/gini-landen.yaml`           | Gini-index per land van de Wereldbank. **Gegenereerd** door `npm run gini:landen`.                 |
 
 CI controleert al deze bestanden. Een tikfout of een onbekende parameter laat de build falen met een leesbare melding.
