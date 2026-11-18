@@ -929,3 +929,53 @@ Melding van de eigenaar (17 november 2026): in het lab lopen dingen door elkaar;
 - **Figuren naast elkaar.** `Figuur` heeft altijd drie delen (kop, legenda, inhoud). De nieuwe klasse `.figuren-naast` (global.css) zet ze in een subgrid, zodat kop, legenda en grafiek links en rechts op dezelfde hoogte beginnen. Onder elkaar (container smaller dan 620 px) komt er ruimte tussen. Gebruikt in het lab bij de groepen en bij netto inkomen en marginale druk.
 - **Voorbeeldhuishoudens op volgorde.** Van meeste achteruit naar meeste vooruit; zonder scenario in de volgorde van het bestand. "Jij" staat daartussen, in de accentkleur (`nadruk`).
 - Dit raakt ook de staafgrafieken op Jouw situatie (wat doen de voorstellen met jou) en bij de verkiezingen.
+
+### D-096 Tooltips en hover in de grafieken
+
+Melding van de eigenaar (18 november 2026): de grafieken en de tooltips op de live site zijn nog niet goed. Bekeken in Chrome, op 1300 en 390 px breed, met muis en met tikken.
+
+Wat er mis was:
+
+- **De tooltip viel buiten de grafiek.** Hij klapte naar links zodra de aanwijzer binnen 200 px van de rechterrand kwam. Op een telefoon is dat bijna overal, en daar viel hij links buiten beeld.
+- **Lange regels liepen buiten het kader** (`white-space: nowrap` met `max-width`).
+- **De tooltip lag over de rij waar je naar keek** en over de bedragen eronder. Hij herhaalde vooral wat er al stond.
+- **Op een telefoon verdween hij meteen.** Na een tik volgt `pointerleave`.
+- **De bedragen staan in een kolom rechts (D-095),** zodat het oog van staaf naar bedrag een lange weg heeft.
+- **Rijen met € 0 waren leeg.**
+- **Op een telefoon waren de staven bij de inkomensgroepen een paar pixels breed,** en de aslabels liepen in elkaar.
+- **Bij de lijnen ontbraken punten op de lijnen en het verschil.**
+
+Wat er nu is:
+
+- **`Tooltip`**
+  - meet zijn eigen maat en blijft binnen de container
+  - staat boven de rij; past dat niet, dan onder de rij (`onder`), nooit eroverheen
+  - breekt lange regels af
+  - kan een kleurstaaltje per regel tonen (`TipRegel`, blok of lijn)
+  - met `onsluit` sluit een tik buiten de grafiek hem
+- **In alle grafieken** blijft de tooltip op een aanraakscherm staan na een tik (`pointerdown`; `pointerleave` alleen bij muis).
+- **`StavenDivergent`**
+  - om en om een lichte band per rij, en de rij onder de aanwijzer sterker; zo lees je van label naar bedrag
+  - staan de labels boven de staven, dan lopen raster- en nullijn alleen langs de staaf, niet door de tekst; de rand om de tekst uit D-095 is weg
+  - de labels gaan ook boven de staven als er naast label en bedrag minder dan 140 px voor de staven overblijft
+  - altijd minstens één streepje op de as aan elke kant van de nul
+  - geen zichtbaar verschil: een punt op de nullijn
+- **`Gestapeld`**
+  - percentages in de vlakken die breed genoeg zijn, in een tekstkleur die past bij licht of sterk vlak (`--op-sterk`)
+  - de rij licht op
+  - staaltjes in de tooltip
+- **`Lijnen`**
+  - punten op elke lijn bij het inkomen waar je wijst
+  - staaltjes (gestippeld of doorgetrokken) in de tooltip
+  - het verschil tussen scenario en nu, in euro of procentpunt
+  - in het lab heet de reeks "Huidig 2026", net als in de legenda
+- **Lab**
+  - de tooltip bij de groepen zegt ook het bedrag per maand en hoeveel van de groep erop achteruit en vooruit gaat
+  - kortere omschrijvingen van de voorbeeldhuishoudens, die nu ook op een telefoon blijven staan
+- **Browsertest:** de tooltip blijft binnen de grafiek en ligt niet over de eigen rij.
+
+Niet gedaan, mogelijk later:
+
+- de twee lijngrafieken tegelijk laten meebewegen
+- de rijen met het toetsenbord bereikbaar maken
+- de staafgrafiek in HTML in plaats van SVG, zodat de browser de tekst meet in plaats van een schatting per teken

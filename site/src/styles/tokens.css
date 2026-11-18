@@ -25,6 +25,8 @@
   --loss-tekst: #a82418;
   --zero: #9a948a;
   --neutral: #e6e2da;
+  /* Tekst op de sterke kleuren (--gain, --loss) in een grafiek. */
+  --op-sterk: #ffffff;
   /* Box 1 en box 3 in "Wie betaalt de belasting?" (D-080), gecontroleerd met de dataviz-validator. */
   --box1: #3d5a99;
   --box3: #b8741a;
@@ -58,6 +60,7 @@
     --loss-tekst: #ea846e;
     --zero: #7d776c;
     --neutral: #2c2a26;
+    --op-sterk: #1a1814;
     --box1: #6f8fd6;
     --box3: #b47a22;
     --ontvangen: #9a52b8;
@@ -86,6 +89,7 @@
   --loss-tekst: #ea846e;
   --zero: #7d776c;
   --neutral: #2c2a26;
+  --op-sterk: #1a1814;
   --box1: #6f8fd6;
   --box3: #b47a22;
   --ontvangen: #9a52b8;

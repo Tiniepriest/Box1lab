@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { euro, mooieStap, procent } from "../../lib/format.ts";
-  import Tooltip from "./Tooltip.svelte";
+  import { euro, getal, mooieStap, procent } from "../../lib/format.ts";
+  import Tooltip, { type TipRegel } from "./Tooltip.svelte";
 
   /*
    * Lijngrafiek over bruto inkomen. Eén of twee reeksen: "huidig" (grijs gestippeld) en eventueel "scenario"
@@ -73,7 +73,24 @@
     w.map((v, i) => `${i ? "L" : "M"}${X(x[i]!).toFixed(1)},${Y(v).toFixed(1)}`).join("");
 
   let actief = $state<number | null>(null);
-  let tip = $state<{ x: number; y: number; regels: string[] } | null>(null);
+  let tip = $state<{ x: number; y: number; regels: TipRegel[] } | null>(null);
+  const KLEUR = { huidig: "var(--zero)", scenario: "var(--accent)" } as const;
+
+  /** Verschil tussen scenario en huidig, in euro of in procentpunt. */
+  function verschil(i: number): string | null {
+    const h = reeksen.find((r) => r.soort === "huidig")?.waarden[i];
+    const s = reeksen.find((r) => r.soort === "scenario")?.waarden[i];
+    if (h === undefined || s === undefined) return null;
+    const d = s - h;
+    const teken = d > 0.005 ? "+" : d < -0.005 ? "−" : "";
+    return yEenheid === "procent"
+      ? `${teken}${getal(Math.abs(d), 0)} procentpunt`
+      : `${teken}${euro(Math.abs(d))}`;
+  }
+  function sluit() {
+    actief = null;
+    tip = null;
+  }
 
   function beweeg(e: PointerEvent) {
     const svg = (e.currentTarget as SVGElement).ownerSVGElement!;
@@ -85,7 +102,15 @@
     tip = {
       x: e.clientX - ouder.left,
       y: e.clientY - ouder.top,
-      regels: [`Bruto ${euro(x[i]!)}`, ...reeksen.map((r) => `${r.naam}: ${yLabel(r.waarden[i]!)}`)],
+      regels: [
+        `Bruto ${euro(x[i]!)}`,
+        ...reeksen.map((r) => ({
+          tekst: `${r.naam}: ${yLabel(r.waarden[i]!)}`,
+          kleur: KLEUR[r.soort],
+          lijn: r.soort === "huidig" ? ("gestippeld" as const) : ("doorgetrokken" as const),
+        })),
+        ...(reeksen.length > 1 && verschil(i) ? [`Verschil: ${verschil(i)}`] : []),
+      ],
     };
   }
 </script>
@@ -115,6 +140,9 @@
     {/if}
     {#if actief !== null}
       <line x1={X(x[actief]!)} x2={X(x[actief]!)} y1={T} y2={T + IH} class="hulplijn" />
+      {#each reeksen as r (r.naam)}
+        <circle cx={X(x[actief]!)} cy={Y(r.waarden[actief]!)} r="4" class="punt {r.soort}" />
+      {/each}
     {/if}
     <rect
       x={L}
@@ -124,13 +152,11 @@
       fill="transparent"
       role="presentation"
       onpointermove={beweeg}
-      onpointerleave={() => {
-        actief = null;
-        tip = null;
-      }}
+      onpointerdown={beweeg}
+      onpointerleave={(e) => e.pointerType !== "touch" && sluit()}
     />
   </svg>
-  {#if tip}<Tooltip {...tip} {breedte} />{/if}
+  {#if tip}<Tooltip {...tip} {breedte} onsluit={sluit} />{/if}
 </div>
 
 <style>
@@ -156,6 +182,17 @@
   }
   .scenario {
     stroke: var(--accent);
+  }
+  .punt {
+    stroke: var(--panel);
+    stroke-width: 2;
+    stroke-dasharray: none;
+  }
+  .punt.huidig {
+    fill: var(--zero);
+  }
+  .punt.scenario {
+    fill: var(--accent);
   }
   .hulplijn {
     stroke: var(--muted);

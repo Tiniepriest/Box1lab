@@ -36,13 +36,25 @@
   const max = $derived(Math.max(1, ...posities.flatMap((p) => [p.van, p.tot])));
   const X = (v: number) => LABEL + (Math.max(0, v) / max) * (B - LABEL - R);
 
-  let tip = $state<{ x: number; y: number; regels: string[] } | null>(null);
+  let tip = $state<{ x: number; y: number; onder: number; regels: string[] } | null>(null);
 
   function kleur(soort: string) {
     return soort === "totaal" ? "var(--zero)" : soort === "plus" ? "var(--gain)" : "var(--loss)";
   }
   function tekst(s: { bedrag: number; soort: string }) {
     return s.soort === "totaal" ? euro(s.bedrag) : euroVerschil(s.soort === "plus" ? s.bedrag : -s.bedrag);
+  }
+  /** Tooltip boven de rij (D-096). */
+  function toon(e: PointerEvent, s: { label: string; bedrag: number; soort: string }, i: number) {
+    const svg = (e.currentTarget as SVGElement).ownerSVGElement!;
+    const box = svg.parentElement!.getBoundingClientRect();
+    const schaalPx = svg.getBoundingClientRect().width / B;
+    tip = {
+      x: e.clientX - box.left,
+      y: (i * RIJ + 1) * schaalPx,
+      onder: (i + 1) * RIJ * schaalPx,
+      regels: [s.label, tekst(s) + " per jaar"],
+    };
   }
 </script>
 
@@ -55,15 +67,9 @@
       {@const w = Math.max(1, Math.abs(X(p.tot) - X(p.van)))}
       <g
         role="presentation"
-        onpointermove={(e) => {
-          const box = (e.currentTarget as SVGElement).ownerSVGElement!.parentElement!.getBoundingClientRect();
-          tip = {
-            x: e.clientX - box.left,
-            y: e.clientY - box.top,
-            regels: [s.label, tekst(s) + " per jaar"],
-          };
-        }}
-        onpointerleave={() => (tip = null)}
+        onpointermove={(e) => toon(e, s, i)}
+        onpointerdown={(e) => toon(e, s, i)}
+        onpointerleave={(e) => e.pointerType !== "touch" && (tip = null)}
       >
         <rect x="0" y={y - 3} width={B} height={RIJ} fill="transparent" />
         <text
@@ -79,7 +85,7 @@
       </g>
     {/each}
   </svg>
-  {#if tip}<Tooltip {...tip} {breedte} />{/if}
+  {#if tip}<Tooltip {...tip} {breedte} onsluit={() => (tip = null)} />{/if}
 </div>
 
 <style>
