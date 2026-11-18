@@ -558,8 +558,9 @@
                     tekst: `${procentVerschil(r.e.relatief)} · ${euroVerschil(r.e.gemiddeld)}`,
                     tip: [
                       r.sub ? `${r.label} (${r.sub})` : r.label,
-                      `${euroVerschil(r.e.gemiddeld)} per huishouden per jaar`,
+                      `${euroVerschil(r.e.gemiddeld)} per huishouden per jaar, ${euroVerschil(r.e.gemiddeld / 12)} per maand`,
                       `${procentVerschil(r.e.relatief)} van het besteedbaar inkomen`,
+                      `${getal(r.e.aandelen[0]! + r.e.aandelen[1]!)}% van deze mensen gaat erop achteruit, ${getal(r.e.aandelen[3]! + r.e.aandelen[4]!)}% vooruit`,
                     ],
                   }))}
                   asLabel={(v) => procentVerschil(v, Math.abs(v) < 1 && v !== 0 ? 1 : 0)}
@@ -654,7 +655,7 @@
               <Lijnen
                 x={curve.x}
                 reeksen={[
-                  { naam: "Huidig", waarden: curve.nu.besteedbaar, soort: "huidig" },
+                  { naam: `Huidig ${params.jaar}`, waarden: curve.nu.besteedbaar, soort: "huidig" },
                   { naam: "Scenario", waarden: curve.sc.besteedbaar, soort: "scenario" },
                 ]}
                 beschrijving="Besteedbaar inkomen bij elk bruto inkomen, huidig en scenario"
@@ -673,10 +674,10 @@
               <Lijnen
                 x={curve.x}
                 reeksen={[
-                  { naam: "Huidig", waarden: curve.nu.marginaleDruk, soort: "huidig" },
+                  { naam: `Huidig ${params.jaar}`, waarden: curve.nu.marginaleDruk, soort: "huidig" },
                   { naam: "Scenario", waarden: curve.sc.marginaleDruk, soort: "scenario" },
                 ]}
-                yLabel={(v) => procent(v, 0)}
+                yEenheid="procent"
                 yMin={-20}
                 yMax={120}
                 beschrijving="Marginale druk bij elk bruto inkomen, huidig en scenario"
@@ -724,6 +725,7 @@
                 asLabel={(v) => euroVerschil(v)}
                 drempel={50}
                 labelBreedte={220}
+                subAltijd
                 beschrijving="Verandering van het besteedbaar inkomen per voorbeeldhuishouden"
               />
             {/snippet}

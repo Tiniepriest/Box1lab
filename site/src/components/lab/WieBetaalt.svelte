@@ -1,7 +1,7 @@
 <script lang="ts">
   import { euro, euroVerschil, getal, miljard, mooieStap, procent } from "../../lib/format.ts";
   import Figuur from "../grafieken/Figuur.svelte";
-  import Tooltip from "../grafieken/Tooltip.svelte";
+  import Tooltip, { type TipRegel } from "../grafieken/Tooltip.svelte";
 
   /*
    * Wie betaalt de belasting (D-080)? Per inkomensgroep het deel van de belasting in box 1 en box 3, gestapeld.
@@ -172,19 +172,22 @@
 
   const geenVerschil = $derived(box1.every((_, i) => Math.abs(groepTotaal(i)) < 0.5));
 
-  let tip = $state<{ x: number; y: number; regels: string[] } | null>(null);
+  let tip = $state<{ x: number; y: number; regels: TipRegel[] } | null>(null);
   function beweeg(e: PointerEvent, i: number) {
     const box = (e.currentTarget as SVGElement).ownerSVGElement!.parentElement!.getBoundingClientRect();
     const regels = toonVerschil
       ? [
           naam(i),
-          ...lagen.map((l) => `${l.naam}: ${inWoorden(l.delta[i]!, l.ontvangen)}`),
+          ...lagen.map((l) => ({
+            tekst: `${l.naam}: ${inWoorden(l.delta[i]!, l.ontvangen)}`,
+            kleur: l.kleur,
+          })),
           `Samen: ${euroVerschil(groepTotaal(i))} per huishouden per jaar`,
           `Hele groep: ${miljard(groepDeltaMld(i))}`,
         ]
       : [
           naam(i),
-          ...lagen.map((l) => `${l.naam}: ${mld(l.bedrag[i]!)}`),
+          ...lagen.map((l) => ({ tekst: `${l.naam}: ${mld(l.bedrag[i]!)}`, kleur: l.kleur })),
           `${procent(groepAandeel(i))} van alle belasting in ${welke}`,
           `gemiddeld ${euro(perHuishouden(i))} per huishouden per jaar`,
         ];
@@ -252,7 +255,12 @@
           {#each box1 as _, i (i)}
             {@const x = LINKS + i * vak + (vak - breed) / 2}
             {@const s = stukken(i)}
-            <g role="presentation" onpointermove={(e) => beweeg(e, i)} onpointerleave={() => (tip = null)}>
+            <g
+              role="presentation"
+              onpointermove={(e) => beweeg(e, i)}
+              onpointerdown={(e) => beweeg(e, i)}
+              onpointerleave={(e) => e.pointerType !== "touch" && (tip = null)}
+            >
               <rect x={LINKS + i * vak} y={BOVEN} width={vak} height={hoogte} fill="transparent" />
               {#each s.uit as st, k (k)}
                 <path d={staaf(x, st.boven, breed, st.h, st.rond)} fill={st.kleur} />
@@ -289,7 +297,7 @@
             >inkomensgroep, van laag naar hoog inkomen</text
           >
         </svg>
-        {#if tip}<Tooltip {...tip} {breedte} />{/if}
+        {#if tip}<Tooltip {...tip} {breedte} onsluit={() => (tip = null)} />{/if}
       </div>
       {#if toonVerschil}
         <p class="notitie">

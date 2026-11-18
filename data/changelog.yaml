@@ -6,6 +6,16 @@
 #
 # soort: nieuw | cijfers | model | correctie
 
+- datum: 2026-11-18
+  soort: nieuw
+  titel: "Grafieken: betere uitleg als je eroverheen gaat"
+  tekst: >-
+    Het vakje met uitleg bij een grafiek blijft nu binnen de grafiek, ook op een telefoon, en staat naast de rij
+    waar je op wijst in plaats van eroverheen. Op een telefoon tik je op een rij of lijn; tik ergens anders om het
+    vakje te sluiten. De rij waar je op wijst licht op, en de rijen hebben om en om een lichte achtergrond, zodat
+    je makkelijker van naam naar bedrag leest. In "Hoeveel mensen winnen en verliezen?" staan de percentages in de
+    balk. Bij de lijnen zie je punten op beide lijnen en het verschil tussen nu en het scenario. Een voorstel
+    zonder effect voor jou krijgt een punt op de nullijn in plaats van een lege rij.
 - datum: 2026-11-17
   soort: nieuw
   titel: "Rustiger grafieken"

@@ -7,7 +7,7 @@
 huishoudens:
   - id: bijstand-alleenstaand
     label: "Bijstand, alleenstaand"
-    omschrijving: "Huur € 750 per maand"
+    omschrijving: "Huur € 750 p/m"
     invoer:
       {
         inkomen1: 0,
@@ -23,7 +23,7 @@ huishoudens:
       }
   - id: bijstand-eenouder
     label: "Bijstand, eenoudergezin"
-    omschrijving: "2 kinderen (5 en 9), huur € 800 per maand"
+    omschrijving: "2 kinderen, huur € 800 p/m"
     invoer:
       {
         inkomen1: 0,
@@ -39,7 +39,7 @@ huishoudens:
       }
   - id: bijstand-gezin
     label: "Bijstand, paar met kinderen"
-    omschrijving: "2 kinderen (4 en 8), huur € 900 per maand"
+    omschrijving: "2 kinderen, huur € 900 p/m"
     invoer:
       {
         inkomen1: 0,
@@ -55,7 +55,7 @@ huishoudens:
       }
   - id: ww
     label: "WW-uitkering, alleenstaand"
-    omschrijving: "Huur € 850 per maand"
+    omschrijving: "Huur € 850 p/m"
     invoer:
       {
         inkomen1: 24000,
@@ -71,7 +71,7 @@ huishoudens:
       }
   - id: aow-alleenstaand
     label: "AOW'er, alleenstaand"
-    omschrijving: "AOW en een klein pensioen, huur € 650 per maand"
+    omschrijving: "Klein pensioen, huur € 650 p/m"
     invoer:
       {
         inkomen1: 25000,
@@ -86,7 +86,7 @@ huishoudens:
       }
   - id: aow-stel
     label: "AOW'ers, paar"
-    omschrijving: "AOW en pensioen, koopwoning zonder hypotheek, € 150.000 spaargeld"
+    omschrijving: "Pensioen, koophuis, € 150.000 spaargeld"
     invoer:
       {
         inkomen1: 32000,
@@ -102,7 +102,7 @@ huishoudens:
       }
   - id: laag-loon
     label: "Alleenstaand, laag loon"
-    omschrijving: "Huur € 800 per maand"
+    omschrijving: "Huur € 800 p/m"
     invoer:
       {
         inkomen1: 28000,
@@ -117,7 +117,7 @@ huishoudens:
       }
   - id: eenouder-werkend
     label: "Eenoudergezin, werkend"
-    omschrijving: "1 kind (6), huur € 850 per maand"
+    omschrijving: "1 kind, huur € 850 p/m"
     invoer:
       {
         inkomen1: 32000,
@@ -132,7 +132,7 @@ huishoudens:
       }
   - id: modaal-alleenstaand
     label: "Alleenstaand, modaal"
-    omschrijving: "Modaal inkomen (CPB), huur € 1.100 per maand"
+    omschrijving: "Modaal (CPB), huur € 1.100 p/m"
     invoer:
       {
         inkomen1: 48000,
@@ -147,7 +147,7 @@ huishoudens:
       }
   - id: alleenverdiener
     label: "Alleenverdiener, 2 kinderen"
-    omschrijving: "Partner zonder inkomen, kinderen 5 en 9, huur € 950 per maand"
+    omschrijving: "Partner zonder inkomen, 2 kinderen, huur € 950 p/m"
     invoer:
       {
         inkomen1: 48000,
@@ -162,7 +162,7 @@ huishoudens:
       }
   - id: gezin-koop
     label: "Gezin, anderhalfverdieners"
-    omschrijving: "2 kinderen (4 en 8), koopwoning"
+    omschrijving: "2 kinderen, koophuis"
     invoer:
       {
         inkomen1: 48000,
@@ -177,7 +177,7 @@ huishoudens:
       }
   - id: kinderopvang
     label: "Tweeverdieners, kinderopvang"
-    omschrijving: "2 kleine kinderen (1 en 3), € 18.000 kinderopvang per jaar, huur € 1.200 per maand"
+    omschrijving: "2 kleine kinderen, € 18.000 opvang, huur € 1.200 p/m"
     invoer:
       {
         inkomen1: 45000,
@@ -192,7 +192,7 @@ huishoudens:
       }
   - id: gezin-tweeverdieners
     label: "Gezin, tweeverdieners"
-    omschrijving: "2 kinderen (4 en 8), koopwoning"
+    omschrijving: "2 kinderen, koophuis"
     invoer:
       {
         inkomen1: 62000,
@@ -207,7 +207,7 @@ huishoudens:
       }
   - id: tweeverdieners-hoog
     label: "Tweeverdieners zonder kinderen"
-    omschrijving: "Hoge inkomens, koopwoning"
+    omschrijving: "Koophuis"
     invoer:
       {
         inkomen1: 110000,
@@ -222,7 +222,7 @@ huishoudens:
       }
   - id: topinkomen
     label: "Topinkomen"
-    omschrijving: "Paar, koopwoning, € 500.000 spaargeld en beleggingen"
+    omschrijving: "Paar, koophuis, € 500.000 vermogen"
     invoer:
       {
         inkomen1: 350000,

@@ -229,6 +229,21 @@ try {
     /AOW'ers/.test(groepTekst) && /Bijstand/.test(groepTekst) && /% van de mensen/.test(groepTekst),
     "lab: effect per inkomensbron, met de omvang van elke groep (D-094)",
   );
+  // Tooltip: verschijnt bij de rij en blijft binnen de grafiek (D-096).
+  const staafGrafiek = pg.locator(".figuren-naast svg").first();
+  const laatsteRij = staafGrafiek.locator(".band").last();
+  const rijBox = (await laatsteRij.boundingBox())!;
+  await pg.mouse.move(rijBox.x + rijBox.width - 5, rijBox.y + rijBox.height / 2);
+  const tipBox = await pg.locator("[role=tooltip]").first().boundingBox();
+  const grafiekBox = (await staafGrafiek.boundingBox())!;
+  controleer(
+    !!tipBox &&
+      tipBox.x >= grafiekBox.x - 1 &&
+      tipBox.x + tipBox.width <= grafiekBox.x + grafiekBox.width + 1 &&
+      (tipBox.y + tipBox.height <= rijBox.y + 1 || tipBox.y >= rijBox.y + rijBox.height - 1),
+    "lab: tooltip binnen de grafiek, niet over de eigen rij (D-096)",
+  );
+  await pg.mouse.move(0, 0);
   await bekijkPer.getByRole("button", { name: "Inkomen", exact: true }).click();
   const lab = (await pg.textContent("body")) ?? "";
   controleer(
