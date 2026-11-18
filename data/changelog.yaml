@@ -8,6 +8,15 @@
 
 - datum: 2026-11-18
   soort: model
+  modelversie: 0.9.0
+  titel: "Inleggen voor je pensioen: wat krijg je terug?"
+  tekst: >-
+    Op Jouw situatie staat een nieuw kopje: als je geld inlegt op een pensioenrekening of lijfrenteverzekering,
+    hoeveel krijg je dan terug van de Belastingdienst? Je vult zelf het bedrag in. Je ziet ook of je toeslagen
+    omhooggaan, wat de inleg je netto kost en, als je geen pensioen opbouwt via je werk, hoeveel je ongeveer mag
+    aftrekken (de jaarruimte). De andere uitkomsten op de site veranderen niet.
+- datum: 2026-11-18
+  soort: model
   modelversie: 0.8.0
   titel: "Armoede: wie leeft onder de armoedegrens"
   tekst: >-

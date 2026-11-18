@@ -333,6 +333,15 @@ pensioenpremie:
   franchise: 19200
   aftoppingsgrens: 137800
 
+lijfrente:
+  bron: "Lijfrentepremie (een pensioenrekening of lijfrenteverzekering) is aftrekbaar binnen de jaarruimte: Wet IB 2001, artikel 3.127 (https://wetten.overheid.nl/BWBR0011353), en Belastingdienst, Aftrekken lijfrentepremies (https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/lijfrente/aftrekken-lijfrentepremies/aftrekken-lijfrentepremies). Bedragen 2026 (artikel 3.127, lid 1 en 3): maximale jaarruimte 30% van de premiegrondslag, aftoppingsgrens € 137.800, in te bouwen AOW-franchise € 19.172: Overzicht cijfers levensverzekeringen per 1-1-2026, gepubliceerd door de Belastingdienst (https://odb.belastingdienst.nl/wp-content/uploads/2026/01/20251218-Overzicht-cijfers-leven-2026-FsL.pdf). De premiegrondslag gaat over het arbeidsinkomen, bij ondernemers de winst vóór de ondernemersaftrek. De aftrek verlaagt niet het bijdrage-inkomen Zvw en niet de arbeidskorting (rechtspraak): Taxlive, Niet in aanmerking nemen aftrek lijfrentepremie bij berekening Zvw en arbeidskorting geen verboden discriminatie (https://www.taxlive.nl/nl/documenten/vn-vandaag/niet-in-aanmerking-nemen-aftrek-lijfrentepremie-bij-berekening-zvw-en-arbeidskorting-geen-verboden-discriminatie/)."
+  # Jaarruimte voor wie geen pensioen opbouwt via het werk (factor A = 0): percentage van de premiegrondslag, het
+  # arbeidsinkomen tot de aftoppingsgrens min de franchise. Wie wel pensioen opbouwt, heeft minder ruimte; dat
+  # rekent de site niet uit (de factor A staat op het pensioenoverzicht).
+  percentage: 30
+  aftoppingsgrens: 137800
+  franchise: 19172
+
 gedrag:
   bron: "Modelkeuze. 0 = geen gedragseffect (statische doorrekening)."
   # Elasticiteit van het belastbaar inkomen voor werkenden.

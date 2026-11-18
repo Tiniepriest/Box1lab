@@ -35,6 +35,8 @@ Pas bovenaan `jaar: 2027` aan. Loop daarna elke sectie langs en vul de nieuwe be
 
 De armoedegrens (`armoede`, D-098): neem de nieuwste tabellen A1 en A2 uit de publicatie "Leven in armoede" van het CBS (bijlage A) over in `typen`, en zet `peiljaar` op het jaar van die tabellen. Zet in `indexatie` één prijsstijging per jaar daarna, tot en met het nieuwe jaar: de alternatieve cpi voor koopkracht- en armoedecijfers uit de kerngegevens van de nieuwste MEV of het CEP. `eigenRisicoMld` is de opbrengst van het verplicht eigen risico uit de begroting van VWS (ontvangsten Zvw).
 
+De pensioenrekening (`lijfrente`, D-099): de aftoppingsgrens en de in te bouwen AOW-franchise van artikel 3.127 Wet IB 2001. De Belastingdienst zet ze rond de jaarwisseling in het "Overzicht cijfers levensverzekeringen"; het percentage (30%) verandert alleen bij een wetswijziging.
+
 Let op de schrijfwijze, die bovenaan het bestand staat:
 
 | Officieel                    | In het bestand                                   |

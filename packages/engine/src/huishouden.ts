@@ -46,6 +46,11 @@ export interface Lid {
   aowLeeftijd?: boolean;
   /** Leeftijd, als die bekend is; voor de huurgrens van jongeren in de huurtoeslag. */
   leeftijd?: number;
+  /**
+   * Aftrekbare lijfrentepremie per jaar (inleg op een pensioenrekening, binnen de jaarruimte). Verlaagt het belastbaar
+   * inkomen en het toetsingsinkomen, niet het arbeidsinkomen (arbeidskorting) en niet de bijdrage Zvw.
+   */
+  lijfrentepremie?: number;
 }
 
 export interface Huishouden {
@@ -267,7 +272,9 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     const premie =
       l.pensioenpremie === "standaard" ? standaardPensioenpremie(werk, p) : (l.pensioenpremie ?? 0);
     const winst = l.ondernemer ? belastbareWinst(werk, l.ondernemer, p) : null;
-    const inkomen = (winst ? winst.belastbaar : werk - premie) + aowNaastWerk;
+    const voorLijfrente = (winst ? winst.belastbaar : werk - premie) + aowNaastWerk;
+    // Lijfrentepremie gaat van het inkomen af, tot nul (een verlies schuift het model niet door naar later).
+    const inkomen = voorLijfrente - Math.min(l.lijfrentepremie ?? 0, Math.max(0, voorLijfrente));
     const arbeid = k.werkt ? (winst ? werk : werk - premie) : 0;
     const posten: BeperkteAftrek[] = winst
       ? [
@@ -286,8 +293,9 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     pensioenpremie += premie;
     toetsingsinkomen += Math.max(0, belastbaar + toeslagCorrectie);
     // AOW'ers en ondernemers betalen de bijdrage Zvw zelf; voor loon en uitkeringen doet de werkgever of de
-    // uitkeringsinstantie dat. Een werkende AOW'er in loondienst betaalt hem alleen over de AOW.
-    const eigenZvw = l.ondernemer || l.soort === "aow" ? inkomen : aowNaastWerk;
+    // uitkeringsinstantie dat. Een werkende AOW'er in loondienst betaalt hem alleen over de AOW. Lijfrentepremie
+    // verlaagt het bijdrage-inkomen niet.
+    const eigenZvw = l.ondernemer || l.soort === "aow" ? voorLijfrente : aowNaastWerk;
     zvw += zvwBijdrage(eigenZvw, true, p);
     return {
       k,
