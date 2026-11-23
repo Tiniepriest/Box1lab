@@ -76,11 +76,6 @@ export const parametersSchema = z.strictObject({
      * uit een belastingdeel en premiedelen; alleen het belastingdeel kan ook van de belasting in box 3 af.
      */
     premieVolksverzekeringen: pct,
-    /**
-     * Negatieve belasting (alleen voor scenario's): wie minder verdient dan de vrijstelling, of meer korting heeft dan
-     * belasting, krijgt het verschil uitbetaald.
-     */
-    negatieveBelasting: z.boolean().default(false),
   }),
 
   heffingskortingen: z.strictObject({

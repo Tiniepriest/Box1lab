@@ -34,6 +34,7 @@ function samenvatUitkomst(b: Basis, u: ReturnType<typeof simuleer>): UitkomstSam
 function samenvatBasis(b: Basis): BasisSamenvatting {
   return {
     aantal: b.populatie.length,
+    volwassenen: b.volwassenen,
     armoede: b.armoede,
     gini: b.gini,
     gestandaardiseerd: b.resultaten.map((r) => r.besteedbaar / r.equivalentie),

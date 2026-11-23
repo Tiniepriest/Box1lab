@@ -232,17 +232,18 @@ groepen:
     knoppen:
       - parameter: uitkeringen.nettoKoppeling.aow
         label: "AOW houdt het netto bedrag"
-        uitleg: "De overheid past de bruto AOW aan als de belasting verandert."
         eenheid: aanUit
-      - {
-          parameter: uitkeringen.nettoKoppeling.bijstand,
-          label: "Bijstand houdt het netto bedrag",
-          eenheid: aanUit,
-        }
-      - parameter: uitkeringen.nettoKoppeling.werknemersverzekering
-        label: "WW en WIA houden het netto bedrag"
+        info:
+          - "Aan: verandert de belasting in je scenario, dan past de overheid de bruto AOW zo aan dat AOW'ers netto hetzelfde houden. Wat dat kost of oplevert, staat bij 'Uitkeringen en AOW'."
+          - "Uit: de bruto AOW blijft gelijk. Gaat de belasting omhoog, dan houden AOW'ers netto minder over; gaat hij omlaag, dan meer."
+          - "Het gaat alleen om de AOW zelf, niet om een pensioen. Een basisinkomen gaat altijd van de AOW af, ook als deze knop uit staat."
+      - parameter: uitkeringen.nettoKoppeling.bijstand
+        label: "Bijstand houdt het netto bedrag"
         eenheid: aanUit
-        gevorderd: true
+        info:
+          - "Aan: verandert de belasting in je scenario, dan past de overheid de bruto bijstand zo aan dat mensen in de bijstand netto hetzelfde houden. Wat dat kost of oplevert, staat bij 'Uitkeringen en AOW'."
+          - "Uit: de bruto bijstand blijft gelijk. Gaat de belasting omhoog, dan houden mensen in de bijstand netto minder over; gaat hij omlaag, dan meer."
+          - "Een basisinkomen gaat altijd van de bijstand af, ook als deze knop uit staat."
       - parameter: gedrag.eti
         label: "Gedragseffect (elasticiteit belastbaar inkomen)"
         uitleg: "0 = geen gedragseffect. Hoger = werkenden passen hun inkomen meer aan op het tarief."
@@ -252,8 +253,8 @@ groepen:
         stap: 0.05
         gevorderd: true
   - id: basisinkomen
-    titel: "Basisinkomen en negatieve belasting"
-    uitleg: "Geen van beide bestaat nu. Combineer ze met een vlaktaks om te zien wat het kost."
+    titel: "Basisinkomen"
+    uitleg: "Bestaat nu niet. Combineer het met een hoger tarief of een vlaktaks om te zien wat het kost."
     knoppen:
       - parameter: basisinkomen.perVolwassenePerMaand
         label: "Basisinkomen per volwassene"
@@ -262,7 +263,8 @@ groepen:
         min: 0
         max: 1500
         stap: 25
-      - parameter: box1.negatieveBelasting
-        label: "Negatieve belasting (Friedman)"
-        uitleg: "Wie minder verdient dan de belastingvrije voet, of meer korting heeft dan belasting, krijgt het verschil uitbetaald."
-        eenheid: aanUit
+        info:
+          - "Een vast bedrag per maand voor iedere volwassene, ook voor meerderjarige kinderen die thuis wonen. Zonder belasting en zonder voorwaarden."
+          - "Het komt in plaats van (een deel van) de AOW en de bijstand: die gaan netto evenveel omlaag, tot nul. Voor de bijstand telt ook het basisinkomen van je partner mee. WW, WIA en pensioen blijven zoals ze zijn."
+          - "Het telt niet mee als inkomen voor de toeslagen."
+          - "Het lab betaalt het basisinkomen niet vanzelf. Verhoog een tarief, verlaag een korting of kies 'Budgetneutraal maken' om te zien wat dat vraagt."

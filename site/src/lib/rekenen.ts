@@ -28,6 +28,8 @@ export interface UitkomstSamenvatting {
 
 export interface BasisSamenvatting {
   aantal: number;
+  /** Aantal volwassenen in de nagebootste bevolking (wie een basisinkomen zou krijgen). */
+  volwassenen: number;
   armoede: Armoede;
   gini: number;
   /** Gestandaardiseerd besteedbaar inkomen per huishouden, voor "je plek in Nederland". */

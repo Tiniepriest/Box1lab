@@ -12,6 +12,8 @@ export const knopSchema = z.strictObject({
   label: z.string().min(1),
   /** Korte uitleg onder de knop. */
   uitleg: z.string().optional(),
+  /** Langere uitleg achter een (i) naast de knop; een lijst wordt losse alinea's. */
+  info: z.union([z.string().min(1), z.array(z.string().min(1)).min(1)]).optional(),
   /** "aanUit" is een schakelaar (ja/nee); de andere eenheden zijn schuifjes. */
   eenheid: z.enum(["procent", "euro", "euroPerMaand", "getal", "niveau", "aanUit"]),
   min: z.number().default(0),

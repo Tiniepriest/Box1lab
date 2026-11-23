@@ -10,6 +10,9 @@ import { pasToe, wijzigingSchema, type Wijziging } from "../parameters/wijzig.ts
 
 const codeSchema = z.strictObject({ v: z.literal(1), w: z.array(wijzigingSchema) });
 
+/** Instellingen die het lab niet meer kent (D-100). Een oude link opent dan zonder die instelling. */
+const VERVALLEN = new Set(["box1.negatieveBelasting"]);
+
 function naarBase64Url(tekst: string): string {
   const bytes = new TextEncoder().encode(tekst);
   let binair = "";
@@ -41,6 +44,7 @@ export function decodeerScenario(code: string, params: Parameters): Wijziging[] 
   }
   const r = codeSchema.safeParse(data);
   if (!r.success) throw new Error("Deze scenariocode heeft een onbekend formaat.");
-  pasToe(params, r.data.w, "scenariocode");
-  return r.data.w;
+  const w = r.data.w.filter((x) => !VERVALLEN.has(x.parameter));
+  pasToe(params, w, "scenariocode");
+  return w;
 }

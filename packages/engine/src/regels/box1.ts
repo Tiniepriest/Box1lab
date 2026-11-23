@@ -43,11 +43,6 @@ function maakStukken(p: Parameters, aow: boolean): TariefStuk[] {
 
 /** Inkomstenbelasting + premies volksverzekeringen over het belastbaar inkomen, vóór heffingskortingen. */
 export function heffingVoorKortingen(inkomen: number, p: Parameters, aow: boolean): number {
-  if (p.box1.negatieveBelasting && inkomen < p.box1.vrijstelling) {
-    // Onder de vrijstelling: negatief, tegen het tarief van het eerste stuk boven de vrijstelling.
-    const eerste = tariefStukken(p, aow)[0];
-    return eerste ? (-(p.box1.vrijstelling - Math.max(0, inkomen)) * eerste.tarief) / 100 : 0;
-  }
   if (inkomen <= 0) return 0;
   let heffing = 0;
   for (const s of tariefStukken(p, aow)) {
@@ -66,14 +61,14 @@ export interface Box1Uitkomst {
   belasting: number;
   /**
    * Kortingen die niet van de box 1-heffing af konden. Het belastingdeel daarvan gaat nog van de belasting in box 3
-   * af (zie `belastingdeelKortingen`). Met negatieve belasting 0: dan is alles al uitbetaald.
+   * af (zie `belastingdeelKortingen`).
    */
   onbenut: number;
 }
 
 /**
  * Box 1 van één persoon: heffing (plus eventuele extra heffing, zoals de tariefsaanpassing) min kortingen. Nooit
- * negatief, behalve met `negatieveBelasting`: dan krijgt iemand het verschil uitbetaald.
+ * negatief.
  *
  * De algemene heffingskorting en de ouderenkorting hangen af van het verzamelinkomen: het inkomen uit box 1 plus het
  * inkomen uit box 3 (`overigInkomen`). Een negatief inkomen in box 1 telt daarin als 0.
@@ -93,7 +88,6 @@ export function box1Uitkomst(
 ): Box1Uitkomst {
   const heffing = heffingVoorKortingen(inkomen, p, k.aow) + extraHeffing;
   const kortingen = heffingskortingen(Math.max(0, inkomen) + overigInkomen, arbeidsinkomen, p, k).totaal;
-  if (p.box1.negatieveBelasting) return { heffing, kortingen, belasting: heffing - kortingen, onbenut: 0 };
   const belasting = heffing <= 0 ? 0 : Math.max(0, heffing - kortingen);
   return { heffing, kortingen, belasting, onbenut: Math.max(0, kortingen - Math.max(0, heffing)) };
 }

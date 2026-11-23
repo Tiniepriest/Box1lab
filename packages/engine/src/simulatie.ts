@@ -129,6 +129,8 @@ export interface Basis {
   /** Personen en kinderen onder de armoedegrens van CBS, Nibud en SCP (D-098). */
   armoede: Armoede;
   gini: number;
+  /** Aantal volwassenen (ook meerderjarige kinderen): wie een basisinkomen zou krijgen. */
+  volwassenen: number;
 }
 
 export function maakBasis(
@@ -167,6 +169,11 @@ export function maakBasis(
     eigenRisico,
     armoede: onderArmoedegrens(populatie, resultaten, huishoudgewichten, params, eigenRisico),
     gini: gini(gestandaardiseerd, persoonsgewichten),
+    volwassenen: populatie.reduce(
+      (s, h) =>
+        s + h.gewicht * (h.leden.length + h.kinderen.filter((l) => l >= params.zorg.volwassenVanaf).length),
+      0,
+    ),
   };
 }
 

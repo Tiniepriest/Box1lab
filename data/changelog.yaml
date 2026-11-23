@@ -6,6 +6,18 @@
 #
 # soort: nieuw | cijfers | model | correctie
 
+- datum: 2026-11-23
+  soort: model
+  modelversie: 0.10.0
+  titel: "Lab: basisinkomen beter uitgelegd, negatieve belasting eruit"
+  tekst: >-
+    In het lab kun je geen negatieve belasting meer aanzetten; een oude link opent zonder die instelling. Bij
+    het basisinkomen en bij de knoppen voor AOW en bijstand staat nu een (i) met uitleg, en in "Wat betekent het
+    voor de overheid?" zie je achter een (i) hoe de kosten van het basisinkomen tot stand komen. Correctie: heeft
+    maar één van twee partners bijstand, dan gaat nu ook het basisinkomen van de andere partner van de bijstand af,
+    zoals de gemeente het hele gezinsinkomen meetelt. Daarvoor kreeg zo'n gezin er een basisinkomen bij. De
+    cijfers voor heel Nederland veranderen niet.
+
 - datum: 2026-11-18
   soort: model
   modelversie: 0.9.0
