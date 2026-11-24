@@ -136,7 +136,8 @@ export interface Resultaat {
 
 /**
  * Hoeveel bruto uitkering het basisinkomen vervangt: zoveel dat het netto inkomen van deze persoon (na belasting
- * en Zvw-bijdrage) `basisinkomen` lager wordt, maar nooit meer dan de hele uitkering.
+ * en Zvw-bijdrage) `basisinkomen` lager wordt, maar nooit meer dan de hele uitkering. Geeft ook hoeveel het netto
+ * inkomen daardoor echt lager wordt.
  */
 function brutoVervangen(
   inkomen: number,
@@ -144,10 +145,11 @@ function brutoVervangen(
   basisinkomen: number,
   k: PersoonKenmerken,
   p: Parameters,
-): number {
+): { bruto: number; netto: number } {
   const netto = (y: number) => y - belastingBox1(y, 0, p, k) - zvwBijdrage(y, k.aow, p);
-  const doel = netto(inkomen) - basisinkomen;
-  if (netto(inkomen - uitkering) >= doel) return uitkering;
+  const nu = netto(inkomen);
+  const doel = nu - basisinkomen;
+  if (netto(inkomen - uitkering) >= doel) return { bruto: uitkering, netto: nu - netto(inkomen - uitkering) };
   let lo = 0;
   let hi = uitkering;
   for (let i = 0; i < 50; i++) {
@@ -155,7 +157,7 @@ function brutoVervangen(
     if (netto(inkomen - m) > doel) lo = m;
     else hi = m;
   }
-  return (lo + hi) / 2;
+  return { bruto: (lo + hi) / 2, netto: basisinkomen };
 }
 
 /** Wie krijgt de combinatiekorting? De minstverdienende werkende ouder, en alleen als alle ouders werken. */
@@ -210,8 +212,25 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
   let uitkeringKosten = 0;
   const basisPerPersoon = 12 * p.basisinkomen.perVolwassenePerMaand;
 
-  // 1. Bruto inkomen per persoon, na netto-koppeling en gedragseffect.
-  const personen = h.leden.map((l, i) => {
+  // 1. Bruto inkomen per persoon, na netto-koppeling en gedragseffect. Het basisinkomen komt in plaats van (een deel
+  //    van) de AOW en de bijstand: die gaan netto zoveel omlaag. De bijstand vult het inkomen van het hele gezin aan
+  //    tot de norm, dus ook het basisinkomen van een partner zonder bijstand telt mee, voor zover dat niet al een
+  //    eigen AOW vervangt. Daarom eerst de anderen, dan wie bijstand heeft.
+  const heeftBijstand = (l: Lid) =>
+    l.soort === "uitkering" && (l.uitkeringSoort ?? "bijstand") === "bijstand" && l.uitkering > 0;
+  type Persoon = {
+    k: PersoonKenmerken;
+    x: number;
+    toeslagCorrectie: number;
+    uitkering: number;
+    basisOver: number;
+  };
+  const personen: Persoon[] = new Array<Persoon>(h.leden.length);
+  const volgorde = h.leden
+    .map((_, i) => i)
+    .sort((a, b) => +heeftBijstand(h.leden[a]!) - +heeftBijstand(h.leden[b]!));
+  for (const i of volgorde) {
+    const l = h.leden[i]!;
     const k: PersoonKenmerken = {
       werkt: l.soort === "werk",
       aow: l.soort === "aow" || !!l.aowLeeftijd,
@@ -226,14 +245,19 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
       x += extra;
       uitkering += extra;
     }
-    // Het basisinkomen komt in plaats van (een deel van) de bijstand en de AOW: die gaan netto zoveel omlaag.
-    const vervangbaar =
-      l.soort === "aow" ||
-      !!l.aowLeeftijd ||
-      (l.soort === "uitkering" && (l.uitkeringSoort ?? "bijstand") === "bijstand");
+    const vervangbaar = l.soort === "aow" || !!l.aowLeeftijd || heeftBijstand(l);
+    let teVervangen = basisPerPersoon;
+    if (heeftBijstand(l)) {
+      h.leden.forEach((m, j) => {
+        if (j !== i && !heeftBijstand(m)) teVervangen += personen[j]!.basisOver;
+      });
+    }
     let vervangen = 0;
-    if (basisPerPersoon > 0 && uitkering > 0 && vervangbaar) {
-      vervangen = brutoVervangen(x, uitkering, basisPerPersoon, k, p);
+    let basisOver = basisPerPersoon;
+    if (teVervangen > 0 && uitkering > 0 && vervangbaar) {
+      const v = brutoVervangen(x, uitkering, teVervangen, k, p);
+      vervangen = v.bruto;
+      basisOver = Math.max(0, basisPerPersoon - v.netto);
       uitkeringKosten -= vervangen;
       x -= vervangen;
     }
@@ -246,8 +270,8 @@ export function berekenHuishouden(h: Huishouden, p: Parameters, basis?: Paramete
     }
     // Vervangt het basisinkomen een deel van de uitkering, dan rekenen de toeslagen met het oorspronkelijke inkomen.
     const toeslagCorrectie = vervangen > 0 ? l.inkomen - x : 0;
-    return { k, x, toeslagCorrectie, uitkering: Math.max(0, uitkering - vervangen) };
-  });
+    personen[i] = { k, x, toeslagCorrectie, uitkering: Math.max(0, uitkering - vervangen), basisOver };
+  }
 
   // 2. Eigen woning bij de hoogste verdiener.
   let hoofd = 0;

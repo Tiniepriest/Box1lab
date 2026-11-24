@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   belastingBox1,
   berekenHuishouden,
-  heffingskortingen,
+  codeerScenario,
+  decodeerScenario,
   huishoudenUitInvoer,
   maakBasis,
   maakHuishouden,
@@ -12,11 +13,10 @@ import {
   statisch,
   type PersoonKenmerken,
 } from "../src/index.ts";
-import { laadKalibratie, laadParameters, laadPopulatie, laadPresets } from "../src/node/index.ts";
+import { laadKalibratie, laadParameters, laadPopulatie } from "../src/node/index.ts";
 
 const p = laadParameters(2026);
 const k: PersoonKenmerken = { werkt: false, aow: false, alleenstaand: true, combinatiekorting: false };
-const negatief = pasToe(p, [{ parameter: "box1.negatieveBelasting", zet: true }]);
 const basisinkomen = (bedrag: number) =>
   pasToe(p, [{ parameter: "basisinkomen.perVolwassenePerMaand", zet: bedrag }]);
 
@@ -36,35 +36,20 @@ const alleen = (inkomen: number, soort: "werk" | "uitkering" | "aow") =>
     p,
   );
 
-describe("negatieve belasting", () => {
-  it("staat uit in de huidige wet: belasting is nooit negatief", () => {
+describe("negatieve belasting is uit het lab (D-100)", () => {
+  it("belasting is nooit negatief", () => {
     expect(belastingBox1(0, 0, p, k)).toBe(0);
     expect(belastingBox1(5000, 0, p, k)).toBe(0);
   });
 
-  it("aan: wie te weinig belasting betaalt, krijgt de korting uitbetaald", () => {
-    const korting = heffingskortingen(0, 0, negatief, k).totaal;
-    expect(korting).toBeGreaterThan(0);
-    expect(belastingBox1(0, 0, negatief, k)).toBeCloseTo(-korting, 6);
-  });
-
-  it("vlaktaks 35% boven € 24.000 wordt een negatieve inkomstenbelasting van Friedman", () => {
-    const vlak = laadPresets(p).find((x) => x.id === "vlaktaks-35")!;
-    const nit = pasToe(pasToe(p, vlak.wijzigingen), [{ parameter: "box1.negatieveBelasting", zet: true }]);
-    expect(belastingBox1(0, 0, nit, k)).toBeCloseTo(-0.35 * 24000, 6);
-    expect(belastingBox1(14000, 14000, nit, k)).toBeCloseTo(-0.35 * 10000, 6);
-    expect(belastingBox1(24000, 24000, nit, k)).toBeCloseTo(0, 6);
-    expect(belastingBox1(34000, 34000, nit, k)).toBeCloseTo(0.35 * 10000, 6);
-  });
-
-  it("de bijstand blijft netto gelijk: een uitbetaling gaat van de bijstand af", () => {
-    const vlak = laadPresets(p).find((x) => x.id === "vlaktaks-35")!;
-    const nit = pasToe(pasToe(p, vlak.wijzigingen), [{ parameter: "box1.negatieveBelasting", zet: true }]);
-    const h = alleen(0, "uitkering");
-    const voor = berekenHuishouden(h, p);
-    const na = berekenHuishouden(h, nit, p);
-    expect(na.bruto - na.belasting).toBeCloseTo(voor.bruto - voor.belasting, 0);
-    expect(na.uitkeringKosten).toBeLessThan(0);
+  it("een oude link met negatieve belasting opent zonder die instelling", () => {
+    const code = codeerScenario([
+      { parameter: "box1.negatieveBelasting", zet: true },
+      { parameter: "basisinkomen.perVolwassenePerMaand", zet: 500 },
+    ]);
+    expect(decodeerScenario(code, p)).toEqual([
+      { parameter: "basisinkomen.perVolwassenePerMaand", zet: 500 },
+    ]);
   });
 });
 
@@ -98,10 +83,37 @@ describe("basisinkomen", () => {
     expect(na.besteedbaar).toBeCloseTo(voor.besteedbaar, 0);
   });
 
+  it("bij de bijstand telt ook het basisinkomen van een partner zonder bijstand", () => {
+    const paar = (soort2: "uitkering" | "werk", inkomen2: number) =>
+      maakHuishouden(
+        {
+          inkomen1: 0,
+          soort1: "uitkering",
+          soort2,
+          inkomen2,
+          kinderLeeftijden: [],
+          huurPerMaand: 0,
+          hypotheekrente: 0,
+          woz: 0,
+          kinderopvangKosten: 0,
+        },
+        p,
+      );
+    // Partner werkt een beetje: de bijstand vult aan tot de gezinsnorm. Met € 300 basisinkomen ieder blijft het
+    // gezin netto gelijk; de bijstand gaat het dubbele omlaag.
+    const h = paar("werk", 6000);
+    const voor = berekenHuishouden(h, p);
+    expect(voor.uitkering).toBeGreaterThan(7200);
+    const na = berekenHuishouden(h, basisinkomen(300), p);
+    expect(na.basisinkomen).toBe(7200);
+    expect(na.besteedbaar).toBeCloseTo(voor.besteedbaar, 0);
+    expect(na.uitkeringKosten).toBeLessThan(0);
+  });
+
   it("kost de overheid het bedrag maal het aantal volwassenen, min wat de uitkeringen minder kosten", () => {
     const basis = maakBasis(p, laadPopulatie(2026).huishoudens, laadKalibratie(2026));
     const u = simuleer(basis, basisinkomen(100));
-    expect(u.posten.basisinkomen).toBeLessThan(-1);
+    expect(u.posten.basisinkomen).toBeCloseTo((-basis.volwassenen * 1200) / 1e9, 6);
     expect(u.posten.uitkeringen).toBeGreaterThan(0);
   });
 });

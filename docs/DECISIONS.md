@@ -1047,3 +1047,31 @@ Op verzoek van de eigenaar staat op Jouw situatie een kopje "Inleggen voor je pe
 Voorbeelden 2026, alleenstaande, € 5.000 inleg, geen pensioen via het werk: € 48.000 loon → € 2.198 terug (44%: 37,56% plus de afbouw van de algemene heffingskorting); € 150.000 → € 2.475 (49,5%); € 30.000 loon en € 900 huur → jaarruimte € 3.248, € 1.178 terug en € 913 meer toeslag.
 
 Golden: geen verschil. In de nagebootste bevolking legt niemand in (`lijfrentepremie` ontbreekt), en de lijfrentepremieaftrek in de begroting blijft een vaste post bij de overige aftrekposten. `MODEL_VERSIE` 0.8.0 → 0.9.0, omdat er een rekenregel bij komt.
+
+## Lab: basisinkomen en netto-koppeling uitgelegd (model 0.10.0)
+
+### D-100 Geen negatieve belasting meer, en een controle van de kosten van het basisinkomen
+
+Op verzoek van de eigenaar (23 november 2026).
+
+- **Negatieve belasting eruit.** De knop "Negatieve belasting (Friedman)" en de parameter `box1.negatieveBelasting` zijn weg, met de rekenregel in `box1.ts` en `brutoVoorNetto` (D-071 vervalt op dit punt). Een gedeelde link met die instelling opent zonder: `decodeerScenario` laat vervallen parameters weg (`VERVALLEN` in `scenario/code.ts`) in plaats van de hele link te weigeren. De groep in het lab heet nu "Basisinkomen".
+- **(i) bij de knoppen.** Een knop kan een `info` hebben (tekst of lijst alinea's) achter een (i) (`Info.svelte`: bij aanwijzen, focus of een tik). De knoppen "AOW houdt het netto bedrag" en "Bijstand houdt het netto bedrag" leggen uit wat aan en uit doet, en dat een basisinkomen altijd van de AOW en de bijstand afgaat, ook als de knop uit staat. Ook het basisinkomen zelf heeft een (i) met de uitgangspunten.
+- **(i) bij de posten.** In "Wat betekent het voor de overheid?" heeft "Basisinkomen" een (i) met het aantal volwassenen, het bedrag en het totaal (uit `Basis.volwassenen` en de post zelf; de site rekent niets), en waar de besparing staat. "Uitkeringen en AOW" legt uit wat in die post zit.
+
+**Controle van de kosten.** Gerekend op de nagebootste bevolking van 2026, alleen het basisinkomen, verder niets veranderd:
+
+| Per volwassene per maand | Basisinkomen | Uitkeringen en AOW | Box 1       | Zvw        | Box 3      | Saldo        |
+| ------------------------ | ------------ | ------------------ | ----------- | ---------- | ---------- | ------------ |
+| € 500                    | −€ 88,7 mld  | +€ 31,4 mld        | −€ 8,0 mld  | −€ 1,3 mld | −€ 0,1 mld | −€ 66,9 mld  |
+| € 1.000                  | −€ 177,5 mld | +€ 53,6 mld        | −€ 10,6 mld | −€ 2,3 mld | −€ 0,3 mld | −€ 137,0 mld |
+| € 1.400                  | −€ 248,5 mld | +€ 60,2 mld        | −€ 10,6 mld | −€ 2,6 mld | −€ 0,3 mld | −€ 201,8 mld |
+
+- De bruto kosten zijn precies het aantal volwassenen (14,79 miljoen: 12,81 miljoen hoofdbewoners en partners plus 1,99 miljoen meerderjarige kinderen) × het bedrag × 12; een test controleert dat.
+- De besparing loopt op tot bijna alle bruto AOW (€ 57,0 mld, 3,43 miljoen AOW'ers) en bijstand (€ 4,7 mld, 0,24 miljoen personen) in het model. Door de lagere uitkeringen komt er minder belasting en Zvw-bijdrage binnen; tussen € 1.000 en € 1.400 nauwelijks meer, omdat het laatste stuk van de AOW door de heffingskortingen al onbelast is. Box 3: wie minder inkomen heeft, houdt meer heffingskorting over voor box 3 (D-088).
+- Toeslagen veranderen niet: het basisinkomen telt niet mee in het toetsingsinkomen, en wie een deel van de uitkering kwijtraakt, houdt het oude toetsingsinkomen (D-071).
+- De bevolking bestaat uit particuliere huishoudens (de inkomensstatistiek van het CBS). Bewoners van instellingen, zoals verpleeghuizen, ontbreken: aan de kostenkant (hun basisinkomen) en aan de besparingskant (hun AOW). Ook het aantal AOW'ers ligt daardoor lager dan in de begroting.
+- Statisch: het basisinkomen verandert niet hoeveel mensen werken. Het gedragseffect gaat alleen over de tarieven.
+
+**Correctie bij de bijstand.** De bijstand vult het inkomen van het hele gezin aan tot de norm. Had maar één van twee partners bijstand (de ander werkt, of heeft WW of geen inkomen), dan ging alleen het eigen basisinkomen van de bijstand af, en kreeg het gezin het basisinkomen van de partner erbij. Nu gaat ook het basisinkomen van de partner van de bijstand af, voor zover het niet al een eigen AOW van die partner vervangt (`berekenHuishouden`, stap 1: eerst de anderen, dan wie bijstand heeft). In de nagebootste bevolking hebben alleen alleenstaanden en paren waarvan beide partners bijstand hebben bijstand, dus de cijfers hierboven veranderen niet. Wel bij jouw eigen situatie in het lab.
+
+Golden: geen verschil (het huidige beleid heeft geen basisinkomen en geen negatieve belasting). `MODEL_VERSIE` 0.9.0 → 0.10.0, omdat een rekenregel vervalt en er een verandert.

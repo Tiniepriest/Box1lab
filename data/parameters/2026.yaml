@@ -23,9 +23,6 @@ box1:
     - { tot: null, tarief: 49.5 }
   # AOW'ers betalen geen AOW-premie: hun tarief in de eerste schijf is zoveel procentpunt lager
   # (35,75% − 17,85% voor AOW'ers geboren in of na 1946 = 17,90).
-  # Negatieve belasting bestaat nu niet (false); voor scenario's als een negatieve inkomstenbelasting. Aan: wie
-  # minder verdient dan de vrijstelling, of meer korting heeft dan belasting, krijgt het verschil uitbetaald.
-  negatieveBelasting: false
   aowVerlagingEersteSchijf: 17.9
   # Premies volksverzekeringen in het tarief van de eerste schijf (AOW 17,90% + Anw 0,10% + Wlz 9,65%); de rest
   # is inkomstenbelasting. Een heffingskorting is in dezelfde verhouding belastingdeel en premiedeel; alleen het

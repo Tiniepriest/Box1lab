@@ -266,6 +266,13 @@ Voorstellen 11 en 12 van 2 november 2026 (D-073).
 - [ ] Jaarruimte voor wie wel pensioen opbouwt via het werk (factor A of de pensioenpremie): nu alleen een verwijzing naar het hulpmiddel van de Belastingdienst
 - [ ] AOW-franchise 2027 voor de jaarruimte: TODO: bron nodig (nu die van 2026)
 
+## Lab: basisinkomen uitgelegd (model 0.10.0)
+
+- [x] Negatieve belasting uit het lab en de engine; oude links openen zonder die instelling (D-100)
+- [x] (i) met uitleg bij "AOW houdt het netto bedrag", "Bijstand houdt het netto bedrag", het basisinkomen en de posten "Basisinkomen" en "Uitkeringen en AOW" (D-100)
+- [x] Kosten van het basisinkomen nagerekend; correctie: bij de bijstand telt ook het basisinkomen van een partner zonder bijstand (D-100)
+- [ ] Bewoners van instellingen zitten niet in de nagebootste bevolking: het basisinkomen voor hen en hun AOW ontbreken
+
 ## Open vragen voor de eigenaar
 
 - Uit de expertreview (D-089): standaard niet onthouden op het apparaat (nu aan, D-077)? Meer voorbeelden van de andere kant bij de voorstellen, of de keuze van de voorstellen uitleggen? Een manier om fouten te melden zonder GitHub-account (e-mail of formulier)? "Weet ik niet" bij de pensioenpremie, met een gemiddelde?

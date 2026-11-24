@@ -20,6 +20,7 @@
     type Knop,
     type LabKnoppen,
     type Parameters,
+    type PostId,
     type Preset,
     type Voorbeelden,
     type Wijziging,
@@ -41,6 +42,7 @@
   import Lijnen from "../grafieken/Lijnen.svelte";
   import StavenDivergent from "../grafieken/StavenDivergent.svelte";
   import WieBetaalt from "./WieBetaalt.svelte";
+  import Info from "../Info.svelte";
 
   let {
     params,
@@ -215,6 +217,28 @@
       if (u) uitkomst = u;
     });
   });
+  /** Uitleg achter de (i) bij een post in "Wat betekent het voor de overheid?". */
+  const postInfo = $derived.by((): Partial<Record<PostId, string[]>> => {
+    const info: Partial<Record<PostId, string[]>> = {
+      uitkeringen: [
+        "Wat de AOW, de bijstand en de WW en WIA meer of minder kosten.",
+        "Dat komt door de netto-koppeling: verandert de belasting, dan past de overheid het bruto bedrag aan zodat het netto bedrag gelijk blijft (knoppen bij 'Uitkeringen en gedrag').",
+        "En door een basisinkomen: dat vervangt een deel van de AOW en de bijstand. Dat is een besparing.",
+      ],
+    };
+    const bedrag = toestand.p.basisinkomen.perVolwassenePerMaand;
+    if (basis && uitkomst && bedrag > 0) {
+      const totaal = miljard(Math.abs(uitkomst.posten.basisinkomen)).replace("+", "");
+      info.basisinkomen = [
+        `${getal(basis.volwassenen / 1e6, 1)} miljoen volwassenen (${params.zorg.volwassenVanaf} jaar en ouder) krijgen elk ${euro(bedrag)} per maand. Samen is dat ${totaal} per jaar.`,
+        "Dat is het bedrag vóór de besparing. De AOW en de bijstand gaan omlaag, omdat het basisinkomen een deel ervan vervangt: dat staat bij 'Uitkeringen en AOW'. Over die lagere uitkeringen komt ook minder belasting en Zvw-bijdrage binnen: dat staat bij box 1 en de Zvw.",
+        "Alleen mensen in een gewoon huishouden tellen mee, zoals in de inkomenscijfers van het CBS. Bewoners van bijvoorbeeld een verpleeghuis niet.",
+        "We gaan ervan uit dat mensen evenveel blijven werken. Het gedragseffect onder 'Meer instellingen' gaat alleen over de tarieven.",
+        "Het basisinkomen telt niet mee voor de toeslagen, dus die veranderen er niet door.",
+      ];
+    }
+    return info;
+  });
   /** Nog niets veranderd: dan tonen we geen blokken vol nullen, maar een uitnodiging om te beginnen. */
   const leeg = $derived(!toestand.w.length);
   const achteruit = $derived(uitkomst ? uitkomst.winnaars[0]! + uitkomst.winnaars[1]! : 0);
@@ -309,13 +333,19 @@
 {#snippet knopVeld(k: Knop)}
   {@const v = waarde(k)}
   {#if k.eenheid === "aanUit"}
-    <label class="schakelaar">
-      <input type="checkbox" checked={v as boolean} onchange={(e) => zet(k, e.currentTarget.checked)} />
-      <span>{k.label}</span>
-    </label>
+    <div class="schakelaar-rij">
+      <label class="schakelaar">
+        <input type="checkbox" checked={v as boolean} onchange={(e) => zet(k, e.currentTarget.checked)} />
+        <span>{k.label}</span>
+      </label>
+      {#if k.info}<Info tekst={k.info} label="Uitleg bij {k.label}" />{/if}
+    </div>
   {:else}
     <div class="schuif">
-      <label for="k-{k.parameter}">{k.label} <span class="huidig">{knopTekst(k, v)}</span></label>
+      <span class="schuif-kop"
+        ><label for="k-{k.parameter}">{k.label} <span class="huidig">{knopTekst(k, v)}</span></label
+        >{#if k.info}<Info tekst={k.info} label="Uitleg bij {k.label}" />{/if}</span
+      >
       <input
         id="k-{k.parameter}"
         type="range"
@@ -780,13 +810,18 @@
             geschaald naar de raming van Dienst Toeslagen.
           </p>
           <div class="tabel-wrap">
-            <table class="data">
+            <table class="data posten">
               <thead><tr><th>Post</th><th>Effect</th></tr></thead>
               <tbody>
                 {#each POSTEN as post (post.id)}
                   {@const v = uitkomst.posten[post.id]}
                   <tr>
-                    <td>{post.label}</td>
+                    <td
+                      >{post.label}{#if postInfo[post.id]}<Info
+                          tekst={postInfo[post.id]!}
+                          label="Uitleg bij {post.label}"
+                        />{/if}</td
+                    >
                     <td class="num" class:vooruit={v > 0.05} class:achteruit={v < -0.05}
                       >{Math.abs(v) < 0.05 ? "–" : miljard(v)}</td
                     >
@@ -890,8 +925,13 @@
     gap: 2px 8px;
     align-items: center;
   }
-  .schuif label {
+  .schuif-kop {
     grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+  }
+  .schuif label {
+    flex: 1;
     display: flex;
     justify-content: space-between;
     gap: 8px;
@@ -911,6 +951,14 @@
   }
   .knop-uitleg {
     margin: -4px 0 4px;
+  }
+  /* Lange namen van posten mogen afbreken, zodat het effect op een telefoon in beeld blijft. */
+  .posten td:first-child {
+    white-space: normal;
+  }
+  .schakelaar-rij {
+    display: flex;
+    align-items: baseline;
   }
   .schakelaar {
     display: flex;
